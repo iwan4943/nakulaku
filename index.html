@@ -1,22 +1,253 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Pertamaku</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-            background-color: #f0f8ff;
-        }
-        h1 { color: #2c3e50; }
-        p { color: #555; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAKULAKU EKOSISTEM</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root { 
+      --primary: #c0392b; 
+      --bg-body: #f4f6f8; 
+      --card-radius: 20px;
+    }
+    
+    body { 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      background: var(--bg-body); 
+      color: #2c3e50; 
+      overflow-x: hidden;
+    }
+
+    /* HERO SECTION */
+    .hero-section {
+      background: linear-gradient(135deg, #ffffff 0%, #fceaea 100%);
+      padding: 80px 20px 60px 20px;
+      border-bottom-left-radius: 50px;
+      border-bottom-right-radius: 50px;
+      box-shadow: 0 10px 30px rgba(192, 57, 43, 0.05);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+
+    .tagline-badge {
+      display: inline-block;
+      background: rgba(192, 57, 43, 0.1);
+      color: var(--primary);
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+
+    /* CARD EKOSISTEM */
+    .app-card {
+      background: white;
+      border: none;
+      border-radius: var(--card-radius);
+      padding: 30px 20px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      height: 100%;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+
+    .app-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    }
+
+    .app-icon-box {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 20px auto;
+      transition: transform 0.3s;
+    }
+
+    .app-card:hover .app-icon-box {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Warna Icon Apps */
+    .icon-dashboard { background: #e8f4fd; color: #3498db; }
+    .icon-presensi { background: #eafaf1; color: #2ecc71; }
+    .icon-lms { background: #fef5e7; color: #f39c12; }
+    .icon-feedback { background: #fdedec; color: #e74c3c; }
+
+    .app-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 10px; }
+    .app-desc { font-size: 0.85rem; color: #7f8c8d; line-height: 1.6; }
+
+    /* FOOTER */
+    .footer-section {
+      padding: 40px 20px;
+      text-align: center;
+      color: #95a5a6;
+      font-size: 0.85rem;
+    }
+    
+    .btn-portal {
+      background-color: var(--primary);
+      color: white;
+      padding: 15px 40px;
+      border-radius: 15px;
+      font-weight: 700;
+      border: none;
+      box-shadow: 0 10px 20px rgba(192, 57, 43, 0.3);
+      transition: 0.3s;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 30px;
+    }
+    
+    .btn-portal:hover {
+      background-color: #a93226;
+      transform: translateY(-2px);
+      color: white;
+    }
+
+    /* Background decoration */
+    .bg-deco {
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(192,57,43,0.05) 0%, rgba(255,255,255,0) 70%);
+      border-radius: 50%;
+      z-index: 0;
+    }
+  </style>
 </head>
 <body>
-    <h1>Halo Dunia!</h1>
-    <p>Ini adalah website yang dihosting di GitHub Pages.</p>
+
+  <section class="hero-section">
+    <div class="bg-deco"></div>
+    <div class="container position-relative" style="z-index: 2;">
+      <div class="mb-3 text-danger" style="font-size: 3rem;">
+        <i class="fas fa-shapes"></i>
+      </div>
+      
+      <h1 class="display-4 brand-title">NAKULAKU EKOSISTEM</h1>
+      <div class="tagline-badge">
+        <i class="fas fa-bolt me-2"></i>SOLID - BERSINERGI - MENGINSPIRASI
+      </div>
+      
+      <div class="row justify-content-center mt-3">
+        <div class="col-md-8">
+          <p class="lead text-muted">
+            Platform digital terintegrasi dari <strong>Gugus Nakula</strong> untuk meningkatkan mutu pendidikan, efisiensi manajemen sekolah, dan pengembangan kompetensi guru secara berkelanjutan.
+          </p>
+        </div>
+      </div>
+
+      <a href="#" onclick="goToLogin()" class="btn-portal">
+        <i class="fas fa-sign-in-alt me-2"></i>MASUK PORTAL
+      </a>
+    </div>
+  </section>
+
+  <section class="container py-5" style="margin-top: -30px;">
+    <div class="row g-4">
+      
+      <div class="col-md-6 col-lg-3">
+        <div class="app-card text-center">
+          <div class="app-icon-box icon-dashboard">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h5 class="app-title">Nakulaku Dashboard</h5>
+          <p class="app-desc">
+            Pusat data analitik kinerja guru dan sekolah. Memantau kedisiplinan dan ketuntasan administrasi secara <em>real-time</em> dan transparan.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="app-card text-center">
+          <div class="app-icon-box icon-presensi">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <h5 class="app-title">Nakulaku Presensi</h5>
+          <p class="app-desc">
+            Sistem kehadiran berbasis radius lokasi (GPS) yang akurat. Memudahkan pencatatan kehadiran pendidik di seluruh sekolah gugus.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="app-card text-center">
+          <div class="app-icon-box icon-lms">
+            <i class="fas fa-laptop-code"></i>
+          </div>
+          <h5 class="app-title">Nakulaku LMS</h5>
+          <p class="app-desc">
+            <em>Learning Management System</em> untuk pelatihan guru, berbagi materi ajar, dan pengumpulan tugas administrasi secara digital.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="app-card text-center">
+          <div class="app-icon-box icon-feedback">
+            <i class="fas fa-comments"></i>
+          </div>
+          <h5 class="app-title">Nakulaku Feedback</h5>
+          <p class="app-desc">
+            Wadah aspirasi dan evaluasi berbasis survei untuk mendengar suara warga sekolah demi perbaikan kualitas layanan pendidikan.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer-section">
+    <div class="container">
+      <div class="mb-3">
+        <i class="fas fa-code text-danger me-1"></i>
+        Dikembangkan oleh <strong>Tim Pengembang Gugus Nakula</strong>
+      </div>
+      <div class="opacity-50 small">
+        &copy; 2025 SD Negeri 3 Krisak & Gugus Nakula. All Rights Reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Fungsi sederhana untuk redirect atau menampilkan halaman login
+    function goToLogin() {
+      // OPSI 1: Jika file ini digabung di Index.html, script ini bisa menyembunyikan div 'landing' dan memunculkan div 'login-wrapper'
+      // document.getElementById('view-landing').classList.add('hidden');
+      // document.getElementById('view-login').classList.remove('hidden');
+
+      // OPSI 2: Jika terpisah, bisa redirect atau logic lainnya.
+      // Untuk demo, kita berikan alert
+      console.log("Menuju Login...");
+      
+      // Jika Anda menggabungkan kode ini ke dalam Index.html yang Anda berikan,
+      // Anda bisa memanggil fungsi transisi UI di sini.
+    }
+  </script>
+
 </body>
 </html>
