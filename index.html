@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Nakula</title>
-    <link rel="icon" href="https://raw.githubusercontent.com/iwan4943/nakulaku/main/LOGO%20NAKULA%20(5).png">
-    
     <style>
-        /* CSS untuk tampilan */
+        /* CSS Sederhana untuk tampilan */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f6f9; /* Latar belakang abu-abu lembut */
+            background-color: #f4f6f9; /* Warna latar belakang abu-abu muda */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -23,13 +21,13 @@
             background-color: white;
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Bayangan sedikit lebih halus */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             max-width: 400px;
             width: 90%;
         }
 
         .logo-img {
-            width: 150px;
+            width: 150px; /* Ukuran logo */
             margin-bottom: 20px;
             height: auto;
         }
@@ -45,30 +43,23 @@
             margin-bottom: 30px;
         }
 
-        /* Gaya Tombol Aktif */
-        .btn-portal {
-            background-color: #007bff; /* Warna biru standar (bisa diganti) */
+        /* Gaya untuk tombol Coming Soon */
+        .btn-coming-soon {
+            background-color: #bdc3c7; /* Warna abu-abu */
             color: #fff;
             padding: 12px 30px;
             border: none;
             border-radius: 25px;
             font-size: 16px;
+            cursor: not-allowed; /* Menampilkan ikon dilarang saat di-hover */
             font-weight: bold;
-            text-decoration: none; /* Menghilangkan garis bawah link */
-            display: inline-block; /* Agar padding berfungsi pada tag <a> */
-            transition: background-color 0.3s, transform 0.2s;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+            box-shadow: none;
+            transition: all 0.3s;
         }
 
-        /* Efek saat tombol disentuh mouse */
-        .btn-portal:hover {
-            background-color: #0056b3; /* Biru lebih gelap saat hover */
-            transform: translateY(-2px); /* Efek naik sedikit */
-        }
-
-        .btn-portal:active {
-            transform: translateY(0);
+        /* Efek agar tombol terlihat benar-benar mati */
+        .btn-coming-soon:hover {
+            background-color: #aeb6bf;
         }
     </style>
 </head>
@@ -78,9 +69,9 @@
         <img src="https://raw.githubusercontent.com/iwan4943/nakulaku/main/LOGO%20NAKULA%20(5).png" alt="Logo Nakula" class="logo-img">
         
         <h1>Portal Gugus Nakula</h1>
-        <p>Selamat datang di portal resmi kami.</p>
+        <p>Halaman ini sedang dalam pengembangan.</p>
 
-        <a href="https://nakulaku.tiiny.site" class="btn-portal">Masuk Portal</a>
+        <button class="btn-coming-soon" disabled>Coming soon</button>
     </div>
 
 </body>
