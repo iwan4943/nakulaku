@@ -1,250 +1,87 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NAKULAKU EKOSISTEM - Gugus Nakula</title>
-  
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <style>
-    /* --- VARIABEL WARNA (Sesuai Source Code) --- */
-    :root {
-      --primary: #c0392b; /* Merah Nakula */
-      --primary-dark: #a12d22;
-      --bg-body: #f4f6f8;
-      --card-radius: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Nakula</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/iwan4943/nakulaku/main/LOGO%20NAKULA%20(5).png">
     
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: var(--bg-body);
-      color: #2c3e50;
-      overflow-x: hidden;
-    }
+    <style>
+        /* CSS untuk tampilan */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9; /* Latar belakang abu-abu lembut */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-    /* --- HERO SECTION (Nuansa Merah Dominan) --- */
-    .hero-section {
-      /* Latar belakang gradasi merah solid */
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: white;
-      padding: 60px 20px 100px 20px;
-      border-bottom-left-radius: 40px;
-      border-bottom-right-radius: 40px;
-      text-align: center;
-      position: relative;
-      margin-bottom: -50px; /* Agar kartu di bawahnya sedikit menumpuk */
-      box-shadow: 0 10px 30px rgba(192, 57, 43, 0.3);
-    }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Bayangan sedikit lebih halus */
+            max-width: 400px;
+            width: 90%;
+        }
 
-    .nakula-logo {
-      /* Mengatur ukuran logo agar proporsional */
-      max-height: 130px; 
-      width: auto;
-      margin-bottom: 25px;
-      /* Memberikan bayangan agar logo 'pop-out' dari latar merah */
-      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
-    }
+        .logo-img {
+            width: 150px;
+            margin-bottom: 20px;
+            height: auto;
+        }
 
-    .brand-title {
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-bottom: 15px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
 
-    /* Jargon Badge */
-    .jargon-badge {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.15); /* Putih transparan */
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: white;
-      padding: 10px 25px;
-      border-radius: 50px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-      margin-bottom: 25px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
+        p {
+            color: #666;
+            margin-bottom: 30px;
+        }
 
-    .hero-text {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      max-width: 700px;
-      margin: 0 auto 30px auto;
-    }
+        /* Gaya Tombol Aktif */
+        .btn-portal {
+            background-color: #007bff; /* Warna biru standar (bisa diganti) */
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none; /* Menghilangkan garis bawah link */
+            display: inline-block; /* Agar padding berfungsi pada tag <a> */
+            transition: background-color 0.3s, transform 0.2s;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+        }
 
-    /* Tombol Masuk Portal */
-    .btn-portal {
-      background: white;
-      color: var(--primary);
-      font-weight: 800;
-      padding: 15px 50px;
-      border-radius: 50px;
-      border: none;
-      font-size: 1rem;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      text-decoration: none;
-      display: inline-block;
-    }
-    
-    .btn-portal:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-      background-color: #f8f9fa;
-      color: var(--primary-dark);
-    }
+        /* Efek saat tombol disentuh mouse */
+        .btn-portal:hover {
+            background-color: #0056b3; /* Biru lebih gelap saat hover */
+            transform: translateY(-2px); /* Efek naik sedikit */
+        }
 
-    /* --- ECOSYSTEM CARDS --- */
-    .eco-card {
-      background: white;
-      border: none;
-      border-radius: var(--card-radius);
-      padding: 35px 25px;
-      text-align: center;
-      height: 100%;
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      border-bottom: 4px solid transparent;
-    }
-
-    .eco-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 40px rgba(192, 57, 43, 0.15); /* Bayangan kemerahan saat hover */
-      border-bottom-color: var(--primary); /* Garis bawah merah saat hover */
-    }
-
-    .icon-wrapper {
-      width: 80px;
-      height: 80px;
-      /* Latar ikon merah sangat muda */
-      background: rgba(192, 57, 43, 0.08); 
-      color: var(--primary);
-      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; /* Bentuk organik */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      margin: 0 auto 25px auto;
-      transition: 0.5s;
-    }
-    
-    .eco-card:hover .icon-wrapper {
-      transform: rotate(10deg) scale(1.1);
-      background: var(--primary);
-      color: white;
-      border-radius: 50%;
-    }
-
-    .card-title { font-weight: 700; margin-bottom: 15px; color: #2c3e50; }
-    .card-desc { font-size: 0.9rem; color: #7f8c8d; line-height: 1.6; }
-
-    /* --- FOOTER --- */
-    .footer-section {
-      padding: 40px 20px;
-      text-align: center;
-      color: #7f8c8d;
-      font-size: 0.9rem;
-      margin-top: 30px;
-    }
-    .footer-section strong { color: var(--primary); }
-  </style>
+        .btn-portal:active {
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
 
-  <section class="hero-section">
     <div class="container">
-      <img src="https://raw.githubusercontent.com/iwan4943/nakulaku/main/LOGO%20NAKULA%20(6).png" alt="Logo Nakula" class="nakula-logo">
-      
-      <h1 class="display-5 brand-title">NAKULAKU EKOSISTEM</h1>
-      
-      <div class="jargon-badge">
-        <i class="fas fa-rocket me-2"></i>
-        SOLID - BERSINERGI - MENGINSPIRASI
-      </div>
-      
-      <p class="hero-text">
-        Platform digital terintegrasi dari <strong>Gugus Nakula</strong>. Solusi cerdas untuk manajemen kinerja, presensi, pembelajaran, dan evaluasi demi peningkatan mutu pendidikan yang berkelanjutan.
-      </p>
+        <img src="https://raw.githubusercontent.com/iwan4943/nakulaku/main/LOGO%20NAKULA%20(5).png" alt="Logo Nakula" class="logo-img">
+        
+        <h1>Portal Gugus Nakula</h1>
+        <p>Selamat datang di portal resmi kami.</p>
 
-      <a href="#" class="btn-portal" onclick="alert('Tombol ini nanti akan mengarahkan ke halaman Login aplikasi.')">
-        <i class="fas fa-sign-in-alt me-2"></i>Buka Portal Aplikasi
-      </a>
+        <a href="https://www.socialcreator.com/nakulaku/" class="btn-portal">Masuk Portal</a>
     </div>
-  </section>
-
-  <section class="container py-5 position-relative" style="z-index: 2;">
-    <div class="row g-4 justify-content-center">
-      
-      <div class="col-md-6 col-lg-3">
-        <div class="eco-card">
-          <div class="icon-wrapper">
-            <i class="fas fa-chart-pie"></i>
-          </div>
-          <h5 class="card-title">Nakulaku Dashboard</h5>
-          <p class="card-desc">
-            Pusat analitik kinerja dan statistik data pendidik di Gugus Nakula secara <em>real-time</em> dan transparan.
-          </p>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-3">
-        <div class="eco-card">
-          <div class="icon-wrapper">
-            <i class="fas fa-map-marker-alt"></i>
-          </div>
-          <h5 class="card-title">Nakulaku Presensi</h5>
-          <p class="card-desc">
-            Sistem kehadiran digital berbasis lokasi (GPS) untuk mencatat kedisiplinan secara akurat dan mudah.
-          </p>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-3">
-        <div class="eco-card">
-          <div class="icon-wrapper">
-            <i class="fas fa-laptop-code"></i>
-          </div>
-          <h5 class="card-title">Nakulaku LMS</h5>
-          <p class="card-desc">
-            <em>Learning Management System</em> sebagai wadah materi pelatihan dan pengembangan kompetensi guru.
-          </p>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-3">
-        <div class="eco-card">
-          <div class="icon-wrapper">
-            <i class="fas fa-comments text-danger"></i>
-          </div>
-          <h5 class="card-title">Nakulaku Umpan Balik</h5>
-          <p class="card-desc">
-            Media aspirasi dan survei untuk evaluasi berkelanjutan demi kemajuan bersama di Gugus Nakula.
-          </p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <footer class="footer-section">
-    <div class="container">
-      <div class="mb-2">
-        Dibuat dengan <i class="fas fa-heart text-danger mx-1"></i> oleh <strong>Tim Pengembang Gugus Nakula</strong>
-      </div>
-      <div class="small opacity-75">
-        &copy; 2025 NAKULAKU Ekosistem. All Rights Reserved.
-      </div>
-    </div>
-  </footer>
 
 </body>
 </html>
