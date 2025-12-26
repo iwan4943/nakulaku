@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    :root {
+      --md-sys-color-primary: #B3261E; --md-sys-color-on-primary: #FFFFFF; --md-sys-color-primary-container: #FFDAD6; --md-sys-color-on-primary-container: #410002;
+      --md-sys-color-background: #FFF8F7; --md-sys-color-surface: #FFF8F7; --md-sys-color-surface-container-low: #FCEAE9; --md-sys-color-surface-container: #FFFFFF;
+      --md-sys-color-on-surface: #201A1A; --md-sys-color-on-surface-variant: #534341; --md-sys-color-outline: #857372;
+      --color-green-container: #C4EED0; --color-on-green: #074E23; --color-yellow-container: #FFEFBF; --color-on-yellow: #765600; --color-red-container: #FFDAD6; --color-on-red: #410E0B;
+      --shape-corner-large: 24px; --shape-corner-full: 50px;
+    }
+    [data-theme="dark"] {
+      --md-sys-color-primary: #FFB4AB; --md-sys-color-on-primary: #690005; --md-sys-color-primary-container: #93000A; --md-sys-color-on-primary-container: #FFDAD6;
+      --md-sys-color-background: #141212; --md-sys-color-surface: #141212; --md-sys-color-surface-container-low: #1E1B1B; --md-sys-color-surface-container: #2B2929;
+      --md-sys-color-on-surface: #E6E1E5; --md-sys-color-on-surface-variant: #D0C4C2; --md-sys-color-outline: #A08C8A;
+      --color-green-container: #0F522E; --color-on-green: #C4EED0; --color-yellow-container: #5C4400; --color-on-yellow: #FFEFBF; --color-red-container: #93000A; --color-on-red: #FFDAD6;
+    }
+    body { background-color: var(--md-sys-color-background); font-family: 'Google Sans Text', sans-serif; color: var(--md-sys-color-on-surface); transition: 0.3s cubic-bezier(0.2, 0.0, 0, 1.0); }
+    h1, h2, h3, h4, h5, .fw-google { font-family: 'Google Sans', sans-serif; }
+    .sidebar { width: 280px; height: 100vh; position: fixed; top: 0; left: 0; background: var(--md-sys-color-surface-container-low); z-index: 1000; padding: 20px 16px; display: flex; flex-direction: column; transition: 0.3s; border-radius: 0 28px 28px 0; }
+    .brand { display: flex; align-items: center; gap: 16px; padding: 16px 16px 40px 24px; color: var(--md-sys-color-on-surface-variant); font-family: 'Google Sans'; font-weight: 500; font-size: 1.1rem; letter-spacing: 0.5px; }
+    .nav-btn { display: flex; align-items: center; gap: 16px; padding: 16px 24px; color: var(--md-sys-color-on-surface-variant); text-decoration: none; border-radius: var(--shape-corner-full); margin-bottom: 8px; font-weight: 500; transition: 0.2s; cursor: pointer; font-family: 'Google Sans'; font-size: 0.95rem; }
+    .nav-btn:hover { background-color: rgba(0,0,0,0.05); color: var(--md-sys-color-on-surface); }
+    .nav-btn.active { background-color: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); font-weight: 700; }
+    .nav-btn i { width: 24px; text-align: center; font-size: 1.2rem; }
+    .main-content { margin-left: 280px; padding: 20px 32px; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding-top: 10px; }
+    .white-box { background: var(--md-sys-color-surface-container); border-radius: var(--shape-corner-large); padding: 24px; border: none; height: 100%; transition: 0.3s; box-shadow: 0 1px 3px 1px rgba(0,0,0,0.05); }
+    .btn-toggle-dark { background: transparent; border: 1px solid var(--md-sys-color-outline); color: var(--md-sys-color-on-surface-variant); width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+    .btn-toggle-dark:hover { background: var(--md-sys-color-surface-container-low); }
+    .user-chip { display: flex; align-items: center; gap: 12px; background: var(--md-sys-color-surface-container); padding: 6px 8px 6px 20px; border-radius: var(--shape-corner-full); border: 1px solid var(--md-sys-color-outline); }
+    .stat-card { background: var(--md-sys-color-surface-container); border-radius: var(--shape-corner-large); padding: 24px; transition: transform 0.2s; position: relative; overflow: hidden; border: none; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
+    .sc-green { background-color: var(--color-green-container); color: var(--color-on-green); }
+    .sc-yellow { background-color: var(--color-yellow-container); color: var(--color-on-yellow); }
+    .sc-red { background-color: var(--color-red-container); color: var(--color-on-red); }
+    .stat-val { font-size: 2.5rem; font-weight: 500; font-family: 'Google Sans'; margin-bottom: 0px; line-height: 1.2; }
+    .stat-label { font-size: 0.85rem; opacity: 0.8; font-weight: 600; font-family: 'Google Sans Text'; }
+    .stat-icon { position: absolute; right: 20px; top: 20px; font-size: 4rem; opacity: 0.1; transform: rotate(-10deg); }
+    .sc-green .stat-val, .sc-green .stat-label { color: var(--color-on-green); }
+    .sc-yellow .stat-val, .sc-yellow .stat-label { color: var(--color-on-yellow); }
+    .sc-red .stat-val, .sc-red .stat-label { color: var(--color-on-red); }
+    .table-clean { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; }
+    .table-clean th { text-align: left; color: var(--md-sys-color-on-surface-variant); font-size: 0.75rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; padding: 16px; border-bottom: 1px solid var(--md-sys-color-outline); opacity: 0.8; }
+    .table-clean td { padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.05); vertical-align: middle; color: var(--md-sys-color-on-surface); }
+    [data-theme="dark"] .table-clean td { border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .status-pill { padding: 6px 14px; border-radius: 8px; font-size: 0.75rem; font-family: 'Google Sans'; font-weight: 600; display: inline-block; }
+    .sp-green { background: var(--color-green-container); color: var(--color-on-green); }
+    .sp-yellow { background: var(--color-yellow-container); color: var(--color-on-yellow); }
+    .sp-red { background: var(--color-red-container); color: var(--color-on-red); }
+    .btn-icon-camera { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--md-sys-color-outline); background: var(--md-sys-color-surface-container-low); color: var(--md-sys-color-primary); display: flex; align-items: center; justify-content: center; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; font-size: 1rem; }
+    .btn-icon-camera:hover { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); border-color: transparent; transform: translateY(-2px); }
+    .btn-icon-maps { width: 38px; height: 38px; border-radius: 50%; background: #e8f0fe; color: #1967d2; border: 1px solid #d2e3fc; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: 0.2s; font-size: 1rem; }
+    .btn-icon-maps:hover { background: #d2e3fc; color: #174ea6; transform: translateY(-2px); }
+    .input-modern { background: var(--md-sys-color-surface-container-low); border: 1px solid transparent; color: var(--md-sys-color-on-surface); border-radius: 12px; padding: 14px 16px; width: 100%; font-family: 'Google Sans Text'; transition: 0.2s; }
+    .input-modern:focus { outline: none; border-color: var(--md-sys-color-primary); background: var(--md-sys-color-surface); }
+    .btn-primary-g { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border:none; padding: 12px 24px; border-radius: 50px; font-weight: 500; font-family: 'Google Sans'; transition:0.2s; letter-spacing: 0.5px; }
+    .btn-primary-g:hover { background: #901D16; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+    .loading-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--md-sys-color-background); opacity: 0.9; z-index:9999; display: flex; flex-direction: column; justify-content:center; align-items:center; color: var(--md-sys-color-primary); }
+    .tab-content { display: none; animation: fadeEffect 0.4s; }
+    @keyframes fadeEffect { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
+  </style>
+</head>
+<body>
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner-border text-danger mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
+    <div class="fw-google" style="font-size: 1.2rem;">Memproses Data...</div>
+  </div>
+  <div class="sidebar">
+    <div class="brand"><i class="fas fa-shapes"></i> GUGUS NAKULA</div>
+    <div class="nav-btn active" onclick="switchTab('dashboard', this)"><i class="fas fa-th-large"></i> Dashboard</div>
+    <div class="nav-btn" onclick="switchTab('laporan', this)"><i class="fas fa-chart-pie"></i> Rekapitulasi</div>
+    <div class="nav-btn" onclick="switchTab('award', this)"><i class="fas fa-trophy"></i> Peringkat</div>
+    <div class="nav-btn" onclick="switchTab('setting', this)"><i class="fas fa-sliders-h"></i> Admin</div>
+    <div style="margin-top:auto;"><div class="nav-btn" style="color:var(--md-sys-color-primary);" onclick="logout()"><i class="fas fa-power-off"></i> Keluar</div></div>
+  </div>
+  <div class="main-content">
+    <div class="header">
+        <div>
+            <div class="text-secondary small fw-bold mb-1" id="currentDateDisplay" style="color:var(--md-sys-color-primary) !important; font-family:'Google Sans'; letter-spacing:1px;">...</div>
+            <h1 class="fw-google m-0" style="color:var(--md-sys-color-on-surface); font-size: 2.2rem;" id="pageTitle">Dashboard</h1>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn-toggle-dark" onclick="toggleDarkMode()" title="Ganti Tema"><i class="fas fa-adjust" id="iconTheme"></i></button>
+            <div class="user-chip">
+                <div class="text-end lh-1"><div class="fw-bold small" style="color:var(--md-sys-color-on-surface);" id="userName">Admin</div><div class="small" style="font-size:0.75rem; color:var(--md-sys-color-on-surface-variant);" id="userUnit">Kepala</div></div>
+                <i class="fas fa-user-circle fa-2x text-secondary"></i>
+            </div>
+        </div>
+    </div>
+    <div id="tab-dashboard" class="tab-content" style="display:block;">
+        <div class="d-flex align-items-center justify-content-end mb-4 gap-2">
+            <input type="date" id="dashDate" class="input-modern py-2 px-3 shadow-sm rounded-pill" style="width:auto; border:none; background:var(--md-sys-color-surface-container);">
+            <button class="btn btn-danger rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width:42px;height:42px; background:var(--md-sys-color-primary);" onclick="loadDashboardData()"><i class="fas fa-arrow-right"></i></button>
+        </div>
+        <div class="row g-3 mb-4">
+            <div class="col-md-3"><div class="stat-card sc-green"><div class="stat-val" id="valTotal">0</div><div class="stat-label">Guru Hadir</div><i class="fas fa-check-circle stat-icon"></i></div></div>
+            <div class="col-md-3"><div class="stat-card sc-green"><div class="stat-val" id="valZona">0</div><div class="stat-label">Tepat Waktu</div><i class="fas fa-stopwatch stat-icon"></i></div></div>
+            <div class="col-md-3"><div class="stat-card sc-yellow"><div class="stat-val" id="valLuar">0</div><div class="stat-label">Terlambat</div><i class="fas fa-exclamation-triangle stat-icon"></i></div></div>
+            <div class="col-md-3"><div class="stat-card sc-red"><div class="stat-val" id="valBelum">0</div><div class="stat-label">Belum Absen</div><i class="fas fa-times-circle stat-icon"></i></div></div>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="white-box">
+                    <div class="d-flex justify-content-between align-items-center mb-4"><h5 class="fw-google m-0" style="color:var(--md-sys-color-on-surface);">Aktivitas Terkini</h5><button class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="loadDashboardData()"><i class="fas fa-sync-alt me-1"></i> Refresh</button></div>
+                    <div class="table-responsive"><table class="table-clean"><thead><tr><th>Waktu</th><th>Nama Guru</th><th>Unit Kerja</th><th class="text-center">Bukti & Lokasi</th><th>Status</th></tr></thead><tbody id="tableBody"></tbody></table></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="white-box mb-4" style="height:auto;"><h6 class="fw-bold mb-3" style="color:var(--md-sys-color-on-surface);">Grafik Kehadiran</h6><div style="height:220px; position:relative;"><canvas id="chartSekolah"></canvas></div></div>
+                <div class="white-box" style="height:auto; background: var(--md-sys-color-surface-container-low);"><h6 class="fw-bold mb-3 text-danger"><i class="fas fa-user-clock me-2"></i>Belum Hadir</h6><ul class="list-unstyled m-0 small" id="listBelumHadir" style="max-height: 200px; overflow-y: auto; color:var(--md-sys-color-on-surface);"></ul></div>
+            </div>
+        </div>
+    </div>
+    <div id="tab-laporan" class="tab-content">
+        <div class="white-box mb-4" style="height:auto;">
+            <h5 class="fw-bold mb-4" style="color:var(--md-sys-color-on-surface);">Filter Laporan</h5>
+            <div class="row g-3">
+                <div class="col-md-5"><label class="small fw-bold mb-1" style="color:var(--md-sys-color-primary);">SEKOLAH</label><select id="filterSekolah" class="input-modern"></select></div>
+                <div class="col-md-2"><label class="small fw-bold mb-1" style="color:var(--md-sys-color-primary);">TAHUN</label><select id="filterTahun" class="input-modern"><option value="2025" selected>2025</option><option value="2024">2024</option></select></div>
+                <div class="col-md-3 d-flex align-items-end"><button class="btn-primary-g w-100" onclick="loadLaporan()"><i class="fas fa-search me-2"></i> Tampilkan</button></div>
+                <div class="col-md-2 d-flex align-items-end"><button class="btn btn-outline-danger w-100 rounded-pill py-2 fw-bold" onclick="cetakPDF()"><i class="fas fa-file-pdf me-2"></i> PDF</button></div>
+            </div>
+        </div>
+        <div id="areaLaporan" class="white-box" style="display:none;"><div class="table-responsive" id="tabelLaporanContainer"></div></div>
+    </div>
+    <div id="tab-award" class="tab-content">
+        <div class="white-box">
+            <div class="d-flex align-items-center mb-4"><div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3 text-warning"><i class="fas fa-trophy fa-2x"></i></div><div><h5 class="fw-bold m-0" style="color:var(--md-sys-color-on-surface);">Peringkat Kinerja Sekolah</h5><small class="text-muted">Berdasarkan ketepatan waktu & persentase kehadiran.</small></div></div>
+            <div id="isiAward" class="table-responsive"></div>
+        </div>
+    </div>
+    <div id="tab-setting" class="tab-content">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="white-box">
+                    <h5 class="fw-bold text-danger mb-4">Konfigurasi Global</h5>
+                    <div class="mb-4"><label class="small fw-bold text-muted mb-2">LOKASI TITIK PUSAT (SEKOLAH INDUK)</label><select id="set_lokasi" class="input-modern fw-bold text-danger"></select></div>
+                    <div class="mb-4"><label class="small fw-bold text-muted mb-2">PENGUMUMAN RUNNING TEXT</label><textarea id="set_info" class="input-modern" rows="2" placeholder="Tulis info penting disini..."></textarea></div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-4"><label class="small fw-bold text-muted mb-1">JAM MULAI</label><input type="time" id="set_mulai" class="input-modern text-center"></div>
+                        <div class="col-4"><label class="small fw-bold text-muted mb-1">JAM PULANG</label><input type="time" id="set_selesai" class="input-modern text-center"></div>
+                        <div class="col-4"><label class="small fw-bold text-danger mb-1">BATAS TELAT</label><input type="time" id="set_batas" class="input-modern border-danger text-danger fw-bold text-center" style="background:#FFF0F0;"></div>
+                    </div>
+                    <button class="btn-primary-g w-100 py-3" onclick="simpanSettings()">SIMPAN PERUBAHAN</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbweTTiW0sPe1SAnJZlUK4KCiiks4cDhc420PWmvf1IOJ7mIKGUhudz42SpAJ1KZP4__cg/exec"; 
+    var myBarChart = null;
+
+    async function callAPI(action, data = {}) {
+        data.action = action;
+        try {
+            const response = await fetch(API_URL, { method: "POST", body: JSON.stringify(data) });
+            return await response.json();
+        } catch (error) { console.error(error); return null; }
+    }
+
+    document.getElementById('dashDate').valueAsDate = new Date();
+
+    function toggleDarkMode() {
+        var body = document.body;
+        var isDark = body.getAttribute('data-theme') === 'dark';
+        if(isDark) { body.setAttribute('data-theme', 'light'); document.getElementById('iconTheme').className = "fas fa-moon"; localStorage.setItem('theme', 'light'); }
+        else { body.setAttribute('data-theme', 'dark'); document.getElementById('iconTheme').className = "fas fa-sun"; localStorage.setItem('theme', 'dark'); }
+        if(document.getElementById('tab-dashboard').style.display === 'block') loadDashboardData();
+    }
+
+    window.onload = function() {
+      if(localStorage.getItem('theme') === 'dark') { document.body.setAttribute('data-theme', 'dark'); document.getElementById('iconTheme').className = "fas fa-sun"; }
+      var savedUser = localStorage.getItem('gugusUser');
+      if (!savedUser) { window.location.href = "index.html"; return; } 
+      var user = JSON.parse(savedUser);
+      if (!user.isAdmin) { Swal.fire({ title: 'Akses Ditolak', icon: 'error', confirmButtonColor: '#B3261E' }).then(() => { window.location.href = "index.html"; }); return; }
+      document.getElementById('userName').innerText = user.nama;
+      document.getElementById('userUnit').innerText = user.unitKerja;
+      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('currentDateDisplay').innerText = new Date().toLocaleDateString('id-ID', options);
+      loadDashboardData();
+    };
+
+    function switchTab(tabName, el) {
+      document.querySelectorAll('.tab-content').forEach(d => d.style.display = 'none');
+      document.getElementById('tab-' + tabName).style.display = 'block';
+      document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
+      el.classList.add('active');
+      var titles = { 'dashboard': 'Dashboard', 'laporan': 'Rekapitulasi', 'award': 'Peringkat Kinerja', 'setting': 'Pengaturan Admin' };
+      document.getElementById('pageTitle').innerText = titles[tabName];
+      if(tabName === 'laporan') prepareFilterSekolah();
+      if(tabName === 'award') loadAward();
+      if(tabName === 'setting') loadSettings();
+    }
+
+    async function loadDashboardData() {
+      var tgl = document.getElementById('dashDate').value;
+      document.getElementById('loadingOverlay').style.display = 'flex';
+      const d = await callAPI('getDashboard', { tgl: tgl });
+      document.getElementById('loadingOverlay').style.display = 'none';
+      if(d) renderDashboard(d);
+    }
+
+    function renderDashboard(d) {
+      document.getElementById('valTotal').innerText = d.totalHadir;
+      document.getElementById('valZona').innerText = d.tepatWaktu;
+      document.getElementById('valLuar').innerText = d.luarLokasi;
+      document.getElementById('valBelum').innerText = d.totalBelum;
+      var tbody = document.getElementById('tableBody'); tbody.innerHTML = "";
+      if(d.listDetail.length === 0) tbody.innerHTML = "<tr><td colspan='5' class='text-center py-5 text-muted small'>Tidak ada data pada tanggal ini.</td></tr>";
+      else {
+        d.listDetail.forEach(r => {
+           var pillClass = "sp-red"; if(r.status.includes('Tepat')) pillClass = "sp-green"; else if(r.status.includes('Terlambat')) pillClass = "sp-yellow";
+           var btnMaps = ''; if(r.maps && r.maps.length > 5) { btnMaps = `<a href="${r.maps}" target="_blank" class="btn-icon-maps" title="Buka Lokasi Maps"><i class="fas fa-map-marker-alt fs-6"></i></a>`; }
+           var btnFoto = ''; if(r.foto && r.foto.length > 10) { btnFoto = `<button class="btn-icon-camera" onclick="lihatFoto('${r.foto}')" title="Lihat Foto Wajah"><i class="fas fa-camera fs-6"></i></button>`; }
+           var contentData = `<div class="d-flex justify-content-center align-items-center gap-2">${btnMaps} ${btnFoto}${(!btnMaps && !btnFoto) ? '<span class="text-muted small">-</span>' : ''}</div>`;
+           tbody.innerHTML += `<tr><td class="fw-bold text-secondary" style="font-family:'Google Sans Text'">${r.jam}</td><td><div class="fw-bold" style="color:var(--md-sys-color-on-surface);">${r.nama}</div></td><td class="text-secondary small">${r.sekolahAsal}</td><td>${contentData}</td><td><span class="status-pill ${pillClass}">${r.status}</span></td></tr>`;
+        });
+      }
+      var list = document.getElementById('listBelumHadir'); list.innerHTML = "";
+      d.listBelumHadir.forEach(g => { list.innerHTML += `<li class="d-flex justify-content-between align-items-center py-3 border-bottom" style="border-color: rgba(0,0,0,0.05) !important;"><span class="small fw-bold" style="color:var(--md-sys-color-on-surface);">${g.nama}</span><span class="badge bg-light text-secondary border rounded-pill">${g.sekolah}</span></li>`; });
+      if(myBarChart) myBarChart.destroy();
+      var ctx = document.getElementById('chartSekolah').getContext('2d');
+      var isDark = document.body.getAttribute('data-theme') === 'dark'; var textColor = isDark ? '#E3E3E3' : '#666';
+      myBarChart = new Chart(ctx, { type: 'bar', data: { labels: Object.keys(d.statSekolah), datasets: [{ label: '% Hadir', data: Object.values(d.statSekolah), backgroundColor: '#B3261E', borderRadius: 8, barThickness: 16 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display:false, grid: {display: false} }, y: { grid:{display:false}, ticks: { color: textColor, font: {family: 'Google Sans Text', size: 11} } } } } });
+    }
+
+    function lihatFoto(url) { Swal.fire({ imageUrl: url, imageAlt: 'Bukti', showConfirmButton: false, showCloseButton: true, background: document.body.getAttribute('data-theme')==='dark' ? '#1E1E1E' : '#fff', imageHeight: 'auto', imageWidth: '400px', customClass: { popup: 'rounded-4' } }); }
+
+    async function prepareFilterSekolah() {
+      if(document.getElementById('filterSekolah').options.length > 0) return;
+      const list = await callAPI('listSekolah');
+      if(list) { var sel = document.getElementById('filterSekolah'); sel.innerHTML = '<option value="SEMUA">SEMUA SEKOLAH</option>'; list.forEach(s => { var opt = document.createElement('option'); opt.value = s; opt.innerText = s; sel.appendChild(opt); }); }
+    }
+    async function loadLaporan() {
+      var s = document.getElementById("filterSekolah").value; var t = document.getElementById("filterTahun").value;
+      document.getElementById('loadingOverlay').style.display = 'flex';
+      const d = await callAPI('laporan', { sekolah: s, tahun: t });
+      document.getElementById('loadingOverlay').style.display = 'none';
+      if(d) {
+        document.getElementById('areaLaporan').style.display = 'block';
+        var html = `<table class="table-clean"><thead><tr><th>No</th><th>Nama</th><th>Sekolah</th><th>Hadir</th><th>Telat</th><th>Total</th><th>%</th></tr></thead><tbody>`;
+        if (d.guru.length === 0) html += `<tr><td colspan="7" class="text-center py-4 text-muted">Nihil.</td></tr>`;
+        else { d.guru.forEach((g, i) => { var p = Math.round((g.total / d.target) * 100); var c = p >= 80 ? "text-success" : "text-danger"; html += `<tr><td class="text-muted">${i+1}</td><td class="fw-bold">${g.nama}</td><td class="small">${g.sekolah}</td><td class="text-success fw-bold">${g.tepat}</td><td class="text-warning">${g.telat}</td><td class="fw-bold">${g.total}</td><td class="fw-bold ${c}">${p}%</td></tr>`; }); }
+        html += `</tbody></table>`; document.getElementById('tabelLaporanContainer').innerHTML = html;
+      }
+    }
+    
+    async function cetakPDF() { 
+      var s = document.getElementById("filterSekolah").value; var t = document.getElementById("filterTahun").value;
+      Swal.fire({ title: 'Membuat PDF...', text: 'Mohon tunggu...', icon: 'info', showConfirmButton: false, allowOutsideClick: false });
+      const url = await callAPI('pdf', { sekolah: s, tahun: t });
+      Swal.close(); if(url) window.open(url, '_blank');
+    }
+
+    async function loadAward() {
+      const data = await callAPI('award', { tahun: document.getElementById('filterTahun').value });
+      if(data) {
+         var isDark = document.body.getAttribute('data-theme') === 'dark'; var highlight = isDark ? 'style="background:rgba(255,218,214,0.1)"' : 'style="background:rgba(255,248,247,1)"';
+         var html = `<table class="table-clean"><thead><tr><th>#</th><th>Sekolah</th><th>Guru</th><th>Poin</th><th>Avg</th></tr></thead><tbody>`;
+         data.forEach((d, i) => { var r = i + 1; var style = r===1 ? highlight : ''; var icon = r===1 ? '<i class="fas fa-crown text-warning"></i>' : r; html += `<tr ${style}><td>${icon}</td><td class="fw-bold">${d.sekolah}</td><td>${d.guru}</td><td>${d.poin}</td><td><span class="badge bg-primary rounded-pill">${d.skorAkhir}</span></td></tr>`; });
+         html += `</tbody></table>`; document.getElementById('isiAward').innerHTML = html;
+      }
+    }
+    async function loadSettings() {
+      const d = await callAPI('getSettings');
+      if(d) {
+         var sel = document.getElementById('set_lokasi'); sel.innerHTML = "";
+         d.listSekolah.forEach(s => { var opt = document.createElement('option'); opt.value = s; opt.innerText = s; if(s === d.namaLokasi) opt.selected = true; sel.appendChild(opt); });
+         document.getElementById('set_info').value = d.info; document.getElementById('set_mulai').value = d.jamMulai; document.getElementById('set_selesai').value = d.jamSelesai; document.getElementById('set_batas').value = d.jamBatas;
+      }
+    }
+    function simpanSettings() {
+      var form = { set_lokasi: document.getElementById('set_lokasi').value, set_info: document.getElementById('set_info').value, set_mulai: document.getElementById('set_mulai').value, set_selesai: document.getElementById('set_selesai').value, set_batas: document.getElementById('set_batas').value };
+      Swal.fire({title:'Menyimpan...', showConfirmButton:false});
+      callAPI('saveSettings', form).then(res => Swal.fire(res==='SUKSES'?'Berhasil':'Gagal', res, res==='SUKSES'?'success':'error'));
+    }
+    function logout() { localStorage.removeItem('gugusUser'); window.location.href = "index.html"; }
+  </script>
+</body>
+</html>
