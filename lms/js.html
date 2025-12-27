@@ -1,0 +1,327 @@
+<script>
+let USER={pin:"",nama:"",role:"",sekolah:""}, modalUp, modalNi, modalPr, modalBs, modalEv, rawDataPenilai=[];
+function showLoad(x){ let el=document.getElementById('loading'); if(x){el.classList.remove('d-none');el.classList.add('d-flex')}else{el.classList.add('d-none');el.classList.remove('d-flex')} }
+
+window.onload = () => {
+  modalUp = new bootstrap.Modal(document.getElementById('mdlUpload'));
+  modalNi = new bootstrap.Modal(document.getElementById('mdlNilai'));
+  modalPr = new bootstrap.Modal(document.getElementById('mdlPrestasi'));
+  modalBs = new bootstrap.Modal(document.getElementById('mdlPembiasaan'));
+  modalEv = new bootstrap.Modal(document.getElementById('mdlEvent'));
+  let savedPin = localStorage.getItem('LMS_PIN');
+  if (savedPin) { document.getElementById('inputPIN').value = savedPin; doLogin(true); }
+}
+
+function doLogin(isAuto){
+  let p=document.getElementById('inputPIN').value; if(!p)return alert("Isi PIN!"); showLoad(true);
+  google.script.run.withSuccessHandler(r=>{
+    showLoad(false);
+    if(r.sukses){
+      localStorage.setItem('LMS_PIN', p);
+      USER={pin:p, nama:r.nama, role:r.role, sekolah:r.sekolah};
+      document.getElementById('view-login').classList.add('hidden');
+      document.getElementById('view-main').classList.remove('hidden');
+      ['panel-guru','panel-ks','panel-admin','panel-penilai'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+      document.getElementById('txtNama').innerText = r.nama;
+      document.getElementById('txtSekolah').innerText = r.sekolah;
+      let bdg = document.getElementById('txtRoleBadge');
+      let roleFull = r.role; bdg.className = "badge-role"; 
+      if(r.role === 'KS') { roleFull="Kepala Sekolah"; bdg.classList.add('role-ks'); }
+      else if(r.role === 'ADMIN') { roleFull="Administrator"; bdg.classList.add('role-admin'); }
+      else if(r.role === 'PENILAI') { roleFull="Tim Penilai"; bdg.classList.add('role-penilai'); } 
+      else { roleFull="Guru Kelas"; bdg.classList.add('role-guru'); }
+      bdg.innerText = roleFull;
+
+      if(r.role==='GURU') { document.getElementById('panel-guru').classList.remove('hidden'); loadGuru(); }
+      else if (r.role==='KS') { document.getElementById('panel-ks').classList.remove('hidden'); loadKS(); }
+      else if (r.role==='PENILAI') { document.getElementById('panel-penilai').classList.remove('hidden'); loadPenilai(); }
+      else { document.getElementById('panel-admin').classList.remove('hidden'); loadAdmin(); }
+    } else {
+      if(isAuto) { localStorage.removeItem('LMS_PIN'); document.getElementById('inputPIN').value=""; }
+      else { let m=document.getElementById('msg-login'); m.innerText=r.error; m.classList.remove('hidden'); }
+    }
+  }).cekLogin(p);
+}
+function doLogout(){ localStorage.removeItem('LMS_PIN'); location.reload(); }
+
+function loadPenilai() {
+  showLoad(true);
+  google.script.run.withSuccessHandler(data => {
+    showLoad(false); 
+    rawDataPenilai = data.tugas; 
+    let agenda = data.agenda;
+    let sel = document.getElementById('sel-materi'); 
+    sel.innerHTML = '<option value="ALL">Semua Materi</option>';
+    agenda.forEach(a => { sel.innerHTML += `<option value="${a.materi}">${a.materi} (${a.narsum})</option>`; });
+    renderListPenilai(rawDataPenilai); 
+    renderListSimple(data.prestasi, 'list-penilai-prestasi', 'PRESTASI');
+    renderListSimple(data.sekolah, 'list-penilai-sekolah', 'PRESTASI'); // Mode Validasi
+    renderListSimple(data.implementasi, 'list-penilai-implemen', 'QUAL');
+    renderListSimple(data.inovasi, 'list-penilai-inovasi', 'QUAL');
+  }).getDashboardPenilai();
+}
+
+function filterPenilai(){
+  let val = document.getElementById('sel-materi').value;
+  if(val === 'ALL') renderListPenilai(rawDataPenilai);
+  else { let filtered = rawDataPenilai.filter(item => item.judul === val); renderListPenilai(filtered); }
+}
+
+function renderListPenilai(data) {
+  let div = document.getElementById('list-penilai-tugas'); div.innerHTML = "";
+  if(data.length === 0) { div.innerHTML = "<div class='text-center py-5 text-muted small'>Tidak ada tugas guru masuk.</div>"; return; }
+  data.forEach(item => {
+    let st = item.status || "Menunggu"; 
+    let bgSt = st==='Menunggu' ? 'bg-secondary' : (st==='Diterima'?'bg-success':'bg-danger');
+    let content = (item.link && item.link.length > 5) ? `<a href="${item.link}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill py-2 px-3 me-2 mb-2" style="font-size:0.75rem"><i class="bi bi-link-45deg"></i> Link Tugas</a>` : "";
+    if(item.catatan) content += `<div class="bg-light p-3 rounded-4 text-muted fst-italic mb-2 border" style="font-size:0.8rem">"${item.catatan}"</div>`;
+    let feedInfo = item.feedback ? `<div class="text-success small fw-bold mt-2"><i class="bi bi-check-all"></i> Nilai: ${item.feedback}</div>` : '';
+    div.innerHTML += `<div class="card-pro p-3 mb-2"><div class="d-flex align-items-center justify-content-between"><div class="pe-2" style="flex: 1;"><div class="fw-bold text-dark small mb-1">${item.judul}</div><div class="d-flex align-items-center mb-2"><span class="badge ${bgSt} rounded-pill me-2 px-3" style="font-size:0.65rem">${st}</span><small class="text-muted" style="font-size:0.7rem"><i class="bi bi-clock"></i> ${item.waktu}</small></div>${content}${feedInfo}</div><div class="ps-2"><button onclick="popNilai('${item.id}', 'TUGAS')" class="btn btn-sm btn-success rounded-pill shadow-sm px-4 py-2 fw-bold" style="white-space: nowrap;"><i class="bi bi-pencil-square"></i> NILAI</button></div></div></div>`;
+  });
+}
+
+function renderListSimple(data, targetId, type) {
+  let div = document.getElementById(targetId); div.innerHTML = "";
+  if(data.length === 0) { div.innerHTML = "<div class='text-center py-5 text-muted small'>Tidak ada data masuk.</div>"; return; }
+  data.forEach(item => {
+    let st = item.status || "Menunggu"; 
+    let bgSt = st==='Menunggu' ? 'bg-secondary' : (st==='Diterima'?'bg-success':'bg-danger');
+    let feedInfo = item.feedback ? `<div class="text-success small fw-bold mt-2"><i class="bi bi-check-all"></i> ${item.feedback}</div>` : '';
+    let btnColor = type==='PRESTASI' ? 'btn-warning text-white' : 'btn-primary';
+    let btnIcon = type==='PRESTASI' ? 'bi-check-lg' : 'bi-star';
+    let link = (item.link && item.link.length>5) ? `<a href="${item.link}" target="_blank" class="text-decoration-none fw-bold small"><i class="bi bi-link"></i> Buka Link</a>` : "";
+    div.innerHTML += `<div class="card-pro p-3 mb-2 border-start border-4 border-light"><div class="d-flex justify-content-between"><div class="pe-2" style="flex: 1;"><div class="fw-bold text-dark mb-1" style="font-size:0.9rem">${item.judul}</div><small class="d-block text-secondary fw-bold mb-2">${item.sekolah}</small><div class="bg-light p-2 rounded text-muted mb-2 small">${item.catatan}</div>${link}<div class="mt-2"><span class="badge ${bgSt} rounded-pill me-2 px-3" style="font-size:0.6rem">${st}</span></div>${feedInfo}</div><div class="ps-2 align-self-center"><button onclick="popNilai('${item.id}', '${type}')" class="btn btn-sm ${btnColor} rounded-pill shadow-sm px-3 py-2 fw-bold"><i class="bi ${btnIcon}"></i></button></div></div></div>`;
+  });
+}
+
+function loadGuru(){
+  showLoad(true);
+  google.script.run.withSuccessHandler(d=>{
+    showLoad(false);
+    let mapTugas={}; d.riwayat.forEach(r=>{mapTugas[String(r[6]).trim()]=r[10]});
+    let acc=0, html="";
+    let sel = document.getElementById('sel-prog-kkg'); sel.innerHTML="";
+    d.agenda.forEach(a=>{
+       let n=String(a[1]).trim();
+       sel.innerHTML += `<option value="${n}">${n}</option>`;
+       let t=a[2], l=(a[5]&&a[5].length>4)?a[5]:null, st=mapTugas[n], ui="";
+       if(st==='Diterima')acc++;
+       if(st){
+          let bg=st==='Diterima'?'st-ok':(st==='Revisi'?'st-rev':'st-wait');
+          ui=`<span class="status-pill ${bg}">${st}</span>`;
+          if(st==='Revisi')ui+=`<div class="mt-1"><button onclick="bukaLapor('${n}')" class="btn btn-sm btn-outline-danger py-0" style="font-size:0.65rem">Ulangi</button></div>`;
+       } else ui=`<button onclick="bukaLapor('${n}')" class="btn btn-sm btn-gradient shadow-sm" style="font-size:0.75rem">KERJAKAN</button>`;
+       let bm=l?`<a href="${l}" target="_blank" class="text-primary fw-bold text-decoration-none small"><i class="bi bi-file-earmark-pdf"></i> Materi</a>`:'';
+       html+=`<div class="card-pro p-3 mb-3"><div class="d-flex justify-content-between align-items-center"><div><div class="fw-bold text-dark small">${n}</div><div class="text-muted" style="font-size:0.7rem">${t} &bull; ${bm}</div></div><div class="text-end ps-2">${ui}</div></div></div>`;
+    });
+    document.getElementById('list-kegiatan-guru').innerHTML=html;
+    let pct=Math.round((acc/d.target)*100); if(pct>100)pct=100;
+    document.getElementById('txt-persen').innerText=pct+"%";
+    let bar = document.getElementById('bar-guru'); bar.style.width = pct + "%"; bar.className = "progress-bar"; 
+    if(pct < 50) bar.classList.add('bg-danger'); else if(pct < 80) bar.classList.add('bg-warning'); else bar.classList.add('bg-success');
+  }).getDashboardGuru(USER.pin);
+}
+
+function loadKS() {
+  showLoad(true);
+  google.script.run.withSuccessHandler(data => {
+    showLoad(false); 
+    document.getElementById('ks-count-imp').innerText = data.statsPengembangan.implemen;
+    document.getElementById('ks-count-ino').innerText = data.statsPengembangan.inovasi;
+    
+    let tb = document.getElementById('tbl-ks'); tb.innerHTML = "";
+    let dG = data.dataGuru;
+    let totalPersen = 0;
+    if (dG.length === 0) { tb.innerHTML = "<tr><td colspan='3' class='text-center py-4 text-muted small'>Data guru tidak ditemukan.</td></tr>"; document.getElementById('ks-persen').innerText = "0%"; document.getElementById('ks-total-laporan').innerText = "0"; return; }
+    
+    let totalLaporanMasuk = 0;
+    dG.forEach(guru => {
+      totalPersen += guru.persen; totalLaporanMasuk += guru.selesai;
+      let bgBar = "bg-danger"; if(guru.persen >= 50) bgBar = "bg-warning"; if(guru.persen >= 80) bgBar = "bg-success";
+      tb.innerHTML += `<tr><td class="ps-3" style="width: 40%;"><div class="fw-bold text-dark" style="font-size:0.85rem">${guru.nama}</div></td><td style="width: 40%;"><div class="progress" style="height: 10px; border-radius:10px;"><div class="progress-bar ${bgBar}" role="progressbar" style="width: ${guru.persen}%"></div></div></td><td class="text-end pe-3" style="width: 20%;"><span class="badge ${bgBar} rounded-pill" style="font-size:0.75rem">${guru.persen}%</span><div class="text-muted small" style="font-size:0.65rem">${guru.selesai}/${guru.target}</div></td></tr>`;
+    });
+    let avgSekolah = Math.round(totalPersen / dG.length);
+    let elPct = document.getElementById('ks-persen'); elPct.innerText = avgSekolah + "%";
+    elPct.className = "fw-bold mt-1 mb-0 display-4 ";
+    if(avgSekolah < 50) elPct.classList.add('text-danger'); else if(avgSekolah < 80) elPct.classList.add('text-warning'); else elPct.classList.add('text-success');
+    document.getElementById('ks-total-laporan').innerText = totalLaporanMasuk;
+  }).getDataKSLengkap(USER.sekolah);
+}
+
+function loadAdmin(){
+  showLoad(true);
+  google.script.run.withSuccessHandler(d=>{
+    showLoad(false);
+    document.getElementById('stat-avg-guru').innerText = d.stats.avgGuru + "%";
+    document.getElementById('stat-avg-sekolah').innerText = d.stats.avgSekolah + "%";
+    
+    let tbPres = document.getElementById('tbl-adm-prestasi'); tbPres.innerHTML="";
+    if(d.prestasi.length === 0) { tbPres.innerHTML = "<tr><td colspan='4' class='py-4 text-muted'>Belum ada data prestasi.</td></tr>"; } 
+    else {
+      d.prestasi.forEach((p, idx)=>{
+        let medal = idx===0 ? 'medal-1' : (idx===1 ? 'medal-2' : (idx===2 ? 'medal-3' : 'text-muted'));
+        let icon = idx < 3 ? '<i class="bi bi-trophy-fill"></i>' : `#${idx+1}`;
+        tbPres.innerHTML += `<tr><td class="fw-bold ${medal} fs-5">${icon}</td><td class="text-start"><div class="fw-bold text-dark small">${p.nama}</div></td><td><span class="badge bg-secondary rounded-pill">${p.jumlahPiala} 🏆</span></td><td class="fw-bold text-danger fs-6">${p.totalPoin}</td></tr>`;
+      });
+    }
+    
+    let tbFeed=document.getElementById('tbl-adm-feed'); tbFeed.innerHTML="";
+    if(d.feed.length==0) tbFeed.innerHTML="<tr><td colspan='3' class='text-center py-3'>Kosong</td></tr>";
+    d.feed.forEach(r=>{
+       let st=r.status||'Wait', cls=st==='Diterima'?'text-success':(st==='Revisi'?'text-danger':'text-warning');
+       let skorInfo = r.status==='Diterima' && r.feedback ? `<div class="text-primary small fw-bold">${r.feedback}</div>` : '';
+       tbFeed.innerHTML+=`<tr><td class="ps-3"><div class="fw-bold small">${r.nama}</div><small class="text-muted">${r.sekolah}</small></td><td><div class="small">${r.judul}</div>${skorInfo}</td><td class="small fw-bold ${cls}">${st}</td></tr>`;
+    });
+    
+    let tbSek=document.getElementById('tbl-adm-sekolah'); tbSek.innerHTML="";
+    d.sekolah.forEach((s, idx)=>{
+      let medal = idx===0 ? 'medal-1' : (idx===1 ? 'medal-2' : (idx===2 ? 'medal-3' : 'text-muted'));
+      let icon = idx < 3 ? '<i class="bi bi-award-fill"></i>' : `#${idx+1}`;
+      tbSek.innerHTML += `<tr><td class="fw-bold ${medal}">${icon}</td><td class="text-start"><div class="fw-bold text-dark small">${s.nama}</div><small class="text-muted">${s.guruAktif} Guru Aktif</small></td><td class="fw-bold text-danger">${s.totalPoin}</td><td>${s.tugasSelesai}</td></tr>`;
+    });
+    
+    let tbGur=document.getElementById('tbl-adm-guru'); tbGur.innerHTML="";
+    d.guru.slice(0, 50).forEach((g, idx)=>{ 
+       let medal = idx===0 ? 'medal-1' : (idx===1 ? 'medal-2' : (idx===2 ? 'medal-3' : 'text-muted'));
+       let icon = idx < 3 ? '<i class="bi bi-award-fill"></i>' : `#${idx+1}`;
+       tbGur.innerHTML += `<tr><td class="fw-bold ${medal} text-center">${icon}</td><td><div class="fw-bold text-dark small">${g.nama}</div><small class="text-muted">${g.sekolah}</small></td><td class="fw-bold text-center text-primary">${g.totalPoin}</td></tr>`;
+    });
+  }).getDashboardAdminLengkap();
+}
+
+function bukaLapor(j){ document.getElementById('frmUpload').reset(); document.getElementById('inpJudul').value=j; modalUp.show(); }
+function submitTugas(e){
+  e.preventDefault();
+  let lnk=document.getElementById('inpLink').value, txt=document.getElementById('inpCatatan').value;
+  if(lnk.trim()==="" && txt.trim()==="") return alert("Isi Rangkuman atau Link!");
+  if(!confirm("Kirim?")) return; showLoad(true); modalUp.hide();
+  let f=document.getElementById('frmUpload');
+  let obj={pin_user:USER.pin, nama_user:USER.nama, sekolah_user:document.getElementById('txtSekolah').innerText};
+  Array.from(f.elements).forEach(el=>{if(el.name)obj[el.name]=el.value});
+  google.script.run.withSuccessHandler(r=>{ showLoad(false); alert(r); loadGuru(); }).simpanTugas(obj, null); 
+}
+
+function submitPengembangan(e, jenis) {
+  e.preventDefault();
+  if(!confirm("Kirim Laporan "+jenis+"?")) return;
+  showLoad(true);
+  let data = {};
+  if(jenis === 'Implementasi KKG') {
+     data.judul_dokumen = "IMPLEMENTASI: " + document.getElementById('sel-prog-kkg').value;
+     data.catatan = `[KEGIATAN: ${document.getElementById('imp-nama').value}] [KELAS: ${document.getElementById('imp-kelas').value}] ` + document.getElementById('imp-desc').value;
+     data.link_video = document.getElementById('imp-link').value;
+  } else {
+     data.judul_dokumen = "INOVASI: " + document.getElementById('ino-nama').value;
+     data.catatan = document.getElementById('ino-desc').value;
+     data.link_video = document.getElementById('ino-link').value;
+  }
+  let objKirim = {
+    pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('txtSekolah').innerText,
+    jenis_laporan: jenis, judul_dokumen: data.judul_dokumen, link_video: data.link_video, catatan: data.catatan
+  };
+  google.script.run.withSuccessHandler(r=>{ showLoad(false); alert(r); document.getElementById(jenis==='Karya Inovasi'?'frmInovasi':'frmImplemen').reset(); loadGuru(); }).simpanTugas(objKirim, null);
+}
+
+function isiDropdownSekolah(idElement) {
+  let rawSekolah = document.getElementById('txtSekolah').innerText;
+  let listSekolah = rawSekolah.split(','); 
+  let elSelect = document.getElementById(idElement);
+  elSelect.innerHTML = "";
+  listSekolah.forEach(s => {
+    let namaBersih = s.trim();
+    if(namaBersih) {
+       let opt = document.createElement('option');
+       opt.value = namaBersih; opt.innerText = namaBersih;
+       elSelect.appendChild(opt);
+    }
+  });
+}
+
+function bukaModalPrestasi(){ document.getElementById('frmPrestasi').reset(); isiDropdownSekolah('inpSekolahPrestasi'); modalPr.show(); }
+function bukaModalPembiasaan(){ document.getElementById('frmPembiasaan').reset(); isiDropdownSekolah('inpSekolahBias'); modalBs.show(); }
+function bukaModalEvent(){ document.getElementById('frmEvent').reset(); isiDropdownSekolah('inpSekolahEvent'); modalEv.show(); }
+
+function submitPrestasi(e){
+  e.preventDefault(); if(!confirm("Kirim Data?")) return; showLoad(true); modalPr.hide();
+  let f = document.getElementById('frmPrestasi'); let dataRaw = {}; Array.from(f.elements).forEach(el=>{if(el.name) dataRaw[el.name]=el.value});
+  let obj = {
+    pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('inpSekolahPrestasi').value,
+    jenis_laporan: "Laporan Prestasi", judul_dokumen: "PRESTASI: " + dataRaw.cabang.toUpperCase(), link_video: "-",
+    catatan: `[SISWA: ${dataRaw.nama_siswa}] [JUARA: ${dataRaw.juara}] [TINGKAT: ${dataRaw.tingkat}] [NO: ${dataRaw.no_piagam}] [OLEH: ${dataRaw.penyelenggara}]`
+  };
+  google.script.run.withSuccessHandler(r=>{ showLoad(false); alert("Berhasil!"); loadKS(); }).simpanTugas(obj, null);
+}
+
+function submitPembiasaan(e){
+  e.preventDefault(); if(!confirm("Kirim Data?")) return; showLoad(true); modalBs.hide();
+  let obj = {
+    pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('inpSekolahBias').value,
+    jenis_laporan: "Laporan Pembiasaan", judul_dokumen: "PEMBIASAAN: " + document.getElementById('bias-nama').value, link_video: document.getElementById('bias-link').value,
+    catatan: `[FREQ: ${document.getElementById('bias-freq').value}] [KARAKTER: ${document.getElementById('bias-karakter').value}] ` + document.getElementById('bias-desc').value
+  };
+  google.script.run.withSuccessHandler(r=>{ showLoad(false); alert("Berhasil!"); loadKS(); }).simpanTugas(obj, null);
+}
+
+function submitEvent(e){
+  e.preventDefault(); if(!confirm("Kirim Data?")) return; showLoad(true); modalEv.hide();
+  let obj = {
+    pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('inpSekolahEvent').value,
+    jenis_laporan: "Laporan Event", judul_dokumen: "EVENT: " + document.getElementById('evt-nama').value, link_video: document.getElementById('evt-link').value,
+    catatan: `[SKALA: ${document.getElementById('evt-scale').value}] [TGL: ${document.getElementById('evt-date').value}] ` + document.getElementById('evt-desc').value
+  };
+  google.script.run.withSuccessHandler(r=>{ showLoad(false); alert("Berhasil!"); loadKS(); }).simpanTugas(obj, null);
+}
+
+function popNilai(id, type){ 
+  document.getElementById('n_id').value = id; 
+  document.getElementById('n_type').value = type; 
+  document.getElementById('n_feed').value = ""; 
+  ['ui-nilai-tugas','ui-nilai-prestasi','ui-nilai-qual'].forEach(id=>document.getElementById(id).classList.add('d-none'));
+
+  if(type === 'PRESTASI') {
+    document.getElementById('lbl-modal-title').innerText = "Validasi Data";
+    document.getElementById('ui-nilai-prestasi').classList.remove('d-none');
+    let sel = document.getElementById('n_validasi');
+    sel.className = "form-select form-control-pro mb-3 text-center fw-bold fs-5 text-success border-success";
+    sel.onchange = function() {
+        if(this.value==='VALID') this.className = "form-select form-control-pro mb-3 text-center fw-bold fs-5 text-success border-success";
+        else this.className = "form-select form-control-pro mb-3 text-center fw-bold fs-5 text-danger border-danger";
+    }
+  } else if (type === 'QUAL') {
+    document.getElementById('lbl-modal-title').innerText = "Nilai Kualitas";
+    document.getElementById('ui-nilai-qual').classList.remove('d-none');
+  } else {
+    document.getElementById('lbl-modal-title').innerText = "Form Penilaian";
+    document.getElementById('ui-nilai-tugas').classList.remove('d-none');
+  }
+  modalNi.show(); 
+}
+
+function saveNilai(){
+  let id = document.getElementById('n_id').value;
+  let type = document.getElementById('n_type').value;
+  let note = document.getElementById('n_feed').value;
+  let statusFinal = "", feedbackFinal = "";
+
+  if (type === 'PRESTASI') {
+    let val = document.getElementById('n_validasi').value;
+    if (val === 'VALID') { statusFinal = 'Diterima'; feedbackFinal = '[DATA VALID] ' + note; } 
+    else { statusFinal = 'Revisi'; feedbackFinal = '[DATA TIDAK VALID] ' + note; }
+  } else if (type === 'QUAL') {
+    let huruf = document.getElementById('n_kual').value;
+    statusFinal = 'Diterima'; 
+    if(huruf === 'D') statusFinal = 'Revisi';
+    feedbackFinal = `[Kualitas: ${huruf}] ` + note;
+  } else {
+    let huruf = document.getElementById('n_huruf').value;
+    statusFinal = (huruf === 'D' || huruf === 'E') ? 'Revisi' : 'Diterima';
+    feedbackFinal = `[Nilai: ${huruf}] ` + note;
+  }
+  
+  showLoad(true); modalNi.hide();
+  google.script.run.withSuccessHandler(r=>{ 
+    showLoad(false); alert(r); 
+    if(USER.role==='PENILAI') loadPenilai(); else loadAdmin(); 
+  }).simpanPenilaianAdmin(id, statusFinal, feedbackFinal, USER.nama);
+}
+</script>
