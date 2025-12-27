@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAKULAKU Desktop</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --md-sys-color-primary: #B3261E;
+      --md-sys-color-on-primary: #FFFFFF;
+      --md-sys-color-primary-container: #FFDAD6;
+      --md-sys-color-on-primary-container: #410002;
+      --md-sys-color-background: #FFF8F7;
+      --md-sys-color-surface: #FFF8F7;
+      --md-sys-color-surface-container: #FFFFFF;
+      --md-sys-color-surface-container-high: #FCEAE9;
+      --md-sys-color-on-surface: #201A1A;
+      --md-sys-color-on-surface-variant: #534341;
+      --md-sys-color-outline: #857372;
+      --shape-corner-large: 28px;
+      --shape-corner-medium: 16px;
+      --shape-pill: 50px;
+      --sidebar-w: 280px;
+    }
+
+    body { font-family: 'Google Sans Text', sans-serif; background-color: var(--md-sys-color-background); color: var(--md-sys-color-on-surface); overflow-x: hidden; }
+    h1, h2, h3, h4, h5, h6, .fw-bold, .display-1, .display-4, .display-5 { font-family: 'Google Sans', sans-serif; }
+    .hidden { display: none !important; }
+    .text-nakula { color: var(--md-sys-color-primary) !important; }
+    .wrapper { display: flex; width: 100%; min-height: 100vh; }
+    
+    /* SIDEBAR */
+    .sidebar { 
+      width: var(--sidebar-w); height: 100vh; position: fixed; 
+      background-color: var(--md-sys-color-surface-container-high); 
+      color: var(--md-sys-color-on-surface-variant);
+      padding: 24px 16px; display: flex; flex-direction: column; z-index: 100; 
+      border-radius: 0 28px 28px 0;
+    }
+    .sidebar-brand { padding: 0 16px 32px 16px; color: var(--md-sys-color-primary); font-weight: 700; letter-spacing: 1px; font-size: 1.5rem; display: flex; align-items: center; gap: 12px; }
+    .nav-btn { display: flex; align-items: center; gap: 16px; padding: 16px 24px; color: var(--md-sys-color-on-surface-variant); border-radius: var(--shape-pill); text-decoration: none; font-weight: 500; font-size: 0.95rem; margin-bottom: 8px; transition: 0.2s; }
+    .nav-btn.active { background-color: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); font-weight: 700; }
+    .nav-btn:hover:not(.active) { background-color: rgba(0,0,0,0.03); color: var(--md-sys-color-on-surface); }
+    .btn-logout-sidebar { margin-top: auto; background: transparent; color: var(--md-sys-color-primary); border: 1px solid var(--md-sys-color-outline); border-radius: var(--shape-pill); transition: 0.2s; }
+    .btn-logout-sidebar:hover { background: var(--md-sys-color-primary); color: white; border-color: transparent; }
+
+    /* CONTENT */
+    .main-content { margin-left: var(--sidebar-w); width: calc(100% - var(--sidebar-w)); padding: 24px 40px; min-height: 100vh; }
+    .card-std { background: var(--md-sys-color-surface-container); border: none; border-radius: var(--shape-corner-large); padding: 32px; margin-bottom: 24px; box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.05); transition: box-shadow 0.2s; }
+    .stat-box-desk { background: var(--md-sys-color-surface-container); border: 1px solid rgba(0,0,0,0.05); }
+    .stat-icon-bg { width: 64px; height: 64px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+    .header-profile { background: var(--md-sys-color-surface-container); color: var(--md-sys-color-on-surface); border-radius: var(--shape-corner-large); padding: 24px 32px; margin-bottom: 32px; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05); display: flex; align-items: center; border-left: 12px solid var(--md-sys-color-primary); }
+
+    /* LOGIN */
+    .login-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background-color: var(--md-sys-color-background); }
+    .login-card { width: 400px; text-align: center; background: var(--md-sys-color-surface-container); padding: 48px 32px; border-radius: var(--shape-corner-large); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    .input-pin { font-family: 'Google Sans', sans-serif; font-size: 2rem; letter-spacing: 12px; text-align: center; background: var(--md-sys-color-surface-container-high); border-radius: 16px; padding: 16px; border: 2px solid transparent; color: var(--md-sys-color-primary); font-weight: 700; margin-bottom: 24px; transition: 0.2s; }
+    .input-pin:focus { outline: none; border-color: var(--md-sys-color-primary); background: #fff; }
+
+    /* TABLES & ELEMENTS */
+    .table-rekap { --bs-table-bg: transparent; }
+    .table-rekap thead th { background: transparent; border-bottom: 1px solid var(--md-sys-color-outline); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--md-sys-color-on-surface-variant); padding: 16px; }
+    .table-rekap tbody td { padding: 16px; vertical-align: middle; font-size: 0.9rem; border-bottom: 1px solid rgba(0,0,0,0.05); color: var(--md-sys-color-on-surface); }
+    .rank-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+    .progress-track { background: var(--md-sys-color-surface-container-high); height: 16px; border-radius: 50px; overflow: hidden; width: 100%; margin: 15px 0; }
+    .progress-fill { height: 100%; border-radius: 50px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+    .analysis-box { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); border: none; border-radius: 20px; padding: 20px; }
+    .badge { padding: 6px 12px; border-radius: 8px; font-weight: 600; }
+    .bg-success { background-color: #C4EED0 !important; color: #074E23 !important; }
+    .bg-warning { background-color: #FFEFBF !important; color: #765600 !important; }
+    .btn-danger { background-color: var(--md-sys-color-primary); border: none; border-radius: var(--shape-pill); font-weight: 500; font-family: 'Google Sans'; padding: 12px 24px; color:white; }
+    .btn-danger:hover { background-color: #901D16; }
+    .btn-dark { background-color: var(--md-sys-color-on-surface); border-radius: var(--shape-pill); color:white;}
+    .form-control { background-color: var(--md-sys-color-surface-container-high); border: 1px solid transparent; border-radius: 12px; padding: 12px 16px; }
+  </style>
+</head>
+<body>
+
+  <div id="loader" class="hidden" style="position:fixed; inset:0; background:var(--md-sys-color-background); z-index:10000; display:flex; justify-content:center; align-items:center;">
+    <div class="spinner-border text-danger me-3" role="status"></div>
+    <div class="fw-bold" style="color:var(--md-sys-color-primary); font-family: 'Google Sans'; letter-spacing: 1px;">MEMUAT DATA...</div>
+  </div>
+
+  <div id="view-login" class="login-overlay">
+    <div class="login-card">
+      <div class="mb-4"><i class="fas fa-shapes fa-3x" style="color: var(--md-sys-color-primary);"></i></div>
+      <h1 class="display-5 fw-bold mb-2" style="color: var(--md-sys-color-on-surface);">NAKULAKU</h1>
+      <p style="color: var(--md-sys-color-on-surface-variant);" class="mb-5 small fw-bold">PORTAL KINERJA & PRESTASI</p>
+      
+      <label class="small fw-bold text-start w-100 mb-2 ms-1" style="color: var(--md-sys-color-primary);">MASUKKAN PIN</label>
+      <input type="password" id="input-pin" class="form-control input-pin mb-3" placeholder="• • • • •" inputmode="numeric">
+      
+      <div id="msg-login" class="text-danger fw-bold small mb-4"></div>
+      <button onclick="doLoginManual()" class="btn btn-danger btn-lg w-100 fw-bold shadow-sm">BUKA DASHBOARD <i class="fas fa-arrow-right ms-2"></i></button>
+      <div class="mt-4 text-muted small opacity-50">&copy; 2025 Gugus Nakula</div>
+    </div>
+  </div>
+
+  <div id="view-dashboard" class="hidden wrapper">
+    
+    <div class="sidebar">
+      <div class="sidebar-brand"><i class="fas fa-shapes"></i> NAKULAKU</div>
+      <nav>
+        <a href="#" class="nav-btn active"><i class="fas fa-chart-pie"></i> Dashboard</a>
+        <a href="#section-agenda" class="nav-btn"><i class="far fa-calendar-alt"></i> Agenda Gugus</a>
+        <a href="#section-settings" class="nav-btn"><i class="fas fa-sliders-h"></i> Pengaturan</a>
+      </nav>
+      <div class="mt-auto">
+        <button onclick="doLogout()" class="btn btn-logout-sidebar w-100 fw-bold py-3"><i class="fas fa-power-off me-2"></i>Keluar Sesi</button>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div id="card-header" class="header-profile">
+        <div class="d-flex align-items-center">
+          <div id="main-badge-box" class="bg-light text-danger rounded-circle d-flex align-items-center justify-content-center" style="width:72px; height:72px; font-size:2.5rem; flex-shrink:0; background: var(--md-sys-color-primary-container) !important; color: var(--md-sys-color-on-primary-container) !important;">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <div class="ms-4">
+            <h3 id="u-nama" class="fw-bold mb-0">Memuat Nama...</h3>
+            <div class="d-flex align-items-center gap-3 mt-2">
+              <span id="u-role" class="badge" style="background:var(--md-sys-color-outline); color:white;">ROLE</span>
+              <span id="u-unit" class="text-muted fw-bold small">Nama Sekolah</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-admin" class="hidden">
+        <div class="row g-4 mb-4">
+          <div class="col-md-4">
+            <div class="card-std stat-box-desk d-flex align-items-center justify-content-between p-4">
+              <div><div class="text-muted small fw-bold mb-1">TOTAL SEKOLAH</div><div class="display-5 fw-bold" style="color:var(--md-sys-color-primary);" id="adm-total-sekolah">0</div></div>
+              <div class="stat-icon-bg" style="background: #FCEAE9; color: #B3261E;"><i class="fas fa-school"></i></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card-std stat-box-desk d-flex align-items-center justify-content-between p-4">
+              <div><div class="text-muted small fw-bold mb-1">TOTAL GURU</div><div class="display-5 fw-bold text-dark" id="adm-total-guru">0</div></div>
+              <div class="stat-icon-bg" style="background: #E8F5E9; color: #2E7D32;"><i class="fas fa-chalkboard-teacher"></i></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card-std stat-box-desk d-flex align-items-center justify-content-between p-4">
+              <div><div class="text-muted small fw-bold mb-1">RATA-RATA GUGUS</div><div class="display-5 fw-bold text-dark" id="adm-avg-gugus">0%</div></div>
+              <div class="stat-icon-bg" style="background: #FFF8E1; color: #F57F17;"><i class="fas fa-star"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+          <div class="col-lg-8">
+            <div class="card-std h-100">
+              <h6 class="fw-bold text-nakula mb-4"><i class="fas fa-chart-bar me-2"></i>GRAFIK KINERJA SEKOLAH</h6>
+              <div style="height: 300px;"><canvas id="chartAdmin"></canvas></div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="card-std h-100">
+              <h6 class="fw-bold text-nakula mb-3"><i class="fas fa-trophy me-2"></i>RANKING PRESENSI</h6>
+              <div id="list-ranking-presensi" style="max-height: 300px; overflow-y: auto;"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card-std">
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 class="fw-bold text-nakula mb-0"><i class="fas fa-users me-2"></i>REKAPITULASI GURU</h6>
+                    <div class="position-relative w-25">
+                        <i class="fas fa-search position-absolute text-muted" style="left:15px; top:12px;"></i>
+                        <input type="text" id="search-guru" class="form-control ps-5" placeholder="Cari Guru..." onkeyup="filterGuruTable()">
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-rekap">
+                      <thead><tr><th>Nama / Sekolah</th><th class="text-center">Presensi</th><th class="text-center">Tugas</th><th class="text-center">Total</th></tr></thead>
+                      <tbody id="table-guru-body"></tbody>
+                    </table>
+                  </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div id="panel-user" class="hidden">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card-std">
+                    <div class="text-center py-3">
+                      <div class="mb-2 text-muted fw-bold small" id="label-kinerja-main" style="letter-spacing:1px;">TOTAL SKOR</div>
+                      <div id="text-score-big" class="display-1 fw-bold text-nakula mb-4 mt-2">0%</div>
+                      <div class="progress-track"><div id="bar-score-main" class="progress-fill bg-danger" style="width: 0%"></div></div>
+                    </div>
+                    <div id="box-analisis-cerdas" class="analysis-box mt-4 shadow-none">
+                        <div class="d-flex align-items-center mb-2"><i class="fas fa-magic me-2 fs-5"></i><h6 class="fw-bold mb-0">Analisis Cerdas</h6></div>
+                        <div id="text-analisis-content" class="small fst-italic opacity-75" style="line-height: 1.6;">Memuat analisis otomatis...</div>
+                    </div>
+                    <div class="row mt-4 pt-3 border-top text-center">
+                        <div class="col-6 border-end">
+                            <small class="text-muted fw-bold d-block mb-1" id="label-sub-1">SUB 1</small>
+                            <span class="h4 fw-bold" style="color:var(--md-sys-color-on-surface);" id="val-sub-1">0%</span>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted fw-bold d-block mb-1" id="label-sub-2">SUB 2</small>
+                            <span class="h4 fw-bold" style="color:var(--md-sys-color-on-surface);" id="val-sub-2">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="area-ks-insight" class="card-std mt-4 hidden">
+                    <h6 class="fw-bold text-nakula mb-4">ANALISIS KEPALA SEKOLAH</h6>
+                    <div class="d-flex align-items-center justify-content-between bg-light p-3 rounded-4">
+                        <div style="width: 90px; height: 90px;"><canvas id="chartKS"></canvas></div>
+                        <div id="text-refleksi" class="ms-3 fst-italic text-muted small" style="flex:1;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="row g-4">
+                    <div class="col-md-6 user-only">
+                        <div class="card-std h-100">
+                             <h6 class="fw-bold text-nakula mb-4"><i class="fas fa-history me-2"></i>RIWAYAT PRESENSI</h6>
+                             <div id="list-presensi"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 user-only">
+                        <div class="card-std h-100">
+                             <h6 class="fw-bold text-nakula mb-4" id="label-kanan-title">STATUS TUGAS</h6>
+                             <div id="list-content-kanan" style="max-height:400px; overflow-y:auto;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div id="shared-content" class="mt-4">
+        <div class="row g-4">
+            <div class="col-12" id="section-agenda">
+                <div class="card-std">
+                    <h6 class="fw-bold text-nakula mb-4"><i class="far fa-calendar-check me-2"></i>AGENDA KEGIATAN GUGUS</h6>
+                    <div id="list-agenda" class="row g-3"></div>
+                </div>
+            </div>
+            <div class="col-md-6 user-only" id="section-settings">
+                <div class="card-std">
+                    <h6 class="fw-bold text-nakula mb-4"><i class="fas fa-shield-alt me-2"></i>KEAMANAN AKUN</h6>
+                    <div class="p-3 rounded-4" style="background: var(--md-sys-color-surface-container-high);">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="small fw-bold text-muted ms-1 mb-1">PIN Lama</label>
+                                <input type="password" id="pin-old" class="form-control" placeholder="• • • • •">
+                            </div>
+                            <div class="col-6">
+                                <label class="small fw-bold text-muted ms-1 mb-1">PIN Baru</label>
+                                <input type="password" id="pin-new" class="form-control" placeholder="• • • • •">
+                            </div>
+                            <div class="col-12 mt-2">
+                                 <button onclick="doChangePin()" class="btn btn-dark w-100 py-2"><i class="fas fa-check-circle me-2"></i>Simpan PIN Baru</button>
+                                 <div id="msg-pin" class="mt-2 text-center small fw-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div> 
+  </div> 
+
+  <script>
+    // ==========================================
+    // GANTI URL DI BAWAH INI
+    // ==========================================
+    const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbyvsXS7TSjaz7RccMYhZAaVKhOR03YPrymCXOaqOqOlAgr9jFsa0iuqlPWDlKh-ZE1pGg/exec";
+
+    let curUser = null;
+    let mainChart = null; 
+    let allGuruData = []; 
+    const STORE_KEY = 'nakula_user_pin_desk'; 
+
+    document.addEventListener('DOMContentLoaded', () => {
+       const savedPin = localStorage.getItem(STORE_KEY);
+       if(savedPin) { document.getElementById('input-pin').value = savedPin; doLogin(savedPin); }
+    });
+
+    function doLoginManual() {
+      const pin = document.getElementById('input-pin').value;
+      if(!pin) { showMsg('PIN wajib diisi'); return; }
+      doLogin(pin);
+    }
+
+    async function doLogin(pin) {
+      loader(true);
+      try {
+        const response = await fetch(`${ENDPOINT_URL}?action=login&pin=${pin}`);
+        const res = await response.json();
+        
+        if(res.status === 'success') {
+          localStorage.setItem(STORE_KEY, pin);
+          onLoginSuccess(res);
+        } else {
+          localStorage.removeItem(STORE_KEY); 
+          loader(false); 
+          showMsg(res.message);
+        }
+      } catch (e) { loader(false); showMsg("Gagal koneksi server."); }
+    }
+
+    function onLoginSuccess(res) {
+      curUser = res.data;
+      document.getElementById('u-nama').innerText = curUser.nama;
+      document.getElementById('u-unit').innerText = curUser.sekolah;
+      
+      let roleDisplay = 'GURU';
+      if(curUser.jabatan.toLowerCase().includes('kepala')) roleDisplay = 'KEPALA SEKOLAH';
+      if(curUser.role_khusus.includes('ADMIN') || curUser.jabatan.toLowerCase().includes('admin') || curUser.jabatan.toLowerCase().includes('pengawas')) roleDisplay = 'ADMINISTRATOR';
+      
+      document.getElementById('u-role').innerText = roleDisplay;
+      document.getElementById('view-login').classList.add('hidden');
+      document.getElementById('view-dashboard').classList.remove('hidden');
+      
+      loadData();
+    }
+
+    async function loadData() {
+      try {
+        const params = new URLSearchParams({
+          action: 'getDashboard', email: curUser.email, pin: curUser.pin,
+          role: curUser.jabatan, school: curUser.sekolah, special: curUser.role_khusus
+        });
+        const response = await fetch(`${ENDPOINT_URL}?${params.toString()}`);
+        const d = await response.json();
+        renderDashboard(d);
+      } catch (e) { console.error(e); loader(false); alert("Gagal memuat data."); }
+    }
+
+    function renderDashboard(d) {
+      loader(false);
+      const panelAdmin = document.getElementById('panel-admin');
+      const panelUser = document.getElementById('panel-user');
+      const userOnlyCols = document.querySelectorAll('.user-only');
+      const badgeBox = document.getElementById('main-badge-box');
+
+      if(d.role === 'ADMIN') {
+        panelAdmin.classList.remove('hidden');
+        panelUser.classList.add('hidden');
+        userOnlyCols.forEach(el => el.classList.add('hidden'));
+        badgeBox.innerHTML = '<i class="fas fa-user-shield"></i>';
+        document.getElementById('adm-total-sekolah').innerText = d.stats.total_sekolah;
+        document.getElementById('adm-total-guru').innerText = d.stats.total_guru;
+        document.getElementById('adm-avg-gugus').innerText = d.stats.avg_gugus + '%';
+        renderChartAdmin(d.sekolah_ranking);
+        allGuruData = d.guru_detail;
+        renderRankingTables(d.sekolah_ranking); 
+        renderGuruTable(allGuruData); 
+      } else {
+        panelAdmin.classList.add('hidden');
+        panelUser.classList.remove('hidden');
+        userOnlyCols.forEach(el => el.classList.remove('hidden'));
+
+        const score = d.kinerja.persen;
+        let iconHTML = score==100?'<i class="fas fa-trophy"></i>':(score>=80?'<i class="fas fa-medal"></i>':(score>=60?'<i class="fas fa-star"></i>':'<i class="fas fa-bullseye"></i>'));
+        badgeBox.innerHTML = iconHTML;
+
+        const txtBig = document.getElementById('text-score-big');
+        const barMain = document.getElementById('bar-score-main');
+        let scoreColor = score >= 80 ? '#074E23' : (score >= 60 ? '#765600' : '#B3261E');
+        
+        barMain.style.background = scoreColor;
+        txtBig.innerText = score + '%';
+        txtBig.style.color = scoreColor;
+        setTimeout(()=> { barMain.style.width = score + '%'; }, 100);
+
+        const analysisEl = document.getElementById('text-analisis-content');
+        if(analysisEl) analysisEl.innerHTML = generateSmartAnalysis(score, d.role);
+
+        const ksArea = document.getElementById('area-ks-insight');
+        const listKanan = document.getElementById('list-content-kanan');
+
+        if(d.role === 'KS') {
+          document.getElementById('label-kinerja-main').innerText = "KINERJA SEKOLAH";
+          document.getElementById('label-sub-1').innerText = "DISIPLIN PIMPINAN"; 
+          document.getElementById('val-sub-1').innerText = d.kinerja.score_ks + '%';
+          document.getElementById('label-sub-2').innerText = "RATA-RATA GURU"; 
+          document.getElementById('val-sub-2').innerText = d.kinerja.avg_guru + '%';
+
+          document.getElementById('label-kanan-title').innerHTML = '<i class="fas fa-trophy me-2"></i>PERFORMA GURU';
+          ksArea.classList.remove('hidden');
+          document.getElementById('text-refleksi').innerHTML = d.kinerja.persen >= 80 ? '<strong>"Kinerja Sekolah Prima."</strong>' : '<strong>"Perlu Pembinaan."</strong>';
+          renderChartKS(score);
+          
+          listKanan.innerHTML = '';
+          d.guru_list.forEach((g,i) => {
+              let c = g.score >= 80 ? 'bg-success' : 'bg-warning';
+              listKanan.innerHTML += `<div class="rank-row" style="padding:10px 0;"><div class="fw-bold me-3 text-muted">#${i+1}</div><div class="flex-grow-1"><div class="d-flex justify-content-between mb-1"><span class="small fw-bold text-dark">${g.nama}</span><span class="small">${g.score}%</span></div><div class="progress" style="height:6px"><div class="progress-bar ${c}" style="width:${g.score}%"></div></div></div></div>`;
+          });
+        } else {
+          document.getElementById('label-kinerja-main').innerText = "KINERJA INDIVIDU";
+          ksArea.classList.add('hidden');
+          document.getElementById('label-sub-1').innerText = "PRESENSI SAYA"; 
+          document.getElementById('val-sub-1').innerText = d.kinerja.detail_presensi + '%';
+          document.getElementById('label-sub-2').innerText = "TUGAS SAYA"; 
+          document.getElementById('val-sub-2').innerText = d.kinerja.detail_tugas + '%';
+          document.getElementById('label-kanan-title').innerHTML = '<i class="fas fa-tasks me-2"></i>STATUS TUGAS';
+          
+          listKanan.innerHTML = '';
+          if(d.tugas.length > 0) {
+            d.tugas.forEach(t => {
+              let b = t.status.includes('Diterima') ? 'bg-success' : 'bg-warning text-dark';
+              listKanan.innerHTML += `<div class="py-2 border-bottom"><div class="d-flex justify-content-between"><span class="small fw-bold">${t.judul}</span><span class="badge ${b}">${t.status}</span></div></div>`;
+            });
+          } else listKanan.innerHTML = '<div class="text-center small text-muted py-3">Tidak ada tugas</div>';
+        }
+        
+        const prEl = document.getElementById('list-presensi'); prEl.innerHTML = '';
+        if(d.presensi.length > 0) {
+          d.presensi.forEach(p => {
+            let c = p.status.includes('Tepat') ? 'text-success' : 'text-danger';
+            prEl.innerHTML += `<div class="py-2 border-bottom d-flex justify-content-between"><span class="small fw-bold">${p.waktu}</span><span class="small fw-bold ${c}">${p.status.split(' ')[0]}</span></div>`;
+          });
+        } else prEl.innerHTML = '<div class="text-center small text-muted py-3">Belum ada presensi</div>';
+      }
+      
+      const agEl = document.getElementById('list-agenda'); agEl.innerHTML = '';
+      if(d.agenda.length === 0) agEl.innerHTML = '<div class="col-12 text-center text-muted small py-3">Belum ada agenda</div>';
+      else {
+        d.agenda.forEach(a => {
+          let t = a.tanggal.split(' ');
+          agEl.innerHTML += `<div class="col-md-6 col-lg-4"><div class="card-std h-100 p-3" style="background:var(--md-sys-color-surface-container-high);"><div class="d-flex align-items-center mb-2"><div class="bg-white rounded-3 px-3 py-2 text-center me-3 shadow-sm"><div class="small fw-bold text-danger">${t[0]}</div><div class="small text-muted" style="font-size:0.7rem">${t[1]||''}</div></div><div class="fw-bold text-dark small">${a.kegiatan}</div></div><div class="text-muted small ps-1"><i class="far fa-clock me-1"></i>${a.waktu} • ${a.narsum||'-'}</div></div></div>`;
+        });
+      }
+    }
+
+    function generateSmartAnalysis(score, role) {
+        let text = ""; const roleName = role === 'KS' ? 'Sekolah' : 'Anda';
+        if (score >= 90) text = `<strong>Luar Biasa!</strong> Capaian kinerja ${roleName} sangat prima. Pertahankan konsistensi ini.`;
+        else if (score >= 80) text = `<strong>Sangat Baik.</strong> Capaian kinerja ${roleName} memenuhi standar tinggi. Evaluasi detail kecil yang terlewat.`;
+        else if (score >= 70) text = `<strong>Baik.</strong> Kinerja ${roleName} sudah benar namun masih ada celah. Tingkatkan fokus.`;
+        else if (score >= 60) text = `<strong>Cukup.</strong> Kinerja ${roleName} baru memenuhi standar minimal. Diperlukan usaha lebih keras.`;
+        else text = `<strong>Perlu Perhatian.</strong> Capaian kinerja ${roleName} masih di bawah standar. Segera lakukan perbaikan.`;
+        return text;
+    }
+
+    function renderRankingTables(rankingData) {
+      const listPresensi = document.getElementById('list-ranking-presensi');
+      let rankPresensi = [...rankingData].sort((a, b) => b.rata_rata_presensi - a.rata_rata_presensi);
+      let html = '';
+      rankPresensi.forEach((s, i) => {
+        const score = s.rata_rata_presensi; const color = score >= 80 ? 'bg-success' : (score >= 60 ? 'bg-warning' : 'bg-danger');
+        html += `<div class="rank-row"><div class="fw-bold text-muted me-2" style="width:25px">#${i+1}</div><div class="flex-grow-1"><div class="d-flex justify-content-between mb-1"><span class="small text-dark fw-bold">${s.nama}</span><span class="small text-muted">${score}%</span></div><div class="progress" style="height:8px"><div class="progress-bar ${color}" style="width:${score}%"></div></div></div></div>`;
+      });
+      listPresensi.innerHTML = html;
+    }
+
+    function renderGuruTable(data) {
+      const tbody = document.getElementById('table-guru-body'); tbody.innerHTML = '';
+      if(!data || data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted small">Tidak ada data</td></tr>'; return; }
+      data.forEach(g => {
+        let b = g.total >= 80 ? 'bg-success' : (g.total >= 60 ? 'bg-warning' : 'bg-danger');
+        tbody.innerHTML += `<tr><td><div class="fw-bold text-dark small">${g.nama}</div><div class="text-muted" style="font-size:0.75rem">${g.sekolah}</div></td><td class="text-center small">${g.presensi}%</td><td class="text-center small">${g.tugas}%</td><td class="text-center"><span class="badge ${b}">${g.total}%</span></td></tr>`;
+      });
+    }
+
+    function filterGuruTable() {
+      const term = document.getElementById('search-guru').value.toLowerCase();
+      const filtered = allGuruData.filter(g => g.nama.toLowerCase().includes(term) || g.sekolah.toLowerCase().includes(term));
+      renderGuruTable(filtered);
+    }
+
+    function renderChartAdmin(data) {
+      const ctx = document.getElementById('chartAdmin').getContext('2d');
+      if(mainChart) mainChart.destroy();
+      mainChart = new Chart(ctx, { type: 'bar', data: { labels: data.map(d=>d.nama), datasets: [{ label: 'Skor', data: data.map(d=>d.rata_rata), backgroundColor: '#B3261E', borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100, grid:{display:false} }, x:{grid:{display:false}} } } });
+    }
+
+    function renderChartKS(score) {
+      const ctx = document.getElementById('chartKS').getContext('2d');
+      if(mainChart) mainChart.destroy(); 
+      let c = score >= 80 ? '#C4EED0' : (score >= 60 ? '#FFEFBF' : '#FFDAD6'); let cOn = score >= 80 ? '#074E23' : (score >= 60 ? '#765600' : '#410E0B');
+      mainChart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Capaian', 'Gap'], datasets: [{ data: [score, 100-score], backgroundColor: [cOn, c], borderWidth: 0 }] }, options: { cutout: '70%', plugins: { legend: { display: false } }, maintainAspectRatio: false } });
+    }
+
+    async function doChangePin() {
+      const pOld = document.getElementById('pin-old').value; const pNew = document.getElementById('pin-new').value; const msgEl = document.getElementById('msg-pin');
+      if(!pOld || !pNew || isNaN(pNew)) { msgEl.innerText = "Isi PIN dengan benar (Angka)"; msgEl.className="text-danger small fw-bold mt-2 text-center"; return; }
+      loader(true);
+      try {
+        const response = await fetch(`${ENDPOINT_URL}?action=changePin&email=${curUser.email}&oldPin=${pOld}&newPin=${pNew}`);
+        const res = await response.json();
+        loader(false);
+        if(res.status === 'success') {
+          document.getElementById('pin-old').value = ''; document.getElementById('pin-new').value = '';
+          msgEl.className = 'text-success small fw-bold mt-2 text-center'; msgEl.innerText = res.message;
+          localStorage.setItem(STORE_KEY, pNew); curUser.pin = pNew; 
+        } else {
+          msgEl.className = 'text-danger small fw-bold mt-2 text-center'; msgEl.innerText = res.message;
+        }
+      } catch (e) { loader(false); msgEl.innerText = "Gagal koneksi server."; }
+    }
+
+    function doLogout() {
+      localStorage.removeItem(STORE_KEY); curUser = null;
+      document.getElementById('input-pin').value = '';
+      if(mainChart) mainChart.destroy();
+      document.getElementById('view-dashboard').classList.add('hidden');
+      document.getElementById('view-login').classList.remove('hidden');
+    }
+
+    function loader(show) { document.getElementById('loader').className = show ? '' : 'hidden'; }
+    function showMsg(m) { document.getElementById('msg-login').innerText = m; }
+  </script>
+</body>
+</html>
