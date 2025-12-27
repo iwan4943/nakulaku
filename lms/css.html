@@ -1,0 +1,159 @@
+<style>
+  :root {
+    /* --- ANDROID 16 / MATERIAL 3 COLOR TOKENS --- */
+    --md-sys-color-primary: #B3261E;
+    --md-sys-color-on-primary: #FFFFFF;
+    --md-sys-color-primary-container: #FFDAD6;
+    --md-sys-color-on-primary-container: #410E0B;
+    
+    --md-sys-color-secondary: #775652;
+    --md-sys-color-secondary-container: #FFDAD6;
+    
+    /* Backgrounds */
+    --md-sys-color-surface: #FFF8F6; /* Warm White */
+    --md-sys-color-surface-container: #F3E5E5; 
+    --md-sys-color-surface-bright: #FFFFFF;
+    
+    --md-sys-color-outline: #857372;
+    --md-sys-color-on-surface: #201A19;
+    --md-sys-color-on-surface-variant: #524343;
+
+    /* Status Colors (Pastel) */
+    --st-success-bg: #C3EED0; --st-success-text: #0F5223;
+    --st-warning-bg: #FEE4C1; --st-warning-text: #744C00;
+    --st-error-bg: #F9DEDC;   --st-error-text: #8C1D18;
+    --st-info-bg: #E8DEF8;    --st-info-text: #1D192B;
+  }
+
+  body { 
+    background-color: var(--md-sys-color-surface); 
+    font-family: 'Poppins', sans-serif; 
+    color: var(--md-sys-color-on-surface);
+    padding-bottom: 80px;
+  }
+  
+  .hidden { display: none !important; }
+
+  /* --- COMPONENTS: CARD --- */
+  .card-pro { 
+    border: none; 
+    border-radius: 28px; /* Sudut Ekstra Bulat */
+    background: var(--md-sys-color-surface-bright); 
+    /* Shadow sangat halus (Flat Design) */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05); 
+    margin-bottom: 1rem; 
+  }
+  
+  .header-card {
+    background: var(--md-sys-color-surface-bright); 
+    padding: 1rem 1.2rem;
+    border-radius: 28px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+
+  /* --- COMPONENTS: INPUTS (Filled Style) --- */
+  .form-control-pro { 
+    background-color: var(--md-sys-color-surface-container); 
+    border: 2px solid transparent; 
+    border-radius: 16px; 
+    padding: 14px; 
+    font-size: 0.95rem; 
+    color: var(--md-sys-color-on-surface);
+    transition: all 0.2s;
+  }
+  .form-control-pro:focus { 
+    background-color: var(--md-sys-color-surface-bright); 
+    border-color: var(--md-sys-color-primary); 
+    box-shadow: none;
+    color: var(--md-sys-color-on-surface);
+  }
+  
+  /* --- COMPONENTS: BUTTONS (Pill Shape) --- */
+  .btn-gradient, .btn-primary, .btn-success, .btn-warning, .btn-danger { 
+    border-radius: 100px; 
+    padding: 10px 24px; 
+    font-weight: 600; 
+    border: none; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  /* Override Bootstrap Colors to Material Palette */
+  .btn-gradient { background: var(--md-sys-color-primary); color: white; }
+  .btn-gradient:hover { background: #901B15; color: white; transform: translateY(-1px); }
+
+  .btn-primary { background: #984061; color: white; } /* Tertiary Color */
+  .btn-success { background: #466742; color: white; } /* Green Muted */
+  .btn-warning { background: #E6B91F; color: #3E1C00; }
+  
+  /* --- BADGES & CHIPS --- */
+  .badge-role { 
+    padding: 6px 14px; 
+    border-radius: 12px; 
+    font-weight: 600; 
+    font-size: 0.7rem; 
+    letter-spacing: 0.5px; 
+    text-transform: uppercase; 
+    border: none !important;
+  }
+  .role-guru    { background: var(--st-info-bg); color: var(--st-info-text); } 
+  .role-ks      { background: var(--st-warning-bg); color: var(--st-warning-text); } 
+  .role-admin   { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); } 
+  .role-penilai { background: var(--st-success-bg); color: var(--st-success-text); }
+
+  .status-pill { padding: 6px 14px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; display: inline-block;}
+  .st-ok { background: var(--st-success-bg); color: var(--st-success-text); }
+  .st-wait { background: var(--st-warning-bg); color: var(--st-warning-text); }
+  .st-rev { background: var(--st-error-bg); color: var(--st-error-text); }
+  
+  .filter-select { 
+    border: 1px solid var(--md-sys-color-outline); 
+    background: var(--md-sys-color-surface-bright); 
+    color: var(--md-sys-color-on-surface); 
+    padding: 8px 16px; 
+    border-radius: 16px; 
+    font-size: 0.85rem; 
+    font-weight: 500;
+  }
+  
+  /* --- TABS / NAVIGATION BAR --- */
+  .nav-pills {
+    background: var(--md-sys-color-surface-container);
+    border-radius: 50px;
+    padding: 4px;
+    gap: 0;
+    border: none !important;
+  }
+  .nav-pills .nav-link { 
+    color: var(--md-sys-color-on-surface-variant); 
+    font-size: 0.8rem; 
+    font-weight: 600; 
+    border-radius: 50px; 
+    padding: 10px 10px; 
+    transition: all 0.2s;
+  }
+  .nav-pills .nav-link.active { 
+    background-color: var(--md-sys-color-secondary-container); 
+    color: #380C08; 
+    box-shadow: none; 
+  }
+  .nav-pills .nav-link i { font-size: 1rem; }
+
+  /* MODAL */
+  .modal-content {
+    border-radius: 28px;
+    border: none;
+    background: var(--md-sys-color-surface-bright);
+  }
+  .modal-header, .modal-body { padding: 1.5rem; }
+  
+  /* UTILS */
+  .text-danger { color: var(--md-sys-color-primary) !important; }
+  .bg-danger { background-color: var(--md-sys-color-primary) !important; }
+  .text-primary { color: #984061 !important; }
+  .border-light { border-color: var(--md-sys-color-surface-container) !important; }
+
+</style>
