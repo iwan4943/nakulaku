@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+<?!= include('src/client/css'); ?>
+
+</head>
+<body>
+
+<div id="loading" class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-none justify-content-center align-items-center" style="z-index:9999;">
+  <div class="spinner-border text-danger" role="status"></div>
+</div>
+
+<div id="view-login" class="container d-flex flex-column justify-content-center" style="min-height: 100vh;">
+  <div class="row justify-content-center"><div class="col-md-5">
+    <div class="text-center mb-5">
+        <div class="bg-danger-subtle rounded-4 d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px; background-color: var(--md-sys-color-primary-container) !important;">
+            <i class="bi bi-mortarboard-fill fs-1" style="color: var(--md-sys-color-on-primary-container);"></i>
+        </div>
+        <h4 class="fw-bold" style="color: var(--md-sys-color-on-surface);">LMS GUGUS NAKULA</h4>
+        <p class="small text-muted">Portal Kinerja Guru</p>
+    </div>
+    <div class="card-pro px-4 py-5 mx-2">
+      <label class="d-block text-center small fw-bold mb-3" style="color: var(--md-sys-color-primary); letter-spacing: 1px;">MASUKKAN PIN</label>
+      <input type="number" id="inputPIN" class="form-control form-control-pro text-center mb-4 fw-bold" placeholder="0 0 0 0 0 0" style="letter-spacing: 8px; font-size: 1.8rem;">
+      <button onclick="doLogin(false)" class="btn btn-gradient w-100 py-3 fs-6">MASUK APLIKASI</button>
+      <div id="msg-login" class="alert mt-3 small hidden py-2 text-center border-0" style="background: var(--st-error-bg); color: var(--st-error-text); border-radius: 12px;"></div>
+    </div>
+  </div></div>
+</div>
+
+<div id="view-main" class="hidden pb-5">
+  <div class="container mt-3">
+    <div class="header-card">
+      <div class="d-flex align-items-center">
+        <div class="rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width:45px;height:45px; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);"><i class="bi bi-mortarboard-fill fs-5"></i></div>
+        <div style="line-height: 1.1;"><div class="fw-bold text-dark" style="font-size: 1rem;">LMS Nakula</div><div class="text-muted" style="font-size: 0.75rem;">Dashboard</div></div>
+      </div>
+      <div class="text-end">
+        <div class="fw-bold text-dark mb-1" id="txtNama">User</div>
+        <span id="txtRoleBadge" class="badge-role role-guru">GURU</span>
+        <div class="mt-1"><a href="#" onclick="doLogout()" class="text-danger fw-bold small text-decoration-none" style="font-size: 0.7rem;">Keluar</a></div>
+      </div>
+    </div>
+    <span id="txtSekolah" class="hidden"></span>
+    
+    <div id="panel-guru" class="hidden">
+      <div class="card-pro p-4 mb-3" style="background-color: var(--md-sys-color-primary); color: white;">
+        <div class="row align-items-center">
+          <div class="col-8">
+            <span class="small fw-bold text-white-50 text-uppercase" style="letter-spacing: 1px;">CAPAIAN KINERJA</span>
+            <h1 class="fw-bold mt-1 mb-0 display-4" id="txt-persen">0%</h1>
+            <div class="progress mt-3 mb-3" style="height: 8px; border-radius: 20px; background-color: rgba(255,255,255,0.2);">
+                <div id="bar-guru" class="progress-bar bg-white" role="progressbar" style="width: 0%; border-radius: 20px;"></div>
+            </div>
+            <div class="d-flex align-items-center"><span class="badge bg-white text-danger border-0 me-2 rounded-pill px-3" id="txt-target">0/0</span><small class="text-white-50">Selesai</small></div>
+          </div>
+          <div class="col-4 text-end opacity-25"><i class="bi bi-bar-chart-fill" style="font-size: 4rem; color: #fff;"></i></div>
+        </div>
+      </div>
+      
+      <ul class="nav nav-pills nav-fill mb-3 p-1">
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#g-tab-tugas"><i class="bi bi-list-check me-1"></i> Tugas</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#g-tab-implemen"><i class="bi bi-person-workspace me-1"></i> Implemen</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#g-tab-inovasi"><i class="bi bi-lightbulb me-1"></i> Inovasi</button></li>
+      </ul>
+
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="g-tab-tugas"><div id="list-kegiatan-guru"></div></div>
+        <div class="tab-pane fade" id="g-tab-implemen">
+           <div class="card-pro p-4">
+             <h6 class="fw-bold text-dark mb-4">Lapor Implementasi KKG</h6>
+             <form id="frmImplemen" onsubmit="submitPengembangan(event, 'Implementasi KKG')">
+               <div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">PROGRAM KKG</label><select id="sel-prog-kkg" class="form-select form-control-pro"></select></div>
+               <div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">NAMA KEGIATAN</label><input type="text" id="imp-nama" class="form-control form-control-pro" required></div>
+               <div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">KELAS / MAPEL</label><input type="text" id="imp-kelas" class="form-control form-control-pro" required></div>
+               <div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">LINK DOKUMENTASI</label><input type="url" id="imp-link" class="form-control form-control-pro" placeholder="https://..." required></div>
+               <div class="mb-4"><label class="small fw-bold text-muted ms-2 mb-1">URAIAN SINGKAT</label><textarea id="imp-desc" class="form-control form-control-pro" rows="3" required></textarea></div>
+               <button class="btn btn-primary w-100 py-3">KIRIM LAPORAN</button>
+             </form>
+           </div>
+        </div>
+        <div class="tab-pane fade" id="g-tab-inovasi">
+           <div class="card-pro p-4">
+             <div class="alert small border-0 mb-4" style="background: var(--st-info-bg); color: var(--st-info-text); border-radius: 16px;"><i class="bi bi-star-fill me-1"></i> Opsional: Kirimkan karya inovatif Anda.</div>
+             <form id="frmInovasi" onsubmit="submitPengembangan(event, 'Karya Inovasi')">
+               <div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">NAMA INOVASI</label><input type="text" id="ino-nama" class="form-control form-control-pro" required></div>
+               <div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">LINK DOKUMENTASI</label><input type="url" id="ino-link" class="form-control form-control-pro" placeholder="https://..." required></div>
+               <div class="mb-4"><label class="small fw-bold text-muted ms-2 mb-1">URAIAN SINGKAT</label><textarea id="ino-desc" class="form-control form-control-pro" rows="3" required></textarea></div>
+               <button class="btn btn-success w-100 py-3">KIRIM KARYA</button>
+             </form>
+           </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-ks" class="hidden">
+      <div class="card-pro p-4 mb-3">
+        <div class="d-flex justify-content-between align-items-start">
+          <div><span class="text-muted small fw-bold text-uppercase">Capaian Sekolah</span><h1 class="fw-bold mt-1 mb-0 display-4 text-danger" id="ks-persen">0%</h1><small class="text-muted" style="font-size:0.75rem">Rata-rata Kinerja Guru</small></div>
+          <div class="text-end bg-danger-subtle p-3 rounded-4" style="background-color: var(--md-sys-color-primary-container) !important;">
+              <h2 class="mb-0 fw-bold" style="color: var(--md-sys-color-primary);" id="ks-total-laporan">0</h2>
+              <small class="fw-bold" style="font-size:0.65rem; color: var(--md-sys-color-on-primary-container);">LAPORAN</small>
+          </div>
+        </div>
+      </div>
+      <div class="card-pro p-3 mb-4" style="background-color: #E3F2FD;">
+        <h6 class="fw-bold small mb-2 text-primary"><i class="bi bi-graph-up me-1"></i> PENGEMBANGAN DIRI</h6>
+        <div class="row text-center">
+          <div class="col-6 border-end border-secondary-subtle"><h3 class="fw-bold mb-0 text-dark" id="ks-count-imp">0</h3><small class="text-muted" style="font-size:0.7rem">Implementasi</small></div>
+          <div class="col-6"><h3 class="fw-bold mb-0 text-dark" id="ks-count-ino">0</h3><small class="text-muted" style="font-size:0.7rem">Inovasi</small></div>
+        </div>
+      </div>
+      
+      <h6 class="fw-bold text-dark small mb-3 px-2">MANAJEMEN SEKOLAH</h6>
+      <div class="row gx-2 mb-4">
+        <div class="col-4">
+          <button onclick="bukaModalPrestasi()" class="btn btn-warning w-100 h-100 py-3 text-white fw-bold d-flex flex-column align-items-center justify-content-center">
+            <i class="bi bi-trophy-fill fs-3 mb-1"></i><span style="font-size:0.65rem">PRESTASI</span>
+          </button>
+        </div>
+        <div class="col-4">
+          <button onclick="bukaModalPembiasaan()" class="btn btn-success w-100 h-100 py-3 text-white fw-bold d-flex flex-column align-items-center justify-content-center">
+            <i class="bi bi-calendar-check-fill fs-3 mb-1"></i><span style="font-size:0.65rem">BIAS</span>
+          </button>
+        </div>
+        <div class="col-4">
+          <button onclick="bukaModalEvent()" class="btn btn-primary w-100 h-100 py-3 text-white fw-bold d-flex flex-column align-items-center justify-content-center">
+            <i class="bi bi-balloon-fill fs-3 mb-1"></i><span style="font-size:0.65rem">EVENT</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3 px-2 mt-2">
+        <h6 class="fw-bold text-dark mb-0 fs-6">Rapor Kinerja Guru</h6>
+        <button onclick="loadKS()" class="btn btn-sm btn-light text-primary rounded-circle shadow-sm" style="width:36px;height:36px"><i class="bi bi-arrow-clockwise"></i></button>
+      </div>
+      <div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;"><thead style="background: var(--md-sys-color-surface-container);"><tr><th class="ps-3 py-3 border-0">Nama Guru</th><th style="width:35%" class="border-0">Progress</th><th class="text-end pe-4 border-0">Capaian</th></tr></thead><tbody id="tbl-ks" class="border-0"></tbody></table></div></div>
+    </div>
+
+    <div id="panel-penilai" class="hidden">
+      <div class="overflow-auto mb-3 pb-1">
+          <ul class="nav nav-pills flex-nowrap" role="tablist">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#p-tab-tugas">TUGAS</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#p-tab-prestasi">PRESTASI</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#p-tab-sekolah">SEKOLAH</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#p-tab-implemen">IMPLEMEN</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#p-tab-inovasi">INOVASI</button></li>
+          </ul>
+      </div>
+
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="p-tab-tugas">
+          <div class="card-pro p-3 mb-3 d-flex justify-content-between align-items-center">
+            <div class="fw-bold text-dark small"><i class="bi bi-funnel me-1"></i> Filter</div><select id="sel-materi" class="filter-select" onchange="filterPenilai()"><option value="ALL">Semua</option></select>
+          </div>
+          <div id="list-penilai-tugas"></div>
+        </div>
+        <div class="tab-pane fade" id="p-tab-prestasi"><div id="list-penilai-prestasi"></div></div>
+        <div class="tab-pane fade" id="p-tab-sekolah"><div id="list-penilai-sekolah"></div></div>
+        <div class="tab-pane fade" id="p-tab-implemen"><div id="list-penilai-implemen"></div></div>
+        <div class="tab-pane fade" id="p-tab-inovasi"><div id="list-penilai-inovasi"></div></div>
+      </div>
+    </div>
+
+    <div id="panel-admin" class="hidden">
+      <div class="row mb-3 gx-3">
+        <div class="col-6"><div class="card-pro p-3 text-center mb-0 h-100 d-flex flex-column justify-content-center"><small class="text-muted fw-bold d-block mb-1" style="font-size:0.7rem">RATA-RATA GURU</small><h3 class="fw-bold text-danger mb-0" id="stat-avg-guru">0%</h3></div></div>
+        <div class="col-6"><div class="card-pro p-3 text-center mb-0 h-100 d-flex flex-column justify-content-center"><small class="text-muted fw-bold d-block mb-1" style="font-size:0.7rem">RATA-RATA SEKOLAH</small><h3 class="fw-bold text-success mb-0" id="stat-avg-sekolah">0%</h3></div></div>
+      </div>
+      <ul class="nav nav-pills nav-fill mb-4">
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#adm-feed">Feed</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-sekolah">Sekolah</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-guru">Guru</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-prestasi">Prestasi</button></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="adm-feed"><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0 small"><thead style="background: var(--md-sys-color-surface-container);"><tr><th class="ps-4 py-3 border-0">Guru / Sekolah</th><th class="border-0">Kegiatan</th><th class="border-0">Status</th></tr></thead><tbody id="tbl-adm-feed" class="border-0"></tbody></table></div></div></div>
+        <div class="tab-pane fade" id="adm-sekolah"><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0 small text-center"><thead style="background: var(--md-sys-color-surface-container);"><tr><th class="border-0 py-3">Rank</th><th class="text-start border-0">Sekolah</th><th class="border-0">Poin</th><th class="border-0">Tugas</th></tr></thead><tbody id="tbl-adm-sekolah" class="border-0"></tbody></table></div></div></div>
+        <div class="tab-pane fade" id="adm-guru"><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0 small"><thead style="background: var(--md-sys-color-surface-container);"><tr><th class="ps-4 py-3 border-0 text-center">Rank</th><th class="border-0">Nama Guru</th><th class="text-center border-0">Poin</th></tr></thead><tbody id="tbl-adm-guru" class="border-0"></tbody></table></div></div></div>
+        <div class="tab-pane fade" id="adm-prestasi"><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0 small text-center"><thead class="bg-warning text-dark"><tr><th class="border-0 py-3">Rank</th><th class="text-start border-0">Sekolah</th><th class="border-0">Piala</th><th class="fw-bold border-0">Total Poin</th></tr></thead><tbody id="tbl-adm-prestasi" class="border-0"></tbody></table></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="mdlUpload"><div class="modal-dialog modal-dialog-centered"><div class="modal-content shadow"><div class="modal-body p-4"><h5 class="fw-bold mb-3">Lapor Kegiatan</h5><form id="frmUpload" onsubmit="submitTugas(event)"><div class="mb-3"><label class="small fw-bold text-muted ms-1 mb-1">KEGIATAN</label><input name="judul_dokumen" id="inpJudul" class="form-control form-control-pro bg-light fw-bold" readonly><input type="hidden" name="jenis_laporan" value="Kegiatan Gugus"></div><div class="mb-3"><label class="small fw-bold text-muted ms-1 mb-1">LINK</label><input type="url" name="link_video" id="inpLink" class="form-control form-control-pro"></div><div class="mb-4"><label class="small fw-bold text-muted ms-1 mb-1">RANGKUMAN</label><textarea name="catatan" id="inpCatatan" class="form-control form-control-pro" rows="4"></textarea></div><button class="btn btn-gradient w-100 py-3">KIRIM</button></form></div></div></div></div>
+
+<div class="modal fade" id="mdlPrestasi"><div class="modal-dialog modal-dialog-centered"><div class="modal-content shadow"><div class="modal-body p-4"><h5 class="fw-bold mb-3 text-warning">Input Prestasi</h5><form id="frmPrestasi" onsubmit="submitPrestasi(event)"><div class="mb-3"><label class="small fw-bold text-muted ms-1 mb-1">SEKOLAH</label><select id="inpSekolahPrestasi" class="form-select form-control-pro"></select></div><div class="mb-3"><input type="text" name="nama_siswa" class="form-control form-control-pro" placeholder="Nama Siswa" required></div><div class="row mb-3"><div class="col-6"><input type="text" name="cabang" class="form-control form-control-pro" placeholder="Cabang" required></div><div class="col-6"><input type="text" name="penyelenggara" class="form-control form-control-pro" placeholder="Penyelenggara" required></div></div><div class="row mb-3"><div class="col-6"><select name="tingkat" class="form-select form-control-pro"><option value="Kecamatan">Kecamatan</option><option value="Kabupaten">Kabupaten</option><option value="Nasional">Nasional</option></select></div><div class="col-6"><select name="juara" class="form-select form-control-pro"><option value="1">Juara 1</option><option value="2">Juara 2</option><option value="3">Juara 3</option></select></div></div><div class="mb-4"><input type="text" name="no_piagam" class="form-control form-control-pro" placeholder="No Piagam" required></div><button class="btn btn-warning w-100 py-3">KIRIM</button></form></div></div></div></div>
+
+<div class="modal fade" id="mdlPembiasaan"><div class="modal-dialog modal-dialog-centered"><div class="modal-content shadow"><div class="modal-body p-4"><h5 class="fw-bold mb-3 text-success">Lapor Pembiasaan</h5><form id="frmPembiasaan" onsubmit="submitPembiasaan(event)"><div class="mb-3"><label class="small fw-bold text-muted ms-1 mb-1">SEKOLAH</label><select id="inpSekolahBias" class="form-select form-control-pro"></select></div><div class="mb-3"><input type="text" id="bias-nama" class="form-control form-control-pro" placeholder="Nama Program" required></div><div class="row mb-3"><div class="col-6"><select id="bias-freq" class="form-select form-control-pro"><option>Harian</option><option>Mingguan</option><option>Bulanan</option></select></div><div class="col-6"><input type="text" id="bias-karakter" class="form-control form-control-pro" placeholder="Karakter" required></div></div><div class="mb-3"><input type="url" id="bias-link" class="form-control form-control-pro" placeholder="Link Foto/Video" required></div><div class="mb-4"><textarea id="bias-desc" class="form-control form-control-pro" rows="3" placeholder="Keterangan..." required></textarea></div><button class="btn btn-success w-100 py-3">KIRIM</button></form></div></div></div></div>
+
+<div class="modal fade" id="mdlEvent"><div class="modal-dialog modal-dialog-centered"><div class="modal-content shadow"><div class="modal-body p-4"><h5 class="fw-bold mb-3 text-primary">Lapor Event Sekolah</h5><form id="frmEvent" onsubmit="submitEvent(event)"><div class="mb-3"><label class="small fw-bold text-muted ms-1 mb-1">SEKOLAH</label><select id="inpSekolahEvent" class="form-select form-control-pro"></select></div><div class="mb-3"><input type="text" id="evt-nama" class="form-control form-control-pro" placeholder="Nama Event" required></div><div class="row mb-3"><div class="col-6"><input type="date" id="evt-date" class="form-control form-control-pro" required></div><div class="col-6"><select id="evt-scale" class="form-select form-control-pro"><option value="Internal">Internal</option><option value="Orang Tua">Orang Tua</option><option value="Umum">Umum/Pejabat</option></select></div></div><div class="mb-3"><input type="url" id="evt-link" class="form-control form-control-pro" placeholder="Link Dokumentasi" required></div><div class="mb-4"><textarea id="evt-desc" class="form-control form-control-pro" rows="3" placeholder="Dampak Kegiatan..." required></textarea></div><button class="btn btn-primary w-100 py-3">KIRIM</button></form></div></div></div></div>
+
+<div class="modal fade" id="mdlNilai"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-body p-4"><input type="hidden" id="n_id"><input type="hidden" id="n_type"><div class="text-center mb-4"><h5 class="fw-bold mb-1" id="lbl-modal-title">Form Penilaian</h5></div><label class="small fw-bold text-muted ms-1 mb-1">KEPUTUSAN</label><div id="ui-nilai-tugas"><select id="n_huruf" class="form-select form-control-pro mb-3 text-center fw-bold text-dark fs-5"><option value="A">A - Sangat Baik</option><option value="B">B - Baik</option><option value="C">C - Cukup</option><option value="D">D - Kurang</option><option value="E">E - Sangat Kurang</option></select></div><div id="ui-nilai-prestasi" class="d-none"><select id="n_validasi" class="form-select form-control-pro mb-3 text-center fw-bold fs-5"><option value="VALID" class="text-success">✅ VALID (Terima)</option><option value="INVALID" class="text-danger">❌ INVALID (Revisi)</option></select></div><div id="ui-nilai-qual" class="d-none"><select id="n_kual" class="form-select form-control-pro mb-3 text-center fw-bold text-primary fs-5"><option value="A">A - Sangat Baik</option><option value="B">B - Baik</option><option value="C">C - Cukup</option><option value="D">D - Kurang</option></select></div><label class="small fw-bold text-muted ms-1 mb-1">CATATAN</label><textarea id="n_feed" class="form-control form-control-pro mb-4" rows="3" placeholder="..."></textarea><button onclick="saveNilai()" class="btn btn-success w-100 py-3">SIMPAN KEPUTUSAN</button></div></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<?!= include('src/client/js'); ?>
+
+</body>
+</html>
