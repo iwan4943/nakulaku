@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAKULAKU EKOSISTEM</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           MATERIAL YOU (ANDROID 16) - RED THEME
+           ========================================= */
+        :root {
+            --md-sys-color-primary: #b71c1c;
+            --md-sys-color-on-primary: #ffffff;
+            --md-sys-color-primary-container: #ffdad6;
+            --md-sys-color-on-primary-container: #410002;
+            
+            --md-sys-color-secondary: #775652;
+            --md-sys-color-surface: #fff8f7;
+            --md-sys-color-surface-variant: #f5ddda;
+            
+            --md-sys-color-background: #fffbff;
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--md-sys-color-background); color: #201a1a; overflow-x: hidden; }
+
+        /* UTILITIES */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .hidden { display: none; }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 12px 28px; border-radius: 100px; font-weight: 600;
+            text-decoration: none; transition: all 0.3s ease; gap: 8px; font-size: 0.95rem; cursor: pointer;
+        }
+        .btn-primary { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); box-shadow: 0 4px 10px rgba(183, 28, 28, 0.3); }
+        .btn-primary:hover { background-color: #d32f2f; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(183, 28, 28, 0.4); }
+        .btn-tonal { background-color: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+        .btn-tonal:hover { filter: brightness(0.95); }
+
+        /* HEADER */
+        header { padding: 16px 0; position: sticky; top: 0; z-index: 100; background: rgba(255, 251, 255, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--md-sys-color-surface-variant); }
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        
+        .logo-container { display: flex; align-items: center; gap: 10px; }
+        .logo-img { height: 40px; width: auto; object-fit: contain; }
+        .logo-text { font-size: 1.25rem; font-weight: 800; color: var(--md-sys-color-primary); letter-spacing: -0.5px; text-transform: uppercase; }
+
+        /* HERO SECTION */
+        .hero { padding: 60px 0 80px; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+        .hero-text { flex: 1; }
+        .hero h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 24px; color: #201a1a; letter-spacing: -1px; }
+        .hero h1 span { color: var(--md-sys-color-primary); }
+        .hero p { font-size: 1.15rem; color: #524341; margin-bottom: 32px; line-height: 1.6; max-width: 90%; }
+        
+        .badge-version {
+            display: inline-block; background: var(--md-sys-color-primary-container); 
+            color: var(--md-sys-color-on-primary-container); padding: 6px 16px; 
+            border-radius: 50px; font-size: 0.85rem; font-weight: 700; margin-bottom: 20px;
+        }
+
+        .hero-img { flex: 1; display: flex; justify-content: center; position: relative; }
+        .mockup-card {
+            width: 280px; height: 580px; background: var(--md-sys-color-primary-container);
+            border-radius: 45px; border: 10px solid #fff;
+            box-shadow: 0 25px 50px -12px rgba(183, 28, 28, 0.25); 
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 2;
+        }
+        /* Blob background effect */
+        .hero-img::before {
+            content: ''; position: absolute; width: 120%; height: 120%;
+            background: radial-gradient(circle, var(--md-sys-color-surface-variant) 0%, rgba(255,255,255,0) 70%);
+            z-index: 1; top: -10%;
+        }
+
+        .mockup-logo { width: 90px; height: auto; margin-bottom: 15px; }
+
+        /* FEATURES */
+        .section-title { text-align: center; margin-bottom: 50px; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .section-title h2 { font-size: 2.2rem; margin-bottom: 12px; font-weight: 800; color: #410002; }
+        .section-title p { color: #775652; font-size: 1.1rem; }
+        
+        .grid-apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; padding-bottom: 80px; }
+        .app-card { background: #fff; padding: 28px; border-radius: var(--radius-lg); border: 1px solid var(--md-sys-color-surface-variant); transition: 0.3s; height: 100%; display: flex; flex-direction: column; }
+        .app-card:hover { background: #fff8f7; border-color: var(--md-sys-color-primary); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .icon-box { width: 56px; height: 56px; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 20px; }
+        .app-card h3 { font-size: 1.25rem; margin-bottom: 10px; font-weight: 700; }
+        .app-card p { font-size: 0.95rem; color: #524341; margin-bottom: 15px; flex-grow: 1; }
+        .app-card ul { list-style: none; margin-top: auto; padding-top: 15px; border-top: 1px dashed var(--md-sys-color-surface-variant); }
+        .app-card li { font-size: 0.9rem; color: #201a1a; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .app-card li i { color: var(--md-sys-color-primary); font-size: 0.8rem; }
+
+        /* BENEFITS */
+        .dual-section { background-color: var(--md-sys-color-surface-variant); padding: 80px 0; border-radius: var(--radius-xl); margin-bottom: 60px; }
+        .row { display: flex; flex-wrap: wrap; gap: 60px; }
+        .col { flex: 1; min-width: 300px; }
+        .chip { display: inline-flex; align-items: center; padding: 8px 16px; background: #fff; border-radius: 50px; font-weight: 600; font-size: 0.9rem; margin: 0 8px 12px 0; color: #410002; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .chip i { margin-right: 8px; color: var(--md-sys-color-primary); }
+        
+        .benefit-item { display: flex; gap: 16px; margin-bottom: 24px; background: rgba(255,255,255,0.6); padding: 20px; border-radius: var(--radius-md); transition: 0.3s; }
+        .benefit-item:hover { background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .benefit-icon { color: var(--md-sys-color-primary); font-size: 1.4rem; background: var(--md-sys-color-primary-container); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
+
+        /* FOOTER */
+        footer { background-color: #201a1a; color: #fff; padding: 60px 0 40px; text-align: center; border-top-left-radius: var(--radius-xl); border-top-right-radius: var(--radius-xl); }
+        .footer-logo { filter: brightness(0) invert(1); opacity: 0.9; height: 50px; margin-bottom: 15px; }
+        .footer-links a { color: #f5ddda; margin: 0 12px; text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
+        .footer-links a:hover { color: #fff; text-decoration: underline; }
+        .copyright { margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; color: #938f99; line-height: 1.6; }
+
+        /* RESPONSIVE MEDIA QUERIES */
+        @media (max-width: 992px) {
+            .hero h1 { font-size: 2.8rem; }
+            .row { gap: 40px; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            
+            /* Header Mobile */
+            .logo-text { font-size: 1.1rem; }
+            .btn { padding: 10px 20px; font-size: 0.9rem; }
+            
+            /* Hero Mobile */
+            .hero { flex-direction: column; text-align: center; padding: 40px 0 60px; gap: 50px; }
+            .hero-text { order: 1; }
+            .hero-img { order: 2; margin-bottom: 0; }
+            .hero h1 { font-size: 2.4rem; }
+            .hero p { margin-left: auto; margin-right: auto; }
+            .btn-group { justify-content: center; }
+            
+            /* Sections Mobile */
+            .section-title h2 { font-size: 1.8rem; }
+            .dual-section { padding: 50px 0; border-radius: var(--radius-lg); }
+            .row { flex-direction: column; gap: 40px; }
+            .col { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo-container">
+                    <img src="https://i.imgur.com/ELNzJK4.png" alt="Logo Nakulaku" class="logo-img">
+                    <span class="logo-text">Nakulaku</span>
+                </div>
+                <a href="https://apk.e-droid.net/apk/app3833934-vu6745.apk?v=4" class="btn btn-primary">
+                    <i class="fas fa-download"></i> <span style="display: inline-block;">Unduh</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="container hero">
+        <div class="hero-text">
+            <div class="badge-version">
+                Versi 1.1 Tersedia
+            </div>
+            <h1>NAKULAKU<br><span>EKOSISTEM</span></h1>
+            <p>Platform digital terintegrasi untuk Guru, Kepala Sekolah, di Gugus Nakula. Absensi, Kinerja, hingga Monitoring dalam satu genggaman.</p>
+            <div class="btn-group" style="display:flex; gap:12px; flex-wrap: wrap;">
+                <a href="https://apk.e-droid.net/apk/app3833934-vu6745.apk?v=4" class="btn btn-primary">
+                    <i class="fab fa-android"></i> Download APK
+                </a>
+                <a href="#fitur" class="btn btn-tonal">Pelajari Fitur</a>
+            </div>
+        </div>
+        <div class="hero-img">
+            <div class="mockup-card">
+                <img src="https://i.imgur.com/ELNzJK4.png" alt="Logo App" class="mockup-logo">
+                <h3 style="margin:10px 0; color:#410002; font-weight:800;">Nakulaku</h3>
+                <p style="font-size:0.9rem; opacity:0.8; color:#410002; text-align:center; font-weight:600;">Super App Kelompok Kerja Guru (KKG)<br>Gugus Nakula</p>
+                <div style="margin-top:20px; width:80%; height:8px; background:rgba(255,255,255,0.5); border-radius:10px;"></div>
+                <div style="margin-top:10px; width:60%; height:8px; background:rgba(255,255,255,0.5); border-radius:10px;"></div>
+                
+                <a href="https://apk.e-droid.net/apk/app3833934-vu6745.apk?v=4" style="margin-top:40px; background:white; color:#b71c1c; padding:12px 30px; border-radius:50px; text-decoration:none; font-weight:bold; font-size:0.85rem; box-shadow:0 4px 10px rgba(0,0,0,0.1);">Install Sekarang</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="fitur" class="container">
+        <div class="section-title">
+            <h2>Modul Ekosistem</h2>
+            <p>Fitur lengkap untuk mendukung kinerja pendidikan yang optimal</p>
+        </div>
+
+        <div class="grid-apps">
+            <div class="app-card">
+                <div class="icon-box"><i class="fas fa-fingerprint"></i></div>
+                <h3>Smart Presensi</h3>
+                <p>Sistem absensi cerdas berbasis lokasi GPS dan validasi biometrik wajah.</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Geotagging GPS Radius</li>
+                    <li><i class="fas fa-check-circle"></i> Validasi Foto Wajah</li>
+                    <li><i class="fas fa-check-circle"></i> Rekap Kehadiran Realtime</li>
+                </ul>
+            </div>
+
+            <div class="app-card">
+                <div class="icon-box"><i class="fas fa-chart-line"></i></div>
+                <h3>E-Kinerja & LMS</h3>
+                <p>Manajemen tugas harian dan laporan pengembangan diri guru secara digital.</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Upload Tugas Wajib</li>
+                    <li><i class="fas fa-check-circle"></i> Laporan Inovasi & Prestasi</li>
+                    <li><i class="fas fa-check-circle"></i> Materi Pembelajaran (KKG)</li>
+                </ul>
+            </div>
+
+            <div class="app-card">
+                <div class="icon-box"><i class="fas fa-poll"></i></div>
+                <h3>Monev Digital</h3>
+                <p>Alat monitoring dan evaluasi kegiatan sekolah secara langsung dan transparan.</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Survei Umpan Balik</li>
+                    <li><i class="fas fa-check-circle"></i> Voting Kekompakan</li>
+                    <li><i class="fas fa-check-circle"></i> Jurnal Observasi</li>
+                </ul>
+            </div>
+
+            <div class="app-card">
+                <div class="icon-box"><i class="fas fa-gavel"></i></div>
+                <h3>Meja Penilai</h3>
+                <p>Dashboard "Command Center" khusus Pengawas/KS untuk validasi data.</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Statistik Real-time</li>
+                    <li><i class="fas fa-check-circle"></i> Approval Berkas</li>
+                    <li><i class="fas fa-check-circle"></i> Blind Grading System</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="dual-section">
+            <div class="container row">
+                
+                <div class="col">
+                    <h3 style="font-size:1.8rem; margin-bottom:20px; color: #410002; font-weight:800;">Sasaran Pengguna</h3>
+                    <p style="margin-bottom:24px; line-height:1.6;">Aplikasi ini dirancang khusus untuk memfasilitasi seluruh elemen pendidik di lingkungan Gugus, menciptakan sinergi data yang akurat dan terpercaya.</p>
+                    
+                    <div>
+                        <div class="chip"><i class="fas fa-chalkboard-teacher"></i> Guru Kelas & Mapel</div>
+                        <div class="chip"><i class="fas fa-user-tie"></i> Kepala Sekolah</div>
+                        <div class="chip"><i class="fas fa-tasks"></i> Operator Sekolah</div>
+                        <div class="chip"><i class="fas fa-eye"></i> Pengawas / Korwil</div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h3 style="font-size:1.8rem; margin-bottom:20px; color: #410002; font-weight:800;">Manfaat Utama</h3>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon"><i class="fas fa-bolt"></i></div>
+                        <div>
+                            <h4 style="margin-bottom:5px; font-weight:700;">Efisiensi Waktu</h4>
+                            <small style="color:#524341;">Pelaporan otomatis tanpa perlu rekap manual kertas yang memakan waktu.</small>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon"><i class="fas fa-database"></i></div>
+                        <div>
+                            <h4 style="margin-bottom:5px; font-weight:700;">Data Terpusat</h4>
+                            <small style="color:#524341;">Satu database terintegrasi untuk absensi, kinerja, dan prestasi sekolah.</small>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon"><i class="fas fa-balance-scale"></i></div>
+                        <div>
+                            <h4 style="margin-bottom:5px; font-weight:700;">Penilaian Objektif</h4>
+                            <small style="color:#524341;">Fitur <i>Blind Review</i> menjamin keadilan dalam penilaian kinerja guru.</small>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div style="margin-bottom:30px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <img src="https://i.imgur.com/ELNzJK4.png" alt="Logo Footer" class="footer-logo">
+                <h4 style="font-weight:800; font-size:1.6rem; margin-bottom:5px; letter-spacing: -0.5px;">NAKULAKU EKOSISTEM</h4>
+                <p style="opacity:0.7;">Digitalisasi Pendidikan Menuju Era 5.0</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">Panduan Penggunaan</a>
+                <a href="https://apk.e-droid.net/apk/app3833934-vu6745.apk?v=4">Download Versi 1.1</a>
+                <a href="#">Kebijakan Privasi</a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Tim Pengembang Gu<br>Korwilcambidik Kecamatan Selogiri.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
