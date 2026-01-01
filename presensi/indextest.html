@@ -860,23 +860,23 @@
         
         toggleLoading(true);
         
-        // Mapped to Google Apps Script `processForm` payload keys
+        // UPDATED PAYLOAD TO MATCH STABLE BACKEND (kode.gs)
         const payload = {
-            nama_hidden: userData.nama,
-            email_hidden: userData.email,
-            unit_hidden: userData.unitKerja,
-            jabatan_hidden: userData.jabatan,
+            nama: userData.nama,          // Was: nama_hidden
+            email: userData.email,        // Was: email_hidden
+            unit: userData.unitKerja,     // Was: unit_hidden
+            jabatan: userData.jabatan,    // Was: jabatan_hidden
             lat: lat,
             long: document.getElementById('h_long').value,
             materi: materi,
-            lokasi_kegiatan_target: document.getElementById('h_target').value,
-            foto_base64: foto
+            lokasi_target: document.getElementById('h_target').value, // Was: lokasi_kegiatan_target
+            foto: foto                    // Was: foto_base64
         };
         
         const r = await callAPI('absen', payload);
         toggleLoading(false);
         
-        // Check response string from GAS (usually returns "SUKSES: ..." or "GAGAL: ...")
+        // Backend now returns JSON string like "SUKSES: Hadir (Tepat Waktu)"
         if (r && typeof r === 'string' && r.includes("SUKSES")) {
             Swal.fire({
                 icon: 'success',
@@ -903,14 +903,15 @@
         if (!alasan) return Swal.fire('Wajib', 'Isi keterangan izin.', 'warning');
 
         toggleLoading(true);
-        // Mapped to Google Apps Script `processIzin` payload keys
+        
+        // UPDATED PAYLOAD TO MATCH STABLE BACKEND (kode.gs)
         const payload = {
-            nama_hidden: userData.nama,
-            email_hidden: userData.email,
-            unit_hidden: userData.unitKerja,
-            jabatan_hidden: userData.jabatan,
-            jenis_izin: document.getElementById('izin_jenis').value,
-            alasan_izin: alasan
+            nama: userData.nama,          // Was: nama_hidden
+            email: userData.email,        // Was: email_hidden
+            unit: userData.unitKerja,     // Was: unit_hidden
+            jabatan: userData.jabatan,    // Was: jabatan_hidden
+            jenis: document.getElementById('izin_jenis').value, // Was: jenis_izin
+            alasan: alasan               // Was: alasan_izin
         };
 
         const r = await callAPI('izin', payload);
