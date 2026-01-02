@@ -13,8 +13,8 @@
     :root {
       --md-sys-color-primary: #B3261E;
       --md-sys-color-on-primary: #FFFFFF;
-      --md-sys-color-primary-container: #FFDAD6;
-      --md-sys-color-on-primary-container: #410002;
+      --md-sys-color-primary-container: #FFDAD6; /* Warna Soft */
+      --md-sys-color-on-primary-container: #410002; /* Teks Gelap pada Soft */
       --md-sys-color-surface: #FFF8F7;
       --md-sys-color-surface-container: #FCEAE9;
       --md-sys-color-surface-bright: #FFFFFF;
@@ -51,6 +51,33 @@
       background: linear-gradient(180deg, var(--md-sys-color-surface-container) 0%, var(--md-sys-color-surface) 100%);
       border-radius: 0 0 32px 32px;
       margin-bottom: 25px;
+      position: relative; 
+    }
+
+    /* TOMBOL APK SOFT - POJOK KANAN ATAS */
+    .btn-apk-top {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      /* Warna Soft */
+      background-color: var(--md-sys-color-primary-container); 
+      color: var(--md-sys-color-on-primary-container); 
+      
+      text-decoration: none;
+      font-size: 0.7rem;
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+
+    .btn-apk-top:active {
+      transform: scale(0.95);
+      background-color: #ffb4ab; /* Sedikit lebih gelap saat ditekan */
     }
 
     .logo-img {
@@ -145,33 +172,6 @@
       color: var(--md-sys-color-on-surface-variant);
     }
 
-    /* DOWNLOAD APK SMALL BUTTON */
-    .cta-section {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .btn-download-sm {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background-color: var(--md-sys-color-primary-container);
-      color: var(--md-sys-color-on-primary-container);
-      padding: 10px 20px;
-      border-radius: var(--shape-pill);
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 600;
-      font-family: 'Google Sans', sans-serif;
-      transition: 0.2s;
-      border: 1px solid rgba(179, 38, 30, 0.1);
-    }
-
-    .btn-download-sm:active {
-      transform: scale(0.95);
-      background-color: #ffb4ab;
-    }
-
     /* FOOTER */
     .footer {
       padding: 24px 20px;
@@ -205,13 +205,16 @@
     @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
     .d-1 { animation-delay: 0.1s; } .d-2 { animation-delay: 0.2s; }
     .d-3 { animation-delay: 0.3s; } .d-4 { animation-delay: 0.4s; }
-    .d-5 { animation-delay: 0.5s; }
 
   </style>
 </head>
 <body>
 
   <div class="header fade-in-up">
+    <a href="https://apk.e-droid.net/apk/app3833934-vu6745.apk?v=4" class="btn-apk-top">
+      <i class="fab fa-android fa-lg"></i> Download
+    </a>
+
     <img src="https://i.imgur.com/teco2dH.png" alt="Logo Nakula" class="logo-img">
     <h1 class="app-title">NAKULAKU</h1>
     <p class="app-subtitle">Ekosistem Digital Gugus Nakula</p>
@@ -242,13 +245,6 @@
         <div class="icon-box"><i class="fas fa-comments"></i></div>
         <div class="card-title">Feedback</div>
         <div class="card-desc">Penilaian Kegiatan</div>
-      </a>
-    </div>
-
-    <div class="cta-section fade-in-up d-5">
-      <a href="https://apk.e-droid.net/apk/app3833934-vu6745.apk?v=4" class="btn-download-sm">
-        <i class="fab fa-android fa-lg"></i>
-        <span>Download Aplikasi (.apk)</span>
       </a>
     </div>
 
