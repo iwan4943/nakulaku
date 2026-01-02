@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Nakula Ekosistem</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* MATERIAL YOU THEME - RED (NAKULA IDENTITY) */
+    :root {
+      --md-sys-color-primary: #B3261E;
+      --md-sys-color-on-primary: #FFFFFF;
+      --md-sys-color-primary-container: #FFDAD6;
+      --md-sys-color-on-primary-container: #410002;
+      --md-sys-color-surface: #FFF8F7;
+      --md-sys-color-surface-container: #FCEAE9;
+      --md-sys-color-surface-bright: #FFFFFF;
+      --md-sys-color-outline: #857372;
+      --md-sys-color-on-surface: #201A1A;
+      --md-sys-color-on-surface-variant: #534341;
+      
+      --shape-card: 24px;
+      --shape-pill: 50px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      background-color: var(--md-sys-color-surface);
+      font-family: 'Roboto', sans-serif;
+      color: var(--md-sys-color-on-surface);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1, h2, h3, .font-google { font-family: 'Google Sans', sans-serif; }
+
+    /* HEADER SECTION */
+    .header {
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      padding: 40px 24px 25px 24px;
+      background: linear-gradient(180deg, var(--md-sys-color-surface-container) 0%, var(--md-sys-color-surface) 100%);
+      border-radius: 0 0 32px 32px;
+      margin-bottom: 25px;
+    }
+
+    .logo-img {
+      width: 85px;
+      height: 85px;
+      object-fit: contain;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 4px 6px rgba(179, 38, 30, 0.1));
+      transition: transform 0.3s ease;
+    }
+    .logo-img:hover { transform: scale(1.05); }
+
+    .app-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--md-sys-color-primary);
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .app-subtitle {
+      font-size: 0.85rem;
+      color: var(--md-sys-color-on-surface-variant);
+      margin-top: 5px;
+      font-weight: 500;
+    }
+
+    /* GRID MENU SECTION */
+    .container {
+      width: 100%;
+      max-width: 480px;
+      padding: 0 24px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .grid-menu {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 25px;
+    }
+
+    .card-app {
+      background: var(--md-sys-color-surface-bright);
+      border-radius: var(--shape-card);
+      padding: 20px 12px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid white;
+      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .card-app:active {
+      transform: scale(0.96);
+      background-color: var(--md-sys-color-surface-container);
+    }
+
+    .icon-box {
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    /* Card Specific Colors */
+    .c-presensi .icon-box { background: #FCEAE9; color: #B3261E; }
+    .c-dashboard .icon-box { background: #FFF0D6; color: #8F4C00; }
+    .c-lms .icon-box { background: #F3E5F5; color: #782695; }
+    .c-feedback .icon-box { background: #E1F5FE; color: #0277BD; }
+
+    .card-title {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--md-sys-color-on-surface);
+      margin-bottom: 2px;
+    }
+
+    .card-desc {
+      font-size: 0.7rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    /* DOWNLOAD APK SMALL BUTTON */
+    .cta-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .btn-download-sm {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+      padding: 10px 20px;
+      border-radius: var(--shape-pill);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: 'Google Sans', sans-serif;
+      transition: 0.2s;
+      border: 1px solid rgba(179, 38, 30, 0.1);
+    }
+
+    .btn-download-sm:active {
+      transform: scale(0.95);
+      background-color: #ffb4ab;
+    }
+
+    /* FOOTER */
+    .footer {
+      padding: 24px 20px;
+      text-align: center;
+      width: 100%;
+      background: var(--md-sys-color-surface-container);
+      border-radius: 32px 32px 0 0;
+      margin-top: auto;
+    }
+    
+    .footer-quote {
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--md-sys-color-primary);
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+    }
+
+    .footer-copy {
+      font-size: 0.7rem;
+      color: var(--md-sys-color-outline);
+    }
+
+    /* ANIMATION */
+    .fade-in-up {
+      animation: fadeInUp 0.6s cubic-bezier(0.2, 0, 0, 1) forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+    .d-1 { animation-delay: 0.1s; } .d-2 { animation-delay: 0.2s; }
+    .d-3 { animation-delay: 0.3s; } .d-4 { animation-delay: 0.4s; }
+    .d-5 { animation-delay: 0.5s; }
+
+  </style>
+</head>
+<body>
+
+  <div class="header fade-in-up">
+    <img src="https://i.imgur.com/teco2dH.png" alt="Logo Nakula" class="logo-img">
+    <h1 class="app-title">NAKULAKU</h1>
+    <p class="app-subtitle">Ekosistem Digital Gugus Nakula</p>
+  </div>
+
+  <div class="container">
+    
+    <div class="grid-menu">
+      <a href="https://iwan4943.github.io/nakulaku/presensi/" class="card-app c-presensi fade-in-up d-1">
+        <div class="icon-box"><i class="fas fa-map-marked-alt"></i></div>
+        <div class="card-title">Presensi</div>
+        <div class="card-desc">Absensi & Izin</div>
+      </a>
+
+      <a href="https://iwan4943.github.io/nakulaku/dashboard/" class="card-app c-dashboard fade-in-up d-2">
+        <div class="icon-box"><i class="fas fa-chart-pie"></i></div>
+        <div class="card-title">Dashboard</div>
+        <div class="card-desc">Kinerja & Ranking</div>
+      </a>
+
+      <a href="https://iwan4943.github.io/nakulaku/lms/" class="card-app c-lms fade-in-up d-3">
+        <div class="icon-box"><i class="fas fa-graduation-cap"></i></div>
+        <div class="card-title">LMS</div>
+        <div class="card-desc">Tugas & Inovasi</div>
+      </a>
+
+      <a href="https://iwan4943.github.io/nakulaku/feedback/" class="card-app c-feedback fade-in-up d-4">
+        <div class="icon-box"><i class="fas fa-comments"></i></div>
+        <div class="card-title">Feedback</div>
+        <div class="card-desc">Penilaian Kegiatan</div>
+      </a>
+    </div>
+
+    <div class="cta-section fade-in-up d-5">
+      <a href="https://apk.e-droid.net/apk/app3833934-vu6745.apk?v=4" class="btn-download-sm">
+        <i class="fab fa-android fa-lg"></i>
+        <span>Download Aplikasi (.apk)</span>
+      </a>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer-quote">"Solid Bersinergi Menginspirasi"</div>
+    <div class="footer-copy">&copy; 2026 Tim Pengembang Gugus Nakula</div>
+  </div>
+
+</body>
+</html>
