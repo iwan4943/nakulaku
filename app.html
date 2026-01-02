@@ -13,8 +13,8 @@
     :root {
       --md-sys-color-primary: #B3261E;
       --md-sys-color-on-primary: #FFFFFF;
-      --md-sys-color-primary-container: #FFDAD6; /* Warna Soft */
-      --md-sys-color-on-primary-container: #410002; /* Teks Gelap pada Soft */
+      --md-sys-color-primary-container: #FFDAD6;
+      --md-sys-color-on-primary-container: #410002;
       --md-sys-color-surface: #FFF8F7;
       --md-sys-color-surface-container: #FCEAE9;
       --md-sys-color-surface-bright: #FFFFFF;
@@ -50,34 +50,7 @@
       padding: 40px 24px 25px 24px;
       background: linear-gradient(180deg, var(--md-sys-color-surface-container) 0%, var(--md-sys-color-surface) 100%);
       border-radius: 0 0 32px 32px;
-      margin-bottom: 25px;
-      position: relative; 
-    }
-
-    /* TOMBOL APK SOFT - POJOK KANAN ATAS */
-    .btn-apk-top {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      /* Warna Soft */
-      background-color: var(--md-sys-color-primary-container); 
-      color: var(--md-sys-color-on-primary-container); 
-      
-      text-decoration: none;
-      font-size: 0.7rem;
-      font-family: 'Google Sans', sans-serif;
-      font-weight: 700;
-      padding: 8px 16px;
-      border-radius: 50px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: 0.2s;
-    }
-
-    .btn-apk-top:active {
-      transform: scale(0.95);
-      background-color: #ffb4ab; /* Sedikit lebih gelap saat ditekan */
+      margin-bottom: 20px;
     }
 
     .logo-img {
@@ -110,16 +83,17 @@
       width: 100%;
       max-width: 480px;
       padding: 0 24px;
-      flex-grow: 1;
+      flex-grow: 1; /* Mengisi ruang kosong agar footer terdorong ke bawah */
       display: flex;
       flex-direction: column;
+      justify-content: center; /* Menu akan berada di tengah area kosong */
     }
 
     .grid-menu {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
-      margin-bottom: 25px;
+      margin-bottom: 30px; /* Jarak aman ke footer */
     }
 
     .card-app {
@@ -172,14 +146,44 @@
       color: var(--md-sys-color-on-surface-variant);
     }
 
-    /* FOOTER */
+    /* FOOTER & DOWNLOAD BTN */
     .footer {
-      padding: 24px 20px;
+      padding: 24px 20px 20px 20px;
       text-align: center;
       width: 100%;
       background: var(--md-sys-color-surface-container);
       border-radius: 32px 32px 0 0;
-      margin-top: auto;
+      margin-top: auto; /* Kunci: Mendorong footer ke paling bawah */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-apk-footer {
+      background-color: #FFFFFF; /* Putih agar kontras lembut di atas footer pink */
+      color: var(--md-sys-color-on-surface-variant);
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 50px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: 0.2s;
+      margin-bottom: 8px;
+    }
+
+    .btn-apk-footer i {
+      color: #3DDC84; /* Warna Ikon Android Asli */
+    }
+
+    .btn-apk-footer:active {
+      transform: scale(0.95);
+      background-color: #f0f0f0;
     }
     
     .footer-quote {
@@ -187,7 +191,6 @@
       font-weight: 700;
       font-style: italic;
       color: var(--md-sys-color-primary);
-      margin-bottom: 6px;
       font-size: 0.85rem;
     }
 
@@ -211,10 +214,6 @@
 <body>
 
   <div class="header fade-in-up">
-    <a href="https://apk.e-droid.net/apk/app3833934-vu6745.apk?v=4" class="btn-apk-top">
-      <i class="fab fa-android fa-lg"></i> Download
-    </a>
-
     <img src="https://i.imgur.com/teco2dH.png" alt="Logo Nakula" class="logo-img">
     <h1 class="app-title">NAKULAKU</h1>
     <p class="app-subtitle">Ekosistem Digital Gugus Nakula</p>
@@ -251,6 +250,10 @@
   </div>
 
   <div class="footer">
+    <a href="https://apk.e-droid.net/apk/app3833934-vu6745.apk?v=4" class="btn-apk-footer">
+      <i class="fab fa-android fa-lg"></i> Download
+    </a>
+
     <div class="footer-quote">"Solid Bersinergi Menginspirasi"</div>
     <div class="footer-copy">&copy; 2026 Tim Pengembang Gugus Nakula</div>
   </div>
