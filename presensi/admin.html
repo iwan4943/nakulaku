@@ -124,7 +124,7 @@
             <h5 class="fw-bold mb-4" style="color:var(--md-sys-color-on-surface);">Filter Laporan</h5>
             <div class="row g-3">
                 <div class="col-md-5"><label class="small fw-bold mb-1" style="color:var(--md-sys-color-primary);">SEKOLAH</label><select id="filterSekolah" class="input-modern"></select></div>
-                <div class="col-md-2"><label class="small fw-bold mb-1" style="color:var(--md-sys-color-primary);">TAHUN</label><select id="filterTahun" class="input-modern"><option value="2025" selected>2025</option><option value="2024">2024</option></select></div>
+                <div class="col-md-2"><label class="small fw-bold mb-1" style="color:var(--md-sys-color-primary);">TAHUN</label><select id="filterTahun" class="input-modern"></select></div>
                 <div class="col-md-3 d-flex align-items-end"><button class="btn-primary-g w-100" onclick="loadLaporan()"><i class="fas fa-search me-2"></i> Tampilkan</button></div>
                 <div class="col-md-2 d-flex align-items-end"><button class="btn btn-outline-danger w-100 rounded-pill py-2 fw-bold" onclick="cetakPDF()"><i class="fas fa-file-pdf me-2"></i> PDF</button></div>
             </div>
@@ -179,14 +179,32 @@
 
     window.onload = function() {
       if(localStorage.getItem('theme') === 'dark') { document.body.setAttribute('data-theme', 'dark'); document.getElementById('iconTheme').className = "fas fa-sun"; }
+      
       var savedUser = localStorage.getItem('gugusUser');
       if (!savedUser) { window.location.href = "index.html"; return; } 
+      
       var user = JSON.parse(savedUser);
       if (!user.isAdmin) { Swal.fire({ title: 'Akses Ditolak', icon: 'error', confirmButtonColor: '#B3261E' }).then(() => { window.location.href = "index.html"; }); return; }
+      
       document.getElementById('userName').innerText = user.nama;
       document.getElementById('userUnit').innerText = user.unitKerja;
+      
       var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       document.getElementById('currentDateDisplay').innerText = new Date().toLocaleDateString('id-ID', options);
+
+      // --- LOGIKA OTOMATIS TAHUN (MODIFIKASI) ---
+      var yearSelect = document.getElementById('filterTahun');
+      var currentYear = new Date().getFullYear();
+      // Menampilkan tahun depan, tahun ini, dan 2 tahun lalu
+      for (var y = currentYear + 1; y >= currentYear - 2; y--) {
+          var opt = document.createElement('option');
+          opt.value = y;
+          opt.innerHTML = y;
+          if (y === currentYear) opt.selected = true;
+          yearSelect.appendChild(opt);
+      }
+      // ------------------------------------------
+
       loadDashboardData();
     };
 
