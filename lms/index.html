@@ -61,9 +61,18 @@
   .bg-danger { background-color: var(--md-sys-color-primary) !important; }
   .text-primary { color: #984061 !important; }
   .border-light { border-color: var(--md-sys-color-surface-container) !important; }
+
+  /* --- TOAST NOTIFICATION --- */
+  #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; width: 90%; max-width: 400px; text-align: center; }
+  .toast-box { background: #FFFFFF; color: #201A19; padding: 12px 24px; border-radius: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; opacity: 0; transform: translateY(-20px); transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); font-weight: 600; font-size: 0.9rem; border: 1px solid rgba(0,0,0,0.05); }
+  .toast-box.show { opacity: 1; transform: translateY(0); }
+  .toast-success { border-left: 5px solid #466742; }
+  .toast-error { border-left: 5px solid #B3261E; }
 </style>
 </head>
 <body>
+
+<div id="toast-container"></div>
 
 <div id="loading" class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-none justify-content-center align-items-center" style="z-index:9999;">
   <div class="d-flex flex-column align-items-center">
@@ -182,11 +191,23 @@
           <button onclick="bukaModalEvent()" class="btn btn-primary w-100 h-100 py-3 text-white fw-bold d-flex flex-column align-items-center justify-content-center"><i class="bi bi-balloon-fill fs-3 mb-1"></i><span style="font-size:0.65rem">EVENT</span></button>
         </div>
       </div>
-      <div class="d-flex justify-content-between align-items-center mb-3 px-2 mt-2">
-        <h6 class="fw-bold text-dark mb-0 fs-6">Rapor Kinerja Guru</h6>
-        <button onclick="loadKS()" class="btn btn-sm btn-light text-primary rounded-circle shadow-sm" style="width:36px;height:36px"><i class="bi bi-arrow-clockwise"></i></button>
+      
+      <ul class="nav nav-pills nav-fill mb-3 p-1">
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#ks-tab-guru"><i class="bi bi-people-fill me-1"></i> Data Guru</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#ks-tab-riwayat"><i class="bi bi-clock-history me-1"></i> Riwayat</button></li>
+      </ul>
+      <div class="tab-content">
+          <div class="tab-pane fade show active" id="ks-tab-guru">
+              <div class="d-flex justify-content-between align-items-center mb-3 px-2 mt-2">
+                <h6 class="fw-bold text-dark mb-0 fs-6">Rapor Kinerja Guru</h6>
+                <button onclick="loadKS()" class="btn btn-sm btn-light text-primary rounded-circle shadow-sm" style="width:36px;height:36px"><i class="bi bi-arrow-clockwise"></i></button>
+              </div>
+              <div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;"><thead style="background: var(--md-sys-color-surface-container);"><tr><th class="ps-3 py-3 border-0">Nama Guru</th><th style="width:35%" class="border-0">Progress</th><th class="text-end pe-4 border-0">Capaian</th></tr></thead><tbody id="tbl-ks" class="border-0"></tbody></table></div></div>
+          </div>
+          <div class="tab-pane fade" id="ks-tab-riwayat">
+             <div id="list-riwayat-ks"></div>
+          </div>
       </div>
-      <div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;"><thead style="background: var(--md-sys-color-surface-container);"><tr><th class="ps-3 py-3 border-0">Nama Guru</th><th style="width:35%" class="border-0">Progress</th><th class="text-end pe-4 border-0">Capaian</th></tr></thead><tbody id="tbl-ks" class="border-0"></tbody></table></div></div>
     </div>
 
     <div id="panel-penilai" class="hidden">
@@ -243,24 +264,42 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 // ===========================================
-// CONFIGURATION (GANTI URL INI)
+// CONFIGURATION 
 // ===========================================
-const DEPLOY_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec"; 
+const DEPLOY_URL = "https://script.google.com/macros/s/AKfycbzL5ZJpY5F9Z3J3Q5B5B5B5B5B5B5B5B5B/exec"; // GANTI URL INI!!!
 
 let USER={pin:"",nama:"",role:"",sekolah:""}, modalUp, modalNi, modalPr, modalBs, modalEv, rawDataPenilai=[];
 
-// Helper function untuk API Call ke GAS
-async function requestAPI(action, data = null) {
+// --- NEW FUNCTION: TOAST ---
+function showToast(msg, type = 'success') {
+  let container = document.getElementById('toast-container');
+  let el = document.createElement('div');
+  let icon = type === 'success' ? '<i class="bi bi-check-circle-fill text-success fs-5"></i>' : '<i class="bi bi-x-circle-fill text-danger fs-5"></i>';
+  el.className = `toast-box ${type === 'success' ? 'toast-success' : 'toast-error'}`;
+  el.innerHTML = `${icon} <span>${msg}</span>`;
+  container.appendChild(el);
+  setTimeout(() => el.classList.add('show'), 10);
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 3000);
+}
+
+// --- NEW FUNCTION: API AUTO RETRY ---
+async function requestAPI(action, data = null, retryCount = 0) {
   try {
     const response = await fetch(DEPLOY_URL, {
       method: "POST",
       body: JSON.stringify({ action: action, data: data }),
     });
+    if (!response.ok) throw new Error("Server Error");
     return await response.json();
   } catch (error) {
-    console.error(error);
-    alert("Gagal terhubung ke server. Cek koneksi internet.");
-    return null;
+    console.error("Gagal, mencoba lagi...", error);
+    if (retryCount < 2) { // Coba 2 kali lagi
+      await new Promise(r => setTimeout(r, 2000)); 
+      return requestAPI(action, data, retryCount + 1);
+    } else {
+      showToast("Koneksi padat/error. Coba lagi.", "error");
+      return null;
+    }
   }
 }
 
@@ -277,10 +316,9 @@ window.onload = () => {
 }
 
 async function doLogin(isAuto){
-  let p=document.getElementById('inputPIN').value; if(!p)return alert("Isi PIN!"); 
+  let p=document.getElementById('inputPIN').value; if(!p)return showToast("Isi PIN dulu!", "error"); 
   showLoad(true);
   
-  // GANTI google.script.run dengan requestAPI
   let r = await requestAPI('cekLogin', p);
   showLoad(false);
 
@@ -306,7 +344,7 @@ async function doLogin(isAuto){
     else { document.getElementById('panel-admin').classList.remove('hidden'); loadAdmin(); }
   } else {
     if(isAuto) { localStorage.removeItem('LMS_PIN'); document.getElementById('inputPIN').value=""; }
-    else { let m=document.getElementById('msg-login'); m.innerText=r ? r.error : "Koneksi Error"; m.classList.remove('hidden'); }
+    else { showToast(r ? r.error : "Koneksi Error", "error"); }
   }
 }
 
@@ -354,7 +392,7 @@ function renderListSimple(data, targetId, type) {
   if(data.length === 0) { div.innerHTML = "<div class='text-center py-5 text-muted small'>Tidak ada data masuk.</div>"; return; }
   data.forEach(item => {
     let st = item.status || "Menunggu"; 
-    let bgSt = st==='Menunggu' ? 'bg-secondary' : (st==='Diterima'?'bg-success':'bg-danger');
+    let bgSt = st==='Menunggu' ? 'bg-secondary' : (st==='Diterima'||st==='Valid'?'bg-success':'bg-danger');
     let feedInfo = item.feedback ? `<div class="text-success small fw-bold mt-2"><i class="bi bi-check-all"></i> ${item.feedback}</div>` : '';
     let btnColor = type==='PRESTASI' ? 'btn-warning text-white' : 'btn-primary';
     let btnIcon = type==='PRESTASI' ? 'bi-check-lg' : 'bi-star';
@@ -401,22 +439,44 @@ async function loadKS() {
   document.getElementById('ks-count-imp').innerText = data.statsPengembangan.implemen;
   document.getElementById('ks-count-ino').innerText = data.statsPengembangan.inovasi;
   
+  // Render Tabel Guru
   let tb = document.getElementById('tbl-ks'); tb.innerHTML = "";
   let dG = data.dataGuru;
   let totalPersen = 0;
-  if (dG.length === 0) { tb.innerHTML = "<tr><td colspan='3' class='text-center py-4 text-muted small'>Data guru tidak ditemukan.</td></tr>"; document.getElementById('ks-persen').innerText = "0%"; document.getElementById('ks-total-laporan').innerText = "0"; return; }
-  
   let totalLaporanMasuk = 0;
-  dG.forEach(guru => {
-    totalPersen += guru.persen; totalLaporanMasuk += guru.selesai;
-    let bgBar = "bg-danger"; if(guru.persen >= 50) bgBar = "bg-warning"; if(guru.persen >= 80) bgBar = "bg-success";
-    tb.innerHTML += `<tr><td class="ps-3" style="width: 40%;"><div class="fw-bold text-dark" style="font-size:0.85rem">${guru.nama}</div></td><td style="width: 40%;"><div class="progress" style="height: 10px; border-radius:10px;"><div class="progress-bar ${bgBar}" role="progressbar" style="width: ${guru.persen}%"></div></div></td><td class="text-end pe-3" style="width: 20%;"><span class="badge ${bgBar} rounded-pill" style="font-size:0.75rem">${guru.persen}%</span><div class="text-muted small" style="font-size:0.65rem">${guru.selesai}/${guru.target}</div></td></tr>`;
-  });
-  let avgSekolah = Math.round(totalPersen / dG.length);
-  let elPct = document.getElementById('ks-persen'); elPct.innerText = avgSekolah + "%";
-  elPct.className = "fw-bold mt-1 mb-0 display-4 ";
-  if(avgSekolah < 50) elPct.classList.add('text-danger'); else if(avgSekolah < 80) elPct.classList.add('text-warning'); else elPct.classList.add('text-success');
-  document.getElementById('ks-total-laporan').innerText = totalLaporanMasuk;
+
+  if (dG.length === 0) { 
+      tb.innerHTML = "<tr><td colspan='3' class='text-center py-4 text-muted small'>Data guru tidak ditemukan.</td></tr>"; 
+      document.getElementById('ks-persen').innerText = "0%"; 
+      document.getElementById('ks-total-laporan').innerText = "0"; 
+  } else {
+      dG.forEach(guru => {
+        totalPersen += guru.persen; totalLaporanMasuk += guru.selesai;
+        let bgBar = "bg-danger"; if(guru.persen >= 50) bgBar = "bg-warning"; if(guru.persen >= 80) bgBar = "bg-success";
+        tb.innerHTML += `<tr><td class="ps-3" style="width: 40%;"><div class="fw-bold text-dark" style="font-size:0.85rem">${guru.nama}</div></td><td style="width: 40%;"><div class="progress" style="height: 10px; border-radius:10px;"><div class="progress-bar ${bgBar}" role="progressbar" style="width: ${guru.persen}%"></div></div></td><td class="text-end pe-3" style="width: 20%;"><span class="badge ${bgBar} rounded-pill" style="font-size:0.75rem">${guru.persen}%</span><div class="text-muted small" style="font-size:0.65rem">${guru.selesai}/${guru.target}</div></td></tr>`;
+      });
+      let avgSekolah = Math.round(totalPersen / dG.length);
+      let elPct = document.getElementById('ks-persen'); elPct.innerText = avgSekolah + "%";
+      elPct.className = "fw-bold mt-1 mb-0 display-4 ";
+      if(avgSekolah < 50) elPct.classList.add('text-danger'); else if(avgSekolah < 80) elPct.classList.add('text-warning'); else elPct.classList.add('text-success');
+      document.getElementById('ks-total-laporan').innerText = totalLaporanMasuk;
+  }
+
+  // --- LOGIKA BARU: RIWAYAT KS ---
+  let divR = document.getElementById('list-riwayat-ks');
+  if(divR) {
+      divR.innerHTML = "";
+      if (data.riwayat && data.riwayat.length > 0) {
+        data.riwayat.forEach(item => {
+            let st = item.status || 'Menunggu';
+            let bg = st === 'Menunggu' ? 'bg-secondary' : (st === 'Diterima' || st === 'Valid' ? 'bg-success' : 'bg-danger');
+            let feed = item.feedback ? `<div class="mt-2 small text-danger bg-danger-subtle p-2 rounded border border-danger-subtle"><i class="bi bi-exclamation-circle-fill me-1"></i> ${item.feedback}</div>` : '';
+            divR.innerHTML += `<div class="card-pro p-3 mb-2"><div class="d-flex justify-content-between align-items-start"><div><span class="badge bg-light text-dark border mb-1" style="font-size:0.65rem">${item.jenis}</span><div class="fw-bold text-dark small">${item.judul}</div><small class="text-muted" style="font-size:0.7rem">${item.waktu}</small>${feed}</div><span class="badge ${bg} rounded-pill" style="font-size:0.65rem">${st}</span></div></div>`;
+        });
+      } else {
+        divR.innerHTML = "<div class='text-center py-5 text-muted small'>Belum ada riwayat pengiriman.</div>";
+      }
+  }
 }
 
 async function loadAdmin(){
@@ -441,8 +501,8 @@ async function loadAdmin(){
   let tbFeed=document.getElementById('tbl-adm-feed'); tbFeed.innerHTML="";
   if(d.feed.length==0) tbFeed.innerHTML="<tr><td colspan='3' class='text-center py-3'>Kosong</td></tr>";
   d.feed.forEach(r=>{
-      let st=r.status||'Wait', cls=st==='Diterima'?'text-success':(st==='Revisi'?'text-danger':'text-warning');
-      let skorInfo = r.status==='Diterima' && r.feedback ? `<div class="text-primary small fw-bold">${r.feedback}</div>` : '';
+      let st=r.status||'Wait', cls=st==='Diterima'||st==='Valid'?'text-success':(st==='Revisi'?'text-danger':'text-warning');
+      let skorInfo = (r.status==='Diterima' || r.status==='Valid') && r.feedback ? `<div class="text-primary small fw-bold">${r.feedback}</div>` : '';
       tbFeed.innerHTML+=`<tr><td class="ps-3"><div class="fw-bold small">${r.nama}</div><small class="text-muted">${r.sekolah}</small></td><td><div class="small">${r.judul}</div>${skorInfo}</td><td class="small fw-bold ${cls}">${st}</td></tr>`;
   });
   
@@ -466,14 +526,14 @@ function bukaLapor(j){ document.getElementById('frmUpload').reset(); document.ge
 async function submitTugas(e){
   e.preventDefault();
   let lnk=document.getElementById('inpLink').value, txt=document.getElementById('inpCatatan').value;
-  if(lnk.trim()==="" && txt.trim()==="") return alert("Isi Rangkuman atau Link!");
+  if(lnk.trim()==="" && txt.trim()==="") return showToast("Isi Rangkuman atau Link!", "error");
   if(!confirm("Kirim?")) return; showLoad(true); modalUp.hide();
   let f=document.getElementById('frmUpload');
   let obj={pin_user:USER.pin, nama_user:USER.nama, sekolah_user:document.getElementById('txtSekolah').innerText};
   Array.from(f.elements).forEach(el=>{if(el.name)obj[el.name]=el.value});
   
   let r = await requestAPI('simpanTugas', obj);
-  showLoad(false); alert(r); loadGuru();
+  showLoad(false); showToast(r); loadGuru();
 }
 
 async function submitPengembangan(e, jenis) {
@@ -495,7 +555,7 @@ async function submitPengembangan(e, jenis) {
     jenis_laporan: jenis, judul_dokumen: data.judul_dokumen, link_video: data.link_video, catatan: data.catatan
   };
   let r = await requestAPI('simpanTugas', objKirim);
-  showLoad(false); alert(r); document.getElementById(jenis==='Karya Inovasi'?'frmInovasi':'frmImplemen').reset(); loadGuru();
+  showLoad(false); showToast(r); document.getElementById(jenis==='Karya Inovasi'?'frmInovasi':'frmImplemen').reset(); loadGuru();
 }
 
 function isiDropdownSekolah(idElement) {
@@ -526,7 +586,7 @@ async function submitPrestasi(e){
     catatan: `[SISWA: ${dataRaw.nama_siswa}] [JUARA: ${dataRaw.juara}] [TINGKAT: ${dataRaw.tingkat}] [NO: ${dataRaw.no_piagam}] [OLEH: ${dataRaw.penyelenggara}]`
   };
   let r = await requestAPI('simpanTugas', obj);
-  showLoad(false); alert("Berhasil!"); loadKS();
+  showLoad(false); showToast(r); loadKS();
 }
 
 async function submitPembiasaan(e){
@@ -537,7 +597,7 @@ async function submitPembiasaan(e){
     catatan: `[FREQ: ${document.getElementById('bias-freq').value}] [KARAKTER: ${document.getElementById('bias-karakter').value}] ` + document.getElementById('bias-desc').value
   };
   let r = await requestAPI('simpanTugas', obj);
-  showLoad(false); alert("Berhasil!"); loadKS();
+  showLoad(false); showToast(r); loadKS();
 }
 
 async function submitEvent(e){
@@ -548,7 +608,7 @@ async function submitEvent(e){
     catatan: `[SKALA: ${document.getElementById('evt-scale').value}] [TGL: ${document.getElementById('evt-date').value}] ` + document.getElementById('evt-desc').value
   };
   let r = await requestAPI('simpanTugas', obj);
-  showLoad(false); alert("Berhasil!"); loadKS();
+  showLoad(false); showToast(r); loadKS();
 }
 
 function popNilai(id, type){ 
@@ -584,7 +644,7 @@ async function saveNilai(){
 
   if (type === 'PRESTASI') {
     let val = document.getElementById('n_validasi').value;
-    if (val === 'VALID') { statusFinal = 'Diterima'; feedbackFinal = '[DATA VALID] ' + note; } 
+    if (val === 'VALID') { statusFinal = 'Valid'; feedbackFinal = '[DATA VALID] ' + note; } 
     else { statusFinal = 'Revisi'; feedbackFinal = '[DATA TIDAK VALID] ' + note; }
   } else if (type === 'QUAL') {
     let huruf = document.getElementById('n_kual').value;
@@ -600,7 +660,7 @@ async function saveNilai(){
   showLoad(true); modalNi.hide();
   
   let r = await requestAPI('simpanPenilaianAdmin', {id: id, status: statusFinal, feedback: feedbackFinal, adminName: USER.nama});
-  showLoad(false); alert(r);
+  showLoad(false); showToast(r);
   if(USER.role==='PENILAI') loadPenilai(); else loadAdmin(); 
 }
 </script>
