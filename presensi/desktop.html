@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Guru (SIG) - Desktop</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #B3261E; /* Warna Merah Gugus Nakula */
+            --sidebar-width: 260px;
+            --bg-light: #f4f6f9;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, .fw-google {
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        /* --- Sidebar Styling --- */
+        .sidebar {
+            height: 100vh;
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #2c3e50;
+            color: #fff;
+            transition: 0.3s;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.1);
+        }
+
+        .user-panel {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: #fff;
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 14px 20px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid transparent;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+        }
+
+        .nav-link.active {
+            background: #34495e;
+            color: #fff;
+            border-left-color: var(--primary-color);
+        }
+
+        .nav-link i {
+            width: 25px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        /* --- Cards & Stats --- */
+        .card-stat {
+            border: none;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+            transition: transform 0.2s;
+        }
+        .card-stat:hover {
+            transform: translateY(-5px);
+        }
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        /* --- Login Overlay --- */
+        #login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Utilities --- */
+        .hide { display: none !important; }
+        .text-primary-custom { color: var(--primary-color); }
+        .btn-primary-custom { background-color: var(--primary-color); border: none; color: white; }
+        .btn-primary-custom:hover { background-color: #901f18; color: white; }
+
+        /* --- DataTables Custom --- */
+        .table-responsive { border-radius: 12px; background: white; padding: 20px; box-shadow: 0 2px 15px rgba(0,0,0,0.03); }
+        table.dataTable thead th { background-color: #f8f9fa; border-bottom: 2px solid #e9ecef; }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="card border-0 shadow-lg p-5 text-center" style="width: 400px; border-radius: 20px;">
+            <div class="mb-4">
+                <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                    <i class="fas fa-desktop fa-3x text-danger"></i>
+                </div>
+                <h3 class="fw-google fw-bold text-dark">Gugus Nakula</h3>
+                <p class="text-muted small">Portal Administrasi Desktop</p>
+            </div>
+            
+            <div class="form-group mb-4 text-start">
+                <label class="small fw-bold text-muted mb-2 ps-1">MASUKKAN PIN GURU</label>
+                <input type="password" id="inputPin" class="form-control form-control-lg text-center fw-bold" placeholder="• • • • • •" style="letter-spacing: 8px; font-size: 1.5rem;">
+            </div>
+            
+            <button onclick="doLogin()" class="btn btn-primary-custom w-100 py-3 fw-bold rounded-pill shadow-sm">
+                MASUK DASHBOARD <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header d-flex align-items-center">
+            <i class="fas fa-school fa-lg me-2 text-danger"></i>
+            <span class="fw-bold fs-5">SIG Desktop</span>
+        </div>
+        
+        <div class="user-panel">
+            <div class="user-avatar" id="avatarInitials">GN</div>
+            <div style="line-height: 1.2; overflow: hidden;">
+                <div class="fw-bold text-truncate" id="sidebarName" style="max-width: 160px;">Memuat...</div>
+                <div class="small opacity-50 text-truncate" id="sidebarRole" style="max-width: 160px;">...</div>
+            </div>
+        </div>
+        
+        <ul class="nav flex-column mt-3" id="menuContainer">
+            </ul>
+
+        <div class="mt-auto p-3">
+            <button onclick="doLogout()" class="btn btn-outline-light w-100 d-flex align-items-center justify-content-center gap-2">
+                <i class="fas fa-sign-out-alt"></i> Keluar
+            </button>
+            <div class="text-center mt-3 small opacity-25">Ver 1.0.0 Desktop</div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <h6 class="text-muted small mb-1 text-uppercase ls-1">Overview</h6>
+                <h3 class="fw-bold m-0" id="pageTitle">Dashboard</h3>
+            </div>
+            <div class="text-end">
+                <h5 class="m-0 fw-bold text-primary-custom" id="clockTime">00:00</h5>
+                <small class="text-muted" id="currentDate">...</small>
+            </div>
+        </div>
+
+        <div id="view-admin-dashboard" class="view-section hide">
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card card-stat p-3 h-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-box bg-primary bg-opacity-10 text-primary me-3"><i class="fas fa-users"></i></div>
+                            <div><div class="text-muted small">Total Pegawai</div><h4 class="fw-bold m-0" id="statTotal">0</h4></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-stat p-3 h-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-box bg-success bg-opacity-10 text-success me-3"><i class="fas fa-check-circle"></i></div>
+                            <div><div class="text-muted small">Hadir Hari Ini</div><h4 class="fw-bold m-0" id="statHadir">0</h4></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-stat p-3 h-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-box bg-warning bg-opacity-10 text-warning me-3"><i class="fas fa-clock"></i></div>
+                            <div><div class="text-muted small">Terlambat</div><h4 class="fw-bold m-0" id="statTelat">0</h4></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-stat p-3 h-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-box bg-danger bg-opacity-10 text-danger me-3"><i class="fas fa-times-circle"></i></div>
+                            <div><div class="text-muted small">Belum Hadir</div><h4 class="fw-bold m-0" id="statBelum">0</h4></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-0">
+                    <h5 class="fw-bold m-0"><i class="fas fa-table me-2 text-danger"></i>Rekapitulasi Kehadiran</h5>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="refreshDataAdmin()">
+                        <i class="fas fa-sync-alt me-1"></i> Refresh Data
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive border-0 shadow-none">
+                        <table id="tableAdmin" class="table table-hover align-middle w-100">
+                            <thead>
+                                <tr>
+                                    <th>Nama Pegawai</th>
+                                    <th>Status</th>
+                                    <th>Jam Absen</th>
+                                    <th>Keterangan / Lokasi</th>
+                                    <th>Foto</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-guru-dashboard" class="view-section hide">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="card card-stat bg-danger text-white p-4 border-0 h-100" style="background: linear-gradient(45deg, #B3261E, #cb453e);">
+                        <h2 class="fw-light">Selamat Datang, <span id="dashGuruName" class="fw-bold">Guru</span></h2>
+                        <p class="mb-4 opacity-75">Dashboard Personal Kehadiran Anda</p>
+                        <div class="row">
+                            <div class="col-auto border-end border-white border-opacity-25 pe-4">
+                                <div class="small opacity-75">Unit Kerja</div>
+                                <div class="fw-bold fs-5" id="dashGuruUnit">-</div>
+                            </div>
+                            <div class="col-auto ps-4">
+                                <div class="small opacity-75">Jabatan</div>
+                                <div class="fw-bold fs-5" id="dashGuruJab">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-stat p-4 h-100">
+                        <h6 class="fw-bold text-muted mb-3">Aksi Cepat</h6>
+                        <button class="btn btn-outline-danger w-100 mb-2 text-start py-2" onclick="Swal.fire('Info','Silahkan gunakan Aplikasi Mobile untuk Absen','info')">
+                            <i class="fas fa-camera me-2"></i> Absen Masuk
+                        </button>
+                        <button class="btn btn-outline-primary w-100 mb-2 text-start py-2" onclick="Swal.fire('Info','Gunakan Aplikasi Mobile untuk Izin','info')">
+                            <i class="fas fa-envelope-open-text me-2"></i> Ajukan Izin
+                        </button>
+                        <button class="btn btn-secondary w-100 text-start py-2" onclick="doLogout()">
+                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="fw-bold m-0"><i class="fas fa-history me-2 text-danger"></i>Riwayat Kehadiran Saya</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive border-0 shadow-none">
+                        <table id="tableGuru" class="table table-striped w-100">
+                            <thead><tr><th>Tanggal</th><th>Jam</th><th>Status</th><th>Lokasi</th></tr></thead>
+                            <tbody id="tbodyGuru"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // =====================================================================
+        // KONFIGURASI (WAJIB DIGANTI)
+        // =====================================================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbweTTiW0sPe1SAnJZlUK4KCiiks4cDhc420PWmvf1IOJ7mIKGUhudz42SpAJ1KZP4__cg/exec"; 
+        
+        let userData = null;
+        let dataTableInstance = null;
+
+        // --- Init Clock ---
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clockTime').innerText = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+            document.getElementById('currentDate').innerText = now.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+        }, 1000);
+
+        // --- Cek Sesi ---
+        $(document).ready(function() {
+            const saved = sessionStorage.getItem('sig_user_desktop');
+            if (saved) {
+                userData = JSON.parse(saved);
+                $('#login-screen').hide();
+                initDashboard();
+            }
+            
+            // Enter key on PIN input
+            $('#inputPin').keypress(function (e) {
+                if (e.which == 13) doLogin();
+            });
+        });
+
+        // --- 1. LOGIN SYSTEM ---
+        async function doLogin() {
+            const pin = $('#inputPin').val();
+            if (!pin) return Swal.fire('Error', 'PIN tidak boleh kosong', 'warning');
+
+            if(API_URL.includes("GANTI_DENGAN")) {
+                return Swal.fire('Konfigurasi Error', 'URL API belum diganti di script desktop.html', 'error');
+            }
+
+            Swal.fire({ title: 'Memeriksa Kredensial...', didOpen: () => Swal.showLoading() });
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'login', pin: pin })
+                });
+                const res = await response.json();
+
+                Swal.close();
+
+                if (res.status === 'SUKSES') {
+                    userData = res;
+                    sessionStorage.setItem('sig_user_desktop', JSON.stringify(res));
+                    $('#login-screen').fadeOut(500);
+                    initDashboard();
+                } else {
+                    Swal.fire('Gagal', 'PIN Salah atau tidak ditemukan.', 'error');
+                }
+            } catch (e) {
+                console.error(e);
+                Swal.fire('Error Koneksi', 'Gagal menghubungi server Google Apps Script.', 'error');
+            }
+        }
+
+        function doLogout() {
+            Swal.fire({
+                title: 'Keluar?',
+                text: "Sesi Anda akan diakhiri.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#B3261E',
+                confirmButtonText: 'Ya, Keluar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sessionStorage.removeItem('sig_user_desktop');
+                    location.reload();
+                }
+            });
+        }
+
+        // --- 2. DASHBOARD INIT & ROLE CHECK ---
+        function initDashboard() {
+            // Set Sidebar Info
+            $('#sidebarName').text(userData.nama);
+            $('#sidebarRole').text(userData.jabatan || 'Guru');
+            
+            // Initials Avatar
+            const initials = userData.nama.split(" ").map((n)=>n[0]).join("").substring(0,2).toUpperCase();
+            $('#avatarInitials').text(initials);
+
+            // Generate Menu based on Role
+            let menuHtml = '';
+            
+            // Logic Role: Admin jika isAdmin=true ATAU Jabatan mengandung "Kepala"
+            const isPimpinan = userData.isAdmin || (userData.jabatan && userData.jabatan.toLowerCase().includes('kepala'));
+
+            if (isPimpinan) {
+                // MENU ADMIN
+                menuHtml += `
+                    <li class="nav-item mb-1">
+                        <a href="#" class="nav-link active" onclick="switchView('admin-dashboard', this, 'Dashboard Monitoring')">
+                            <i class="fas fa-tachometer-alt"></i> Monitoring Sekolah
+                        </a>
+                    </li>
+                    <li class="nav-item mb-1">
+                        <a href="#" class="nav-link" onclick="downloadLaporanPDF()">
+                            <i class="fas fa-file-pdf"></i> Download Laporan
+                        </a>
+                    </li>
+                `;
+                switchView('admin-dashboard', null, 'Dashboard Monitoring'); 
+            } else {
+                // MENU GURU
+                menuHtml += `
+                    <li class="nav-item mb-1">
+                        <a href="#" class="nav-link active" onclick="switchView('guru-dashboard', this, 'Dashboard Saya')">
+                            <i class="fas fa-user"></i> Dashboard Saya
+                        </a>
+                    </li>
+                `;
+                switchView('guru-dashboard', null, 'Dashboard Saya');
+            }
+            
+            $('#menuContainer').html(menuHtml);
+        }
+
+        function switchView(viewName, el, title) {
+            $('.view-section').addClass('hide');
+            
+            if(el) {
+                $('.nav-link').removeClass('active');
+                $(el).addClass('active');
+            }
+            if(title) $('#pageTitle').text(title);
+
+            $('#view-' + viewName).removeClass('hide');
+
+            if (viewName === 'admin-dashboard') refreshDataAdmin();
+            if (viewName === 'guru-dashboard') loadDataGuru();
+        }
+
+        // --- 3. LOGIC ADMIN (MONITORING) ---
+        async function refreshDataAdmin() {
+            // Jangan load jika tabel sudah ada, kecuali dipaksa refresh
+            // Tapi untuk amannya kita reload data setiap buka menu
+            
+            // Tampilkan loading state sederhana di tabel wrapper jika perlu
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        action: 'monitoring', 
+                        sekolah: userData.unitKerja 
+                    })
+                });
+                const data = await response.json();
+
+                // Update Statistik
+                const totalGuru = data.listSudah.length + data.listBelum.length;
+                const hadirCount = data.listSudah.filter(x => x.status.includes('Hadir') || x.status.includes('Tepat') || x.status.includes('Terlambat')).length;
+                const telatCount = data.listSudah.filter(x => x.status.includes('Terlambat')).length;
+                const belumCount = data.listBelum.length;
+
+                $('#statTotal').text(totalGuru);
+                $('#statHadir').text(hadirCount);
+                $('#statTelat').text(telatCount);
+                $('#statBelum').text(belumCount);
+
+                // Gabung Data untuk DataTables
+                const combinedData = [...data.listSudah, ...data.listBelum];
+                renderTableAdmin(combinedData);
+
+            } catch (e) {
+                console.error(e);
+                Swal.fire('Gagal', 'Gagal memuat data monitoring.', 'error');
+            }
+        }
+
+        function renderTableAdmin(dataSet) {
+            if (dataTableInstance) {
+                dataTableInstance.destroy();
+            }
+
+            dataTableInstance = $('#tableAdmin').DataTable({
+                data: dataSet,
+                pageLength: 10,
+                language: { search: "Cari:", lengthMenu: "_MENU_ baris", info: "_START_ - _END_ dari _TOTAL_" },
+                columns: [
+                    { 
+                        data: 'nama',
+                        render: function(data) { return `<span class="fw-bold text-dark">${data}</span>`; }
+                    },
+                    { 
+                        data: 'status',
+                        render: function(data) { return getBadgeStatus(data); }
+                    },
+                    { data: 'jam' },
+                    { 
+                        data: null,
+                        render: function(data, type, row) {
+                            return row.alasan ? `<small class="text-muted fst-italic">${row.alasan}</small>` : '-';
+                        }
+                    },
+                    {
+                        data: 'foto',
+                        render: function(data, type, row) {
+                            if (data && data.includes('http')) {
+                                return `<button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" onclick="lihatFoto('${data}', '${row.nama}')"><i class="fas fa-eye me-1"></i> Foto</button>`;
+                            }
+                            return '<span class="text-muted small">-</span>';
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            // Tombol Approval hanya jika status Menunggu
+                            if (row.status && row.status.toLowerCase().includes('menunggu')) {
+                                const safeNama = row.nama.replace(/'/g, "\\'"); 
+                                return `
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-success" title="Setujui" onclick="prosesApproval('${safeNama}', 'Disetujui')"><i class="fas fa-check"></i></button>
+                                        <button class="btn btn-danger" title="Tolak" onclick="prosesApproval('${safeNama}', 'Ditolak')"><i class="fas fa-times"></i></button>
+                                    </div>
+                                `;
+                            }
+                            return '';
+                        }
+                    }
+                ],
+                order: [[1, 'asc']]
+            });
+        }
+
+        // --- 4. LOGIC GURU (PERSONAL) ---
+        async function loadDataGuru() {
+            $('#dashGuruName').text(userData.nama);
+            $('#dashGuruUnit').text(userData.unitKerja);
+            $('#dashGuruJab').text(userData.jabatan);
+            
+            // Fetch History
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'riwayat', nama: userData.nama })
+            });
+            const list = await response.json();
+            
+            let html = "";
+            if(list && list.length > 0) {
+                list.forEach(item => {
+                    html += `<tr>
+                        <td>${item.tanggal}</td>
+                        <td class="fw-bold">${item.jam}</td>
+                        <td>${getBadgeStatus(item.status)}</td>
+                        <td>${item.lokasi || '-'}</td>
+                    </tr>`;
+                });
+            } else {
+                html = `<tr><td colspan="4" class="text-center py-4 text-muted">Belum ada riwayat kehadiran bulan ini.</td></tr>`;
+            }
+            $('#tbodyGuru').html(html);
+        }
+
+        // --- 5. HELPER FUNCTIONS ---
+        function getBadgeStatus(status) {
+            let color = 'secondary';
+            let icon = '';
+
+            if (status.includes('Tepat Waktu')) { color = 'success'; icon = 'check-circle'; }
+            else if (status.includes('Terlambat')) { color = 'warning text-dark'; icon = 'exclamation-triangle'; }
+            else if (status.includes('Sakit') || status.includes('Izin')) { color = 'info text-dark'; icon = 'file-medical'; }
+            else if (status.includes('Luar Radius')) { color = 'danger'; icon = 'map-marker-alt'; }
+            else if (status.includes('Belum')) { color = 'light text-muted border'; icon = 'user-clock'; }
+
+            return `<span class="badge bg-${color} rounded-pill fw-normal px-3"><i class="fas fa-${icon} me-1"></i> ${status}</span>`;
+        }
+
+        function lihatFoto(url, nama) {
+            Swal.fire({
+                title: nama,
+                imageUrl: url,
+                imageAlt: 'Bukti Foto',
+                imageHeight: 450,
+                showConfirmButton: false,
+                showCloseButton: true,
+                background: '#fff',
+                width: 600,
+                customClass: { image: 'rounded-3 shadow-sm' }
+            });
+        }
+
+        async function prosesApproval(namaGuru, keputusan) {
+            const result = await Swal.fire({
+                title: 'Konfirmasi',
+                text: `Ubah status ${namaGuru} menjadi ${keputusan}?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#B3261E',
+                confirmButtonText: 'Ya, Proses'
+            });
+
+            if (result.isConfirmed) {
+                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({ action: 'updateIzin', nama: namaGuru, status: keputusan })
+                    });
+                    const res = await response.text();
+                    
+                    if (res.includes('SUKSES') || res.includes('Berhasil')) {
+                        Swal.fire('Berhasil', 'Status diperbarui', 'success');
+                        refreshDataAdmin();
+                    } else {
+                        Swal.fire('Gagal', res, 'error');
+                    }
+                } catch (e) { Swal.fire('Error', 'Gagal update data.', 'error'); }
+            }
+        }
+
+        function downloadLaporanPDF() {
+            Swal.fire({
+                title: 'Download Laporan Bulanan',
+                html: `Masukkan Tahun:<br><input id="pdfYear" class="swal2-input" value="${new Date().getFullYear()}">`,
+                showCancelButton: true,
+                confirmButtonText: 'Download PDF',
+                confirmButtonColor: '#B3261E',
+                preConfirm: () => {
+                    return document.getElementById('pdfYear').value;
+                }
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const tahun = result.value;
+                    Swal.fire({ title: 'Generating PDF...', text: 'Tunggu sebentar, file sedang dibuat.', didOpen: () => Swal.showLoading() });
+                    
+                    try {
+                        const response = await fetch(API_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({ action: 'pdf', sekolah: userData.unitKerja, tahun: tahun })
+                        });
+                        const res = await response.json(); 
+                        
+                        // Backend harus return { status: 'SUKSES', url: '...' } atau langsung URL string
+                        // Kita handle keduanya
+                        let downloadUrl = "";
+                        if(typeof res === 'string' && res.includes('http')) downloadUrl = res;
+                        else if(res.url) downloadUrl = res.url;
+
+                        if (downloadUrl) {
+                            Swal.close();
+                            window.open(downloadUrl, '_blank');
+                        } else {
+                            Swal.fire('Info', 'Respon server: ' + JSON.stringify(res), 'info');
+                        }
+                    } catch (e) {
+                        Swal.fire('Gagal', 'Gagal generate PDF. Cek log backend.', 'error');
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
