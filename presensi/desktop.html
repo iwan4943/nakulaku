@@ -96,6 +96,15 @@
             margin-right: 10px;
         }
 
+        .nav-section-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.4);
+            margin: 20px 20px 5px 20px;
+            font-weight: 500;
+        }
+
         /* --- Main Content --- */
         .main-content {
             margin-left: var(--sidebar-width);
@@ -183,7 +192,7 @@
             </div>
         </div>
         
-        <ul class="nav flex-column mt-3" id="menuContainer">
+        <ul class="nav flex-column mt-2" id="menuContainer">
             </ul>
 
         <div class="mt-auto p-3">
@@ -297,9 +306,6 @@
                         <button class="btn btn-outline-primary w-100 mb-2 text-start py-2" onclick="Swal.fire('Info','Gunakan Aplikasi Mobile untuk Izin','info')">
                             <i class="fas fa-envelope-open-text me-2"></i> Ajukan Izin
                         </button>
-                        <button class="btn btn-secondary w-100 text-start py-2" onclick="doLogout()">
-                            <i class="fas fa-sign-out-alt me-2"></i> Logout
-                        </button>
                     </div>
                 </div>
             </div>
@@ -329,7 +335,7 @@
 
     <script>
         // =====================================================================
-        // KONFIGURASI (WAJIB DIGANTI)
+        // 1. KONFIGURASI API (SUDAH TERPASANG)
         // =====================================================================
         const API_URL = "https://script.google.com/macros/s/AKfycbweTTiW0sPe1SAnJZlUK4KCiiks4cDhc420PWmvf1IOJ7mIKGUhudz42SpAJ1KZP4__cg/exec"; 
         
@@ -358,14 +364,10 @@
             });
         });
 
-        // --- 1. LOGIN SYSTEM ---
+        // --- 2. LOGIN SYSTEM ---
         async function doLogin() {
             const pin = $('#inputPin').val();
             if (!pin) return Swal.fire('Error', 'PIN tidak boleh kosong', 'warning');
-
-            if(API_URL.includes("GANTI_DENGAN")) {
-                return Swal.fire('Konfigurasi Error', 'URL API belum diganti di script desktop.html', 'error');
-            }
 
             Swal.fire({ title: 'Memeriksa Kredensial...', didOpen: () => Swal.showLoading() });
 
@@ -388,7 +390,7 @@
                 }
             } catch (e) {
                 console.error(e);
-                Swal.fire('Error Koneksi', 'Gagal menghubungi server Google Apps Script.', 'error');
+                Swal.fire('Error Koneksi', 'Gagal menghubungi server.', 'error');
             }
         }
 
@@ -408,7 +410,7 @@
             });
         }
 
-        // --- 2. DASHBOARD INIT & ROLE CHECK ---
+        // --- 3. DASHBOARD INIT & DUAL ROLE LOGIC ---
         function initDashboard() {
             // Set Sidebar Info
             $('#sidebarName').text(userData.nama);
@@ -421,14 +423,15 @@
             // Generate Menu based on Role
             let menuHtml = '';
             
-            // Logic Role: Admin jika isAdmin=true ATAU Jabatan mengandung "Kepala"
+            // Cek apakah Admin/Pimpinan
             const isPimpinan = userData.isAdmin || (userData.jabatan && userData.jabatan.toLowerCase().includes('kepala'));
 
+            // 1. JIKA ADMIN: Tampilkan Menu Monitoring DULUAN
             if (isPimpinan) {
-                // MENU ADMIN
                 menuHtml += `
+                    <div class="nav-section-label">Menu Admin</div>
                     <li class="nav-item mb-1">
-                        <a href="#" class="nav-link active" onclick="switchView('admin-dashboard', this, 'Dashboard Monitoring')">
+                        <a href="#" class="nav-link" id="link-admin" onclick="switchView('admin-dashboard', this, 'Monitoring Sekolah')">
                             <i class="fas fa-tachometer-alt"></i> Monitoring Sekolah
                         </a>
                     </li>
@@ -438,20 +441,31 @@
                         </a>
                     </li>
                 `;
-                switchView('admin-dashboard', null, 'Dashboard Monitoring'); 
-            } else {
-                // MENU GURU
-                menuHtml += `
-                    <li class="nav-item mb-1">
-                        <a href="#" class="nav-link active" onclick="switchView('guru-dashboard', this, 'Dashboard Saya')">
-                            <i class="fas fa-user"></i> Dashboard Saya
-                        </a>
-                    </li>
-                `;
-                switchView('guru-dashboard', null, 'Dashboard Saya');
             }
+
+            // 2. MENU PRIBADI (TAMPIL UNTUK SEMUA ORANG)
+            menuHtml += `
+                <div class="nav-section-label">Menu Pribadi</div>
+                <li class="nav-item mb-1">
+                    <a href="#" class="nav-link" id="link-guru" onclick="switchView('guru-dashboard', this, 'Dashboard Saya')">
+                        <i class="fas fa-user"></i> Dashboard Saya
+                    </a>
+                </li>
+            `;
             
             $('#menuContainer').html(menuHtml);
+
+            // Tentukan tampilan awal
+            if (isPimpinan) {
+                // Admin start di Monitoring
+                // Kita trigger click manual atau panggil fungsi agar class active benar
+                switchView('admin-dashboard', document.getElementById('link-admin'), 'Monitoring Sekolah');
+                $('#link-admin').addClass('active');
+            } else {
+                // Guru start di Dashboard Saya
+                switchView('guru-dashboard', document.getElementById('link-guru'), 'Dashboard Saya');
+                $('#link-guru').addClass('active');
+            }
         }
 
         function switchView(viewName, el, title) {
@@ -469,13 +483,8 @@
             if (viewName === 'guru-dashboard') loadDataGuru();
         }
 
-        // --- 3. LOGIC ADMIN (MONITORING) ---
+        // --- 4. LOGIC ADMIN (MONITORING) ---
         async function refreshDataAdmin() {
-            // Jangan load jika tabel sudah ada, kecuali dipaksa refresh
-            // Tapi untuk amannya kita reload data setiap buka menu
-            
-            // Tampilkan loading state sederhana di tabel wrapper jika perlu
-            
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -562,7 +571,7 @@
             });
         }
 
-        // --- 4. LOGIC GURU (PERSONAL) ---
+        // --- 5. LOGIC GURU (PERSONAL) ---
         async function loadDataGuru() {
             $('#dashGuruName').text(userData.nama);
             $('#dashGuruUnit').text(userData.unitKerja);
@@ -591,7 +600,7 @@
             $('#tbodyGuru').html(html);
         }
 
-        // --- 5. HELPER FUNCTIONS ---
+        // --- 6. HELPER FUNCTIONS ---
         function getBadgeStatus(status) {
             let color = 'secondary';
             let icon = '';
@@ -670,8 +679,6 @@
                         });
                         const res = await response.json(); 
                         
-                        // Backend harus return { status: 'SUKSES', url: '...' } atau langsung URL string
-                        // Kita handle keduanya
                         let downloadUrl = "";
                         if(typeof res === 'string' && res.includes('http')) downloadUrl = res;
                         else if(res.url) downloadUrl = res.url;
