@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Informasi Guru (SIG) - Desktop</title>
+    <title>Desk Presensi - Gugus Nakula</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -12,14 +12,24 @@
     
     <style>
         :root {
-            --primary-color: #B3261E; /* Warna Merah Gugus Nakula */
-            --sidebar-width: 260px;
-            --bg-light: #f4f6f9;
+            /* Warna Dasar (Sama dengan Mobile) */
+            --md-primary: #B3261E; 
+            --md-on-primary: #FFFFFF;
+            --md-primary-container: #FFDAD6;
+            --md-on-primary-container: #410002;
+            --md-surface: #FFF8F7;
+            --md-surface-container: #FCEAE9;
+            --md-text-main: #201A1A;
+            --md-text-sub: #534341;
+            
+            --sidebar-width: 280px;
+            --sidebar-bg: #410E0B; /* Versi Gelap dari Primary agar kontras */
         }
 
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-light);
+            background-color: var(--md-surface);
+            color: var(--md-text-main);
             overflow-x: hidden;
         }
 
@@ -27,300 +37,310 @@
             font-family: 'Google Sans', sans-serif;
         }
 
-        /* --- Sidebar Styling --- */
-        .sidebar {
-            height: 100vh;
-            width: var(--sidebar-width);
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #2c3e50;
-            color: #fff;
-            transition: 0.3s;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
+        /* --- LOGIN SCREEN --- */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, var(--md-surface) 0%, var(--md-primary-container) 100%);
+            z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
         }
-
-        .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            background: rgba(0,0,0,0.1);
-        }
-
-        .user-panel {
-            padding: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            background: #fff;
-            color: var(--primary-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        .nav-link {
-            color: rgba(255,255,255,0.8);
-            padding: 14px 20px;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            border-left: 4px solid transparent;
-            transition: 0.2s;
-        }
-
-        .nav-link:hover {
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-        }
-
-        .nav-link.active {
-            background: #34495e;
-            color: #fff;
-            border-left-color: var(--primary-color);
-        }
-
-        .nav-link i {
-            width: 25px;
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 28px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(179, 38, 30, 0.15);
+            border: 1px solid #fff;
+            width: 400px;
             text-align: center;
-            margin-right: 10px;
         }
-
-        .nav-section-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255,255,255,0.4);
-            margin: 20px 20px 5px 20px;
-            font-weight: 500;
+        .pin-input {
+            border: none; border-bottom: 2px solid var(--md-text-sub);
+            background: transparent; font-size: 2rem; letter-spacing: 12px;
+            color: var(--md-primary); font-weight: bold; text-align: center;
+            width: 100%; outline: none; transition: 0.3s;
         }
+        .pin-input:focus { border-color: var(--md-primary); }
 
-        /* --- Main Content --- */
+        /* --- SIDEBAR --- */
+        .sidebar {
+            height: 100vh; width: var(--sidebar-width);
+            position: fixed; top: 0; left: 0;
+            background-color: var(--sidebar-bg);
+            color: #FFDAD6;
+            display: flex; flex-direction: column;
+            z-index: 1000;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+        }
+        .sidebar-header {
+            padding: 30px 25px;
+            background: rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .user-panel {
+            padding: 25px;
+            background: rgba(255,255,255,0.02);
+            display: flex; align-items: center; gap: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .user-avatar {
+            width: 50px; height: 50px;
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        /* MENU ITEMS */
+        .nav-label {
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px;
+            color: rgba(255,218,214, 0.5); margin: 25px 25px 10px 25px; font-weight: 700;
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.85);
+            padding: 14px 25px; font-size: 0.95rem; font-weight: 500;
+            display: flex; align-items: center;
+            transition: 0.2s; border-radius: 0 50px 50px 0; margin-right: 15px;
+        }
+        .nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .nav-link.active {
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            font-weight: 700;
+        }
+        .nav-link i { width: 28px; font-size: 1.1rem; }
+
+        /* --- MAIN CONTENT --- */
         .main-content {
             margin-left: var(--sidebar-width);
-            padding: 30px;
+            padding: 35px;
             min-height: 100vh;
         }
 
-        /* --- Cards & Stats --- */
+        /* --- CARDS & WIDGETS --- */
         .card-stat {
-            border: none;
-            border-radius: 12px;
-            background: #fff;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+            background: #FFFFFF; border: none;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
             transition: transform 0.2s;
+            height: 100%;
         }
-        .card-stat:hover {
-            transform: translateY(-5px);
-        }
+        .card-stat:hover { transform: translateY(-5px); }
+        
         .icon-box {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
+            width: 56px; height: 56px; border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin-right: 16px;
+        }
+        .ib-primary { background: var(--md-surface-container); color: var(--md-primary); }
+        .ib-success { background: #C4EED0; color: #074E23; }
+        .ib-warn { background: #FFEFBF; color: #765600; }
+        .ib-danger { background: #FFDAD6; color: #410E0B; }
+
+        /* Table Card */
+        .card-table {
+            background: #FFFFFF; border-radius: 28px;
+            border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            overflow: hidden;
+        }
+        .card-header-custom {
+            padding: 25px; background: #fff;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        /* Dropdown Filter Komunitas */
+        .com-filter {
+            background: #fff; border: 1px solid var(--md-primary-container);
+            padding: 8px 20px; border-radius: 50px;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 2px 10px rgba(179, 38, 30, 0.05);
+            transition: 0.3s;
+        }
+        .com-filter:hover { border-color: var(--md-primary); }
+        .com-filter select {
+            border: none; outline: none; background: transparent;
+            font-family: 'Google Sans'; font-weight: 600;
+            color: var(--md-primary); cursor: pointer; min-width: 220px;
         }
 
-        /* --- Login Overlay --- */
-        #login-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Buttons */
+        .btn-primary-md {
+            background: var(--md-primary); color: #fff;
+            border-radius: 50px; padding: 10px 24px; border: none;
+            font-family: 'Google Sans'; font-weight: 500;
+            transition: 0.2s;
         }
-
-        /* --- Utilities --- */
+        .btn-primary-md:hover { background: #9c1c16; color:#fff; transform: scale(1.02); }
+        
         .hide { display: none !important; }
-        .text-primary-custom { color: var(--primary-color); }
-        .btn-primary-custom { background-color: var(--primary-color); border: none; color: white; }
-        .btn-primary-custom:hover { background-color: #901f18; color: white; }
-
-        /* --- DataTables Custom --- */
-        .table-responsive { border-radius: 12px; background: white; padding: 20px; box-shadow: 0 2px 15px rgba(0,0,0,0.03); }
-        table.dataTable thead th { background-color: #f8f9fa; border-bottom: 2px solid #e9ecef; }
+        
+        /* DataTables Custom */
+        .dataTables_wrapper .dataTables_length select { border-radius: 8px; padding: 5px; }
+        .dataTables_wrapper .dataTables_filter input { border-radius: 20px; padding: 5px 15px; border: 1px solid #ddd; }
+        table.dataTable thead th { background-color: var(--md-surface-container); color: var(--md-text-main); border-bottom: none; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
-        <div class="card border-0 shadow-lg p-5 text-center" style="width: 400px; border-radius: 20px;">
-            <div class="mb-4">
-                <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                    <i class="fas fa-desktop fa-3x text-danger"></i>
-                </div>
-                <h3 class="fw-google fw-bold text-dark">Gugus Nakula</h3>
-                <p class="text-muted small">Portal Administrasi Desktop</p>
+        <div class="login-card">
+            <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex p-4 mb-4">
+                <i class="fas fa-desktop fa-3x" style="color: var(--md-primary);"></i>
+            </div>
+            <h2 class="fw-google fw-bold mb-1" style="color: var(--md-text-main);">Desk Presensi</h2>
+            <p style="color: var(--md-text-sub);" class="mb-5">Portal Gugus Nakula</p>
+            
+            <div class="text-start mb-4 px-3">
+                <label class="small fw-bold ms-1 mb-2" style="color:var(--md-primary); letter-spacing:1px;">MASUKKAN PIN</label>
+                <input type="password" id="inputPin" class="pin-input" placeholder="• • • • • •">
             </div>
             
-            <div class="form-group mb-4 text-start">
-                <label class="small fw-bold text-muted mb-2 ps-1">MASUKKAN PIN GURU</label>
-                <input type="password" id="inputPin" class="form-control form-control-lg text-center fw-bold" placeholder="• • • • • •" style="letter-spacing: 8px; font-size: 1.5rem;">
-            </div>
-            
-            <button onclick="doLogin()" class="btn btn-primary-custom w-100 py-3 fw-bold rounded-pill shadow-sm">
-                MASUK DASHBOARD <i class="fas fa-arrow-right ms-2"></i>
+            <button onclick="doLogin()" class="btn-primary-md w-100 py-3 shadow-sm">
+                MASUK <i class="fas fa-arrow-right ms-2"></i>
             </button>
         </div>
     </div>
 
     <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header d-flex align-items-center">
-            <i class="fas fa-school fa-lg me-2 text-danger"></i>
-            <span class="fw-bold fs-5">SIG Desktop</span>
+        <div class="sidebar-header d-flex align-items-center gap-3">
+            <div style="width: 8px; height: 35px; background: #FFDAD6; border-radius: 4px;"></div>
+            <div>
+                <h4 class="fw-google m-0 fw-bold">Desk Presensi</h4>
+                <small style="opacity:0.7;">Ver 1.0 Admin</small>
+            </div>
         </div>
         
         <div class="user-panel">
             <div class="user-avatar" id="avatarInitials">GN</div>
-            <div style="line-height: 1.2; overflow: hidden;">
-                <div class="fw-bold text-truncate" id="sidebarName" style="max-width: 160px;">Memuat...</div>
-                <div class="small opacity-50 text-truncate" id="sidebarRole" style="max-width: 160px;">...</div>
+            <div style="line-height: 1.3; overflow: hidden;">
+                <div class="fw-bold text-white text-truncate" id="sidebarName" style="max-width: 150px;">Memuat...</div>
+                <div class="small text-truncate" id="sidebarRole" style="color: #FFDAD6; opacity:0.8; max-width: 150px;">...</div>
             </div>
         </div>
         
-        <ul class="nav flex-column mt-2" id="menuContainer">
-            </ul>
+        <div id="menuContainer" style="flex: 1; overflow-y: auto; padding-top: 10px;">
+            </div>
 
-        <div class="mt-auto p-3">
-            <button onclick="doLogout()" class="btn btn-outline-light w-100 d-flex align-items-center justify-content-center gap-2">
-                <i class="fas fa-sign-out-alt"></i> Keluar
+        <div class="p-4">
+            <button onclick="doLogout()" class="btn btn-outline-light w-100 rounded-pill py-2" style="border-color: rgba(255,255,255,0.3); color: #FFDAD6;">
+                <i class="fas fa-sign-out-alt me-2"></i> Keluar
             </button>
-            <div class="text-center mt-3 small opacity-25">Ver 1.0.0 Desktop</div>
         </div>
     </nav>
 
     <div class="main-content">
-        
-        <div class="d-flex justify-content-between align-items-end mb-4">
+        <div class="d-flex justify-content-between align-items-end mb-5">
             <div>
-                <h6 class="text-muted small mb-1 text-uppercase ls-1">Overview</h6>
-                <h3 class="fw-bold m-0" id="pageTitle">Dashboard</h3>
+                <h6 class="text-uppercase fw-bold mb-1" style="color: var(--md-primary); letter-spacing: 1px;">Overview</h6>
+                <h2 class="fw-google fw-bold m-0" id="pageTitle" style="color: var(--md-text-main);">Dashboard</h2>
             </div>
-            <div class="text-end">
-                <h5 class="m-0 fw-bold text-primary-custom" id="clockTime">00:00</h5>
-                <small class="text-muted" id="currentDate">...</small>
+
+            <div id="wrapperFilterSekolah" class="hide">
+                <div class="com-filter">
+                    <i class="fas fa-building" style="color: var(--md-primary);"></i>
+                    <select id="selectSekolah" onchange="gantiSekolah()">
+                        <option value="">Memuat Data...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="text-end d-none d-md-block">
+                <h2 class="fw-google fw-bold m-0" id="clockTime" style="color: var(--md-text-main);">00:00</h2>
+                <small style="color: var(--md-text-sub);" id="currentDate">...</small>
             </div>
         </div>
 
         <div id="view-admin-dashboard" class="view-section hide">
+            <div class="d-flex align-items-center mb-4 px-2">
+                <div class="badge rounded-pill px-3 py-2 me-2" style="background: var(--md-primary-container); color: var(--md-on-primary-container);">
+                    <i class="fas fa-info-circle me-1"></i> Status
+                </div>
+                <span style="color: var(--md-text-sub);">Menampilkan data untuk: <strong id="labelSekolahAktif" style="color: var(--md-primary);">...</strong></span>
+            </div>
+
             <div class="row g-4 mb-4">
                 <div class="col-md-3">
-                    <div class="card card-stat p-3 h-100">
+                    <div class="card-stat">
                         <div class="d-flex align-items-center">
-                            <div class="icon-box bg-primary bg-opacity-10 text-primary me-3"><i class="fas fa-users"></i></div>
-                            <div><div class="text-muted small">Total Pegawai</div><h4 class="fw-bold m-0" id="statTotal">0</h4></div>
+                            <div class="icon-box ib-primary"><i class="fas fa-users"></i></div>
+                            <div><small class="text-muted fw-bold">Total Pegawai</small><h3 class="fw-bold m-0 mt-1" id="statTotal">0</h3></div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card card-stat p-3 h-100">
+                    <div class="card-stat">
                         <div class="d-flex align-items-center">
-                            <div class="icon-box bg-success bg-opacity-10 text-success me-3"><i class="fas fa-check-circle"></i></div>
-                            <div><div class="text-muted small">Hadir Hari Ini</div><h4 class="fw-bold m-0" id="statHadir">0</h4></div>
+                            <div class="icon-box ib-success"><i class="fas fa-check"></i></div>
+                            <div><small class="text-muted fw-bold">Hadir</small><h3 class="fw-bold m-0 mt-1" id="statHadir">0</h3></div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card card-stat p-3 h-100">
+                    <div class="card-stat">
                         <div class="d-flex align-items-center">
-                            <div class="icon-box bg-warning bg-opacity-10 text-warning me-3"><i class="fas fa-clock"></i></div>
-                            <div><div class="text-muted small">Terlambat</div><h4 class="fw-bold m-0" id="statTelat">0</h4></div>
+                            <div class="icon-box ib-warn"><i class="fas fa-clock"></i></div>
+                            <div><small class="text-muted fw-bold">Terlambat</small><h3 class="fw-bold m-0 mt-1" id="statTelat">0</h3></div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card card-stat p-3 h-100">
+                    <div class="card-stat">
                         <div class="d-flex align-items-center">
-                            <div class="icon-box bg-danger bg-opacity-10 text-danger me-3"><i class="fas fa-times-circle"></i></div>
-                            <div><div class="text-muted small">Belum Hadir</div><h4 class="fw-bold m-0" id="statBelum">0</h4></div>
+                            <div class="icon-box ib-danger"><i class="fas fa-times"></i></div>
+                            <div><small class="text-muted fw-bold">Belum Hadir</small><h3 class="fw-bold m-0 mt-1" id="statBelum">0</h3></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-0">
-                    <h5 class="fw-bold m-0"><i class="fas fa-table me-2 text-danger"></i>Rekapitulasi Kehadiran</h5>
-                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="refreshDataAdmin()">
-                        <i class="fas fa-sync-alt me-1"></i> Refresh Data
+            <div class="card-table">
+                <div class="card-header-custom">
+                    <h5 class="fw-bold m-0" style="color: var(--md-text-main);"><i class="fas fa-list-alt me-2" style="color: var(--md-primary);"></i>Rekapitulasi Realtime</h5>
+                    <button class="btn btn-sm btn-light rounded-pill px-3 fw-bold border" onclick="refreshDataAdmin()" style="color: var(--md-text-sub);">
+                        <i class="fas fa-sync-alt me-1"></i> Refresh
                     </button>
                 </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive border-0 shadow-none">
-                        <table id="tableAdmin" class="table table-hover align-middle w-100">
-                            <thead>
-                                <tr>
-                                    <th>Nama Pegawai</th>
-                                    <th>Status</th>
-                                    <th>Jam Absen</th>
-                                    <th>Keterangan / Lokasi</th>
-                                    <th>Foto</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
+                <div class="p-3">
+                    <table id="tableAdmin" class="table table-hover align-middle w-100" style="border-color: #eee;">
+                        <thead><tr><th>Nama Pegawai</th><th>Status</th><th>Jam</th><th>Keterangan</th><th>Foto</th><th>Aksi</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
         <div id="view-guru-dashboard" class="view-section hide">
-            <div class="row mb-4">
-                <div class="col-md-8">
-                    <div class="card card-stat bg-danger text-white p-4 border-0 h-100" style="background: linear-gradient(45deg, #B3261E, #cb453e);">
-                        <h2 class="fw-light">Selamat Datang, <span id="dashGuruName" class="fw-bold">Guru</span></h2>
-                        <p class="mb-4 opacity-75">Dashboard Personal Kehadiran Anda</p>
-                        <div class="row">
-                            <div class="col-auto border-end border-white border-opacity-25 pe-4">
-                                <div class="small opacity-75">Unit Kerja</div>
-                                <div class="fw-bold fs-5" id="dashGuruUnit">-</div>
-                            </div>
-                            <div class="col-auto ps-4">
-                                <div class="small opacity-75">Jabatan</div>
-                                <div class="fw-bold fs-5" id="dashGuruJab">-</div>
-                            </div>
+             <div class="row mb-4">
+                 <div class="col-md-8">
+                     <div class="card-stat text-white d-flex flex-column justify-content-center" style="background: linear-gradient(135deg, #B3261E 0%, #601410 100%); border:none; min-height: 200px;">
+                        <h2 class="fw-light">Halo, <span id="dashGuruName" class="fw-bold">...</span></h2>
+                        <p class="opacity-75 mb-4" id="dashGuruJab">...</p>
+                        <div class="d-flex gap-4 mt-auto">
+                            <div><small class="opacity-50">Unit Kerja</small><div class="fw-bold" id="dashGuruUnit">-</div></div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card card-stat p-4 h-100">
-                        <h6 class="fw-bold text-muted mb-3">Aksi Cepat</h6>
-                        <button class="btn btn-outline-danger w-100 mb-2 text-start py-2" onclick="Swal.fire('Info','Silahkan gunakan Aplikasi Mobile untuk Absen','info')">
-                            <i class="fas fa-camera me-2"></i> Absen Masuk
-                        </button>
-                        <button class="btn btn-outline-primary w-100 mb-2 text-start py-2" onclick="Swal.fire('Info','Gunakan Aplikasi Mobile untuk Izin','info')">
-                            <i class="fas fa-envelope-open-text me-2"></i> Ajukan Izin
-                        </button>
-                    </div>
-                </div>
-            </div>
+                     </div>
+                 </div>
+                 <div class="col-md-4">
+                     <div class="card-stat">
+                         <h6 class="fw-bold text-muted mb-3">Menu Cepat</h6>
+                         <button class="btn btn-light w-100 text-start mb-2 py-2 text-muted" onclick="Swal.fire('Info','Gunakan HP untuk Absen','info')"><i class="fas fa-camera me-2 text-danger"></i> Absen Masuk</button>
+                         <button class="btn btn-light w-100 text-start py-2 text-muted" onclick="Swal.fire('Info','Gunakan HP untuk Izin','info')"><i class="fas fa-envelope me-2 text-primary"></i> Ajukan Izin</button>
+                     </div>
+                 </div>
+             </div>
 
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-header bg-white py-3 border-0">
-                    <h5 class="fw-bold m-0"><i class="fas fa-history me-2 text-danger"></i>Riwayat Kehadiran Saya</h5>
+            <div class="card-table">
+                <div class="card-header-custom">
+                    <h5 class="fw-bold m-0"><i class="fas fa-history me-2 text-danger"></i>Riwayat Saya</h5>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive border-0 shadow-none">
-                        <table id="tableGuru" class="table table-striped w-100">
-                            <thead><tr><th>Tanggal</th><th>Jam</th><th>Status</th><th>Lokasi</th></tr></thead>
-                            <tbody id="tbodyGuru"></tbody>
-                        </table>
-                    </div>
+                <div class="p-3">
+                    <table id="tableGuru" class="table table-striped w-100">
+                        <thead><tr><th>Tanggal</th><th>Jam</th><th>Status</th><th>Lokasi</th></tr></thead>
+                        <tbody id="tbodyGuru"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -334,364 +354,215 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // =====================================================================
-        // 1. KONFIGURASI API (SUDAH TERPASANG)
-        // =====================================================================
+        // URL WEB APP GAS (Backend)
         const API_URL = "https://script.google.com/macros/s/AKfycbweTTiW0sPe1SAnJZlUK4KCiiks4cDhc420PWmvf1IOJ7mIKGUhudz42SpAJ1KZP4__cg/exec"; 
         
         let userData = null;
         let dataTableInstance = null;
+        let sekolahAktif = ""; 
 
-        // --- Init Clock ---
+        // Clock Update
         setInterval(() => {
             const now = new Date();
             document.getElementById('clockTime').innerText = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
             document.getElementById('currentDate').innerText = now.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
         }, 1000);
 
-        // --- Cek Sesi ---
         $(document).ready(function() {
-            const saved = sessionStorage.getItem('sig_user_desktop');
-            if (saved) {
-                userData = JSON.parse(saved);
-                $('#login-screen').hide();
-                initDashboard();
-            }
-            
-            // Enter key on PIN input
-            $('#inputPin').keypress(function (e) {
-                if (e.which == 13) doLogin();
-            });
+            const saved = sessionStorage.getItem('desk_presensi_user');
+            if (saved) { userData = JSON.parse(saved); $('#login-screen').hide(); initDashboard(); }
+            $('#inputPin').keypress(function (e) { if (e.which == 13) doLogin(); });
         });
 
-        // --- 2. LOGIN SYSTEM ---
+        // --- AUTHENTICATION ---
         async function doLogin() {
             const pin = $('#inputPin').val();
-            if (!pin) return Swal.fire('Error', 'PIN tidak boleh kosong', 'warning');
-
-            Swal.fire({ title: 'Memeriksa Kredensial...', didOpen: () => Swal.showLoading() });
-
+            if (!pin) return Swal.fire({title:'PIN Kosong', icon:'warning', confirmButtonColor:'#B3261E'});
+            
+            Swal.fire({ title: 'Memeriksa...', didOpen: () => Swal.showLoading() });
+            
             try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'login', pin: pin })
-                });
+                const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'login', pin: pin }) });
                 const res = await response.json();
-
                 Swal.close();
 
                 if (res.status === 'SUKSES') {
                     userData = res;
-                    sessionStorage.setItem('sig_user_desktop', JSON.stringify(res));
-                    $('#login-screen').fadeOut(500);
+                    sessionStorage.setItem('desk_presensi_user', JSON.stringify(res));
+                    $('#login-screen').fadeOut();
                     initDashboard();
                 } else {
-                    Swal.fire('Gagal', 'PIN Salah atau tidak ditemukan.', 'error');
+                    Swal.fire({title:'Akses Ditolak', text:'PIN Salah / Tidak Ditemukan', icon:'error', confirmButtonColor:'#B3261E'});
                 }
-            } catch (e) {
-                console.error(e);
-                Swal.fire('Error Koneksi', 'Gagal menghubungi server.', 'error');
-            }
+            } catch (e) { Swal.fire('Error', 'Gagal koneksi server', 'error'); }
         }
 
         function doLogout() {
-            Swal.fire({
-                title: 'Keluar?',
-                text: "Sesi Anda akan diakhiri.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#B3261E',
-                confirmButtonText: 'Ya, Keluar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    sessionStorage.removeItem('sig_user_desktop');
-                    location.reload();
-                }
+            Swal.fire({ title: 'Keluar?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#B3261E', confirmButtonText: 'Ya' }).then((r) => {
+                if (r.isConfirmed) { sessionStorage.removeItem('desk_presensi_user'); location.reload(); }
             });
         }
 
-        // --- 3. DASHBOARD INIT & DUAL ROLE LOGIC ---
-        function initDashboard() {
-            // Set Sidebar Info
+        // --- DASHBOARD LOGIC (HIERARKI ADMIN) ---
+        async function initDashboard() {
             $('#sidebarName').text(userData.nama);
-            $('#sidebarRole').text(userData.jabatan || 'Guru');
-            
-            // Initials Avatar
-            const initials = userData.nama.split(" ").map((n)=>n[0]).join("").substring(0,2).toUpperCase();
-            $('#avatarInitials').text(initials);
+            $('#sidebarRole').text(userData.jabatan || 'User');
+            $('#avatarInitials').text(userData.nama.substring(0,2).toUpperCase());
+            if(userData.unitKerja) $('#dashGuruUnit').text(userData.unitKerja);
 
-            // Generate Menu based on Role
             let menuHtml = '';
             
-            // Cek apakah Admin/Pimpinan
-            const isPimpinan = userData.isAdmin || (userData.jabatan && userData.jabatan.toLowerCase().includes('kepala'));
+            // 1. CEK SUPER ADMIN (ADMIN KOMUNITAS) -> Kolom G = "ADMIN"
+            const isCommunityAdmin = userData.isAdmin; 
 
-            // 1. JIKA ADMIN: Tampilkan Menu Monitoring DULUAN
-            if (isPimpinan) {
+            // 2. CEK ADMIN SEKOLAH (KS) -> Jabatan mengandung "Kepala"
+            const isSchoolAdmin = userData.jabatan && userData.jabatan.toLowerCase().includes('kepala');
+
+            if (isCommunityAdmin) {
                 menuHtml += `
-                    <div class="nav-section-label">Menu Admin</div>
-                    <li class="nav-item mb-1">
-                        <a href="#" class="nav-link" id="link-admin" onclick="switchView('admin-dashboard', this, 'Monitoring Sekolah')">
-                            <i class="fas fa-tachometer-alt"></i> Monitoring Sekolah
-                        </a>
-                    </li>
-                    <li class="nav-item mb-1">
-                        <a href="#" class="nav-link" onclick="downloadLaporanPDF()">
-                            <i class="fas fa-file-pdf"></i> Download Laporan
-                        </a>
-                    </li>
+                    <div class="nav-label">Admin Komunitas</div>
+                    <a class="nav-link" id="link-mon" onclick="switchView('admin-dashboard', this, 'Monitoring Gugus')"><i class="fas fa-globe"></i> Monitoring Gugus</a>
+                    <a class="nav-link" onclick="downloadLaporanPDF()"><i class="fas fa-file-pdf"></i> Download Laporan</a>
                 `;
+                $('#wrapperFilterSekolah').removeClass('hide');
+                await loadListSekolah();
+                
+            } else if (isSchoolAdmin) {
+                menuHtml += `
+                    <div class="nav-label">Admin Sekolah</div>
+                    <a class="nav-link" id="link-mon" onclick="switchView('admin-dashboard', this, 'Monitoring Sekolah')"><i class="fas fa-school"></i> Monitoring Sekolah</a>
+                    <a class="nav-link" onclick="downloadLaporanPDF()"><i class="fas fa-file-pdf"></i> Download Laporan</a>
+                `;
+                $('#wrapperFilterSekolah').addClass('hide');
+                sekolahAktif = userData.unitKerja;
+                $('#labelSekolahAktif').text(sekolahAktif);
             }
 
-            // 2. MENU PRIBADI (TAMPIL UNTUK SEMUA ORANG)
+            // MENU PRIBADI
             menuHtml += `
-                <div class="nav-section-label">Menu Pribadi</div>
-                <li class="nav-item mb-1">
-                    <a href="#" class="nav-link" id="link-guru" onclick="switchView('guru-dashboard', this, 'Dashboard Saya')">
-                        <i class="fas fa-user"></i> Dashboard Saya
-                    </a>
-                </li>
+                <div class="nav-label">Pribadi</div>
+                <a class="nav-link" id="link-me" onclick="switchView('guru-dashboard', this, 'Dashboard Saya')"><i class="fas fa-user-circle"></i> Data Saya</a>
             `;
-            
+
             $('#menuContainer').html(menuHtml);
 
-            // Tentukan tampilan awal
-            if (isPimpinan) {
-                // Admin start di Monitoring
-                // Kita trigger click manual atau panggil fungsi agar class active benar
-                switchView('admin-dashboard', document.getElementById('link-admin'), 'Monitoring Sekolah');
-                $('#link-admin').addClass('active');
+            // Default View
+            if (isCommunityAdmin || isSchoolAdmin) {
+                switchView('admin-dashboard', document.getElementById('link-mon'), isCommunityAdmin ? 'Monitoring Gugus' : 'Monitoring Sekolah');
+                $('#link-mon').addClass('active');
             } else {
-                // Guru start di Dashboard Saya
-                switchView('guru-dashboard', document.getElementById('link-guru'), 'Dashboard Saya');
-                $('#link-guru').addClass('active');
+                switchView('guru-dashboard', document.getElementById('link-me'), 'Dashboard Saya');
+                $('#link-me').addClass('active');
             }
+        }
+
+        // --- HELPER FUNCTIONS ---
+        async function loadListSekolah() {
+            try {
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'listSekolah' }) });
+                const data = await res.json(); 
+                let opts = '<option value="" disabled>-- Pilih Sekolah --</option>';
+                data.forEach(s => { opts += `<option value="${Array.isArray(s)?s[0]:s}">${Array.isArray(s)?s[0]:s}</option>`; });
+                $('#selectSekolah').html(opts);
+                
+                if(data.length > 0) {
+                    const first = Array.isArray(data[0]) ? data[0][0] : data[0];
+                    $('#selectSekolah').val(first);
+                    sekolahAktif = first;
+                    $('#labelSekolahAktif').text(first);
+                }
+            } catch(e) {}
+        }
+
+        function gantiSekolah() {
+            sekolahAktif = $('#selectSekolah').val();
+            $('#labelSekolahAktif').text(sekolahAktif);
+            refreshDataAdmin(); 
         }
 
         function switchView(viewName, el, title) {
             $('.view-section').addClass('hide');
-            
-            if(el) {
-                $('.nav-link').removeClass('active');
-                $(el).addClass('active');
-            }
+            if(el) { $('.nav-link').removeClass('active'); $(el).addClass('active'); }
             if(title) $('#pageTitle').text(title);
-
             $('#view-' + viewName).removeClass('hide');
-
             if (viewName === 'admin-dashboard') refreshDataAdmin();
             if (viewName === 'guru-dashboard') loadDataGuru();
         }
 
-        // --- 4. LOGIC ADMIN (MONITORING) ---
         async function refreshDataAdmin() {
+            if(!sekolahAktif) return;
+            if ($.fn.DataTable.isDataTable('#tableAdmin')) $('#tableAdmin').DataTable().clear().draw();
+            
             try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ 
-                        action: 'monitoring', 
-                        sekolah: userData.unitKerja 
-                    })
-                });
-                const data = await response.json();
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'monitoring', sekolah: sekolahAktif }) });
+                const data = await res.json();
 
-                // Update Statistik
-                const totalGuru = data.listSudah.length + data.listBelum.length;
-                const hadirCount = data.listSudah.filter(x => x.status.includes('Hadir') || x.status.includes('Tepat') || x.status.includes('Terlambat')).length;
-                const telatCount = data.listSudah.filter(x => x.status.includes('Terlambat')).length;
-                const belumCount = data.listBelum.length;
+                $('#statTotal').text(data.listSudah.length + data.listBelum.length);
+                $('#statHadir').text(data.listSudah.filter(x => x.status.includes('Hadir') || x.status.includes('Tepat')).length);
+                $('#statTelat').text(data.listSudah.filter(x => x.status.includes('Terlambat')).length);
+                $('#statBelum').text(data.listBelum.length);
 
-                $('#statTotal').text(totalGuru);
-                $('#statHadir').text(hadirCount);
-                $('#statTelat').text(telatCount);
-                $('#statBelum').text(belumCount);
-
-                // Gabung Data untuk DataTables
-                const combinedData = [...data.listSudah, ...data.listBelum];
-                renderTableAdmin(combinedData);
-
-            } catch (e) {
-                console.error(e);
-                Swal.fire('Gagal', 'Gagal memuat data monitoring.', 'error');
-            }
+                renderTableAdmin([...data.listSudah, ...data.listBelum]);
+            } catch (e) { console.error(e); }
         }
 
         function renderTableAdmin(dataSet) {
-            if (dataTableInstance) {
-                dataTableInstance.destroy();
-            }
-
+            if (dataTableInstance) dataTableInstance.destroy();
             dataTableInstance = $('#tableAdmin').DataTable({
-                data: dataSet,
-                pageLength: 10,
-                language: { search: "Cari:", lengthMenu: "_MENU_ baris", info: "_START_ - _END_ dari _TOTAL_" },
+                data: dataSet, pageLength: 10,
+                language: { search: "Cari:", lengthMenu: "_MENU_", info: "_START_ - _END_ / _TOTAL_" },
                 columns: [
-                    { 
-                        data: 'nama',
-                        render: function(data) { return `<span class="fw-bold text-dark">${data}</span>`; }
-                    },
-                    { 
-                        data: 'status',
-                        render: function(data) { return getBadgeStatus(data); }
-                    },
+                    { data: 'nama', render: d => `<span class="fw-bold text-dark">${d}</span>` },
+                    { data: 'status', render: d => getBadgeStatus(d) },
                     { data: 'jam' },
-                    { 
-                        data: null,
-                        render: function(data, type, row) {
-                            return row.alasan ? `<small class="text-muted fst-italic">${row.alasan}</small>` : '-';
-                        }
-                    },
-                    {
-                        data: 'foto',
-                        render: function(data, type, row) {
-                            if (data && data.includes('http')) {
-                                return `<button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" onclick="lihatFoto('${data}', '${row.nama}')"><i class="fas fa-eye me-1"></i> Foto</button>`;
-                            }
-                            return '<span class="text-muted small">-</span>';
-                        }
-                    },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            // Tombol Approval hanya jika status Menunggu
-                            if (row.status && row.status.toLowerCase().includes('menunggu')) {
-                                const safeNama = row.nama.replace(/'/g, "\\'"); 
-                                return `
-                                    <div class="btn-group btn-group-sm">
-                                        <button class="btn btn-success" title="Setujui" onclick="prosesApproval('${safeNama}', 'Disetujui')"><i class="fas fa-check"></i></button>
-                                        <button class="btn btn-danger" title="Tolak" onclick="prosesApproval('${safeNama}', 'Ditolak')"><i class="fas fa-times"></i></button>
-                                    </div>
-                                `;
-                            }
-                            return '';
-                        }
-                    }
-                ],
-                order: [[1, 'asc']]
+                    { data: null, render: r => r.alasan ? `<small class="text-muted fst-italic">${r.alasan}</small>` : '-' },
+                    { data: 'foto', render: (d,t,r) => d && d.includes('http') ? `<button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="lihatFoto('${d}','${r.nama}')"><i class="fas fa-eye"></i></button>` : '-' },
+                    { data: null, render: (d,t,r) => r.status && r.status.includes('Menunggu') ? `<div class="btn-group btn-group-sm"><button class="btn btn-success" onclick="acc('${r.nama}','Disetujui')"><i class="fas fa-check"></i></button><button class="btn btn-danger" onclick="acc('${r.nama}','Ditolak')"><i class="fas fa-times"></i></button></div>` : '' }
+                ]
             });
         }
 
-        // --- 5. LOGIC GURU (PERSONAL) ---
         async function loadDataGuru() {
-            $('#dashGuruName').text(userData.nama);
-            $('#dashGuruUnit').text(userData.unitKerja);
-            $('#dashGuruJab').text(userData.jabatan);
-            
-            // Fetch History
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'riwayat', nama: userData.nama })
-            });
-            const list = await response.json();
-            
-            let html = "";
-            if(list && list.length > 0) {
-                list.forEach(item => {
-                    html += `<tr>
-                        <td>${item.tanggal}</td>
-                        <td class="fw-bold">${item.jam}</td>
-                        <td>${getBadgeStatus(item.status)}</td>
-                        <td>${item.lokasi || '-'}</td>
-                    </tr>`;
-                });
-            } else {
-                html = `<tr><td colspan="4" class="text-center py-4 text-muted">Belum ada riwayat kehadiran bulan ini.</td></tr>`;
-            }
-            $('#tbodyGuru').html(html);
+            $('#dashGuruName').text(userData.nama); $('#dashGuruJab').text(userData.jabatan);
+            const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'riwayat', nama: userData.nama }) });
+            const list = await res.json();
+            let html = list.map(i => `<tr><td>${i.tanggal}</td><td class="fw-bold">${i.jam}</td><td>${getBadgeStatus(i.status)}</td><td>${i.lokasi||'-'}</td></tr>`).join('');
+            $('#tbodyGuru').html(html || '<tr><td colspan="4" class="text-center text-muted">Belum ada riwayat.</td></tr>');
         }
 
-        // --- 6. HELPER FUNCTIONS ---
-        function getBadgeStatus(status) {
-            let color = 'secondary';
-            let icon = '';
-
-            if (status.includes('Tepat Waktu')) { color = 'success'; icon = 'check-circle'; }
-            else if (status.includes('Terlambat')) { color = 'warning text-dark'; icon = 'exclamation-triangle'; }
-            else if (status.includes('Sakit') || status.includes('Izin')) { color = 'info text-dark'; icon = 'file-medical'; }
-            else if (status.includes('Luar Radius')) { color = 'danger'; icon = 'map-marker-alt'; }
-            else if (status.includes('Belum')) { color = 'light text-muted border'; icon = 'user-clock'; }
-
-            return `<span class="badge bg-${color} rounded-pill fw-normal px-3"><i class="fas fa-${icon} me-1"></i> ${status}</span>`;
+        function getBadgeStatus(s) {
+            let c = 'secondary', i = '';
+            if (s.includes('Tepat')) { c='success'; i='check-circle'; }
+            else if (s.includes('Terlambat')) { c='warning text-dark'; i='exclamation-circle'; }
+            else if (s.includes('Sakit')||s.includes('Izin')) { c='info text-dark'; i='envelope-open'; }
+            else if (s.includes('Luar')) { c='danger'; i='map-marker-alt'; }
+            return `<span class="badge bg-${c} rounded-pill fw-normal px-3"><i class="fas fa-${i} me-1"></i> ${s}</span>`;
         }
 
-        function lihatFoto(url, nama) {
-            Swal.fire({
-                title: nama,
-                imageUrl: url,
-                imageAlt: 'Bukti Foto',
-                imageHeight: 450,
-                showConfirmButton: false,
-                showCloseButton: true,
-                background: '#fff',
-                width: 600,
-                customClass: { image: 'rounded-3 shadow-sm' }
-            });
-        }
-
-        async function prosesApproval(namaGuru, keputusan) {
-            const result = await Swal.fire({
-                title: 'Konfirmasi',
-                text: `Ubah status ${namaGuru} menjadi ${keputusan}?`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#B3261E',
-                confirmButtonText: 'Ya, Proses'
-            });
-
-            if (result.isConfirmed) {
-                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
-                try {
-                    const response = await fetch(API_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({ action: 'updateIzin', nama: namaGuru, status: keputusan })
-                    });
-                    const res = await response.text();
-                    
-                    if (res.includes('SUKSES') || res.includes('Berhasil')) {
-                        Swal.fire('Berhasil', 'Status diperbarui', 'success');
-                        refreshDataAdmin();
-                    } else {
-                        Swal.fire('Gagal', res, 'error');
-                    }
-                } catch (e) { Swal.fire('Error', 'Gagal update data.', 'error'); }
+        function lihatFoto(u,n) { Swal.fire({ title:n, imageUrl:u, showConfirmButton:false, showCloseButton:true, width:500, customClass:{image:'rounded-4'} }); }
+        
+        async function acc(n,s) {
+            const c = await Swal.fire({ title:'Konfirmasi', text:`Ubah status ${n} jadi ${s}?`, showCancelButton:true, confirmButtonColor:'#B3261E' });
+            if(c.isConfirmed) {
+                await fetch(API_URL, { method:'POST', body:JSON.stringify({ action:'updateIzin', nama:n, status:s }) });
+                refreshDataAdmin(); Swal.fire('Sukses','Data diperbarui','success');
             }
         }
 
         function downloadLaporanPDF() {
+            let valSekolah = sekolahAktif;
             Swal.fire({
-                title: 'Download Laporan Bulanan',
-                html: `Masukkan Tahun:<br><input id="pdfYear" class="swal2-input" value="${new Date().getFullYear()}">`,
-                showCancelButton: true,
-                confirmButtonText: 'Download PDF',
-                confirmButtonColor: '#B3261E',
-                preConfirm: () => {
-                    return document.getElementById('pdfYear').value;
-                }
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    const tahun = result.value;
-                    Swal.fire({ title: 'Generating PDF...', text: 'Tunggu sebentar, file sedang dibuat.', didOpen: () => Swal.showLoading() });
-                    
-                    try {
-                        const response = await fetch(API_URL, {
-                            method: 'POST',
-                            body: JSON.stringify({ action: 'pdf', sekolah: userData.unitKerja, tahun: tahun })
-                        });
-                        const res = await response.json(); 
-                        
-                        let downloadUrl = "";
-                        if(typeof res === 'string' && res.includes('http')) downloadUrl = res;
-                        else if(res.url) downloadUrl = res.url;
-
-                        if (downloadUrl) {
-                            Swal.close();
-                            window.open(downloadUrl, '_blank');
-                        } else {
-                            Swal.fire('Info', 'Respon server: ' + JSON.stringify(res), 'info');
-                        }
-                    } catch (e) {
-                        Swal.fire('Gagal', 'Gagal generate PDF. Cek log backend.', 'error');
-                    }
+                title: 'Download Laporan',
+                html: `Sekolah: <b>${valSekolah}</b><br><br>Tahun:<br><input id="pdfTahun" class="swal2-input" value="${new Date().getFullYear()}">`,
+                showCancelButton: true, confirmButtonColor: '#B3261E', confirmButtonText: 'Download'
+            }).then(async (res) => {
+                if(res.isConfirmed) {
+                    Swal.showLoading();
+                    const t = document.getElementById('pdfTahun').value;
+                    const r = await fetch(API_URL, { method:'POST', body:JSON.stringify({ action:'pdf', sekolah:valSekolah, tahun:t }) });
+                    const j = await r.json();
+                    if(j.url || (typeof j==='string' && j.includes('http'))) window.open(j.url || j, '_blank');
+                    else Swal.fire('Gagal', JSON.stringify(j), 'error');
                 }
             });
         }
