@@ -10,39 +10,99 @@
 
 <style>
   :root {
+    /* Color Palette (Material Design 3 Style) */
     --md-sys-color-primary: #B3261E;
     --md-sys-color-on-primary: #FFFFFF;
     --md-sys-color-primary-container: #FFDAD6;
     --md-sys-color-on-primary-container: #410E0B;
     --md-sys-color-secondary: #775652;
     --md-sys-color-secondary-container: #FFDAD6;
+    
     --md-sys-color-surface: #FFF8F6; 
     --md-sys-color-surface-container: #F3E5E5; 
     --md-sys-color-surface-bright: #FFFFFF;
+    
     --md-sys-color-outline: #857372;
     --md-sys-color-on-surface: #201A19;
+    --md-sys-color-on-surface-variant: #524343;
+
+    /* Status Colors */
     --st-success-bg: #C3EED0; --st-success-text: #0F5223;
     --st-warning-bg: #FEE4C1; --st-warning-text: #744C00;
     --st-error-bg: #F9DEDC;   --st-error-text: #8C1D18;
     --st-info-bg: #E8DEF8;    --st-info-text: #1D192B;
   }
-  body { background-color: var(--md-sys-color-surface); font-family: 'Poppins', sans-serif; color: var(--md-sys-color-on-surface); padding-bottom: 80px; }
+
+  body { 
+    background-color: var(--md-sys-color-surface); 
+    font-family: 'Poppins', sans-serif; 
+    color: var(--md-sys-color-on-surface);
+    padding-bottom: 80px; /* Space for mobile */
+  }
+  
   .hidden { display: none !important; }
-  .card-pro { border: none; border-radius: 28px; background: var(--md-sys-color-surface-bright); box-shadow: 0 2px 6px rgba(0,0,0,0.05); margin-bottom: 1rem; }
-  .header-card { background: var(--md-sys-color-surface-bright); padding: 1rem 1.2rem; border-radius: 28px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
-  .form-control-pro { background-color: var(--md-sys-color-surface-container); border: 2px solid transparent; border-radius: 16px; padding: 14px; font-size: 0.95rem; color: var(--md-sys-color-on-surface); transition: all 0.2s; }
-  .form-control-pro:focus { background-color: var(--md-sys-color-surface-bright); border-color: var(--md-sys-color-primary); box-shadow: none; color: var(--md-sys-color-on-surface); }
-  .btn-gradient, .btn-primary, .btn-success, .btn-warning, .btn-danger { border-radius: 100px; padding: 10px 24px; font-weight: 600; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-  .btn-gradient { background: var(--md-sys-color-primary); color: white; } .btn-gradient:hover { background: #901B15; color: white; transform: translateY(-1px); }
-  .btn-primary { background: #984061; color: white; } .btn-success { background: #466742; color: white; } .btn-warning { background: #E6B91F; color: #3E1C00; }
-  .badge-role { padding: 6px 14px; border-radius: 12px; font-weight: 600; font-size: 0.7rem; letter-spacing: 0.5px; text-transform: uppercase; border: none !important; }
-  .role-guru { background: var(--st-info-bg); color: var(--st-info-text); } .role-ks { background: var(--st-warning-bg); color: var(--st-warning-text); } .role-admin { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); } .role-penilai { background: var(--st-success-bg); color: var(--st-success-text); }
-  .status-pill { padding: 6px 14px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; display: inline-block;} .st-ok { background: var(--st-success-bg); color: var(--st-success-text); } .st-wait { background: var(--st-warning-bg); color: var(--st-warning-text); } .st-rev { background: var(--st-error-bg); color: var(--st-error-text); }
+
+  /* Custom Components */
+  .card-pro { 
+    border: none; border-radius: 28px; 
+    background: var(--md-sys-color-surface-bright); 
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05); 
+    margin-bottom: 1rem; 
+  }
+  
+  .header-card {
+    background: var(--md-sys-color-surface-bright); 
+    padding: 1rem 1.2rem;
+    border-radius: 28px;
+    display: flex; justify-content: space-between; align-items: center; 
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+
+  .form-control-pro { 
+    background-color: var(--md-sys-color-surface-container); 
+    border: 2px solid transparent; border-radius: 16px; padding: 14px; 
+    font-size: 0.95rem; color: var(--md-sys-color-on-surface); 
+    transition: all 0.2s;
+  }
+  .form-control-pro:focus { 
+    background-color: var(--md-sys-color-surface-bright); 
+    border-color: var(--md-sys-color-primary); box-shadow: none;
+    color: var(--md-sys-color-on-surface);
+  }
+  
+  /* Buttons */
+  .btn-gradient, .btn-primary, .btn-success, .btn-warning, .btn-danger { 
+    border-radius: 100px; padding: 10px 24px; font-weight: 600; 
+    border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+  }
+  .btn-gradient { background: var(--md-sys-color-primary); color: white; }
+  .btn-gradient:hover { background: #901B15; color: white; transform: translateY(-1px); }
+  .btn-primary { background: #984061; color: white; } 
+  .btn-success { background: #466742; color: white; } 
+  .btn-warning { background: #E6B91F; color: #3E1C00; }
+  
+  /* Badges & Pills */
+  .badge-role { padding: 6px 14px; border-radius: 12px; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; }
+  .role-guru { background: var(--st-info-bg); color: var(--st-info-text); } 
+  .role-ks { background: var(--st-warning-bg); color: var(--st-warning-text); } 
+  .role-admin { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); } 
+  .role-penilai { background: var(--st-success-bg); color: var(--st-success-text); }
+
+  .status-pill { padding: 6px 14px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; display: inline-block;}
+  .st-ok { background: var(--st-success-bg); color: var(--st-success-text); }
+  .st-wait { background: var(--st-warning-bg); color: var(--st-warning-text); }
+  .st-rev { background: var(--st-error-bg); color: var(--st-error-text); }
+  
+  /* Tabs */
   .nav-pills { background: var(--md-sys-color-surface-container); border-radius: 50px; padding: 4px; gap: 0; border: none !important; }
   .nav-pills .nav-link { color: var(--md-sys-color-on-surface-variant); font-size: 0.8rem; font-weight: 600; border-radius: 50px; padding: 10px 16px; transition: all 0.2s; white-space: nowrap; }
   .nav-pills .nav-link.active { background-color: var(--md-sys-color-secondary-container); color: #380C08; box-shadow: none; }
+  
+  /* Utils */
   .modal-content { border-radius: 28px; border: none; background: var(--md-sys-color-surface-bright); }
-  .text-danger { color: var(--md-sys-color-primary) !important; } .bg-danger { background-color: var(--md-sys-color-primary) !important; }
+  .text-danger { color: var(--md-sys-color-primary) !important; }
+  .bg-danger { background-color: var(--md-sys-color-primary) !important; }
 </style>
 </head>
 <body>
@@ -54,8 +114,11 @@
 <div id="view-login" class="container d-flex flex-column justify-content-center" style="min-height: 100vh;">
   <div class="row justify-content-center"><div class="col-md-5">
     <div class="text-center mb-5">
-        <div class="bg-danger-subtle rounded-4 d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px; background-color: var(--md-sys-color-primary-container) !important;"><i class="bi bi-mortarboard-fill fs-1" style="color: var(--md-sys-color-on-primary-container);"></i></div>
-        <h4 class="fw-bold" style="color: var(--md-sys-color-on-surface);">LMS GUGUS NAKULA</h4><p class="small text-muted">Portal Kinerja Guru</p>
+        <div class="bg-danger-subtle rounded-4 d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px; background-color: var(--md-sys-color-primary-container) !important;">
+            <i class="bi bi-mortarboard-fill fs-1" style="color: var(--md-sys-color-on-primary-container);"></i>
+        </div>
+        <h4 class="fw-bold" style="color: var(--md-sys-color-on-surface);">LMS GUGUS NAKULA</h4>
+        <p class="small text-muted">Portal Kinerja Guru</p>
     </div>
     <div class="card-pro px-4 py-5 mx-2">
       <label class="d-block text-center small fw-bold mb-3" style="color: var(--md-sys-color-primary); letter-spacing: 1px;">MASUKKAN PIN</label>
@@ -69,45 +132,147 @@
 <div id="view-main" class="hidden pb-5">
   <div class="container mt-3">
     <div class="header-card">
-      <div class="d-flex align-items-center"><div class="rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width:45px;height:45px; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);"><i class="bi bi-mortarboard-fill fs-5"></i></div><div style="line-height: 1.1;"><div class="fw-bold text-dark" style="font-size: 1rem;">LMS Nakula</div><div class="text-muted" style="font-size: 0.75rem;">Dashboard</div></div></div>
-      <div class="text-end"><div class="fw-bold text-dark mb-1" id="txtNama" style="font-size: 0.9rem;">User</div><span id="txtRoleBadge" class="badge-role role-guru">GURU</span><div class="mt-1"><a href="#" onclick="doLogout()" class="text-danger fw-bold small text-decoration-none" style="font-size: 0.7rem;">Keluar</a></div></div>
+      <div class="d-flex align-items-center">
+        <div class="rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width:45px;height:45px; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);"><i class="bi bi-mortarboard-fill fs-5"></i></div>
+        <div style="line-height: 1.1;"><div class="fw-bold text-dark" style="font-size: 1rem;">LMS Nakula</div><div class="text-muted" style="font-size: 0.75rem;">Dashboard</div></div>
+      </div>
+      <div class="text-end">
+        <div class="fw-bold text-dark mb-1" id="txtNama" style="font-size: 0.9rem;">User</div>
+        <span id="txtRoleBadge" class="badge-role role-guru">GURU</span>
+        <div class="mt-1"><a href="#" onclick="doLogout()" class="text-danger fw-bold small text-decoration-none" style="font-size: 0.7rem;">Keluar</a></div>
+      </div>
     </div>
     <span id="txtSekolah" class="hidden"></span>
     
     <div id="panel-guru" class="hidden">
       <div class="card-pro p-4 mb-3" style="background-color: var(--md-sys-color-primary); color: white;">
         <div class="row align-items-center">
-          <div class="col-8"><span class="small fw-bold text-white-50 text-uppercase" style="letter-spacing: 1px;">CAPAIAN KINERJA</span><h1 class="fw-bold mt-1 mb-0 display-4" id="txt-persen">0%</h1><div class="progress mt-3 mb-3" style="height: 8px; border-radius: 20px; background-color: rgba(255,255,255,0.2);"><div id="bar-guru" class="progress-bar bg-white" role="progressbar" style="width: 0%; border-radius: 20px;"></div></div><div class="d-flex align-items-center"><span class="badge bg-white text-danger border-0 me-2 rounded-pill px-3" id="txt-target">0/0</span><small class="text-white-50">Selesai</small></div></div>
+          <div class="col-8">
+            <span class="small fw-bold text-white-50 text-uppercase" style="letter-spacing: 1px;">CAPAIAN KINERJA</span>
+            <h1 class="fw-bold mt-1 mb-0 display-4" id="txt-persen">0%</h1>
+            <div class="progress mt-3 mb-3" style="height: 8px; border-radius: 20px; background-color: rgba(255,255,255,0.2);">
+                <div id="bar-guru" class="progress-bar bg-white" role="progressbar" style="width: 0%; border-radius: 20px;"></div>
+            </div>
+            <div class="d-flex align-items-center"><span class="badge bg-white text-danger border-0 me-2 rounded-pill px-3" id="txt-target">0/0</span><small class="text-white-50">Selesai</small></div>
+          </div>
           <div class="col-4 text-end opacity-25"><i class="bi bi-bar-chart-fill" style="font-size: 4rem; color: #fff;"></i></div>
         </div>
       </div>
+      
       <ul class="nav nav-pills nav-fill mb-3 p-1">
         <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#g-tab-tugas">Tugas</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#g-tab-implemen">Implemen</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#g-tab-inovasi">Inovasi</button></li>
       </ul>
+
       <div class="tab-content">
         <div class="tab-pane fade show active" id="g-tab-tugas"><div id="list-kegiatan-guru"></div></div>
-        <div class="tab-pane fade" id="g-tab-implemen"><div class="card-pro p-4"><h6 class="fw-bold text-dark mb-4">Lapor Implementasi KKG</h6><form id="frmImplemen" onsubmit="submitPengembangan(event, 'Implementasi KKG')"><div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">PROGRAM KKG</label><select id="sel-prog-kkg" class="form-select form-control-pro"></select></div><div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">KEGIATAN</label><input type="text" id="imp-nama" class="form-control form-control-pro" required></div><div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">KELAS</label><input type="text" id="imp-kelas" class="form-control form-control-pro" required></div><div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">LINK</label><input type="url" id="imp-link" class="form-control form-control-pro" placeholder="https://..." required></div><div class="mb-4"><label class="small fw-bold text-muted ms-2 mb-1">URAIAN</label><textarea id="imp-desc" class="form-control form-control-pro" rows="3" required></textarea></div><button class="btn btn-primary w-100 py-3">KIRIM LAPORAN</button></form></div></div>
-        <div class="tab-pane fade" id="g-tab-inovasi"><div class="card-pro p-4"><div class="alert small border-0 mb-4" style="background: var(--st-info-bg); color: var(--st-info-text); border-radius: 16px;">Opsional: Kirimkan karya inovatif Anda.</div><form id="frmInovasi" onsubmit="submitPengembangan(event, 'Karya Inovasi')"><div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">NAMA INOVASI</label><input type="text" id="ino-nama" class="form-control form-control-pro" required></div><div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">LINK</label><input type="url" id="ino-link" class="form-control form-control-pro" placeholder="https://..." required></div><div class="mb-4"><label class="small fw-bold text-muted ms-2 mb-1">URAIAN</label><textarea id="ino-desc" class="form-control form-control-pro" rows="3" required></textarea></div><button class="btn btn-success w-100 py-3">KIRIM KARYA</button></form></div></div>
+        <div class="tab-pane fade" id="g-tab-implemen">
+           <div class="card-pro p-4">
+             <h6 class="fw-bold text-dark mb-4">Lapor Implementasi KKG</h6>
+             <form id="frmImplemen" onsubmit="submitPengembangan(event, 'Implementasi KKG')">
+               <div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">PROGRAM KKG</label><select id="sel-prog-kkg" class="form-select form-control-pro"></select></div>
+               <div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">KEGIATAN</label><input type="text" id="imp-nama" class="form-control form-control-pro" required></div>
+               <div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">KELAS</label><input type="text" id="imp-kelas" class="form-control form-control-pro" required></div>
+               <div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">LINK</label><input type="url" id="imp-link" class="form-control form-control-pro" placeholder="https://..." required></div>
+               <div class="mb-4"><label class="small fw-bold text-muted ms-2 mb-1">URAIAN</label><textarea id="imp-desc" class="form-control form-control-pro" rows="3" required></textarea></div>
+               <button class="btn btn-primary w-100 py-3">KIRIM LAPORAN</button>
+             </form>
+           </div>
+        </div>
+        <div class="tab-pane fade" id="g-tab-inovasi">
+           <div class="card-pro p-4">
+             <div class="alert small border-0 mb-4" style="background: var(--st-info-bg); color: var(--st-info-text); border-radius: 16px;">Opsional: Kirimkan karya inovatif Anda.</div>
+             <form id="frmInovasi" onsubmit="submitPengembangan(event, 'Karya Inovasi')">
+               <div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">NAMA INOVASI</label><input type="text" id="ino-nama" class="form-control form-control-pro" required></div>
+               <div class="mb-3"><label class="small fw-bold text-muted ms-2 mb-1">LINK</label><input type="url" id="ino-link" class="form-control form-control-pro" placeholder="https://..." required></div>
+               <div class="mb-4"><label class="small fw-bold text-muted ms-2 mb-1">URAIAN</label><textarea id="ino-desc" class="form-control form-control-pro" rows="3" required></textarea></div>
+               <button class="btn btn-success w-100 py-3">KIRIM KARYA</button>
+             </form>
+           </div>
+        </div>
       </div>
     </div>
 
     <div id="panel-ks" class="hidden">
-      <div class="card-pro p-4 mb-3"><div class="d-flex justify-content-between align-items-start"><div><span class="text-muted small fw-bold text-uppercase">Capaian Sekolah</span><h1 class="fw-bold mt-1 mb-0 display-4 text-danger" id="ks-persen">0%</h1></div><div class="text-end bg-danger-subtle p-3 rounded-4" style="background-color: var(--md-sys-color-primary-container)!important;"><h2 class="mb-0 fw-bold" style="color: var(--md-sys-color-primary);" id="ks-total-laporan">0</h2><small class="fw-bold" style="font-size:0.65rem; color: var(--md-sys-color-on-primary-container);">LAPORAN</small></div></div></div>
-      <div class="card-pro p-3 mb-4" style="background-color: #E3F2FD;"><h6 class="fw-bold small mb-2 text-primary"><i class="bi bi-graph-up me-1"></i> PENGEMBANGAN DIRI</h6><div class="row text-center"><div class="col-6 border-end border-secondary-subtle"><h3 class="fw-bold mb-0 text-dark" id="ks-count-imp">0</h3><small class="text-muted" style="font-size:0.7rem">Implementasi</small></div><div class="col-6"><h3 class="fw-bold mb-0 text-dark" id="ks-count-ino">0</h3><small class="text-muted" style="font-size:0.7rem">Inovasi</small></div></div></div>
-      <h6 class="fw-bold text-dark small mb-3 px-2">MANAJEMEN SEKOLAH</h6><div class="row gx-2 mb-4"><div class="col-4"><button onclick="bukaModalPrestasi()" class="btn btn-warning w-100 h-100 py-3 text-white fw-bold d-flex flex-column align-items-center justify-content-center"><i class="bi bi-trophy-fill fs-3 mb-1"></i><span style="font-size:0.65rem">PRESTASI</span></button></div><div class="col-4"><button onclick="bukaModalPembiasaan()" class="btn btn-success w-100 h-100 py-3 text-white fw-bold d-flex flex-column align-items-center justify-content-center"><i class="bi bi-calendar-check-fill fs-3 mb-1"></i><span style="font-size:0.65rem">BIAS</span></button></div><div class="col-4"><button onclick="bukaModalEvent()" class="btn btn-primary w-100 h-100 py-3 text-white fw-bold d-flex flex-column align-items-center justify-content-center"><i class="bi bi-balloon-fill fs-3 mb-1"></i><span style="font-size:0.65rem">EVENT</span></button></div></div>
-      <div class="d-flex justify-content-between align-items-center mb-3 px-2 mt-2"><h6 class="fw-bold text-dark mb-0 fs-6">Rapor Kinerja Guru</h6><button onclick="loadKS()" class="btn btn-sm btn-light text-primary rounded-circle shadow-sm" style="width:36px;height:36px"><i class="bi bi-arrow-clockwise"></i></button></div><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;"><thead style="background: var(--md-sys-color-surface-container);"><tr><th class="ps-3 py-3 border-0">Nama Guru</th><th style="width:35%" class="border-0">Progress</th><th class="text-end pe-4 border-0">Capaian</th></tr></thead><tbody id="tbl-ks" class="border-0"></tbody></table></div></div>
+      <div class="card-pro p-4 mb-3">
+        <div class="d-flex justify-content-between align-items-start">
+          <div><span class="text-muted small fw-bold text-uppercase">Capaian Sekolah</span><h1 class="fw-bold mt-1 mb-0 display-4 text-danger" id="ks-persen">0%</h1></div>
+          <div class="text-end bg-danger-subtle p-3 rounded-4" style="background-color: var(--md-sys-color-primary-container) !important;">
+              <h2 class="mb-0 fw-bold" style="color: var(--md-sys-color-primary);" id="ks-total-laporan">0</h2>
+              <small class="fw-bold" style="font-size:0.65rem; color: var(--md-sys-color-on-primary-container);">LAPORAN</small>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-pro p-3 mb-4" style="background-color: #E3F2FD;">
+        <h6 class="fw-bold small mb-2 text-primary"><i class="bi bi-graph-up me-1"></i> PENGEMBANGAN DIRI</h6>
+        <div class="row text-center">
+          <div class="col-6 border-end border-secondary-subtle"><h3 class="fw-bold mb-0 text-dark" id="ks-count-imp">0</h3><small class="text-muted" style="font-size:0.7rem">Implementasi</small></div>
+          <div class="col-6"><h3 class="fw-bold mb-0 text-dark" id="ks-count-ino">0</h3><small class="text-muted" style="font-size:0.7rem">Inovasi</small></div>
+        </div>
+      </div>
+      
+      <h6 class="fw-bold text-dark small mb-3 px-2">MANAJEMEN SEKOLAH</h6>
+      <div class="row gx-2 mb-2">
+        <div class="col-4">
+          <button onclick="bukaModalPrestasi()" class="btn btn-warning w-100 h-100 py-3 text-white fw-bold d-flex flex-column align-items-center justify-content-center">
+            <i class="bi bi-trophy-fill fs-3 mb-1"></i><span style="font-size:0.65rem">PRESTASI</span>
+          </button>
+        </div>
+        <div class="col-4">
+          <button onclick="bukaModalPembiasaan()" class="btn btn-success w-100 h-100 py-3 text-white fw-bold d-flex flex-column align-items-center justify-content-center">
+            <i class="bi bi-calendar-check-fill fs-3 mb-1"></i><span style="font-size:0.65rem">BIAS</span>
+          </button>
+        </div>
+        <div class="col-4">
+          <button onclick="bukaModalEvent()" class="btn btn-primary w-100 h-100 py-3 text-white fw-bold d-flex flex-column align-items-center justify-content-center">
+            <i class="bi bi-balloon-fill fs-3 mb-1"></i><span style="font-size:0.65rem">EVENT</span>
+          </button>
+        </div>
+      </div>
+      <div class="row gx-2 mb-4">
+         <div class="col-12">
+            <button onclick="bukaRiwayatKS()" class="btn btn-outline-secondary w-100 py-2 fw-bold small"><i class="bi bi-clock-history me-2"></i>LIHAT RIWAYAT LAPORAN SAYA</button>
+         </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3 px-2 mt-2">
+        <h6 class="fw-bold text-dark mb-0 fs-6">Rapor Kinerja Guru</h6>
+        <button onclick="loadKS()" class="btn btn-sm btn-light text-primary rounded-circle shadow-sm" style="width:36px;height:36px"><i class="bi bi-arrow-clockwise"></i></button>
+      </div>
+      <div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;"><thead style="background: var(--md-sys-color-surface-container);"><tr><th class="ps-3 py-3 border-0">Nama Guru</th><th style="width:35%" class="border-0">Progress</th><th class="text-end pe-4 border-0">Capaian</th></tr></thead><tbody id="tbl-ks" class="border-0"></tbody></table></div></div>
     </div>
 
     <div id="panel-penilai" class="hidden">
-      <div class="overflow-auto mb-3 pb-1"><ul class="nav nav-pills flex-nowrap"><li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#p-tab-tugas">TUGAS</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#p-tab-prestasi">PRESTASI</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#p-tab-sekolah">SEKOLAH</button></li></ul></div>
-      <div class="tab-content"><div class="tab-pane fade show active" id="p-tab-tugas"><div class="card-pro p-3 mb-3 d-flex justify-content-between align-items-center"><div class="fw-bold text-dark small">Filter</div><select id="sel-materi" class="filter-select" onchange="filterPenilai()"><option value="ALL">Semua</option></select></div><div id="list-penilai-tugas"></div></div><div class="tab-pane fade" id="p-tab-prestasi"><div id="list-penilai-prestasi"></div></div><div class="tab-pane fade" id="p-tab-sekolah"><div id="list-penilai-sekolah"></div></div></div>
+      <div class="overflow-auto mb-3 pb-1">
+          <ul class="nav nav-pills flex-nowrap"><li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#p-tab-tugas">TUGAS</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#p-tab-prestasi">PRESTASI</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#p-tab-sekolah">SEKOLAH</button></li></ul>
+      </div>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="p-tab-tugas">
+          <div class="card-pro p-3 mb-3 d-flex justify-content-between align-items-center"><div class="fw-bold text-dark small">Filter</div><select id="sel-materi" class="filter-select" onchange="filterPenilai()"><option value="ALL">Semua</option></select></div>
+          <div id="list-penilai-tugas"></div>
+        </div>
+        <div class="tab-pane fade" id="p-tab-prestasi"><div id="list-penilai-prestasi"></div></div>
+        <div class="tab-pane fade" id="p-tab-sekolah"><div id="list-penilai-sekolah"></div></div>
+      </div>
     </div>
 
     <div id="panel-admin" class="hidden">
-      <div class="card-pro p-3 mb-3 bg-danger-subtle text-center"><h6 class="fw-bold text-danger m-0"><i class="bi bi-trophy-fill me-2"></i>KLASEMEN NOMINASI</h6></div>
-      <div class="overflow-auto mb-3 pb-1"><ul class="nav nav-pills flex-nowrap" style="min-width: 400px;"><li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#adm-feed">FEED</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-pres">PRESTASI</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-event">EVENT</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-bias">KARAKTER</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-implemen">IMPLEMEN</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-inovasi">INOVASI</button></li></ul></div>
+      <div class="card-pro p-3 mb-3 bg-danger-subtle text-center">
+        <h6 class="fw-bold text-danger m-0"><i class="bi bi-trophy-fill me-2"></i>KLASEMEN NOMINASI</h6>
+      </div>
+      <div class="overflow-auto mb-3 pb-1">
+        <ul class="nav nav-pills flex-nowrap" style="min-width: 400px;">
+          <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#adm-feed">FEED</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-pres">PRESTASI</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-event">EVENT</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-bias">KARAKTER</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-implemen">IMPLEMEN</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-inovasi">INOVASI</button></li>
+        </ul>
+      </div>
+
       <div class="tab-content">
         <div class="tab-pane fade show active" id="adm-feed"><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0 small"><thead style="background: var(--md-sys-color-surface-container);"><tr><th class="ps-4 py-3 border-0">Aktivitas</th><th class="border-0">Status</th></tr></thead><tbody id="tbl-adm-feed" class="border-0"></tbody></table></div></div></div>
         <div class="tab-pane fade" id="adm-pres"><div class="alert alert-warning small py-2 mb-2">Nominasi Sekolah Berprestasi</div><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0 small text-center"><thead class="bg-warning text-dark"><tr><th class="py-3 border-0">Rank</th><th class="text-start border-0">Sekolah</th><th class="border-0">Piala 🏆</th><th class="border-0 fw-bold">Poin</th></tr></thead><tbody id="tbl-adm-pres" class="border-0"></tbody></table></div></div></div>
@@ -126,33 +291,31 @@
 <div class="modal fade" id="mdlEvent"><div class="modal-dialog modal-dialog-centered"><div class="modal-content shadow"><div class="modal-body p-4"><h5 class="fw-bold mb-3 text-primary">Lapor Event Sekolah</h5><form id="frmEvent" onsubmit="submitEvent(event)"><div class="mb-3"><label class="small fw-bold text-muted ms-1 mb-1">SEKOLAH</label><select id="inpSekolahEvent" class="form-select form-control-pro"></select></div><div class="mb-3"><input type="text" id="evt-nama" class="form-control form-control-pro" placeholder="Nama Event" required></div><div class="row mb-3"><div class="col-6"><input type="date" id="evt-date" class="form-control form-control-pro" required></div><div class="col-6"><select id="evt-scale" class="form-select form-control-pro"><option value="Internal">Internal</option><option value="Orang Tua">Orang Tua</option><option value="Umum">Umum/Pejabat</option></select></div></div><div class="mb-3"><input type="url" id="evt-link" class="form-control form-control-pro" placeholder="Link Dokumentasi" required></div><div class="mb-4"><textarea id="evt-desc" class="form-control form-control-pro" rows="3" placeholder="Dampak Kegiatan..." required></textarea></div><button class="btn btn-primary w-100 py-3">KIRIM</button></form></div></div></div></div>
 <div class="modal fade" id="mdlNilai"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-body p-4"><input type="hidden" id="n_id"><input type="hidden" id="n_type"><div class="text-center mb-4"><h5 class="fw-bold mb-1" id="lbl-modal-title">Form Penilaian</h5></div><label class="small fw-bold text-muted ms-1 mb-1">KEPUTUSAN</label><div id="ui-nilai-tugas"><select id="n_huruf" class="form-select form-control-pro mb-3 text-center fw-bold text-dark fs-5"><option value="A">A - Sangat Baik</option><option value="B">B - Baik</option><option value="C">C - Cukup</option><option value="D">D - Kurang</option><option value="E">E - Sangat Kurang</option></select></div><div id="ui-nilai-prestasi" class="d-none"><select id="n_validasi" class="form-select form-control-pro mb-3 text-center fw-bold fs-5"><option value="VALID" class="text-success">✅ VALID (Terima)</option><option value="INVALID" class="text-danger">❌ INVALID (Revisi)</option></select></div><div id="ui-nilai-qual" class="d-none"><select id="n_kual" class="form-select form-control-pro mb-3 text-center fw-bold text-primary fs-5"><option value="A">A - Sangat Baik</option><option value="B">B - Baik</option><option value="C">C - Cukup</option><option value="D">D - Kurang</option></select></div><label class="small fw-bold text-muted ms-1 mb-1">CATATAN</label><textarea id="n_feed" class="form-control form-control-pro mb-4" rows="3" placeholder="..."></textarea><button onclick="saveNilai()" class="btn btn-success w-100 py-3">SIMPAN KEPUTUSAN</button></div></div></div></div>
 
+<div class="modal fade" id="mdlRiwayatKS"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content shadow"><div class="modal-header border-0"><h5 class="fw-bold">Riwayat Laporan</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body p-3 bg-light" id="konten-riwayat-ks" style="min-height: 200px;">Sedang memuat...</div></div></div></div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 // ==========================================
-// 1. KONFIGURASI LINK GAS (WAJIB DIISI)
+// 1. KONFIGURASI LINK GAS (WAJIB GANTI INI!)
 // ==========================================
-// Ganti dengan Link Exec Anda (Berakhiran /exec)
+// Ganti link di bawah ini dengan link "Web App" dari GAS Anda (berakhiran /exec)
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec"; 
 
-// --- JANGAN UBAH DI BAWAH INI ---
-let USER={pin:"",nama:"",role:"",sekolah:""}, modalUp, modalNi, modalPr, modalBs, modalEv, rawDataPenilai=[];
+// ==========================================
+// 2. MAIN SCRIPT
+// ==========================================
+let USER={pin:"",nama:"",role:"",sekolah:""}, modalUp, modalNi, modalPr, modalBs, modalEv, modalHistKS, rawDataPenilai=[];
 function showLoad(x){ let el=document.getElementById('loading'); if(x){el.classList.remove('d-none');el.classList.add('d-flex')}else{el.classList.add('d-none');el.classList.remove('d-flex')} }
 
-// FUNGSI JEMBATAN API (PENGGANTI google.script.run)
+// FUNGSI API (PENGGANTI google.script.run)
 async function apiCall(action, params = {}) {
   try {
     let payload = { action: action, ...params };
-    let response = await fetch(GAS_URL, {
-      method: "POST",
-      body: JSON.stringify(payload)
-    });
+    let response = await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
     let result = await response.json();
     return result;
   } catch (error) {
-    console.error(error);
-    alert("Koneksi Error: " + error);
-    showLoad(false);
-    return null;
+    console.error(error); alert("Koneksi Error: " + error); showLoad(false); return null;
   }
 }
 
@@ -162,6 +325,8 @@ window.onload = () => {
   modalPr = new bootstrap.Modal(document.getElementById('mdlPrestasi'));
   modalBs = new bootstrap.Modal(document.getElementById('mdlPembiasaan'));
   modalEv = new bootstrap.Modal(document.getElementById('mdlEvent'));
+  modalHistKS = new bootstrap.Modal(document.getElementById('mdlRiwayatKS'));
+  
   let savedPin = localStorage.getItem('LMS_PIN');
   if (savedPin) { document.getElementById('inputPIN').value = savedPin; doLogin(true); }
 }
@@ -178,10 +343,12 @@ async function doLogin(isAuto){
     document.getElementById('view-login').classList.add('hidden');
     document.getElementById('view-main').classList.remove('hidden');
     ['panel-guru','panel-ks','panel-admin','panel-penilai'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+    
     document.getElementById('txtNama').innerText = r.nama;
     document.getElementById('txtSekolah').innerText = r.sekolah;
     let bdg = document.getElementById('txtRoleBadge');
     let roleFull = r.role; bdg.className = "badge-role"; 
+    
     if(r.role === 'KS') { roleFull="Kepala Sekolah"; bdg.classList.add('role-ks'); }
     else if(r.role === 'ADMIN') { roleFull="Administrator"; bdg.classList.add('role-admin'); }
     else if(r.role === 'PENILAI') { roleFull="Tim Penilai"; bdg.classList.add('role-penilai'); } 
@@ -197,58 +364,10 @@ async function doLogin(isAuto){
     else { let m=document.getElementById('msg-login'); m.innerText=r ? r.error : "Gagal Koneksi"; m.classList.remove('hidden'); }
   }
 }
+
 function doLogout(){ localStorage.removeItem('LMS_PIN'); location.reload(); }
 
-async function loadPenilai() {
-  showLoad(true);
-  let data = await apiCall("getDashboardPenilai");
-  showLoad(false);
-  if(data) {
-    rawDataPenilai = data.tugas; 
-    let agenda = data.agenda;
-    let sel = document.getElementById('sel-materi'); 
-    sel.innerHTML = '<option value="ALL">Semua Materi</option>';
-    agenda.forEach(a => { sel.innerHTML += `<option value="${a.materi}">${a.materi} (${a.narsum})</option>`; });
-    renderListPenilai(rawDataPenilai); 
-    renderListSimple(data.prestasi, 'list-penilai-prestasi', 'PRESTASI');
-    renderListSimple(data.sekolah, 'list-penilai-sekolah', 'PRESTASI');
-    renderListSimple(data.implementasi, 'list-penilai-implemen', 'QUAL');
-    renderListSimple(data.inovasi, 'list-penilai-inovasi', 'QUAL');
-  }
-}
-
-function filterPenilai(){
-  let val = document.getElementById('sel-materi').value;
-  if(val === 'ALL') renderListPenilai(rawDataPenilai);
-  else { let filtered = rawDataPenilai.filter(item => item.judul === val); renderListPenilai(filtered); }
-}
-
-function renderListPenilai(data) {
-  let div = document.getElementById('list-penilai-tugas'); let html = "";
-  if(data.length === 0) { div.innerHTML = "<div class='text-center py-5 text-muted small'>Tidak ada tugas guru masuk.</div>"; return; }
-  data.forEach(item => {
-    let st = item.status || "Menunggu"; let bgSt = st==='Menunggu' ? 'bg-secondary' : (st==='Diterima'?'bg-success':'bg-danger');
-    let content = (item.link && item.link.length > 5) ? `<a href="${item.link}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill py-2 px-3 me-2 mb-2" style="font-size:0.75rem"><i class="bi bi-link-45deg"></i> Link Tugas</a>` : "";
-    if(item.catatan) content += `<div class="bg-light p-3 rounded-4 text-muted fst-italic mb-2 border" style="font-size:0.8rem">"${item.catatan}"</div>`;
-    let feedInfo = item.feedback ? `<div class="text-success small fw-bold mt-2"><i class="bi bi-check-all"></i> Nilai: ${item.feedback}</div>` : '';
-    html += `<div class="card-pro p-3 mb-2"><div class="d-flex align-items-center justify-content-between"><div class="pe-2" style="flex: 1;"><div class="fw-bold text-dark small mb-1">${item.judul}</div><div class="d-flex align-items-center mb-2"><span class="badge ${bgSt} rounded-pill me-2 px-3" style="font-size:0.65rem">${st}</span><small class="text-muted" style="font-size:0.7rem"><i class="bi bi-clock"></i> ${item.waktu}</small></div>${content}${feedInfo}</div><div class="ps-2"><button onclick="popNilai('${item.id}', 'TUGAS')" class="btn btn-sm btn-success rounded-pill shadow-sm px-4 py-2 fw-bold" style="white-space: nowrap;"><i class="bi bi-pencil-square"></i> NILAI</button></div></div></div>`;
-  });
-  div.innerHTML = html;
-}
-
-function renderListSimple(data, targetId, type) {
-  let div = document.getElementById(targetId); let html = "";
-  if(data.length === 0) { div.innerHTML = "<div class='text-center py-5 text-muted small'>Tidak ada data masuk.</div>"; return; }
-  data.forEach(item => {
-    let st = item.status || "Menunggu"; let bgSt = st==='Menunggu' ? 'bg-secondary' : (st==='Diterima'?'bg-success':'bg-danger');
-    let feedInfo = item.feedback ? `<div class="text-success small fw-bold mt-2"><i class="bi bi-check-all"></i> ${item.feedback}</div>` : '';
-    let btnColor = type==='PRESTASI' ? 'btn-warning text-white' : 'btn-primary'; let btnIcon = type==='PRESTASI' ? 'bi-check-lg' : 'bi-star';
-    let link = (item.link && item.link.length>5) ? `<a href="${item.link}" target="_blank" class="text-decoration-none fw-bold small"><i class="bi bi-link"></i> Buka Link</a>` : "";
-    html += `<div class="card-pro p-3 mb-2 border-start border-4 border-light"><div class="d-flex justify-content-between"><div class="pe-2" style="flex: 1;"><div class="fw-bold text-dark mb-1" style="font-size:0.9rem">${item.judul}</div><small class="d-block text-secondary fw-bold mb-2">${item.sekolah}</small><div class="bg-light p-2 rounded text-muted mb-2 small">${item.catatan}</div>${link}<div class="mt-2"><span class="badge ${bgSt} rounded-pill me-2 px-3" style="font-size:0.6rem">${st}</span></div>${feedInfo}</div><div class="ps-2 align-self-center"><button onclick="popNilai('${item.id}', '${type}')" class="btn btn-sm ${btnColor} rounded-pill shadow-sm px-3 py-2 fw-bold"><i class="bi ${btnIcon}"></i></button></div></div></div>`;
-  });
-  div.innerHTML = html;
-}
-
+// --- LOGIKA GURU ---
 async function loadGuru(){
   showLoad(true);
   let d = await apiCall("getDashboardGuru", { pin: USER.pin });
@@ -276,6 +395,7 @@ async function loadGuru(){
   }
 }
 
+// --- LOGIKA KEPALA SEKOLAH ---
 async function loadKS() {
   showLoad(true);
   let data = await apiCall("getDataKS", { sekolah: USER.sekolah });
@@ -301,6 +421,73 @@ async function loadKS() {
   }
 }
 
+async function bukaRiwayatKS() {
+  modalHistKS.show();
+  document.getElementById('konten-riwayat-ks').innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div></div>';
+  let d = await apiCall("getDashboardGuru", { pin: USER.pin });
+  let html = "";
+  if(d && d.riwayat && d.riwayat.length > 0) {
+    d.riwayat.forEach(item => {
+      let jenis = item[5], judul = item[6], status = item[10], feedback = item[11], waktu = item[1];
+      let bgSt = status==='Menunggu' ? 'bg-secondary' : (status==='Diterima'?'bg-success':'bg-danger');
+      let fbHtml = (status==='Diterima' && feedback) ? `<div class="mt-1 small text-success fw-bold border-top pt-1">${feedback}</div>` : '';
+      html += `<div class="card p-3 mb-2 border-0 shadow-sm" style="border-radius:16px;"><div class="d-flex justify-content-between align-items-start"><div><span class="badge bg-light text-dark border mb-1" style="font-size:0.65rem">${jenis}</span><div class="fw-bold text-dark small" style="line-height:1.2">${judul}</div><small class="text-muted" style="font-size:0.65rem">${waktu}</small></div><span class="badge ${bgSt} rounded-pill" style="font-size:0.65rem">${status}</span></div>${fbHtml}</div>`;
+    });
+    document.getElementById('konten-riwayat-ks').innerHTML = html;
+  } else {
+    document.getElementById('konten-riwayat-ks').innerHTML = '<div class="text-center py-5 text-muted small">Belum ada riwayat laporan.</div>';
+  }
+}
+
+// --- LOGIKA PENILAI ---
+async function loadPenilai() {
+  showLoad(true);
+  let data = await apiCall("getDashboardPenilai");
+  showLoad(false);
+  if(data) {
+    rawDataPenilai = data.tugas; 
+    let agenda = data.agenda;
+    let sel = document.getElementById('sel-materi'); 
+    sel.innerHTML = '<option value="ALL">Semua Materi</option>';
+    agenda.forEach(a => { sel.innerHTML += `<option value="${a.materi}">${a.materi} (${a.narsum})</option>`; });
+    renderListPenilai(rawDataPenilai); 
+    renderListSimple(data.prestasi, 'list-penilai-prestasi', 'PRESTASI');
+    renderListSimple(data.sekolah, 'list-penilai-sekolah', 'PRESTASI');
+    renderListSimple(data.implementasi, 'list-penilai-implemen', 'QUAL');
+    renderListSimple(data.inovasi, 'list-penilai-inovasi', 'QUAL');
+  }
+}
+function filterPenilai(){
+  let val = document.getElementById('sel-materi').value;
+  if(val === 'ALL') renderListPenilai(rawDataPenilai);
+  else { let filtered = rawDataPenilai.filter(item => item.judul === val); renderListPenilai(filtered); }
+}
+function renderListPenilai(data) {
+  let div = document.getElementById('list-penilai-tugas'); let html = "";
+  if(data.length === 0) { div.innerHTML = "<div class='text-center py-5 text-muted small'>Tidak ada tugas guru masuk.</div>"; return; }
+  data.forEach(item => {
+    let st = item.status || "Menunggu"; let bgSt = st==='Menunggu' ? 'bg-secondary' : (st==='Diterima'?'bg-success':'bg-danger');
+    let content = (item.link && item.link.length > 5) ? `<a href="${item.link}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill py-2 px-3 me-2 mb-2" style="font-size:0.75rem"><i class="bi bi-link-45deg"></i> Link Tugas</a>` : "";
+    if(item.catatan) content += `<div class="bg-light p-3 rounded-4 text-muted fst-italic mb-2 border" style="font-size:0.8rem">"${item.catatan}"</div>`;
+    let feedInfo = item.feedback ? `<div class="text-success small fw-bold mt-2"><i class="bi bi-check-all"></i> Nilai: ${item.feedback}</div>` : '';
+    html += `<div class="card-pro p-3 mb-2"><div class="d-flex align-items-center justify-content-between"><div class="pe-2" style="flex: 1;"><div class="fw-bold text-dark small mb-1">${item.judul}</div><div class="d-flex align-items-center mb-2"><span class="badge ${bgSt} rounded-pill me-2 px-3" style="font-size:0.65rem">${st}</span><small class="text-muted" style="font-size:0.7rem"><i class="bi bi-clock"></i> ${item.waktu}</small></div>${content}${feedInfo}</div><div class="ps-2"><button onclick="popNilai('${item.id}', 'TUGAS')" class="btn btn-sm btn-success rounded-pill shadow-sm px-4 py-2 fw-bold" style="white-space: nowrap;"><i class="bi bi-pencil-square"></i> NILAI</button></div></div></div>`;
+  });
+  div.innerHTML = html;
+}
+function renderListSimple(data, targetId, type) {
+  let div = document.getElementById(targetId); let html = "";
+  if(data.length === 0) { div.innerHTML = "<div class='text-center py-5 text-muted small'>Tidak ada data masuk.</div>"; return; }
+  data.forEach(item => {
+    let st = item.status || "Menunggu"; let bgSt = st==='Menunggu' ? 'bg-secondary' : (st==='Diterima'?'bg-success':'bg-danger');
+    let feedInfo = item.feedback ? `<div class="text-success small fw-bold mt-2"><i class="bi bi-check-all"></i> ${item.feedback}</div>` : '';
+    let btnColor = type==='PRESTASI' ? 'btn-warning text-white' : 'btn-primary'; let btnIcon = type==='PRESTASI' ? 'bi-check-lg' : 'bi-star';
+    let link = (item.link && item.link.length>5) ? `<a href="${item.link}" target="_blank" class="text-decoration-none fw-bold small"><i class="bi bi-link"></i> Buka Link</a>` : "";
+    html += `<div class="card-pro p-3 mb-2 border-start border-4 border-light"><div class="d-flex justify-content-between"><div class="pe-2" style="flex: 1;"><div class="fw-bold text-dark mb-1" style="font-size:0.9rem">${item.judul}</div><small class="d-block text-secondary fw-bold mb-2">${item.sekolah}</small><div class="bg-light p-2 rounded text-muted mb-2 small">${item.catatan}</div>${link}<div class="mt-2"><span class="badge ${bgSt} rounded-pill me-2 px-3" style="font-size:0.6rem">${st}</span></div>${feedInfo}</div><div class="ps-2 align-self-center"><button onclick="popNilai('${item.id}', '${type}')" class="btn btn-sm ${btnColor} rounded-pill shadow-sm px-3 py-2 fw-bold"><i class="bi ${btnIcon}"></i></button></div></div></div>`;
+  });
+  div.innerHTML = html;
+}
+
+// --- LOGIKA ADMIN (5 NOMINASI) ---
 async function loadAdmin(){
   showLoad(true);
   let d = await apiCall("getDashboardAdmin");
@@ -331,6 +518,7 @@ async function loadAdmin(){
   }
 }
 
+// --- FUNGSI SUBMIT & UPLOAD ---
 function bukaLapor(j){ document.getElementById('frmUpload').reset(); document.getElementById('inpJudul').value=j; modalUp.show(); }
 async function submitTugas(e){
   e.preventDefault();
@@ -373,6 +561,7 @@ function isiDropdownSekolah(idElement) {
 function bukaModalPrestasi(){ document.getElementById('frmPrestasi').reset(); isiDropdownSekolah('inpSekolahPrestasi'); modalPr.show(); }
 function bukaModalPembiasaan(){ document.getElementById('frmPembiasaan').reset(); isiDropdownSekolah('inpSekolahBias'); modalBs.show(); }
 function bukaModalEvent(){ document.getElementById('frmEvent').reset(); isiDropdownSekolah('inpSekolahEvent'); modalEv.show(); }
+
 async function submitPrestasi(e){
   e.preventDefault(); if(!confirm("Kirim Data?")) return; showLoad(true); modalPr.hide();
   let f = document.getElementById('frmPrestasi'); let dataRaw = {}; Array.from(f.elements).forEach(el=>{if(el.name) dataRaw[el.name]=el.value});
