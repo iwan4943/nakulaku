@@ -16,6 +16,7 @@
            MATERIAL YOU (ANDROID 16) - RED THEME
            ========================================= */
         :root {
+            /* Color Palette */
             --md-sys-color-primary: #b71c1c;
             --md-sys-color-on-primary: #ffffff;
             --md-sys-color-primary-container: #ffdad6;
@@ -23,14 +24,16 @@
             
             --md-sys-color-secondary: #775652;
             --md-sys-color-secondary-container: #ffdad6;
-            --md-sys-color-surface: #fffbff;
+            
+            --md-sys-color-surface: #ffffff;
             --md-sys-color-surface-variant: #f4dddb;
             --md-sys-color-outline: #857371;
             
-            --md-sys-color-background: #faf9f9;
-            --text-body: #2d2424; /* Lebih gelap untuk keterbacaan */
+            --md-sys-color-background: #fdf8f7;
+            --text-body: #2d2424;
             --text-muted: #5f5454;
             
+            /* Spacing & Radius */
             --radius-xl: 32px;
             --radius-lg: 24px;
             --radius-md: 16px;
@@ -42,19 +45,18 @@
             background-color: var(--md-sys-color-background); 
             color: var(--text-body); 
             font-family: 'Plus Jakarta Sans', sans-serif;
-            line-height: 1.7; /* Peningkatan kenyamanan baca */
+            line-height: 1.7; /* Jarak baris lega agar enak dibaca */
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
 
-        /* UTILITIES */
+        /* CONTAINER */
         .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
-        .text-primary { color: var(--md-sys-color-primary); }
         
         /* HEADER */
         header { 
             padding: 16px 0; position: sticky; top: 0; z-index: 100; 
-            background: rgba(255, 255, 255, 0.9); 
+            background: rgba(255, 255, 255, 0.95); 
             backdrop-filter: blur(12px); 
             border-bottom: 1px solid rgba(0,0,0,0.05); 
         }
@@ -64,7 +66,7 @@
         .logo-text { 
             font-size: 1.25rem; font-weight: 800; 
             color: var(--md-sys-color-primary); 
-            letter-spacing: -0.03em; text-transform: uppercase; 
+            text-transform: uppercase; letter-spacing: -0.5px;
         }
 
         .btn {
@@ -75,15 +77,15 @@
         .btn-primary { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(183, 28, 28, 0.35); }
 
-        /* HERO DOCUMENTATION */
+        /* HERO TITLE */
         .doc-header { text-align: center; padding: 60px 0 50px; }
         .doc-header h1 { 
-            font-size: 2.75rem; color: #201a1a; 
+            font-size: 2.5rem; color: #201a1a; 
             margin-bottom: 16px; font-weight: 800; 
-            letter-spacing: -0.04em; line-height: 1.1; 
+            line-height: 1.2; letter-spacing: -1px;
         }
         .doc-header p { 
-            color: var(--text-muted); font-size: 1.15rem; 
+            color: var(--text-muted); font-size: 1.1rem; 
             max-width: 640px; margin: 0 auto; 
         }
         .badge-doc { 
@@ -91,42 +93,38 @@
             color: var(--md-sys-color-on-primary-container); 
             padding: 6px 16px; border-radius: 50px; 
             font-size: 0.85rem; font-weight: 700; margin-bottom: 20px; 
-            display: inline-block; letter-spacing: 0.02em;
+            display: inline-block;
         }
 
-        /* CONTENT CARDS */
+        /* CARDS & SECTIONS */
         .doc-section { margin-bottom: 60px; scroll-margin-top: 100px; }
         .section-label { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
         .label-icon { 
-            width: 42px; height: 42px; 
+            width: 44px; height: 44px; 
             background: var(--md-sys-color-primary); color: white; 
             border-radius: 14px; display: flex; align-items: center; 
-            justify-content: center; font-size: 1.1rem; flex-shrink: 0; 
+            justify-content: center; font-size: 1.2rem; flex-shrink: 0; 
             box-shadow: 0 4px 10px rgba(183, 28, 28, 0.2);
         }
-        .section-label h2 { font-size: 1.75rem; font-weight: 800; color: var(--md-sys-color-on-primary-container); letter-spacing: -0.02em; }
+        .section-label h2 { font-size: 1.8rem; font-weight: 800; color: var(--md-sys-color-on-primary-container); }
 
         .content-card {
             background: #fff; padding: 32px; border-radius: var(--radius-lg);
             border: 1px solid rgba(0,0,0,0.06);
-            box-shadow: 0 4px 24px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
             margin-bottom: 24px;
         }
         .content-card h3 { 
             font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; 
             color: var(--md-sys-color-primary); 
             border-bottom: 2px solid var(--md-sys-color-surface-variant); 
-            padding-bottom: 10px; display: inline-block; 
-        }
-        .content-card p { 
-            color: var(--text-body); font-size: 1rem; margin-bottom: 20px; 
+            padding-bottom: 8px; display: inline-block; 
         }
         
         /* NOMINATION CARDS */
         .nomination-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .nomination-card {
-            background: #fff;
-            border: 1px solid #eee;
+            background: #fff; border: 1px solid #eee;
             padding: 24px; border-radius: 20px;
             position: relative; overflow: hidden;
             transition: all 0.3s ease;
@@ -144,7 +142,7 @@
             justify-content: center; border-radius: 50%; 
         }
         .nomination-title { font-weight: 800; font-size: 1.1rem; color: #201a1a; margin-bottom: 8px; }
-        .nomination-criteria { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+        .nomination-criteria { font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; }
         .nomination-badge { 
             position: absolute; top: 20px; right: 20px; 
             font-size: 0.75rem; font-weight: 700; 
@@ -152,35 +150,30 @@
             background: #ffdad6; padding: 4px 10px; border-radius: 6px;
         }
 
-        /* TABLES - Enhanced Readability */
+        /* TABLES */
         .table-container { 
             overflow-x: auto; -webkit-overflow-scrolling: touch; 
-            border-radius: 16px; border: 1px solid #eee; 
-            margin: 24px 0; 
+            border-radius: 16px; border: 1px solid #eee; margin: 24px 0; 
         }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th { 
             background: var(--md-sys-color-primary-container); 
             color: var(--md-sys-color-on-primary-container); 
             text-align: left; padding: 16px 24px; 
-            font-weight: 700; font-size: 0.9rem; 
-            text-transform: uppercase; letter-spacing: 0.05em;
+            font-weight: 700; font-size: 0.9rem; text-transform: uppercase; 
         }
         td { 
             padding: 16px 24px; border-bottom: 1px solid #f0f0f0; 
             font-size: 0.95rem; color: #333; 
         }
-        tbody tr:nth-child(even) { background-color: #fafafa; } /* Zebra Striping */
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background-color: #fff1f1; }
-
+        tbody tr:nth-child(even) { background-color: #fafafa; }
+        
         /* FORMULAS */
         .formula-box {
             background: #1a1a1a; color: #fff; padding: 24px; 
             border-radius: var(--radius-md); text-align: center; 
             margin: 24px 0; overflow-x: auto;
             border-left: 6px solid var(--md-sys-color-primary);
-            font-size: 1rem;
         }
 
         /* LISTS */
@@ -189,15 +182,12 @@
             padding: 14px 20px; margin-bottom: 10px; 
             background: #fdfcfc; border-radius: 12px; 
             border: 1px solid #eee; border-left: 4px solid var(--md-sys-color-outline); 
-            font-size: 0.95rem; transition: 0.2s;
+            font-size: 0.95rem; 
         }
-        ul.custom-list li:hover { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         ul.custom-list li strong { color: #b71c1c; display: block; margin-bottom: 4px; font-weight: 700; }
-        ul.custom-list li.highlight { 
-            background: #fff8f7; border-color: var(--md-sys-color-primary); 
-        }
+        ul.custom-list li.highlight { background: #fff8f7; border-color: var(--md-sys-color-primary); }
 
-        /* GRID SYSTEM */
+        /* GRID */
         .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
         
         /* FOOTER */
@@ -211,19 +201,14 @@
             display: inline-block; margin-top: 20px; 
             background: rgba(255,255,255,0.1); padding: 8px 20px; 
             border-radius: 50px; font-size: 0.85rem; 
-            color: #ffdad6; font-weight: 600; letter-spacing: 0.02em;
+            color: #ffdad6; font-weight: 600; 
         }
-        .location-text { font-size: 0.85rem; color: #888; margin-top: 10px; }
-
-        /* RESPONSIVE */
+        
         @media (max-width: 768px) {
-            .doc-header { padding: 40px 0; }
             .doc-header h1 { font-size: 2rem; }
             .container { padding: 0 20px; }
             .content-card { padding: 24px; border-radius: 20px; }
-            .section-label h2 { font-size: 1.4rem; }
-            .grid-2 { grid-template-columns: 1fr; }
-            .nomination-grid { grid-template-columns: 1fr; }
+            .grid-2, .nomination-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -259,7 +244,7 @@
 
             <div class="content-card">
                 <h3>1. Tabel Bobot Nilai Kehadiran</h3>
-                <p>Sistem memberikan poin otomatis untuk setiap aktivitas presensi harian guru. [cite_start]Berlaku untuk perhitungan kinerja individu maupun rata-rata sekolah[cite: 3, 4].</p>
+                <p>Sistem memberikan poin otomatis untuk setiap aktivitas presensi harian guru. Berlaku untuk perhitungan kinerja individu maupun rata-rata sekolah.</p>
                 
                 <div class="table-container">
                     <table>
@@ -274,27 +259,27 @@
                             <tr>
                                 <td style="font-weight:700; color:#2e7d32;">Tepat Waktu</td>
                                 <td><b>100</b></td>
-                                [cite_start]<td>Absen sebelum jam masuk & di dalam radius[cite: 5].</td>
+                                <td>Absen sebelum jam masuk & di dalam radius.</td>
                             </tr>
                             <tr>
                                 <td style="font-weight:700; color:#f9a825;">Terlambat</td>
                                 <td><b>80</b></td>
-                                [cite_start]<td>Absen setelah jam masuk & di dalam radius[cite: 5].</td>
+                                <td>Absen setelah jam masuk & di dalam radius.</td>
                             </tr>
                             <tr>
                                 <td style="font-weight:700; color:#1565c0;">Izin / Sakit / Dinas</td>
                                 <td><b>50</b></td>
-                                [cite_start]<td>Mengajukan form izin resmi di aplikasi[cite: 5].</td>
+                                <td>Mengajukan form izin resmi di aplikasi.</td>
                             </tr>
                             <tr>
                                 <td style="font-weight:700; color:#e65100;">Luar Radius</td>
                                 <td><b>10</b></td>
-                                [cite_start]<td>Check-in tetapi GPS di luar lokasi sekolah[cite: 5].</td>
+                                <td>Check-in tetapi GPS di luar lokasi sekolah.</td>
                             </tr>
                             <tr>
                                 <td style="font-weight:700; color:#c62828;">Alpha / Tidak Hadir</td>
                                 <td><b>0</b></td>
-                                [cite_start]<td>Tidak melakukan presensi sama sekali[cite: 5].</td>
+                                <td>Tidak melakukan presensi sama sekali.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -303,17 +288,17 @@
 
             <div class="content-card">
                 <h3>2. Algoritma Ranking Sekolah</h3>
-                [cite_start]<p>Sistem memberikan penghargaan (Award) kepada sekolah berdasarkan akumulasi kinerja seluruh gurunya dengan rumus utama[cite: 7, 8]:</p>
+                <p>Sistem memberikan penghargaan (Award) kepada sekolah berdasarkan akumulasi kinerja seluruh gurunya dengan rumus utama:</p>
                 
                 <div class="formula-box">
                     $$ \text{Skor Sekolah} = \frac{\sum \text{Total Poin Seluruh Guru}}{\sum \text{Total Kehadiran Seluruh Guru}} $$
                 </div>
 
-                [cite_start]<p><strong>Mekanisme Tie-Breaker (Jika Nilai Sama)[cite: 10]:</strong></p>
+                <p><strong>Mekanisme Tie-Breaker (Jika Nilai Sama):</strong></p>
                 <ul class="custom-list">
-                    [cite_start]<li class="highlight"><strong>Prioritas 1: Skor Akhir Tertinggi</strong>Rata-rata poin maksimal 100[cite: 11, 12].</li>
-                    [cite_start]<li><strong>Prioritas 2: Jumlah Tepat Waktu</strong>Sekolah dengan frekuensi guru "Tepat Waktu" terbanyak[cite: 13, 14].</li>
-                    [cite_start]<li><strong>Prioritas 3: Datang Terawal</strong>Sekolah dengan rata-rata jam kedatangan (menit) paling pagi[cite: 15, 17].</li>
+                    <li class="highlight"><strong>Prioritas 1: Skor Akhir Tertinggi</strong>Rata-rata poin maksimal 100.</li>
+                    <li><strong>Prioritas 2: Jumlah Tepat Waktu</strong>Sekolah dengan frekuensi guru "Tepat Waktu" terbanyak.</li>
+                    <li><strong>Prioritas 3: Datang Terawal</strong>Sekolah dengan rata-rata jam kedatangan (menit) paling pagi.</li>
                 </ul>
             </div>
         </section>
@@ -327,30 +312,30 @@
             <div class="grid-2">
                 <div class="content-card">
                     <h3>A. Kualitas Tugas Guru</h3>
-                    [cite_start]<p>Konversi nilai mutu tugas menjadi poin angka[cite: 23]:</p>
+                    <p>Konversi nilai mutu tugas menjadi poin angka:</p>
                     <ul class="custom-list">
-                        [cite_start]<li class="highlight"><strong>Nilai A (Sangat Baik)</strong> : 4 Poin [cite: 25]</li>
-                        [cite_start]<li><strong>Nilai B (Baik)</strong> : 3 Poin [cite: 26]</li>
-                        [cite_start]<li><strong>Nilai C (Cukup)</strong> : 2 Poin [cite: 27]</li>
-                        [cite_start]<li><strong>Nilai D/E (Revisi)</strong> : 1 Poin [cite: 28]</li>
+                        <li class="highlight"><strong>Nilai A (Sangat Baik)</strong> : 4 Poin</li>
+                        <li><strong>Nilai B (Baik)</strong> : 3 Poin</li>
+                        <li><strong>Nilai C (Cukup)</strong> : 2 Poin</li>
+                        <li><strong>Nilai D/E (Revisi)</strong> : 1 Poin</li>
                     </ul>
                 </div>
 
                 <div class="content-card">
                     <h3>B. Manajemen Sekolah (KS)</h3>
-                    [cite_start]<p>Poin tambahan dari laporan Kepala Sekolah[cite: 33]:</p>
+                    <p>Poin tambahan dari laporan Kepala Sekolah:</p>
                     <ul class="custom-list">
-                        [cite_start]<li><strong>Pembiasaan Karakter</strong> : 5 Poin (Flat) [cite: 35]</li>
-                        [cite_start]<li><strong>Event (Umum/Pejabat)</strong> : 30 Poin [cite: 36, 37]</li>
-                        [cite_start]<li><strong>Event (Orang Tua)</strong> : 20 Poin [cite: 38]</li>
-                        [cite_start]<li><strong>Event (Internal)</strong> : 10 Poin [cite: 39]</li>
+                        <li><strong>Pembiasaan Karakter</strong> : 5 Poin (Flat)</li>
+                        <li><strong>Event (Umum/Pejabat)</strong> : 30 Poin</li>
+                        <li><strong>Event (Orang Tua)</strong> : 20 Poin</li>
+                        <li><strong>Event (Internal)</strong> : 10 Poin</li>
                     </ul>
                 </div>
             </div>
 
             <div class="content-card">
                 <h3>C. Matriks Bobot Prestasi Siswa</h3>
-                [cite_start]<p>Poin dihitung dinamis berdasarkan Tingkat dan Juara[cite: 30]:</p>
+                <p>Poin dihitung dinamis berdasarkan Tingkat dan Juara:</p>
                 <div class="table-container">
                     <table style="text-align:center;">
                         <thead>
@@ -394,7 +379,7 @@
                         </tbody>
                     </table>
                 </div>
-                [cite_start]<div style="text-align: right; font-size: 0.8rem; opacity: 0.6; margin-top:5px;">Sumber: Tabel Bobot Prestasi [cite: 31]</div>
+                <div style="text-align: right; font-size: 0.8rem; opacity: 0.6; margin-top:5px;">Sumber: Tabel Bobot Prestasi</div>
             </div>
         </section>
 
@@ -407,44 +392,44 @@
             <div class="grid-2">
                 <div class="content-card" style="border-top: 4px solid #e91e63;">
                     <h3 style="color:#e91e63; border-color:#fce4ec;">🏆 Kategori "Terkompak"</h3>
-                    [cite_start]<p>Penilaian kualitatif oleh Juri/Pengamat (Visual & Kerjasama)[cite: 60, 61].</p>
-                    [cite_start]<p style="font-size:0.9rem;"><strong>Kriteria (Skala 1-5)[cite: 63]:</strong></p>
+                    <p>Penilaian kualitatif oleh Juri/Pengamat (Visual & Kerjasama).</p>
+                    <p style="font-size:0.9rem;"><strong>Kriteria (Skala 1-5):</strong></p>
                     <ul class="custom-list">
-                        <li>1. [cite_start]Seragam (Dresscode) [cite: 64]</li>
-                        <li>2. [cite_start]Antusiasme [cite: 65]</li>
-                        <li>3. [cite_start]Kerjasama Tim [cite: 66]</li>
+                        <li>1. Seragam (Dresscode)</li>
+                        <li>2. Antusiasme</li>
+                        <li>3. Kerjasama Tim</li>
                     </ul>
                     <div class="formula-box" style="background:#fce4ec; color:#880e4f; border-left-color:#e91e63;">
-                        [cite_start]$$ \text{Total} = \text{Seragam} + \text{Antusias} + \text{Kerjasama} $$ [cite: 69]
+                        $$ \text{Total} = \text{Seragam} + \text{Antusias} + \text{Kerjasama} $$
                     </div>
                 </div>
 
                 <div class="content-card" style="border-top: 4px solid #00897b;">
                     <h3 style="color:#00897b; border-color:#e0f2f1;">⚡ Kategori "Tergiat"</h3>
-                    [cite_start]<p>Penilaian kuantitatif berdasarkan Log Keaktifan di sistem[cite: 72, 73].</p>
-                    [cite_start]<p style="font-size:0.9rem;"><strong>Aktivitas (1 Poin/Aksi)[cite: 75]:</strong></p>
+                    <p>Penilaian kuantitatif berdasarkan Log Keaktifan di sistem.</p>
+                    <p style="font-size:0.9rem;"><strong>Aktivitas (1 Poin/Aksi):</strong></p>
                     <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
                         <span style="background:#e0f2f1; color:#00695c; padding:4px 10px; border-radius:4px; font-size:0.8rem; font-weight:bold;">Bertanya</span>
                         <span style="background:#e0f2f1; color:#00695c; padding:4px 10px; border-radius:4px; font-size:0.8rem; font-weight:bold;">Menjawab</span>
                         <span style="background:#e0f2f1; color:#00695c; padding:4px 10px; border-radius:4px; font-size:0.8rem; font-weight:bold;">Presentasi</span>
                     </div>
                     <div class="formula-box" style="background:#e0f2f1; color:#004d40; border-left-color:#00897b; margin-top:24px;">
-                        [cite_start]$$ \text{Skor} = \sum \text{Total Log Aktivitas} $$ [cite: 77]
+                        $$ \text{Skor} = \sum \text{Total Log Aktivitas} $$
                     </div>
                 </div>
             </div>
 
             <div class="content-card" style="margin-top:24px;">
                 <h3>Rumus Skor Feedback (Evaluasi)</h3>
-                [cite_start]<p>Nilai rata-rata dari input formulir peserta[cite: 81]:</p>
+                <p>Nilai rata-rata dari input formulir peserta:</p>
                 <div class="grid-2">
                     <div style="background:#263238; color:white; padding:20px; border-radius:16px; text-align:center;">
                         <div style="color:#ffca28; font-weight:bold; margin-bottom:8px; font-size:1.1rem;">Narasumber</div>
-                        [cite_start]<div style="font-size:0.85rem; opacity:0.8; line-height:1.5;">(Materi + Penyajian + Interaksi + Waktu) / 4 [cite: 84, 85]</div>
+                        <div style="font-size:0.85rem; opacity:0.8; line-height:1.5;">(Materi + Penyajian + Interaksi + Waktu) / 4</div>
                     </div>
                     <div style="background:#263238; color:white; padding:20px; border-radius:16px; text-align:center;">
                         <div style="color:#ffca28; font-weight:bold; margin-bottom:8px; font-size:1.1rem;">Panitia</div>
-                        [cite_start]<div style="font-size:0.85rem; opacity:0.8; line-height:1.5;">(Sarana + Pelayanan + Acara) / 3 [cite: 86, 87]</div>
+                        <div style="font-size:0.85rem; opacity:0.8; line-height:1.5;">(Sarana + Pelayanan + Acara) / 3</div>
                     </div>
                 </div>
             </div>
@@ -463,56 +448,56 @@
                     <div class="nomination-badge">Utama</div>
                     <div class="nomination-icon"><i class="fas fa-user-clock"></i></div>
                     <div class="nomination-title">1. Sekolah Terdisiplin</div>
-                    [cite_start]<div class="nomination-criteria">Rata-rata <strong>Skor Presensi</strong> tertinggi (Tie-breaker: Jumlah Tepat Waktu & Jam Datang)[cite: 8, 10, 15].</div>
+                    <div class="nomination-criteria">Rata-rata <strong>Skor Presensi</strong> tertinggi (Tie-breaker: Jumlah Tepat Waktu & Jam Datang).</div>
                 </div>
 
                 <div class="nomination-card">
                     <div class="nomination-badge">Utama</div>
                     <div class="nomination-icon"><i class="fas fa-chart-line"></i></div>
                     <div class="nomination-title">2. Sekolah Terbaik LMS</div>
-                    [cite_start]<div class="nomination-criteria">Akumulasi tertinggi dari <strong>Total Poin Tugas Guru</strong> ditambah <strong>Poin Manajemen Sekolah</strong>[cite: 49, 50].</div>
+                    <div class="nomination-criteria">Akumulasi tertinggi dari <strong>Total Poin Tugas Guru</strong> ditambah <strong>Poin Manajemen Sekolah</strong>.</div>
                 </div>
 
                 <div class="nomination-card">
                     <div class="nomination-badge">Individu</div>
                     <div class="nomination-icon"><i class="fas fa-user-graduate"></i></div>
                     <div class="nomination-title">3. Guru Terbaik</div>
-                    [cite_start]<div class="nomination-criteria">Akumulasi poin tertinggi dari <strong>Kualitas Tugas</strong> (A/B/C) yang dikumpulkan[cite: 44, 45].</div>
+                    <div class="nomination-criteria">Akumulasi poin tertinggi dari <strong>Kualitas Tugas</strong> (A/B/C) yang dikumpulkan.</div>
                 </div>
 
                 <div class="nomination-card">
                     <div class="nomination-badge">Lembaga</div>
                     <div class="nomination-icon"><i class="fas fa-medal"></i></div>
                     <div class="nomination-title">4. Sekolah Berprestasi</div>
-                    [cite_start]<div class="nomination-criteria">Total poin tertinggi khusus dari <strong>Laporan Prestasi Siswa</strong> (Juara Lomba)[cite: 53].</div>
+                    <div class="nomination-criteria">Total poin tertinggi khusus dari <strong>Laporan Prestasi Siswa</strong> (Juara Lomba).</div>
                 </div>
 
                 <div class="nomination-card">
                     <div class="nomination-badge">Event</div>
                     <div class="nomination-icon"><i class="fas fa-users"></i></div>
                     <div class="nomination-title">5. Sekolah Terkompak</div>
-                    [cite_start]<div class="nomination-criteria">Nilai tertinggi dari Juri untuk aspek <strong>Seragam, Antusiasme, & Kerjasama</strong>[cite: 60, 61].</div>
+                    <div class="nomination-criteria">Nilai tertinggi dari Juri untuk aspek <strong>Seragam, Antusiasme, & Kerjasama</strong>.</div>
                 </div>
 
                 <div class="nomination-card">
                     <div class="nomination-badge">Event</div>
                     <div class="nomination-icon"><i class="fas fa-bolt"></i></div>
                     <div class="nomination-title">6. Sekolah Tergiat</div>
-                    [cite_start]<div class="nomination-criteria">Jumlah <strong>Log Aktivitas</strong> (Tanya/Jawab/Presentasi) terbanyak saat acara[cite: 72, 78].</div>
+                    <div class="nomination-criteria">Jumlah <strong>Log Aktivitas</strong> (Tanya/Jawab/Presentasi) terbanyak saat acara.</div>
                 </div>
 
                 <div class="nomination-card">
                     <div class="nomination-badge">Feedback</div>
                     <div class="nomination-icon"><i class="fas fa-microphone-alt"></i></div>
                     <div class="nomination-title">7. Narasumber Terbaik</div>
-                    [cite_start]<div class="nomination-criteria">Skor rata-rata ulasan peserta tertinggi (Materi & Penyajian)[cite: 89].</div>
+                    <div class="nomination-criteria">Skor rata-rata ulasan peserta tertinggi (Materi & Penyajian).</div>
                 </div>
 
                 <div class="nomination-card">
                     <div class="nomination-badge">Feedback</div>
                     <div class="nomination-icon"><i class="fas fa-building"></i></div>
                     <div class="nomination-title">8. Tuan Rumah Terbaik</div>
-                    [cite_start]<div class="nomination-criteria">Skor rata-rata ulasan peserta tertinggi (Fasilitas & Pelayanan)[cite: 89].</div>
+                    <div class="nomination-criteria">Skor rata-rata ulasan peserta tertinggi (Fasilitas & Pelayanan).</div>
                 </div>
             </div>
         </section>
@@ -528,7 +513,7 @@
             </div>
             
             <div class="dev-badge">Tim Pengembang Gugus Nakula</div>
-            <div class="location-text">Korwilcambidik Kecamatan Selogiri</div>
+            <div style="margin-top: 10px; font-size: 0.85rem; color: #888;">Korwilcambidik Kecamatan Selogiri</div>
         </div>
     </footer>
 
