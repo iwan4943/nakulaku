@@ -12,7 +12,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
-    /* CSS STYLE */
+    /* CSS STYLE UTAMA */
     :root {
       --md-primary: #B3261E; --md-on-primary: #FFFFFF;
       --md-primary-container: #FFDAD6; --md-surface: #FFF8F7;
@@ -23,10 +23,12 @@
     body { background-color: var(--md-surface); font-family: 'Roboto', sans-serif; padding-bottom: 120px; color: var(--md-text-main); overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
     h1, h2, h3, h4, h5, .fw-google { font-family: 'Google Sans', sans-serif; }
     
+    /* LOGIN */
     #login-page { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, var(--md-surface) 0%, var(--md-primary-container) 100%); position: fixed; top: 0; left: 0; width: 100%; z-index: 2000; }
     .login-card { width: 85%; max-width: 360px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-radius: 28px; padding: 40px 24px; box-shadow: 0 10px 30px rgba(179, 38, 30, 0.1); border: 1px solid white; }
     .form-control-pin { background: var(--md-surface); border: none; border-bottom: 2px solid #857372; border-radius: 12px 12px 0 0; font-size: 1.8rem; letter-spacing: 12px; color: var(--md-primary); text-align: center; }
 
+    /* HEADER APP */
     #app-page { display: none; }
     .header-app { background-color: var(--md-surface); padding: 20px 24px 10px 24px; border-radius: 0 0 32px 32px; }
     .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
@@ -34,16 +36,19 @@
     .profile-section .jabatan { font-size: 0.9rem; color: var(--md-text-sub); margin-top: 2px; }
     .btn-logout-header { background: var(--md-primary-container); border:none; width: 42px; height: 42px; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #410002; }
     
+    /* CHIPS INFO */
     .chip-info { font-size: 0.75rem; font-weight: 500; padding: 6px 14px; border-radius: 16px; display: inline-flex; align-items: center; gap: 6px; }
     .chip-unit { background: var(--md-primary); color: white; }
     .chip-time { background: #FCEAE9; color: var(--md-text-sub); border: 1px solid #eee; }
     #infoBar { background: #FFF2F1; border: 1px solid #FFDAD6; color: #410E0B; border-radius: 16px; padding: 10px 16px; margin-top: 16px; font-size: 0.85rem; display:none; }
 
+    /* CARDS */
     .card-menu { border: none; border-radius: var(--shape-card); box-shadow: 0 2px 12px rgba(0,0,0,0.03); margin-bottom: 16px; background: white; padding: 16px; }
     .label-header { font-family: 'Google Sans'; font-weight: 600; font-size: 0.9rem; color: var(--md-primary); margin-bottom: 12px; display: block; }
     .form-control, .form-select { background-color: #FCEAE9; border: 1px solid transparent; border-radius: 12px; padding: 12px 16px; }
     .btn-google { background-color: var(--md-primary); color: white; border: none; border-radius: var(--shape-pill); font-family: 'Google Sans'; font-weight: 500; height: 50px; width: 100%; }
 
+    /* MAPS & CAMERA */
     #mapContainer { display: none; margin-top: 10px; }
     #map { height: 180px; width: 100%; border-radius: 20px; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     
@@ -56,14 +61,27 @@
     #result-container { display: none; margin-top: 10px; }
     #photo-preview { width: 100%; height: 250px; object-fit: cover; border-radius: 16px; margin-bottom: 10px; border: 1px solid #eee; }
 
+    /* LIST MONITORING ITEMS */
     .history-item { padding: 16px; margin-bottom: 12px; background: #FFFFFF; border-radius: 20px; border: 1px solid #F0F0F0; }
     .badge-status { font-family: 'Google Sans'; font-size: 0.75rem; padding: 6px 12px; border-radius: 8px; font-weight: 600; }
-    .bg-hadir { background: #C4EED0; color: #074E23; } .bg-telat { background: #FFEFBF; color: #765600; } .bg-luar { background: #FFDAD6; color: #410E0B; } .bg-izin { background: #D3E3FD; color: #041E49; } .bg-belum { background: #FFDAD6; color: #410E0B; }
     
-    .btn-view-foto-pill { background: #FCEAE9; color: #534341; border: none; padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; display: inline-flex; align-items: center; font-weight: 500; text-decoration: none; transition: 0.2s; }
-    .action-btn { width: 36px; height: 36px; border-radius: 12px; display: flex; justify-content: center; align-items: center; border: none; font-size: 0.9rem; margin-left: 8px; }
-    .btn-acc { background: #C4EED0; color: #074E23; } .btn-rej { background: #FFDAD6; color: #410E0B; }
+    /* WARNA BADGE */
+    .bg-hadir { background: #C4EED0; color: #074E23; } 
+    .bg-telat { background: #FFEFBF; color: #765600; } 
+    .bg-luar { background: #FFDAD6; color: #410E0B; } 
+    .bg-izin { background: #D3E3FD; color: #041E49; } 
+    .bg-belum { background: #FFDAD6; color: #410E0B; }
+    
+    /* TOMBOL BUKTI & ACC */
+    .btn-view-foto-pill { background: #FCEAE9; color: #534341; border: none; padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; display: inline-flex; align-items: center; font-weight: 500; text-decoration: none; transition: 0.2s; margin-right: 5px; }
+    
+    /* STYLE KHUSUS TOMBOL ACC/TOLAK */
+    .action-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: none; font-size: 1rem; margin-left: 8px; transition: transform 0.1s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .action-btn:active { transform: scale(0.9); }
+    .btn-acc { background: #C4EED0; color: #074E23; } 
+    .btn-rej { background: #FFDAD6; color: #410E0B; }
 
+    /* NAVIGASI BAWAH */
     .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #FFFFFF; height: 80px; padding: 0 16px 10px 16px; z-index: 1000; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #F0F0F0; box-shadow: 0 -4px 20px rgba(0,0,0,0.02); }
     .nav-item-c { text-align: center; color: var(--md-text-sub); cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 12px; }
     .nav-icon-container { width: 64px; height: 32px; border-radius: 16px; display: flex; align-items: center; justify-content: center; transition: 0.3s; margin-bottom: 2px; }
@@ -95,6 +113,7 @@
   </div>
 
   <div id="app-page">
+    
     <div class="header-app">
       <div class="header-top">
         <div class="profile-section">
@@ -230,8 +249,8 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   
   <script>
-    // --- GANTI URL INI DENGAN URL DEPLOY TERBARU ---
-    const API_URL = "https://script.google.com/macros/s/AKfycbweTTiW0sPe1SAnJZlUK4KCiiks4cDhc420PWmvf1IOJ7mIKGUhudz42SpAJ1KZP4__cg/exec"; 
+    // --- WAJIB: PASTE URL WEB APP BARU DISINI ---
+    const API_URL = "URL_WEB_APP_GOOGLE_SCRIPT_ANDA_DISINI"; 
 
     var userData = null; var targetLokasi = null;
     var userLat = 0, userLong = 0; var map, marker, streamKamera;
@@ -271,7 +290,9 @@
        document.getElementById('dispUnit').innerText = userData.unitKerja;
        document.getElementById('dispJabatan').innerText = userData.jabatan || "Guru";
 
-       if(userData.isAdmin || (userData.jabatan && userData.jabatan.includes("Kepala"))) {
+       // --- LOGIKA MENAMPILKAN MENU MONITOR ---
+       // Menu monitor muncul jika isAdmin = true ATAU Jabatan mengandung "Kepala"
+       if(userData.isAdmin || (userData.jabatan && userData.jabatan.toString().toLowerCase().includes("kepala"))) {
            document.getElementById('navMonitor').style.display = 'flex';
        }
        if(userData.isAdmin) { document.getElementById('navSetting').style.display = 'flex'; }
@@ -323,6 +344,7 @@
        if(viewName === 'setting') loadSettings();
     }
 
+    // --- LOGIKA MAPS & GPS ---
     function toggleMap() {
         var c = document.getElementById('mapContainer');
         c.style.display = (c.style.display === 'none' || c.style.display === '') ? 'block' : 'none';
@@ -356,6 +378,7 @@
         return 2 * R * Math.asin(Math.sqrt(a));
     }
 
+    // --- LOGIKA KAMERA ---
     function openCameraModal() {
         document.getElementById('cameraModal').style.display = 'flex';
         navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s => { 
@@ -376,6 +399,7 @@
         document.getElementById('camera-btn-start').style.display='none'; document.getElementById('result-container').style.display='block'; 
     }
 
+    // --- TRANSAKSI DATA (ABSEN, IZIN) ---
     async function kirimPresensi() {
        if(!document.getElementById('foto_base64').value) return Swal.fire('Foto Wajib', 'Ambil foto selfie dulu.', 'warning');
        document.getElementById('loadingOverlay').style.display = 'flex';
@@ -408,6 +432,7 @@
        if(r.includes("SUKSES")) { document.getElementById('formIzin').reset(); switchView('home'); }
     }
 
+    // --- FUNGSI LOAD DATA ---
     async function loadRiwayat() {
        document.getElementById('loadingOverlay').style.display = 'flex';
        const list = await callAPI('riwayat', { nama: userData.nama });
@@ -429,6 +454,7 @@
         if(d) renderMonitoring(d);
     }
 
+    // --- RENDER MONITORING (FIXED BUTTON LOGIC) ---
     function renderMonitoring(data) {
         document.getElementById('loadingOverlay').style.display = 'none';
         var html = ""; var allGuru = data.listSudah.concat(data.listBelum);
@@ -438,20 +464,44 @@
         allGuru.forEach(g => {
             var badgeClass = "bg-secondary"; var actionButtons = ""; var btnBukti = ""; var safeNama = g.nama.replace(/'/g, "\\'");
             
+            // Logika Warna Badge
             if(g.status === "Belum Hadir") badgeClass = "bg-belum";
             else if(g.status.includes("Tepat")) badgeClass = "bg-hadir";
             else if(g.status.includes("Terlambat")) badgeClass = "bg-telat";
             else if(g.status.includes("Luar")) badgeClass = "bg-luar";
             else if(g.status.includes("Izin") || g.status.includes("Sakit")) { 
                 badgeClass = "bg-izin"; 
+                // --- LOGIKA PENTING TOMBOL ACC ---
                 if(g.status.includes("Menunggu")) { 
-                    actionButtons = `<div class="mt-2 d-flex justify-content-end border-top pt-2"><small class="me-auto text-muted d-flex align-items-center">Setujui izin ini?</small><button type="button" class="action-btn btn-acc me-2" onclick="prosesIzin('${safeNama}', 'Disetujui')"><i class="fas fa-check"></i></button><button type="button" class="action-btn btn-rej" onclick="prosesIzin('${safeNama}', 'Ditolak')"><i class="fas fa-times"></i></button></div>`; 
+                    actionButtons = `
+                    <div class="mt-2 d-flex justify-content-end border-top pt-2">
+                        <small class="me-auto text-muted d-flex align-items-center fst-italic">Setujui izin ini?</small>
+                        <button type="button" class="action-btn btn-acc me-2" onclick="prosesIzin('${safeNama}', 'Disetujui')"><i class="fas fa-check"></i></button>
+                        <button type="button" class="action-btn btn-rej" onclick="prosesIzin('${safeNama}', 'Ditolak')"><i class="fas fa-times"></i></button>
+                    </div>`; 
                 }
             }
+            
+            // Logika Tombol Bukti
             if(g.maps && g.maps.includes("http")) btnBukti += `<a href="${g.maps}" target="_blank" class="btn-view-foto-pill me-1" style="text-decoration:none;"><i class="fas fa-map-marker-alt text-danger"></i></a>`; 
             if(g.foto && g.foto.includes("http")) btnBukti += `<button type="button" class="btn-view-foto-pill" onclick="lihatFoto(event, '${g.foto}')"><i class="fas fa-image text-primary"></i></button>`; 
 
-            html += `<div class="history-item"><div class="d-flex justify-content-between align-items-center mb-1"><span class="fw-bold text-dark text-truncate" style="max-width:55%; font-family:'Google Sans'">${g.nama}</span><span class="badge badge-status ${badgeClass}">${g.status}</span></div><div class="d-flex align-items-center mt-2"><div class="small text-muted flex-grow-1" style="line-height:1.4;"><i class="fas fa-clock me-1 text-secondary opacity-50"></i> ${g.jam} ${g.alasan ? '<br><span class="text-warning"><i class="fas fa-comment-alt me-1"></i> ' + g.alasan + '</span>' : ''}</div><div class="d-flex align-items-center">${btnBukti}</div></div>${actionButtons}</div>`;
+            // Susun HTML
+            html += `
+            <div class="history-item">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-bold text-dark text-truncate" style="max-width:55%; font-family:'Google Sans'">${g.nama}</span>
+                    <span class="badge badge-status ${badgeClass}">${g.status}</span>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <div class="small text-muted flex-grow-1" style="line-height:1.4;">
+                        <i class="fas fa-clock me-1 text-secondary opacity-50"></i> ${g.jam} 
+                        ${g.alasan ? '<br><span class="text-warning"><i class="fas fa-comment-alt me-1"></i> ' + g.alasan + '</span>' : ''}
+                    </div>
+                    <div class="d-flex align-items-center">${btnBukti}</div>
+                </div>
+                ${actionButtons}
+            </div>`;
         });
         document.getElementById('listMonitoringContainer').innerHTML = html;
     }
