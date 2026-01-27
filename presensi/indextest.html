@@ -12,7 +12,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
-    /* --- VARIABEL WARNA --- */
+    /* --- STYLE BASE (ASLI DARI INDEXTEST) --- */
     :root {
       --md-primary: #B3261E; --md-on-primary: #FFFFFF;
       --md-primary-container: #FFDAD6; --md-on-primary-container: #410002;
@@ -22,17 +22,14 @@
       --shape-card: 24px; --shape-pill: 50px;
     }
     
-    /* --- DASAR --- */
     body { background-color: var(--md-surface); font-family: 'Roboto', sans-serif; padding-bottom: 120px; color: var(--md-text-main); overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
     h1, h2, h3, h4, h5, .fw-google { font-family: 'Google Sans', sans-serif; }
     
-    /* --- HALAMAN LOGIN --- */
     #login-page { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, var(--md-surface) 0%, var(--md-primary-container) 100%); position: fixed; top: 0; left: 0; width: 100%; z-index: 2000; }
     .login-card { width: 85%; max-width: 360px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-radius: 28px; padding: 40px 24px; box-shadow: 0 10px 30px rgba(179, 38, 30, 0.1); border: 1px solid white; }
     .form-control-pin { background: var(--md-surface); border: 2px solid transparent; border-bottom: 2px solid var(--md-outline); border-radius: 12px 12px 0 0; font-size: 1.8rem; letter-spacing: 12px; color: var(--md-primary); transition: 0.3s; }
     .form-control-pin:focus { background: #fff; box-shadow: none; border-color: transparent; border-bottom-color: var(--md-primary); }
 
-    /* --- HEADER APLIKASI --- */
     #app-page { display: none; }
     .header-app { background-color: var(--md-surface); color: var(--md-text-main); padding: 20px 24px 10px 24px; border-radius: 0 0 32px 32px; margin-bottom: 0px; position: relative; }
     .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
@@ -45,26 +42,39 @@
     .chip-unit { background: var(--md-primary); color: white; }
     #infoBar { background: #FFF2F1; border: 1px solid #FFDAD6; color: #410E0B; border-radius: 16px; padding: 10px 16px; margin-top: 16px; font-size: 0.85rem; font-weight: 500; display:none; }
 
-    /* --- CONTAINER & CARD --- */
-    .container { padding-top: 10px; padding-bottom: 160px; /* Ruang lebih untuk sticky button */ }
+    .container { padding-top: 10px; padding-bottom: 100px; }
     .card-menu { border: none; border-radius: var(--shape-card); box-shadow: 0 2px 12px rgba(0,0,0,0.03); margin-bottom: 16px; background: var(--md-surface-container-high); padding: 16px; }
     .label-header { font-family: 'Google Sans', sans-serif; font-weight: 600; font-size: 0.9rem; color: var(--md-primary); margin-bottom: 12px; display: block; }
     .form-control, .form-select { background-color: var(--md-surface-container); border: 1px solid transparent; border-radius: 12px; padding: 12px 16px; color: var(--md-text-main); font-size: 0.95rem; }
     .form-control:focus, .form-select:focus { background-color: #fff; border-color: var(--md-primary); box-shadow: 0 0 0 4px rgba(179, 38, 30, 0.1); }
     
-    /* --- KAMERA & PETA (UPDATED) --- */
-    #camera-container { position: relative; width: 100%; height: 260px; /* LEBIH PENDEK */ background: #000; border-radius: 20px; overflow: hidden; display: none; margin-bottom: 10px; }
-    
-    /* REVISI KAMERA: Tidak di-flip (normal) agar gerakan & teks terbaca */
-    video { width: 100%; height: 100%; object-fit: cover; } 
-    
-    .btn-snap { width: 64px; height: 64px; border-radius: 50%; background: white; border: 4px solid rgba(255,255,255,0.4); outline: 4px solid var(--md-primary); position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); cursor: pointer; transition: 0.2s; }
-    .btn-snap:active { transform: translateX(-50%) scale(0.9); }
-    
-    #mapContainer { display: none; margin-top: 10px; transition: 0.3s; }
-    #map { height: 150px; width: 100%; border-radius: 20px; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .btn-google { background-color: var(--md-primary); color: white; border: none; border-radius: var(--shape-pill); font-family: 'Google Sans'; font-weight: 500; height: 50px; letter-spacing: 0.5px; transition: 0.2s; width: 100%; }
+    .btn-google:active { transform: scale(0.97); background-color: #9c1c16; }
 
-    /* --- STICKY SUBMIT BUTTON (BARU) --- */
+    /* --- MAP --- */
+    #mapContainer { display: none; margin-top: 10px; transition: 0.3s; }
+    #map { height: 180px; width: 100%; border-radius: 20px; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+    /* --- MODAL KAMERA FULLSCREEN (BARU) --- */
+    .modal-camera {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: black; z-index: 5000; display: none; flex-direction: column;
+    }
+    .camera-view { flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    
+    /* PREVIEW CERMIN (MIRROR) */
+    #video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+    
+    .camera-controls { height: 120px; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; position: relative; }
+    .btn-shutter { width: 70px; height: 70px; background: white; border-radius: 50%; border: 4px solid rgba(255,255,255,0.3); outline: 3px solid var(--md-primary); cursor: pointer; transition: 0.2s; }
+    .btn-shutter:active { transform: scale(0.9); }
+    .btn-close-camera { position: absolute; top: 20px; right: 20px; color: white; background: rgba(0,0,0,0.5); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); z-index: 5001; font-size: 0.8rem; }
+
+    /* --- HASIL FOTO DI FORM UTAMA --- */
+    #result-container { display: none; margin-top: 10px; }
+    #photo-preview { width: 100%; height: 250px; object-fit: cover; border-radius: 16px; margin-bottom: 10px; border: 1px solid #eee; }
+
+    /* --- STICKY BUTTON --- */
     .submit-wrapper {
         position: fixed; bottom: 80px; left: 0; width: 100%;
         padding: 12px 24px; background: rgba(255,255,255,0.95);
@@ -72,10 +82,8 @@
         z-index: 990; display: flex; gap: 10px; align-items: center;
         box-shadow: 0 -4px 10px rgba(0,0,0,0.03);
     }
-    .btn-google { background-color: var(--md-primary); color: white; border: none; border-radius: var(--shape-pill); font-family: 'Google Sans'; font-weight: 500; height: 50px; letter-spacing: 0.5px; transition: 0.2s; width: 100%; }
-    .btn-google:active { transform: scale(0.97); background-color: #9c1c16; }
 
-    /* --- RIWAYAT & MONITORING --- */
+    /* --- LIST RIWAYAT & MONITORING --- */
     .history-item { padding: 16px; margin-bottom: 12px; background: #FFFFFF; border-radius: 20px; display: flex; flex-direction: column; gap: 4px; border: 1px solid #F0F0F0; }
     .badge-status { font-family: 'Google Sans'; font-size: 0.75rem; padding: 6px 12px; border-radius: 8px; font-weight: 600; }
     .bg-hadir { background: #C4EED0; color: #074E23; } .bg-telat { background: #FFEFBF; color: #765600; } .bg-luar  { background: #FFDAD6; color: #410E0B; } .bg-belum { background: #FFDAD6; color: #410E0B; } .bg-izin  { background: #D3E3FD; color: #041E49; } 
@@ -83,7 +91,7 @@
     .action-btn { width: 36px; height: 36px; border-radius: 12px; display: flex; justify-content: center; align-items: center; border: none; font-size: 0.9rem; margin-left: 8px; }
     .btn-acc { background: #C4EED0; color: #074E23; } .btn-rej { background: #FFDAD6; color: #410E0B; }
 
-    /* --- BOTTOM NAV --- */
+    /* --- NAVIGASI BAWAH --- */
     .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #FFFFFF; height: 80px; padding: 0 16px 10px 16px; z-index: 1000; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #F0F0F0; box-shadow: 0 -4px 20px rgba(0,0,0,0.02); }
     .nav-item-c { text-align: center; color: var(--md-text-sub); cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 12px; position: relative; }
     .nav-icon-container { width: 64px; height: 32px; border-radius: 16px; display: flex; align-items: center; justify-content: center; transition: 0.3s; margin-bottom: 2px; }
@@ -91,7 +99,6 @@
     .nav-item-c.active i { color: #410E0B; } .nav-item-c.active span { color: #1F1F1F; font-weight: 700; }
     .nav-item-c i { font-size: 1.25rem; } .nav-item-c span { font-size: 0.75rem; font-weight: 500; font-family: 'Google Sans'; }
     
-    /* --- LOADING --- */
     .loading-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(255,248,246,0.9); backdrop-filter:blur(5px); z-index: 9999; display: flex; flex-direction: column; justify-content:center; align-items:center; display:none; }
   </style>
 </head>
@@ -167,30 +174,22 @@
           </div>
 
           <div class="card card-menu">
-             <div class="d-flex justify-content-between align-items-center mb-2">
-                 <span class="label-header mb-0"><i class="fas fa-camera me-2"></i>Foto Bukti</span>
-                 <button onclick="startCamera()" class="btn btn-sm btn-light text-primary rounded-pill px-3 py-1 fw-bold" style="font-size:0.75rem;">Buka Kamera</button>
+             <div class="d-flex justify-content-between align-items-center mb-3">
+                 <span class="label-header mb-0"><i class="fas fa-camera me-2"></i>Bukti Kehadiran</span>
              </div>
 
-             <div id="camera-container">
-                <video id="video" autoplay playsinline></video>
-                <div class="btn-snap" onclick="takeSnapshot()"></div>
-             </div>
-
-             <div id="result-container" style="display:none;" class="row align-items-center g-2">
-                <div class="col-4">
-                    <img id="photo-preview" class="img-fluid rounded-3 shadow-sm" style="height: 80px; width:100%; object-fit:cover;">
+             <div id="camera-btn-start" onclick="openCameraModal()" class="text-center py-4 bg-light rounded-3 border border-1 border-dashed" style="cursor:pointer; border-color: #d0d0d0 !important;">
+                <div class="bg-white p-3 rounded-circle shadow-sm d-inline-block mb-2">
+                    <i class="fas fa-camera fa-2x text-danger"></i>
                 </div>
-                <div class="col-8">
-                    <div class="small text-success fw-bold mb-1"><i class="fas fa-check-circle me-1"></i>Foto Terambil</div>
-                    <button type="button" class="btn btn-sm btn-warning w-100 rounded-pill text-white" onclick="retakePhoto()"><i class="fas fa-redo me-1"></i>Foto Ulang</button>
-                </div>
+                <div class="small fw-bold text-secondary">Ketuk untuk Buka Kamera</div>
              </div>
              
-             <div id="camera-placeholder" class="text-center py-4 bg-light rounded-3 border border-1 border-dashed" onclick="startCamera()" style="cursor:pointer; border-color: #d0d0d0 !important;">
-                <i class="fas fa-camera fa-2x text-secondary opacity-50 mb-2"></i>
-                <div class="small text-muted">Ketuk untuk buka kamera</div>
+             <div id="result-container">
+                <img id="photo-preview" class="shadow-sm">
+                <button type="button" class="btn btn-light text-danger w-100 fw-bold py-2 rounded-pill border" onclick="openCameraModal()"><i class="fas fa-redo me-2"></i>Foto Ulang</button>
              </div>
+             
              <input type="hidden" id="foto_base64" name="foto_base64">
           </div>
 
@@ -288,13 +287,23 @@
      <div class="nav-item-c" id="navSetting" style="display:none;" onclick="switchView('setting', this)"><div class="nav-icon-container"><i class="fas fa-sliders-h"></i></div><span>Admin</span></div>
   </div>
 
+  <div id="cameraModal" class="modal-camera">
+      <button class="btn-close-camera" onclick="closeCameraModal()"><i class="fas fa-times me-2"></i>Batal</button>
+      <div class="camera-view">
+          <video id="video" autoplay playsinline></video>
+      </div>
+      <div class="camera-controls">
+          <div class="btn-shutter" onclick="takeSnapshot()"></div>
+      </div>
+  </div>
+
   <canvas id="canvas" style="display:none;"></canvas>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   
   <script>
-    // URL API GAS - GANTI URL INI JIKA PERLU
+    // URL API GAS
     const API_URL = "https://script.google.com/macros/s/AKfycbweTTiW0sPe1SAnJZlUK4KCiiks4cDhc420PWmvf1IOJ7mIKGUhudz42SpAJ1KZP4__cg/exec"; 
 
     var userData = null; var targetLokasi = null;
@@ -367,14 +376,14 @@
     }
 
     function switchView(viewName, el) {
-       if(streamKamera) stopCamera();
+       // Matikan kamera jika pindah menu (untuk keamanan)
+       if(streamKamera) closeCameraModal();
        
        document.querySelectorAll('.view-section').forEach(v => v.style.display = 'none');
        document.getElementById('view-' + viewName).style.display = 'block';
        document.querySelectorAll('.nav-item-c').forEach(n => n.classList.remove('active'));
        if(el) el.classList.add('active');
        
-       // Handle Sticky Button visibility
        if(viewName === 'home') document.querySelector('.submit-wrapper').style.display = 'flex';
        else document.querySelector('.submit-wrapper').style.display = 'none';
 
@@ -383,12 +392,11 @@
        if(viewName === 'setting') loadSettings();
     }
 
-    // --- LOGIKA PETA & GPS BARU ---
     function toggleMap() {
         var c = document.getElementById('mapContainer');
         if(c.style.display === 'none' || c.style.display === '') {
             c.style.display = 'block';
-            if(map) map.invalidateSize(); // Fix render issue saat hidden
+            if(map) map.invalidateSize(); 
         } else {
             c.style.display = 'none';
         }
@@ -398,20 +406,16 @@
     function updatePos(pos) {
        userLat = pos.coords.latitude; userLong = pos.coords.longitude;
        document.getElementById('lat').value = userLat; document.getElementById('long').value = userLong;
-       
-       var textLokasi = userLat.toFixed(5) + ", " + userLong.toFixed(5);
+       document.getElementById('lokasiStatusText').innerText = userLat.toFixed(5) + ", " + userLong.toFixed(5);
        
        if(!targetLokasi) return;
        var dist = hitungJarak(userLat, userLong, targetLokasi.lat, targetLokasi.long);
        
-       // Update UI Status
        if (dist <= targetLokasi.radius) {
           document.getElementById('badgeJarak').className = "badge bg-success rounded-pill"; 
           document.getElementById('badgeJarak').innerHTML = "<i class='fas fa-check-circle me-1'></i>Aman";
           document.getElementById('lokasiStatusText').innerText = "Dalam Radius (" + Math.round(dist) + "m)";
           document.getElementById('status_jarak').value = "Aman (Dalam Radius)";
-          // Auto hide map kalo aman (opsional)
-          // document.getElementById('mapContainer').style.display = 'none'; 
        } else {
           document.getElementById('badgeJarak').className = "badge bg-danger rounded-pill"; 
           document.getElementById('badgeJarak').innerHTML = "<i class='fas fa-exclamation-circle me-1'></i>Jauh";
@@ -431,52 +435,44 @@
     }
     function hitungJarak(lat1, lon1, lat2, lon2) { var R = 6371e3; var φ1 = lat1 * Math.PI/180, φ2 = lat2 * Math.PI/180; var a = Math.sin((lat2-lat1)*Math.PI/360)**2 + Math.cos(φ1)*Math.cos(φ2)*Math.sin((lon2-lon1)*Math.PI/360)**2; return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); }
 
-    // --- LOGIKA KAMERA BARU ---
-    function startCamera() { 
-        document.getElementById('camera-placeholder').style.display = 'none'; 
-        document.getElementById('camera-container').style.display = 'block'; 
-        document.getElementById('result-container').style.display = 'none';
-        
+    // --- LOGIKA KAMERA FULLSCREEN (BARU) ---
+    function openCameraModal() {
+        document.getElementById('cameraModal').style.display = 'flex';
         navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s => { 
             streamKamera = s; 
             document.getElementById('video').srcObject = s; 
         }).catch(e => {
             Swal.fire('Error', 'Gagal akses kamera: ' + e.message, 'error');
-            stopCamera();
-        }); 
+            closeCameraModal();
+        });
     }
-    
-    function stopCamera() {
+
+    function closeCameraModal() {
         if(streamKamera) { streamKamera.getTracks().forEach(t => t.stop()); streamKamera = null; }
-        document.getElementById('camera-container').style.display='none'; 
-        document.getElementById('camera-placeholder').style.display='block';
+        document.getElementById('cameraModal').style.display='none'; 
     }
 
     function takeSnapshot() { 
         var v = document.getElementById('video'); 
         var c = document.getElementById('canvas'); 
         
-        // Atur ukuran canvas sesuai video asli
         c.width = v.videoWidth; 
         c.height = v.videoHeight; 
         
-        // Draw normal (tidak dibalik) agar teks terbaca
+        // GAMBAR NORMAL (TIDAK DIBALIK)
+        // Meskipun preview divideo memakai CSS transform scaleX(-1) untuk efek cermin,
+        // canvas drawImage mengambil data raw dari sensor kamera yang normal (tidak terbalik).
+        // Jadi hasilnya: Preview Mirror, Hasil Normal (Teks Terbaca).
         c.getContext('2d').drawImage(v, 0, 0); 
         
         var d = c.toDataURL('image/jpeg', 0.7); 
         document.getElementById('foto_base64').value = d; 
         document.getElementById('photo-preview').src = d; 
         
-        // Stop stream untuk hemat baterai
-        if(streamKamera) { streamKamera.getTracks().forEach(t => t.stop()); streamKamera = null; }
-        
-        document.getElementById('camera-container').style.display='none'; 
-        document.getElementById('result-container').style.display='flex'; 
-    }
-    
-    function retakePhoto() { 
-        document.getElementById('result-container').style.display='none'; 
-        startCamera();
+        // Tutup modal, tampilkan hasil di form
+        closeCameraModal();
+        document.getElementById('camera-btn-start').style.display='none'; 
+        document.getElementById('result-container').style.display='block'; 
     }
 
     async function kirimPresensi() {
@@ -501,14 +497,15 @@
        Swal.fire({title:r.includes("SUKSES")?"Berhasil":"Gagal", text:r, icon:r.includes("SUKSES")?"success":"error", confirmButtonColor: '#B3261E'});
        
        if(r.includes("SUKSES")) { 
-           stopCamera();
+           // Reset Form
            document.getElementById('result-container').style.display='none'; 
+           document.getElementById('camera-btn-start').style.display='block'; 
            document.getElementById('foto_base64').value = ""; 
            document.querySelector('[name="materi"]').value = "";
        }
     }
     
-    // --- FUNGSI LAIN (TIDAK BERUBAH BANYAK) ---
+    // --- FITUR ADMIN & LAINNYA (TETAP SAMA) ---
     async function loadSettings() {
         document.getElementById('loadingOverlay').style.display = 'flex';
         const d = await callAPI('getSettings');
