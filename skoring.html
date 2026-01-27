@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dokumentasi Teknis - Nakulaku Ekosistem</title>
+    <title>Mekanisme Penskoran - Nakulaku Ekosistem</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,24 +16,27 @@
            MATERIAL YOU (ANDROID 16) - RED THEME
            ========================================= */
         :root {
+            /* Primary Colors */
             --md-sys-color-primary: #b71c1c;
             --md-sys-color-on-primary: #ffffff;
             --md-sys-color-primary-container: #ffdad6;
             --md-sys-color-on-primary-container: #410002;
             
+            /* Secondary & Surface */
             --md-sys-color-secondary: #775652;
             --md-sys-color-secondary-container: #ffdad6;
-            
             --md-sys-color-surface: #ffffff;
-            --md-sys-color-surface-variant: #f4dddb;
+            --md-sys-color-surface-container: #fff8f7;
             --md-sys-color-outline: #857371;
             
+            /* Background */
             --md-sys-color-background: #fdf8f7;
             --text-body: #2d2424;
             --text-muted: #5f5454;
             
-            --radius-lg: 24px;
-            --radius-md: 16px;
+            /* Radius & Spacing */
+            --radius-card: 24px;
+            --radius-pill: 50px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -44,72 +47,171 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+        .container { max-width: 980px; margin: 0 auto; padding: 0 24px; }
         
-        /* HEADER */
+        /* HEADER & NAV */
         header { 
             padding: 16px 0; position: sticky; top: 0; z-index: 100; 
-            background: rgba(255, 255, 255, 0.95); 
-            backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); 
+            background: rgba(253, 248, 247, 0.95); 
+            backdrop-filter: blur(12px); border-bottom: 1px solid rgba(183, 28, 28, 0.08); 
         }
         nav { display: flex; justify-content: space-between; align-items: center; }
-        .logo-text { font-size: 1.25rem; font-weight: 800; color: var(--md-sys-color-primary); text-transform: uppercase; letter-spacing: -0.5px; }
-        .btn-primary { 
-            background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); 
-            padding: 10px 24px; border-radius: 100px; text-decoration: none; font-weight: 600; font-size: 0.9rem; 
-            box-shadow: 0 4px 10px rgba(183, 28, 28, 0.2); transition: 0.2s;
+        .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-img { height: 38px; width: auto; object-fit: contain; }
+        .logo-text { 
+            font-size: 1.25rem; font-weight: 800; 
+            color: var(--md-sys-color-primary); 
+            text-transform: uppercase; letter-spacing: -0.5px; 
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(183, 28, 28, 0.3); }
+        
+        /* DOWNLOAD BUTTON */
+        .btn-download { 
+            background-color: var(--md-sys-color-primary); 
+            color: var(--md-sys-color-on-primary); 
+            padding: 10px 24px; border-radius: var(--radius-pill); 
+            text-decoration: none; font-weight: 600; font-size: 0.9rem; 
+            box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25); transition: all 0.2s ease;
+            display: inline-flex; align-items: center; gap: 8px; border: none;
+        }
+        .btn-download:hover { 
+            background-color: #a31616; 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 16px rgba(183, 28, 28, 0.35); 
+        }
 
-        /* HERO */
+        /* HERO HEADER */
         .doc-header { text-align: center; padding: 60px 0 50px; }
-        .doc-header h1 { font-size: 2.5rem; color: #201a1a; margin-bottom: 16px; font-weight: 800; letter-spacing: -1px; }
-        .badge-doc { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-primary-container); padding: 6px 16px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; margin-bottom: 20px; display: inline-block; }
+        .doc-header h1 { 
+            font-size: 2.75rem; color: #201a1a; margin-bottom: 16px; 
+            font-weight: 800; letter-spacing: -1px; line-height: 1.2; 
+        }
+        .badge-doc { 
+            background: var(--md-sys-color-primary-container); 
+            color: var(--md-sys-color-on-primary-container); 
+            padding: 6px 16px; border-radius: var(--radius-pill); 
+            font-size: 0.85rem; font-weight: 700; margin-bottom: 20px; 
+            display: inline-block; text-transform: uppercase; letter-spacing: 0.5px;
+        }
 
-        /* SECTIONS */
-        .doc-section { margin-bottom: 60px; scroll-margin-top: 100px; }
+        /* SECTIONS & CARDS */
+        .doc-section { margin-bottom: 70px; scroll-margin-top: 100px; }
         .section-label { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
-        .label-icon { width: 44px; height: 44px; background: var(--md-sys-color-primary); color: white; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+        .label-icon { 
+            width: 48px; height: 48px; 
+            background: var(--md-sys-color-primary); color: white; 
+            border-radius: 16px; display: flex; align-items: center; 
+            justify-content: center; font-size: 1.4rem; flex-shrink: 0; 
+            box-shadow: 0 4px 10px rgba(183, 28, 28, 0.2); 
+        }
         .section-label h2 { font-size: 1.8rem; font-weight: 800; color: var(--md-sys-color-on-primary-container); }
 
         .content-card {
-            background: #fff; padding: 32px; border-radius: var(--radius-lg);
-            border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-            margin-bottom: 24px;
+            background: var(--md-sys-color-surface); 
+            padding: 32px; border-radius: var(--radius-card);
+            border: 1px solid rgba(133, 115, 113, 0.15); 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            margin-bottom: 24px; transition: transform 0.2s ease;
         }
-        .content-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; color: var(--md-sys-color-primary); border-bottom: 2px solid var(--md-sys-color-surface-variant); padding-bottom: 8px; display: inline-block; }
+        .content-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.04); }
+        .content-card h3 { 
+            font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; 
+            color: var(--md-sys-color-primary); 
+            padding-bottom: 10px; border-bottom: 2px solid var(--md-sys-color-primary-container);
+            display: inline-block; 
+        }
 
         /* TABLES */
-        .table-container { overflow-x: auto; border-radius: 16px; border: 1px solid #eee; margin: 24px 0; }
+        .table-container { 
+            overflow-x: auto; border-radius: 16px; 
+            border: 1px solid #eee; margin: 20px 0; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); text-align: left; padding: 16px 24px; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; }
-        td { padding: 16px 24px; border-bottom: 1px solid #f0f0f0; font-size: 0.95rem; color: #333; }
+        th { 
+            background: var(--md-sys-color-primary-container); 
+            color: var(--md-sys-color-on-primary-container); 
+            text-align: left; padding: 16px 24px; 
+            font-weight: 700; font-size: 0.9rem; text-transform: uppercase; 
+        }
+        td { 
+            padding: 16px 24px; border-bottom: 1px solid #f0f0f0; 
+            font-size: 0.95rem; color: #333; 
+        }
         tbody tr:nth-child(even) { background-color: #fafafa; }
+        tr:last-child td { border-bottom: none; }
 
-        /* BADGES FOR LEVEL */
-        .lvl-badge { padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; display: inline-block; }
-        .lvl-rookie { background: #e0e0e0; color: #616161; }
-        .lvl-advanced { background: #e3f2fd; color: #1565c0; }
-        .lvl-expert { background: #e8f5e9; color: #2e7d32; }
-        .lvl-master { background: #ffebee; color: #c62828; }
-        .lvl-grand { background: linear-gradient(135deg, #fff9c4, #ffecb3); color: #f57f17; border: 1px solid #fbc02d; }
+        /* LEVEL BADGES */
+        .lvl-badge { padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; display: inline-block; letter-spacing: 0.5px; }
+        .lvl-rookie { background: #eeeeee; color: #616161; border: 1px solid #e0e0e0; }
+        .lvl-advanced { background: #e3f2fd; color: #0277bd; border: 1px solid #bbdefb; }
+        .lvl-expert { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .lvl-master { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+        .lvl-grand { background: linear-gradient(135deg, #fff9c4, #fff176); color: #f57f17; border: 1px solid #fbc02d; box-shadow: 0 2px 5px rgba(251, 192, 45, 0.3); }
 
-        /* LISTS & FORMULAS */
+        /* NOMINATION CARDS */
+        .nom-card { 
+            background: #fff; border: 1px solid #f0e0df; 
+            border-radius: 20px; padding: 24px; position: relative; 
+            transition: all 0.3s ease; h-100;
+        }
+        .nom-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 12px 25px rgba(183,28,28,0.08); 
+            border-color: var(--md-sys-color-primary); 
+        }
+        .nom-badge { 
+            position: absolute; top: 20px; right: 20px; 
+            font-size: 0.65rem; font-weight: 800; 
+            color: var(--md-sys-color-primary); 
+            background: #ffdad6; padding: 4px 10px; 
+            border-radius: 6px; text-transform: uppercase; 
+        }
+        .nom-icon { 
+            width: 48px; height: 48px; 
+            background: #fff8f7; color: var(--md-sys-color-primary); 
+            border-radius: 14px; display: flex; align-items: center; 
+            justify-content: center; font-size: 1.4rem; margin-bottom: 16px; 
+        }
+        
+        /* FORMULA BOX */
+        .formula-box { 
+            background: #2b2626; color: #fff; padding: 24px; 
+            border-radius: var(--radius-md); text-align: center; margin: 24px 0; 
+            overflow-x: auto; border-left: 6px solid var(--md-sys-color-primary); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* LISTS */
         ul.custom-list { list-style: none; padding: 0; }
-        ul.custom-list li { padding: 12px 20px; margin-bottom: 10px; background: #fdfcfc; border-radius: 12px; border: 1px solid #eee; border-left: 4px solid var(--md-sys-color-outline); font-size: 0.95rem; }
-        .formula-box { background: #1a1a1a; color: #fff; padding: 20px; border-radius: var(--radius-md); text-align: center; margin: 20px 0; overflow-x: auto; border-left: 6px solid var(--md-sys-color-primary); }
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+        ul.custom-list li { 
+            padding: 14px 20px; margin-bottom: 10px; background: #fff; 
+            border-radius: 12px; border: 1px solid #eee; 
+            border-left: 4px solid var(--md-sys-color-outline); font-size: 0.95rem; 
+        }
+        ul.custom-list li strong { color: var(--md-sys-color-primary); }
+
+        /* GRIDS */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
 
         /* FOOTER */
-        footer { background-color: #1a1a1a; color: #fff; padding: 60px 0 40px; text-align: center; margin-top: 80px; border-top-left-radius: 32px; border-top-right-radius: 32px; }
+        footer { 
+            background-color: #2b2626; color: #fff; 
+            padding: 60px 0 40px; text-align: center; margin-top: 100px; 
+            border-top-left-radius: 40px; border-top-right-radius: 40px; 
+        }
+        .footer-logo { 
+            height: 50px; filter: brightness(0) invert(1); opacity: 0.8; margin-bottom: 12px; 
+        }
         
         @media (max-width: 768px) {
             .doc-header h1 { font-size: 2rem; }
             .container { padding: 0 20px; }
-            .content-card { padding: 24px; }
-            .grid-2 { grid-template-columns: 1fr; }
+            .content-card { padding: 24px; border-radius: 20px; }
+            .grid-2, .grid-4 { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -118,11 +220,13 @@
     <header>
         <div class="container">
             <nav>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <img src="https://i.imgur.com/ELNzJK4.png" alt="Logo" style="height:35px;">
+                <a href="#" class="logo-container">
+                    <img src="https://i.imgur.com/ELNzJK4.png" alt="Logo Nakulaku" class="logo-img">
                     <span class="logo-text">NAKULAKU</span>
-                </div>
-                <a href="https://apk.e-droid.net/apk/app3833934-vu6745.apk?v=4" class="btn-primary">Download App</a>
+                </a>
+                <a href="https://apk.e-droid.net/apk/app3833934-vu6745.apk?v=4" class="btn-download">
+                    <i class="fas fa-download"></i> Download Aplikasi
+                </a>
             </nav>
         </div>
     </header>
@@ -130,9 +234,9 @@
     <main class="container">
         
         <div class="doc-header">
-            <div class="badge-doc">Revisi Dokumen v2.0</div>
+            <div class="badge-doc">Dokumen Resmi v2.0</div>
             <h1>Mekanisme Penskoran<br>Gugus Nakula</h1>
-            <p>Panduan lengkap sistem poin (XP), jenjang level guru, dan kriteria penghargaan terbaru.</p>
+            <p>Panduan lengkap sistem poin, jenjang level guru, dan 8 kriteria penghargaan terbaru.</p>
         </div>
 
         <section id="presensi" class="doc-section">
@@ -143,18 +247,18 @@
 
             <div class="content-card">
                 <h3>1. Tabel Bobot Nilai Kehadiran</h3>
-                <p>Poin otomatis untuk setiap aktivitas presensi harian guru. Berlaku untuk kinerja individu & sekolah.</p>
+                <p>Poin otomatis untuk setiap aktivitas presensi harian guru. Berlaku untuk kinerja individu maupun rata-rata sekolah.</p>
                 <div class="table-container">
                     <table>
                         <thead>
-                            <tr><th>Status</th><th>Poin</th><th>Keterangan</th></tr>
+                            <tr><th>Status Kehadiran</th><th>Poin</th><th>Keterangan Syarat</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td class="fw-bold text-success">Tepat Waktu</td><td>100</td><td>Absen sebelum jam masuk & di radius.</td></tr>
-                            <tr><td class="fw-bold text-warning">Terlambat</td><td>80</td><td>Absen setelah jam masuk & di radius.</td></tr>
-                            <tr><td class="fw-bold text-primary">Izin / Sakit / Dinas</td><td>50</td><td>Mengajukan form resmi.</td></tr>
-                            <tr><td class="fw-bold" style="color:#e65100">Luar Radius</td><td>10</td><td>Check-in di luar jangkauan GPS.</td></tr>
-                            <tr><td class="fw-bold text-danger">Alpha / Tidak Hadir</td><td>0</td><td>Tidak presensi.</td></tr>
+                            <tr><td class="fw-bold text-success">Tepat Waktu</td><td>100</td><td>Absen sebelum jam masuk & di dalam radius.</td></tr>
+                            <tr><td class="fw-bold text-warning">Terlambat</td><td>80</td><td>Absen setelah jam masuk & di dalam radius.</td></tr>
+                            <tr><td class="fw-bold text-primary">Izin / Sakit / Dinas</td><td>50</td><td>Mengajukan form izin resmi.</td></tr>
+                            <tr><td class="fw-bold" style="color:#e65100">Luar Radius</td><td>10</td><td>Check-in tapi GPS di luar jangkauan.</td></tr>
+                            <tr><td class="fw-bold text-danger">Tidak Hadir / Alpha</td><td>0</td><td>Tidak melakukan presensi sama sekali.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -162,14 +266,14 @@
 
             <div class="content-card">
                 <h3>2. Ranking Sekolah (Tie-Breaker)</h3>
-                <p>Rumus Skor Akhir Sekolah:</p>
+                <p>Penghargaan sekolah berdasarkan akumulasi kinerja seluruh guru. Rumus Skor Akhir:</p>
                 <div class="formula-box">
                     $$ \text{Skor Akhir} = \frac{\sum \text{Total Poin Seluruh Guru}}{\sum \text{Total Kehadiran Seluruh Guru}} $$
                 </div>
-                <p class="mt-3 mb-2 fw-bold">Prioritas Penentuan Juara:</p>
+                <p class="mt-4 mb-2 fw-bold text-primary">Prioritas Penentuan Juara:</p>
                 <ul class="custom-list">
-                    <li><strong>1. Skor Akhir Tertinggi</strong> (Rata-rata poin, maks 100).</li>
-                    <li><strong>2. Jumlah Tepat Waktu</strong> (Frekuensi guru "Tepat Waktu" terbanyak).</li>
+                    <li><strong>1. Skor Akhir Tertinggi</strong> (Rata-rata poin, maksimal 100).</li>
+                    <li><strong>2. Jumlah Tepat Waktu</strong> (Frekuensi guru status "Tepat Waktu" terbanyak).</li>
                     <li><strong>3. Datang Terawal</strong> (Rata-rata jam kedatangan paling pagi).</li>
                 </ul>
             </div>
@@ -178,26 +282,26 @@
         <section id="lms" class="doc-section">
             <div class="section-label">
                 <div class="label-icon"><i class="fas fa-chart-line"></i></div>
-                <h2>II. Nakulaku LMS (XP System)</h2>
+                <h2>II. Nakulaku LMS</h2>
             </div>
 
             <div class="content-card">
                 <h3>A. Kategori Guru (Individu)</h3>
-                <p>Poin (XP) hanya diberikan jika status laporan <strong>"DITERIMA"</strong> atau <strong>"VALID"</strong>.</p>
+                <p>Poin hanya diberikan jika status laporan <strong>"DITERIMA"</strong> atau <strong>"VALID"</strong>.</p>
                 <div class="table-container">
                     <table>
-                        <thead><tr><th>Aktivitas</th><th>Grade / Mutu</th><th>Poin (XP)</th></tr></thead>
+                        <thead><tr><th>Jenis Aktivitas</th><th>Grade / Kualitas</th><th>Poin</th></tr></thead>
                         <tbody>
                             <tr>
                                 <td class="fw-bold">Tugas Rutin</td>
-                                <td>Lengkap</td>
+                                <td>Kelengkapan (Ada)</td>
                                 <td class="fw-bold">10</td>
                             </tr>
                             <tr>
                                 <td class="fw-bold" rowspan="3">Implementasi KKG</td>
-                                <td>A (Sangat Baik/Inspiratif)</td><td class="fw-bold text-success">50</td>
+                                <td>A (Sangat Baik)</td><td class="fw-bold text-success">50</td>
                             </tr>
-                            <tr><td>B (Baik/Standar)</td><td>40</td></tr>
+                            <tr><td>B (Baik)</td><td>40</td></tr>
                             <tr><td>C (Cukup)</td><td>30</td></tr>
                             <tr>
                                 <td class="fw-bold" rowspan="3">Karya Inovasi</td>
@@ -208,6 +312,7 @@
                         </tbody>
                     </table>
                 </div>
+                <p class="text-muted small text-end mt-2">Sumber: Tabel Bobot Poin Individu</p>
             </div>
 
             <div class="content-card">
@@ -215,7 +320,7 @@
                 <p>Poin masuk ke "Rapor Sekolah" untuk penentuan Sekolah Berprestasi.</p>
                 <div class="table-container">
                     <table>
-                        <thead><tr><th>Laporan</th><th>Tingkat</th><th>Juara 1</th><th>Juara 2</th><th>Juara 3</th></tr></thead>
+                        <thead><tr><th>Jenis Laporan</th><th>Tingkat</th><th>Juara 1</th><th>Juara 2</th><th>Juara 3</th></tr></thead>
                         <tbody>
                             <tr>
                                 <td class="fw-bold" rowspan="3">Prestasi Siswa</td>
@@ -234,41 +339,42 @@
                             </tr>
                             <tr>
                                 <td class="fw-bold">Pembiasaan</td>
-                                <td>Rutin</td>
+                                <td>Rutinitas</td>
                                 <td colspan="3" class="fw-bold text-success text-center">15 Poin</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                 <p class="text-muted small text-end mt-2">Sumber: Tabel Bobot Poin Sekolah</p>
             </div>
 
             <div class="content-card" style="border-top: 5px solid var(--md-sys-color-secondary);">
-                <h3>C. Jenjang Level Guru (User Progression)</h3>
-                <p>Sistem pangkat berdasarkan akumulasi XP guru sepanjang semester.</p>
+                <h3>C. Jenjang Level Guru</h3>
+                <p>Sistem pangkat berdasarkan akumulasi Poin yang didapat sepanjang semester.</p>
                 <div class="grid-2">
-                    <div style="background:#f5f5f5; padding:15px; border-radius:12px; border-left:4px solid #9e9e9e;">
-                        <span class="lvl-badge lvl-rookie mb-2">ROOKIE</span>
-                        <div class="fs-4 fw-bold">0 - 249 XP</div>
+                    <div style="background:#f5f5f5; padding:24px; border-radius:16px; border-left:5px solid #9e9e9e;">
+                        <span class="lvl-badge lvl-rookie mb-3">ROOKIE</span>
+                        <div class="fs-4 fw-bold mb-1">0 - 249 Poin</div>
                         <div class="small text-muted">Guru pemula yang baru aktif.</div>
                     </div>
-                    <div style="background:#e3f2fd; padding:15px; border-radius:12px; border-left:4px solid #2196f3;">
-                        <span class="lvl-badge lvl-advanced mb-2">ADVANCED</span>
-                        <div class="fs-4 fw-bold">250 - 499 XP</div>
+                    <div style="background:#e3f2fd; padding:24px; border-radius:16px; border-left:5px solid #2196f3;">
+                        <span class="lvl-badge lvl-advanced mb-3">ADVANCED</span>
+                        <div class="fs-4 fw-bold mb-1">250 - 499 Poin</div>
                         <div class="small text-muted">Guru konsisten mengerjakan tugas.</div>
                     </div>
-                    <div style="background:#e8f5e9; padding:15px; border-radius:12px; border-left:4px solid #4caf50;">
-                        <span class="lvl-badge lvl-expert mb-2">EXPERT</span>
-                        <div class="fs-4 fw-bold">500 - 749 XP</div>
+                    <div style="background:#e8f5e9; padding:24px; border-radius:16px; border-left:5px solid #4caf50;">
+                        <span class="lvl-badge lvl-expert mb-3">EXPERT</span>
+                        <div class="fs-4 fw-bold mb-1">500 - 749 Poin</div>
                         <div class="small text-muted">Guru yang mulai melakukan inovasi.</div>
                     </div>
-                    <div style="background:#ffebee; padding:15px; border-radius:12px; border-left:4px solid #f44336;">
-                        <span class="lvl-badge lvl-master mb-2">MASTER</span>
-                        <div class="fs-4 fw-bold">750 - 999 XP</div>
+                    <div style="background:#ffebee; padding:24px; border-radius:16px; border-left:5px solid #f44336;">
+                        <span class="lvl-badge lvl-master mb-3">MASTER</span>
+                        <div class="fs-4 fw-bold mb-1">750 - 999 Poin</div>
                         <div class="small text-muted">Guru teladan berkinerja tinggi.</div>
                     </div>
-                    <div style="background:linear-gradient(to right, #fff9c4, #fff); padding:15px; border-radius:12px; border-left:4px solid #ffeb3b;">
-                        <span class="lvl-badge lvl-grand mb-2">GRAND MASTER</span>
-                        <div class="fs-4 fw-bold text-warning">1000+ XP</div>
+                    <div style="background:linear-gradient(to right, #fff9c4, #fff); padding:24px; border-radius:16px; border-left:5px solid #ffeb3b;">
+                        <span class="lvl-badge lvl-grand mb-3">GRAND MASTER</span>
+                        <div class="fs-4 fw-bold text-warning mb-1">1000+ Poin</div>
                         <div class="small text-muted">Guru inspiratif penggerak komunitas.</div>
                     </div>
                 </div>
@@ -283,22 +389,22 @@
             <div class="grid-2">
                 <div class="content-card">
                     <h3 class="text-primary">Kategori "Terkompak"</h3>
-                    <p class="small">Penilaian Juri (Visual & Kerjasama).</p>
-                    <div class="formula-box" style="font-size:0.8rem; background:#e3f2fd; color:#0d47a1; border-color:#2196f3;">
+                    <p class="small text-muted">Penilaian Juri berdasarkan 3 Aspek: Seragam, Antusiasme, Kerjasama.</p>
+                    <div class="formula-box" style="font-size:0.85rem; background:#e3f2fd; color:#0d47a1; border-color:#2196f3;">
                         $$ \text{Total} = \text{Seragam} + \text{Antusias} + \text{Kerjasama} $$
                     </div>
                     <ul class="custom-list">
-                        <li>Skor diakumulasi jika dinilai >1 kali.</li>
+                        <li>Skor diakumulasi jika sekolah dinilai lebih dari satu kali.</li>
                     </ul>
                 </div>
                 <div class="content-card">
                     <h3 class="text-success">Kategori "Tergiat"</h3>
-                    <p class="small">Log Keaktifan Peserta (Kuantitatif).</p>
-                    <div class="formula-box" style="font-size:0.8rem; background:#e8f5e9; color:#1b5e20; border-color:#4caf50;">
-                        $$ \text{Skor} = \sum \text{Total Aksi (Tanya/Jawab/dll)} $$
+                    <p class="small text-muted">Berdasarkan Log Keaktifan (Bertanya, Menjawab, Presentasi, Ice Breaking).</p>
+                    <div class="formula-box" style="font-size:0.85rem; background:#e8f5e9; color:#1b5e20; border-color:#4caf50;">
+                        $$ \text{Skor} = \sum \text{Total Log Aktivitas} $$
                     </div>
                     <ul class="custom-list">
-                        <li>1 Aksi = 1 Poin.</li>
+                        <li>Sistem menggunakan <i>Simple Count</i> (1 Aktivitas = 1 Poin).</li>
                     </ul>
                 </div>
             </div>
@@ -307,34 +413,64 @@
         <section id="awards" class="doc-section">
             <div class="section-label">
                 <div class="label-icon"><i class="fas fa-trophy"></i></div>
-                <h2>IV. Kategori Penghargaan (Awards)</h2>
+                <h2>IV. Nominasi Awards (8 Aspek)</h2>
             </div>
             
-            <h4 class="mb-3 fw-bold text-primary">A. Kategori Sekolah</h4>
-            <div class="grid-2 mb-4">
-                <div class="content-card py-3">
-                    <div class="fw-bold mb-1"><i class="fas fa-medal text-warning me-2"></i>Sekolah Berprestasi</div>
-                    <div class="text-muted small">Indikator: Total Poin tertinggi khusus kategori <strong>Laporan Prestasi Siswa</strong>.</div>
+            <div class="grid-4">
+                <div class="nom-card">
+                    <div class="nom-badge">Presensi</div>
+                    <div class="nom-icon"><i class="fas fa-user-clock"></i></div>
+                    <div class="fw-bold mb-1">1. Sekolah Terdisiplin</div>
+                    <div class="small text-muted">Ranking berdasarkan <strong>Skor Presensi Akhir</strong> tertinggi.</div>
                 </div>
-                <div class="content-card py-3">
-                    <div class="fw-bold mb-1"><i class="fas fa-bolt text-danger me-2"></i>Sekolah Teraktif</div>
-                    <div class="text-muted small">Indikator: Jumlah frekuensi laporan terbanyak (Event + Bias + Tugas Guru).</div>
-                </div>
-                <div class="content-card py-3">
-                    <div class="fw-bold mb-1"><i class="fas fa-lightbulb text-info me-2"></i>Sekolah Inovatif</div>
-                    <div class="text-muted small">Indikator: Akumulasi poin tertinggi dari kategori <strong>Karya Inovasi Guru</strong>.</div>
-                </div>
-            </div>
 
-            <h4 class="mb-3 fw-bold text-success">B. Kategori Guru</h4>
-            <div class="grid-2">
-                <div class="content-card py-3">
-                    <div class="fw-bold mb-1"><i class="fas fa-user-graduate text-success me-2"></i>Guru Teladan</div>
-                    <div class="text-muted small">Indikator: <strong>Total XP Tertinggi</strong> (Gabungan Tugas + Implemen + Inovasi).</div>
+                <div class="nom-card">
+                    <div class="nom-badge">Utama</div>
+                    <div class="nom-icon"><i class="fas fa-medal"></i></div>
+                    <div class="fw-bold mb-1">2. Sekolah Berprestasi</div>
+                    <div class="small text-muted">Total Poin tertinggi dari kategori <strong>Laporan Prestasi Siswa</strong>.</div>
                 </div>
-                <div class="content-card py-3">
-                    <div class="fw-bold mb-1"><i class="fas fa-star text-warning me-2"></i>Guru Kreatif</div>
-                    <div class="text-muted small">Indikator: <strong>Rata-rata Nilai Mutu</strong> tertinggi (Banyak mendapat Nilai A).</div>
+
+                <div class="nom-card">
+                    <div class="nom-badge">Utama</div>
+                    <div class="nom-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="fw-bold mb-1">3. Sekolah Teraktif</div>
+                    <div class="small text-muted">Frekuensi laporan terbanyak (Event + Pembiasaan + Tugas Guru).</div>
+                </div>
+
+                <div class="nom-card">
+                    <div class="nom-badge">Utama</div>
+                    <div class="nom-icon"><i class="fas fa-lightbulb"></i></div>
+                    <div class="fw-bold mb-1">4. Sekolah Inovatif</div>
+                    <div class="small text-muted">Akumulasi poin tertinggi dari kategori <strong>Karya Inovasi Guru</strong>.</div>
+                </div>
+
+                <div class="nom-card">
+                    <div class="nom-badge">Individu</div>
+                    <div class="nom-icon"><i class="fas fa-user-graduate"></i></div>
+                    <div class="fw-bold mb-1">5. Guru Teladan</div>
+                    <div class="small text-muted"><strong>Total Poin Tertinggi</strong> (Gabungan Tugas + Implemen + Inovasi).</div>
+                </div>
+
+                <div class="nom-card">
+                    <div class="nom-badge">Individu</div>
+                    <div class="nom-icon"><i class="fas fa-star"></i></div>
+                    <div class="fw-bold mb-1">6. Guru Kreatif</div>
+                    <div class="small text-muted"><strong>Rata-rata Nilai Mutu</strong> tertinggi (Banyak mendapat Nilai A).</div>
+                </div>
+
+                <div class="nom-card">
+                    <div class="nom-badge">Event</div>
+                    <div class="nom-icon"><i class="fas fa-users"></i></div>
+                    <div class="fw-bold mb-1">7. Sekolah Terkompak</div>
+                    <div class="small text-muted">Skor Juri tertinggi untuk Seragam, Antusiasme, & Kerjasama.</div>
+                </div>
+
+                <div class="nom-card">
+                    <div class="nom-badge">Event</div>
+                    <div class="nom-icon"><i class="fas fa-hand-paper"></i></div>
+                    <div class="fw-bold mb-1">8. Sekolah Tergiat</div>
+                    <div class="small text-muted">Jumlah partisipasi aktif terbanyak yang dicatat dalam log.</div>
                 </div>
             </div>
         </section>
@@ -343,9 +479,13 @@
 
     <footer>
         <div class="container">
-            <h4 style="font-weight:800; font-size:1.5rem; margin-bottom:8px;">NAKULAKU EKOSISTEM</h4>
-            <p style="opacity:0.7; font-size: 0.95rem;">Dokumentasi Digital Gugus Nakula</p>
-            <div style="margin-top:20px; font-size:0.8rem; background:rgba(255,255,255,0.1); display:inline-block; padding:5px 15px; border-radius:50px;">
+            <div style="margin-bottom:24px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <img src="https://i.imgur.com/ELNzJK4.png" alt="Logo Footer" class="footer-logo">
+                <h4 style="font-weight:800; font-size:1.5rem; margin-bottom:8px; letter-spacing: -0.5px;">NAKULAKU EKOSISTEM</h4>
+                <p style="opacity:0.7; font-size: 0.95rem;">Dokumentasi Digital Gugus Nakula</p>
+            </div>
+            
+            <div style="margin-top:20px; font-size:0.8rem; background:rgba(255,255,255,0.1); display:inline-block; padding:8px 24px; border-radius:50px;">
                 Korwilcambidik Kecamatan Selogiri
             </div>
         </div>
