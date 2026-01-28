@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administrator - LMS Nakula</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<style>
+  :root {
+    --primary: #B3261E; --bg: #FFF8F6; --card: #FFFFFF; --text: #201A19;
+    --c-prestasi: #FFD700; --c-event: #2196F3; --c-bias: #4CAF50;
+    --c-implemen: #00BCD4; --c-inovasi: #F44336;
+  }
+  body { background: var(--bg); font-family: 'Poppins', sans-serif; color: var(--text); padding-bottom: 80px; }
+  .hidden { display: none !important; }
+  .card-pro { border: none; border-radius: 28px; background: var(--card); box-shadow: 0 2px 6px rgba(0,0,0,0.05); margin-bottom: 1rem; }
+  .header-card { background: var(--card); padding: 1rem 1.2rem; border-radius: 28px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+  .nav-pills .nav-link { color: #524343; border-radius: 50px; font-weight: 600; font-size: 0.8rem; padding: 8px 16px; }
+  .nav-pills .nav-link.active { background: #FFDAD6; color: #410E0B; }
+  .form-control-pro { background: #F3E5E5; border: none; border-radius: 16px; padding: 14px; font-weight: 600; text-align: center; font-size: 1.2rem; letter-spacing: 2px; }
+  .btn-gradient { background: var(--primary); color: white; border-radius: 50px; padding: 12px; font-weight: 600; width: 100%; border: none; }
+</style>
+</head>
+<body>
+
+<div id="loading" class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-none justify-content-center align-items-center" style="z-index:9999;"><div class="spinner-border text-danger"></div></div>
+
+<div id="view-login" class="container d-flex flex-column justify-content-center" style="min-height: 100vh;">
+  <div class="row justify-content-center"><div class="col-md-5">
+    <div class="text-center mb-4">
+        <div class="bg-danger-subtle rounded-4 d-inline-flex p-3 mb-3 text-danger"><i class="bi bi-shield-lock-fill fs-1"></i></div>
+        <h4 class="fw-bold">ADMINISTRATOR</h4><p class="small text-muted">Panel Kontrol Data</p>
+    </div>
+    <div class="card-pro px-4 py-5 mx-2">
+      <label class="d-block text-center small fw-bold mb-3 text-danger">MASUKKAN PIN ADMIN</label>
+      <input type="number" id="inputPIN" class="form-control-pro mb-4" placeholder="••••••">
+      <button onclick="doLogin()" class="btn-gradient">MASUK PANEL</button>
+      <div id="msg-login" class="alert alert-danger mt-3 small hidden text-center border-0"></div>
+    </div>
+  </div></div>
+</div>
+
+<div id="view-main" class="hidden container mt-3">
+    <div class="header-card">
+      <div class="d-flex align-items-center"><div class="rounded-circle p-2 me-3 bg-danger-subtle text-danger"><i class="bi bi-person-gear fs-4"></i></div><div><div class="fw-bold">Admin Panel</div><div class="text-muted small" id="txtNama">...</div></div></div>
+      <button onclick="doLogout()" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold" style="font-size: 0.7rem;">Keluar</button>
+    </div>
+
+    <div class="card-pro p-3 mb-3 bg-danger-subtle text-center"><h6 class="fw-bold text-danger m-0"><i class="bi bi-trophy-fill me-2"></i>KLASEMEN NOMINASI</h6></div>
+
+    <div class="overflow-auto mb-3 pb-1">
+        <ul class="nav nav-pills flex-nowrap" style="min-width: 400px;">
+          <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#adm-feed">FEED</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-pres">PRESTASI</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-event">EVENT</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-bias">BIAS</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-implemen">IMPLEMEN</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#adm-inovasi">INOVASI</button></li>
+        </ul>
+    </div>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="adm-feed"><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0 small"><thead class="table-light"><tr><th class="ps-4 py-3">Aktivitas Terbaru</th><th>Status</th></tr></thead><tbody id="tbl-adm-feed"></tbody></table></div></div></div>
+        <div class="tab-pane fade" id="adm-pres"><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0 small text-center"><thead style="background:var(--c-prestasi);"><tr><th class="py-3">Rank</th><th class="text-start">Sekolah</th><th>Piala 🏆</th><th>Poin</th></tr></thead><tbody id="tbl-adm-pres"></tbody></table></div></div></div>
+        <div class="tab-pane fade" id="adm-event"><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0 small text-center text-white"><thead style="background:var(--c-event);"><tr><th class="py-3">Rank</th><th class="text-start">Sekolah</th><th>Jml Evt</th><th>Poin</th></tr></thead><tbody id="tbl-adm-event"></tbody></table></div></div></div>
+        <div class="tab-pane fade" id="adm-bias"><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0 small text-center text-white"><thead style="background:var(--c-bias);"><tr><th class="py-3">Rank</th><th class="text-start">Sekolah</th><th>Jml Lap</th><th>Poin</th></tr></thead><tbody id="tbl-adm-bias"></tbody></table></div></div></div>
+        <div class="tab-pane fade" id="adm-implemen"><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0 small text-center"><thead style="background:var(--c-implemen);"><tr><th class="py-3">Rank</th><th class="text-start">Sekolah</th><th>Mutu A</th><th>Poin</th></tr></thead><tbody id="tbl-adm-implemen"></tbody></table></div></div></div>
+        <div class="tab-pane fade" id="adm-inovasi"><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0 small text-center text-white"><thead style="background:var(--c-inovasi);"><tr><th class="py-3">Rank</th><th class="text-start">Sekolah</th><th>Mutu A</th><th>Poin</th></tr></thead><tbody id="tbl-adm-inovasi"></tbody></table></div></div></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ==========================================
+// PASTE LINK GAS DI SINI (WAJIB)
+// ==========================================
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec"; 
+
+let USER={};
+function showLoad(x){ let el=document.getElementById('loading'); if(x){el.classList.remove('d-none');el.classList.add('d-flex')}else{el.classList.add('d-none');el.classList.remove('d-flex')} }
+async function apiCall(action, params = {}) { try { let r = await fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action, ...params }) }); return await r.json(); } catch (e) { alert("Error: "+e); showLoad(false); return null; } }
+
+window.onload = () => {
+  let savedPin = localStorage.getItem('LMS_ADMIN_PIN');
+  if(savedPin) { document.getElementById('inputPIN').value = savedPin; doLogin(true); }
+}
+
+async function doLogin(auto){
+  let p = document.getElementById('inputPIN').value; if(!p) return alert("PIN Kosong");
+  showLoad(true);
+  let r = await apiCall("login", { pin: p });
+  showLoad(false);
+
+  // LOGIKA KUNCI: HANYA TERIMA ADMIN
+  if(r && r.sukses && r.role === 'ADMIN') {
+     localStorage.setItem('LMS_ADMIN_PIN', p);
+     USER = { nama: r.nama, role: r.role };
+     document.getElementById('view-login').classList.add('hidden');
+     document.getElementById('view-main').classList.remove('hidden');
+     document.getElementById('txtNama').innerText = r.nama;
+     loadAdmin();
+  } else {
+     if(auto) { localStorage.removeItem('LMS_ADMIN_PIN'); }
+     else { 
+        let m = document.getElementById('msg-login'); 
+        m.innerHTML = r.role ? "<b>Akses Ditolak!</b><br>PIN ini bukan untuk Admin." : "PIN Tidak Ditemukan"; 
+        m.classList.remove('hidden'); 
+     }
+  }
+}
+
+function doLogout(){ localStorage.removeItem('LMS_ADMIN_PIN'); location.reload(); }
+
+async function loadAdmin(){
+  showLoad(true);
+  let d = await apiCall("getDashboardAdmin");
+  showLoad(false);
+  if(d) {
+    // Feed
+    let tb=document.getElementById('tbl-adm-feed'); let h="";
+    if(d.feed.length==0) h="<tr><td colspan='2' class='text-center py-3'>Kosong</td></tr>";
+    else d.feed.forEach(r=>{ 
+        let cls=r.status==='Diterima'?'text-success':(r.status==='Revisi'?'text-danger':'text-warning');
+        h+=`<tr><td class="ps-4"><div class="fw-bold small">${r.nama}</div><small class="text-muted">${r.sekolah} &bull; ${r.judul}</small></td><td class="small fw-bold ${cls}">${r.status}</td></tr>`; 
+    });
+    tb.innerHTML=h;
+
+    // Render 5 Klasemen
+    const render = (data, id, key) => {
+       let el = document.getElementById(id); let html = "";
+       if(!data || data.length==0) { el.innerHTML = "<tr><td colspan='4' class='py-4 text-muted'>Belum ada data</td></tr>"; return; }
+       data.forEach((i, idx) => {
+          let ico = idx<3 ? '🏆' : '#'+(idx+1);
+          let val = i[key] || i.count || 0;
+          html += `<tr><td class="fw-bold fs-5">${ico}</td><td class="text-start"><div class="fw-bold small">${i.nama}</div></td><td><span class="badge bg-light text-dark border">${val}</span></td><td class="fw-bold fs-6">${i.totalPoin}</td></tr>`;
+       });
+       el.innerHTML = html;
+    };
+    render(d.prestasi, 'tbl-adm-pres', 'count'); 
+    render(d.event, 'tbl-adm-event', 'count'); 
+    render(d.pembiasaan,'tbl-adm-bias', 'count'); 
+    render(d.implemen, 'tbl-adm-implemen', 'qualityCount'); 
+    render(d.inovasi, 'tbl-adm-inovasi', 'qualityCount');
+  }
+}
+</script>
+</body>
+</html>
