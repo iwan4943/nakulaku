@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel Validator - LMS Nakula</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+  :root {
+    --primary: #198754; 
+    --bg: #F8F9FA; 
+    --card: #FFFFFF; 
+    --text: #1B5E20;
+  }
+
+  body { background-color: var(--bg); font-family: 'Poppins', sans-serif; padding-bottom: 80px; }
+  .hidden { display: none !important; }
+
+  /* Card Style */
+  .card-pro { 
+    border: none; 
+    border-radius: 20px; 
+    background: var(--card); 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
+    transition: transform 0.2s, box-shadow 0.2s; 
+  }
+  
+  /* Materi Card Hover Effect */
+  .card-materi { 
+    cursor: pointer; 
+    border: 1px solid rgba(0,0,0,0.05); 
+    text-align: center; 
+    padding: 1.5rem 1rem; 
+    position: relative; 
+    overflow: hidden; 
+    background-color: #fff; 
+  }
+  .card-materi:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 20px rgba(0,0,0, 0.1); 
+    border-color: rgba(0,0,0,0.1); 
+  }
+  
+  /* HEADER ICON FIX */
+  .header-icon {
+    width: 48px; height: 48px; min-width: 48px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ICON BIG CIRCLE (Folder) */
+  .icon-circle-lg {
+    width: 65px; height: 65px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 0.8rem auto; font-size: 1.8rem;
+    transition: all 0.3s;
+  }
+  
+  .card-materi:hover .icon-circle-lg { transform: scale(1.1); }
+
+  .header-card { 
+    background: var(--card); 
+    padding: 1rem 1.2rem; 
+    border-radius: 20px; 
+    display: flex; justify-content: space-between; align-items: center; 
+    margin-bottom: 1.5rem; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+  }
+
+  /* Navigation Pills */
+  .nav-pills .nav-link { 
+    color: #6c757d; 
+    border-radius: 50px; 
+    font-weight: 600; 
+    font-size: 0.8rem; 
+    padding: 8px 18px; 
+    margin-right: 5px; 
+    transition: all 0.2s; 
+    border: 1px solid transparent; 
+  }
+  .nav-pills .nav-link.active { 
+    background-color: var(--primary); 
+    color: #fff; 
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3); 
+  }
+  
+  /* Utils */
+  .badge-count { position: absolute; top: 12px; right: 12px; font-size: 0.7rem; border-radius: 50px; padding: 6px 12px; }
+  .form-control-pro { background: #fff; border: 2px solid #C8E6C9; border-radius: 16px; padding: 12px; font-weight: 600; text-align: center; }
+  .btn-gradient { background: var(--primary); color: white; border-radius: 50px; padding: 12px; font-weight: 600; width: 100%; border: none; box-shadow: 0 4px 6px rgba(25, 135, 84, 0.2); }
+  .modal-content { border-radius: 28px; border: none; }
+  .text-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 40px; }
+  
+  /* THEME COLORS (Pembeda Tugas & Implementasi) */
+  .theme-tugas-icon { background-color: #FFF3E0; color: #E65100; } /* Oranye Lembut */
+  .theme-tugas-badge { background-color: #FFF3E0; color: #E65100; border: 1px solid #FFE0B2; }
+  
+  .theme-implemen-icon { background-color: #E3F2FD; color: #1565C0; } /* Biru Lembut */
+  .theme-implemen-badge { background-color: #E3F2FD; color: #1565C0; border: 1px solid #BBDEFB; }
+
+</style>
+</head>
+<body>
+
+<div id="loading" class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-none justify-content-center align-items-center" style="z-index:9999;">
+  <div class="spinner-border text-success" role="status"></div>
+</div>
+
+<div id="view-login" class="container d-flex flex-column justify-content-center" style="min-height: 100vh;">
+  <div class="row justify-content-center"><div class="col-md-5">
+    <div class="text-center mb-4">
+        <div class="header-icon bg-success-subtle text-success mx-auto mb-3" style="width:80px; height:80px; font-size:2rem;"><i class="bi bi-patch-check-fill"></i></div>
+        <h4 class="fw-bold text-success">TIM PENILAI</h4><p class="small text-muted">Portal Validasi Profesional</p>
+    </div>
+    <div class="card-pro px-4 py-5 mx-2">
+      <label class="d-block text-center small fw-bold mb-3 text-success">MASUKKAN PIN</label>
+      <input type="number" id="inputPIN" class="form-control-pro mb-4" placeholder="••••••">
+      <button onclick="doLogin()" class="btn-gradient">MASUK PANEL</button>
+    </div>
+  </div></div>
+</div>
+
+<div id="view-main" class="hidden container mt-3">
+    <div class="header-card">
+      <div class="d-flex align-items-center">
+        <div class="header-icon bg-success-subtle text-success me-3"><i class="bi bi-person-check-fill fs-4"></i></div>
+        <div style="line-height: 1.1;"><div class="fw-bold text-dark">LMS Nakula</div><div class="text-muted small" id="txtNama">Validator</div></div>
+      </div>
+      <button onclick="doLogout()" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold" style="font-size: 0.75rem;">Keluar</button>
+    </div>
+
+    <div class="overflow-auto mb-3 pb-1">
+        <ul class="nav nav-pills flex-nowrap" style="min-width: 400px;">
+          <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#p-tab-inbox" onclick="resetViewInbox()">TUGAS</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#p-tab-implemen" onclick="resetViewImplemen()">IMPLEMEN</button></li>
+          
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#p-tab-inovasi">INOVASI</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#p-tab-prestasi">PRESTASI</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#p-tab-event">EVENT</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#p-tab-bias">BIAS</button></li>
+        </ul>
+    </div>
+
+    <div class="tab-content">
+      
+      <div class="tab-pane fade show active" id="p-tab-inbox">
+        <div id="view-inbox-grid">
+           <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+              <h6 class="fw-bold text-dark m-0"><i class="bi bi-grid-fill me-2 text-warning"></i>Folder Tugas Rutin</h6>
+              <span class="badge bg-warning-subtle text-dark border border-warning" id="badge-inbox-pending">Memuat...</span>
+           </div>
+           <div class="row g-3" id="grid-inbox"></div>
+        </div>
+        <div id="view-inbox-list" class="hidden">
+           <div class="card-pro p-3 mb-3 bg-warning text-dark d-flex align-items-center shadow-sm">
+              <button onclick="backToInboxGrid()" class="btn btn-sm btn-light text-warning rounded-circle me-3"><i class="bi bi-arrow-left fw-bold"></i></button>
+              <div style="line-height:1.1;">
+                 <span class="small opacity-75 text-uppercase fw-bold" style="font-size:0.65rem">PENILAIAN TUGAS RUTIN</span>
+                 <div class="fw-bold" id="lbl-inbox-active" style="font-size:0.95rem">...</div>
+              </div>
+           </div>
+           <div id="list-inbox-container"></div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="p-tab-implemen">
+        <div id="view-implemen-grid">
+           <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+              <h6 class="fw-bold text-dark m-0"><i class="bi bi-folder-fill me-2 text-primary"></i>Folder Implementasi</h6>
+              <span class="badge bg-primary-subtle text-primary border border-primary" id="badge-implemen-pending">Memuat...</span>
+           </div>
+           <div class="row g-3" id="grid-implemen"></div>
+        </div>
+        <div id="view-implemen-list" class="hidden">
+           <div class="card-pro p-3 mb-3 bg-primary text-white d-flex align-items-center shadow-sm">
+              <button onclick="backToImplemenGrid()" class="btn btn-sm btn-light text-primary rounded-circle me-3"><i class="bi bi-arrow-left fw-bold"></i></button>
+              <div style="line-height:1.1;">
+                 <span class="small opacity-75 text-uppercase fw-bold" style="font-size:0.65rem">PENILAIAN IMPLEMENTASI</span>
+                 <div class="fw-bold" id="lbl-implemen-active" style="font-size:0.95rem">...</div>
+              </div>
+           </div>
+           <div id="list-implemen-container"></div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="p-tab-inovasi">
+         <div class="alert alert-danger small py-2 mb-2 border-0 fw-bold" style="color: #842029; background-color: #F8D7DA;"><i class="bi bi-lightbulb me-1"></i> Karya Inovasi Guru</div>
+         <div id="list-penilai-inovasi"></div>
+      </div>
+
+      <div class="tab-pane fade" id="p-tab-prestasi"><div class="alert alert-warning small py-2 mb-2 border-0 fw-bold" style="color: #856404; background-color: #FFF3CD;"><i class="bi bi-trophy me-1"></i> Validasi Bukti Juara</div><div id="list-penilai-prestasi"></div></div>
+      <div class="tab-pane fade" id="p-tab-event"><div class="alert alert-primary small py-2 mb-2 border-0 fw-bold" style="color: #084298; background-color: #CFE2FF;"><i class="bi bi-balloon me-1"></i> Validasi Skala Event</div><div id="list-penilai-event"></div></div>
+      <div class="tab-pane fade" id="p-tab-bias"><div class="alert alert-success small py-2 mb-2 border-0 fw-bold" style="color: #0F5132; background-color: #D1E7DD;"><i class="bi bi-calendar-check me-1"></i> Validasi Rutinitas</div><div id="list-penilai-bias"></div></div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="mdlNilai"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-body p-4">
+  <input type="hidden" id="n_id"><input type="hidden" id="n_type">
+  <div class="text-center mb-4"><h5 class="fw-bold mb-1" id="lbl-modal-title">Form Penilaian</h5></div>
+  
+  <label class="small fw-bold text-muted ms-1 mb-1">KEPUTUSAN</label>
+  <div id="ui-nilai-tugas"><select id="n_huruf" class="form-select form-control-pro mb-3 text-center fw-bold text-dark fs-5"><option value="A">A - Sangat Baik</option><option value="B">B - Baik</option><option value="C">C - Cukup</option><option value="D">D - Kurang</option><option value="E">E - Sangat Kurang</option></select></div>
+  <div id="ui-nilai-qual" class="d-none"><select id="n_kual" class="form-select form-control-pro mb-3 text-center fw-bold text-primary fs-5"><option value="A">A - Sangat Baik</option><option value="B">B - Baik</option><option value="C">C - Cukup</option><option value="D">D - Kurang (Revisi)</option></select></div>
+  <div id="ui-nilai-valid" class="d-none"><select id="n_validasi" class="form-select form-control-pro mb-3 text-center fw-bold fs-5"><option value="VALID" class="text-success">✅ DITERIMA / VALID</option><option value="INVALID" class="text-danger">❌ REVISI / INVALID</option></select></div>
+
+  <label class="small fw-bold text-muted ms-1 mb-1">CATATAN</label>
+  <textarea id="n_feed" class="form-control form-control-pro mb-4" rows="3" placeholder="Berikan umpan balik..."></textarea>
+  <button onclick="saveNilai()" class="btn btn-gradient py-3">SIMPAN KEPUTUSAN</button>
+</div></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ==========================================
+// PASTE LINK GAS ANDA DI SINI
+// ==========================================
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec"; 
+
+let USER={pin:"",nama:""}, modalNi, GLOBAL_DATA_TUGAS=[], GLOBAL_DATA_IMPLEMEN=[], GLOBAL_DATA_AGENDA=[], GLOBAL_DATA_INOVASI=[];
+function showLoad(x){ let el=document.getElementById('loading'); if(x){el.classList.remove('d-none');el.classList.add('d-flex')}else{el.classList.add('d-none');el.classList.remove('d-flex')} }
+async function apiCall(action, params = {}) { try { let r = await fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action, ...params }) }); return await r.json(); } catch (error) { alert("Koneksi Error: " + error); showLoad(false); return null; } }
+
+window.onload = () => {
+  modalNi = new bootstrap.Modal(document.getElementById('mdlNilai'));
+  let savedPin = localStorage.getItem('LMS_PENILAI_PIN');
+  if(savedPin) { document.getElementById('inputPIN').value = savedPin; doLogin(true); }
+}
+
+async function doLogin(auto){
+  let p = document.getElementById('inputPIN').value; if(!p) { Swal.fire('Error','Isi PIN!','error'); return; }
+  showLoad(true);
+  let r = await apiCall("login", { pin: p });
+  showLoad(false);
+  if(r && r.sukses && r.role === 'PENILAI') {
+     localStorage.setItem('LMS_PENILAI_PIN', p);
+     USER = { nama: r.nama, pin: p };
+     document.getElementById('view-login').classList.add('hidden');
+     document.getElementById('view-main').classList.remove('hidden');
+     document.getElementById('txtNama').innerText = r.nama;
+     loadPenilai();
+  } else {
+     if(auto) { localStorage.removeItem('LMS_PENILAI_PIN'); }
+     else { Swal.fire({ title: 'Akses Ditolak', text: 'PIN Salah atau bukan Penilai.', icon: 'error', confirmButtonColor: '#d33' }); }
+  }
+}
+function doLogout(){ localStorage.removeItem('LMS_PENILAI_PIN'); location.reload(); }
+
+// LOGIKA DASHBOARD & LOAD DATA
+async function loadPenilai() {
+  showLoad(true);
+  let data = await apiCall("getDashboardPenilai");
+  showLoad(false);
+  if(data) {
+    GLOBAL_DATA_TUGAS = data.tugas; 
+    GLOBAL_DATA_IMPLEMEN = data.implementasi; 
+    GLOBAL_DATA_AGENDA = data.agenda; // Simpan Agenda Global
+    GLOBAL_DATA_INOVASI = data.inovasi;
+
+    // Render Grid Folder (Tugas = Oranye, Implemen = Biru)
+    renderFolders(GLOBAL_DATA_AGENDA, GLOBAL_DATA_TUGAS, 'grid-inbox', 'badge-inbox-pending', 'openInboxFolder', 'bi-list-check', 'tugas'); 
+    renderFolders(GLOBAL_DATA_AGENDA, GLOBAL_DATA_IMPLEMEN, 'grid-implemen', 'badge-implemen-pending', 'openImplemenFolder', 'bi-journal-check', 'implemen'); 
+
+    // Render Tab Lain
+    renderList(GLOBAL_DATA_INOVASI, 'list-penilai-inovasi', 'QUAL'); 
+    renderList(data.prestasi, 'list-penilai-prestasi', 'PRESTASI');
+    renderList(data.sekolah.filter(i => i.jenis === 'Laporan Event'), 'list-penilai-event', 'STANDARD'); 
+    renderList(data.sekolah.filter(i => i.jenis === 'Laporan Pembiasaan'), 'list-penilai-bias', 'STANDARD');   
+  }
+}
+
+// 1. RENDER FOLDER GRID (DENGAN NARSUM & WARNA)
+function renderFolders(agenda, allTasks, gridId, badgeId, clickFnName, defaultIcon, themeType) {
+    let grid = document.getElementById(gridId); grid.innerHTML = "";
+    let totalPending = 0;
+    
+    let iconClass = themeType === 'tugas' ? 'theme-tugas-icon' : 'theme-implemen-icon';
+    let badgeClass = themeType === 'tugas' ? 'theme-tugas-badge' : 'theme-implemen-badge';
+
+    agenda.forEach(a => {
+        let materiName = a.materi;
+        let narsumName = a.narsum || "Tim Gugus"; 
+
+        let tasks = allTasks.filter(t => t.judul === materiName || t.judul.includes(materiName));
+        let pending = tasks.filter(t => t.status === 'Menunggu').length;
+        totalPending += pending;
+        
+        let badgeHtml = pending > 0 
+            ? `<span class="badge bg-danger badge-count shadow-sm">${pending} Baru</span>` 
+            : `<span class="badge badge-count ${badgeClass}">0</span>`;
+        
+        let icon = defaultIcon;
+        if(materiName.toLowerCase().includes("pembelajaran")) icon = "bi-easel";
+        if(materiName.toLowerCase().includes("asesmen")) icon = "bi-clipboard-data";
+
+        grid.innerHTML += `
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card-pro card-materi h-100 p-3" onclick="${clickFnName}('${materiName}')">
+                ${badgeHtml}
+                <div class="icon-circle-lg ${iconClass}"><i class="bi ${icon}"></i></div>
+                <div class="fw-bold text-dark small text-clamp-2" style="line-height:1.2;">${materiName}</div>
+                <div class="small text-muted mt-2 text-truncate" style="font-size:0.7rem;">
+                    <i class="bi bi-person-video3 me-1"></i>${narsumName}
+                </div>
+            </div>
+        </div>`;
+    });
+    document.getElementById(badgeId).innerText = totalPending + " Pending";
+}
+
+// 2. NAVIGASI FOLDER: INBOX
+function openInboxFolder(materiName) {
+    document.getElementById('view-inbox-grid').classList.add('hidden');
+    document.getElementById('view-inbox-list').classList.remove('hidden');
+    document.getElementById('lbl-inbox-active').innerText = materiName;
+    let tasks = GLOBAL_DATA_TUGAS.filter(t => t.judul === materiName || t.judul.includes(materiName));
+    renderList(tasks, 'list-inbox-container', 'REGULER'); 
+}
+function backToInboxGrid() { document.getElementById('view-inbox-list').classList.add('hidden'); document.getElementById('view-inbox-grid').classList.remove('hidden'); }
+function resetViewInbox(){ backToInboxGrid(); }
+
+// 3. NAVIGASI FOLDER: IMPLEMENTASI
+function openImplemenFolder(materiName) {
+    document.getElementById('view-implemen-grid').classList.add('hidden');
+    document.getElementById('view-implemen-list').classList.remove('hidden');
+    document.getElementById('lbl-implemen-active').innerText = materiName;
+    let tasks = GLOBAL_DATA_IMPLEMEN.filter(t => t.judul === materiName || t.judul.includes(materiName));
+    renderList(tasks, 'list-implemen-container', 'QUAL'); 
+}
+function backToImplemenGrid() { document.getElementById('view-implemen-list').classList.add('hidden'); document.getElementById('view-implemen-grid').classList.remove('hidden'); }
+function resetViewImplemen(){ backToImplemenGrid(); }
+
+// 4. RENDER LIST (BLIND GRADING)
+function renderList(data, id, type) {
+  let el = document.getElementById(id); let html = "";
+  if(!data || data.length == 0) { el.innerHTML = "<div class='text-center py-5 small text-muted'>Tidak ada tugas di folder ini.</div>"; return; }
+  data.sort((a,b) => (a.status==='Menunggu' ? -1 : 1));
+  data.forEach(item => {
+    let st = item.status, bgSt = st==='Menunggu'?'bg-warning text-dark':(st==='Diterima'?'bg-success':'bg-danger');
+    let btnText = (type==='PRESTASI'||type==='STANDARD')?"Validasi":((type==='QUAL')?"Nilai Mutu":"Nilai Tugas");
+    let btnCls = (type==='PRESTASI'||type==='STANDARD')?"btn-primary":((type==='QUAL')?"btn-danger":"btn-success");
+    let link = (item.link && item.link.length>5) ? `<a href="${item.link}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill py-0 px-2 me-2" style="font-size:0.7rem">Bukti</a>` : "";
+    let blindID = `<span class="badge bg-light text-secondary border fw-normal">ID: #${item.id.substring(0,5)}</span>`;
+    
+    html += `<div class="card-pro p-3 mb-2 border-start border-4 ${st==='Menunggu'?'border-warning':'border-success'}"><div class="d-flex justify-content-between align-items-start"><div class="pe-2" style="flex:1;"><div class="d-flex align-items-center mb-1 flex-wrap gap-2">${blindID} <span class="badge ${bgSt} rounded-pill" style="font-size:0.6rem">${st}</span></div><div class="fw-bold small mb-1">${item.judul}</div><div class="small text-muted fst-italic border p-1 rounded bg-light mb-2">"${item.catatan}"</div>${link}</div><div class="ps-1"><button onclick="popNilai('${item.id}', '${type}')" class="btn btn-sm ${btnCls} rounded-pill px-3 shadow-sm" style="font-size:0.75rem; white-space:nowrap;">${btnText}</button></div></div></div>`;
+  });
+  el.innerHTML = html;
+}
+
+function popNilai(id, type){ 
+  document.getElementById('n_id').value = id; document.getElementById('n_type').value = type; document.getElementById('n_feed').value = ""; 
+  ['ui-nilai-tugas','ui-nilai-valid','ui-nilai-qual'].forEach(i=>document.getElementById(i).classList.add('d-none'));
+  
+  if(type === 'PRESTASI' || type === 'STANDARD') { document.getElementById('lbl-modal-title').innerText = "Validasi Data"; document.getElementById('ui-nilai-valid').classList.remove('d-none'); } 
+  else if (type === 'QUAL') { document.getElementById('lbl-modal-title').innerText = "Nilai Mutu"; document.getElementById('ui-nilai-qual').classList.remove('d-none'); } 
+  else { document.getElementById('lbl-modal-title').innerText = "Nilai Tugas"; document.getElementById('ui-nilai-tugas').classList.remove('d-none'); }
+  modalNi.show(); 
+}
+
+// SIMPAN NILAI (OPTIMISTIC UI + BACKGROUND SYNC)
+async function saveNilai(){
+  let id = document.getElementById('n_id').value, type = document.getElementById('n_type').value, note = document.getElementById('n_feed').value;
+  let statusFinal = "", feedbackFinal = "";
+  
+  // Logic Status
+  if (type === 'PRESTASI' || type === 'STANDARD') { 
+      let val = document.getElementById('n_validasi').value; statusFinal = val === 'VALID' ? 'Diterima' : 'Revisi'; feedbackFinal = (val === 'VALID' ? '[ACC] ' : '[REVISI] ') + note; 
+  } 
+  else if (type === 'QUAL') { 
+      let h = document.getElementById('n_kual').value; statusFinal = h==='D'?'Revisi':'Diterima'; feedbackFinal = `[Kualitas: ${h}] ` + note; 
+  } 
+  else { 
+      let h = document.getElementById('n_huruf').value; statusFinal = (h==='D'||h==='E')?'Revisi':'Diterima'; feedbackFinal = `[Nilai: ${h}] ` + note; 
+  }
+  
+  // 1. TUTUP MODAL & ALERT SUKSES DULUAN (Optimistic)
+  modalNi.hide();
+  Swal.fire({ title: 'Tersimpan!', text: 'Sedang menyinkronkan...', icon: 'success', timer: 1000, showConfirmButton: false, toast: true, position: 'top-end' });
+
+  // 2. UPDATE ARRAY LOKAL
+  const updateLocal = (arr) => {
+      let idx = arr.findIndex(i => i.id === id);
+      if(idx !== -1) { arr[idx].status = statusFinal; arr[idx].feedback = feedbackFinal; }
+  };
+  updateLocal(GLOBAL_DATA_TUGAS);
+  updateLocal(GLOBAL_DATA_IMPLEMEN);
+  updateLocal(GLOBAL_DATA_INOVASI);
+
+  // 3. RENDER ULANG TAMPILAN (INSTANT)
+  if(!document.getElementById('view-inbox-list').classList.contains('hidden')){
+      let active = document.getElementById('lbl-inbox-active').innerText;
+      renderList(GLOBAL_DATA_TUGAS.filter(t => t.judul.includes(active)), 'list-inbox-container', 'REGULER');
+      renderFolders(GLOBAL_DATA_AGENDA, GLOBAL_DATA_TUGAS, 'grid-inbox', 'badge-inbox-pending', 'openInboxFolder', 'bi-list-check', 'tugas');
+  }
+  if(!document.getElementById('view-implemen-list').classList.contains('hidden')){
+      let active = document.getElementById('lbl-implemen-active').innerText;
+      renderList(GLOBAL_DATA_IMPLEMEN.filter(t => t.judul.includes(active)), 'list-implemen-container', 'QUAL');
+      renderFolders(GLOBAL_DATA_AGENDA, GLOBAL_DATA_IMPLEMEN, 'grid-implemen', 'badge-implemen-pending', 'openImplemenFolder', 'bi-journal-check', 'implemen');
+  }
+
+  // 4. KIRIM KE SERVER (BACKGROUND)
+  try {
+      await apiCall("simpanNilai", { id: id, status: statusFinal, feedback: feedbackFinal, adminName: USER.nama });
+      console.log("Sync Success");
+  } catch (e) {
+      Swal.fire('Gagal Sinkron', 'Cek internet!', 'error');
+  }
+}
+</script>
+</body>
+</html>
