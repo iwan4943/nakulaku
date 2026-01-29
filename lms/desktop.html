@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LMS Nakula - Desktop Portal</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+  :root {
+    --primary: #B3261E; 
+    --primary-hover: #901B15;
+    --primary-container: #FFDAD6;
+    --on-primary-container: #410E0B;
+    --bg-body: #F5F7FA;
+    --sidebar-bg: #FFFFFF;
+    --card-bg: #FFFFFF;
+    --text-main: #201A19;
+    --sidebar-width: 260px;
+  }
+
+  body { 
+    background-color: var(--bg-body); 
+    font-family: 'Poppins', sans-serif; 
+    color: var(--text-main); 
+    overflow-x: hidden;
+  }
+  
+  .hidden { display: none !important; }
+
+  /* --- LOGIN STYLE --- */
+  .login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary) 0%, #601410 100%);
+  }
+  .login-card {
+    background: white;
+    padding: 3rem;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+  }
+
+  /* --- LAYOUT UTAMA --- */
+  #wrapper { display: flex; width: 100%; transition: all 0.3s; }
+  
+  /* Sidebar */
+  #sidebar {
+    min-width: var(--sidebar-width);
+    max-width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 1000;
+  }
+  
+  .sidebar-header { padding: 2rem 1.5rem; border-bottom: 1px solid #f0f0f0; }
+  .sidebar-menu { padding: 1rem; flex-grow: 1; }
+  .nav-item { margin-bottom: 0.5rem; }
+  .nav-link { 
+    color: #555; font-weight: 500; border-radius: 12px; padding: 12px 16px; transition: all 0.2s; 
+    display: flex; align-items: center;
+  }
+  .nav-link i { font-size: 1.2rem; margin-right: 12px; }
+  .nav-link:hover { background-color: #FFF0EE; color: var(--primary); }
+  .nav-link.active { background-color: var(--primary-container); color: var(--on-primary-container); font-weight: 600; }
+  .sidebar-footer { padding: 1.5rem; border-top: 1px solid #f0f0f0; }
+
+  /* Content */
+  #content {
+    width: 100%;
+    margin-left: var(--sidebar-width);
+    padding: 2rem;
+    min-height: 100vh;
+  }
+
+  /* Components */
+  .card-std {
+    border: none; border-radius: 16px;
+    background: var(--card-bg);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s;
+  }
+  
+  .stat-card { display: flex; align-items: center; padding: 1.5rem; }
+  .stat-icon { 
+    width: 60px; height: 60px; border-radius: 16px; 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 1.8rem; margin-right: 1rem;
+  }
+
+  .table-custom th { font-weight: 600; color: #777; font-size: 0.85rem; text-transform: uppercase; border-bottom: 2px solid #eee; }
+  .table-custom td { padding: 1rem 0.5rem; vertical-align: middle; font-size: 0.95rem; }
+  .status-pill { padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; display: inline-block;}
+  .st-ok { background: #C3EED0; color: #0F5223; }
+  .st-wait { background: #FEE4C1; color: #744C00; }
+  .st-rev { background: #F9DEDC; color: #8C1D18; }
+
+  .btn-gradient { background: var(--primary); color: white; border: none; }
+  .btn-gradient:hover { background: var(--primary-hover); color: white; }
+  
+  /* Input Styles */
+  .form-control-std { background-color: #f8f9fa; border: 1px solid #eee; border-radius: 10px; padding: 10px 15px; }
+  .form-control-std:focus { background-color: #fff; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.1); }
+
+  /* Header Top */
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+  .user-pill {
+    background: white; padding: 8px 16px; border-radius: 50px;
+    display: flex; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  .role-badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 6px; margin-left: 10px; font-weight: 700; text-transform: uppercase;}
+  .rb-guru { background: #E8DEF8; color: #1D192B; }
+  .rb-ks { background: #FEE4C1; color: #744C00; }
+
+</style>
+</head>
+<body>
+
+<div id="loading" class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-none justify-content-center align-items-center" style="z-index:9999;">
+  <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;"></div>
+</div>
+
+<div id="view-login" class="login-wrapper">
+  <div class="login-card">
+    <div class="bg-danger-subtle text-danger d-inline-flex p-3 rounded-4 mb-3">
+        <i class="bi bi-mortarboard-fill fs-1"></i>
+    </div>
+    <h3 class="fw-bold text-dark mb-1">LMS NAKULA</h3>
+    <p class="text-muted mb-4">Portal Kinerja Desktop</p>
+    
+    <label class="d-block text-start small fw-bold text-muted mb-2">MASUKKAN PIN AKSES</label>
+    <input type="number" id="inputPIN" class="form-control form-control-lg text-center fw-bold mb-4" placeholder="• • • • • •" style="letter-spacing: 5px; font-size: 1.5rem; background:#f8f9fa; border:2px solid #eee;">
+    
+    <button onclick="doLogin()" class="btn btn-gradient w-100 py-3 rounded-pill fw-bold shadow-sm">MASUK DASHBOARD</button>
+  </div>
+</div>
+
+<div id="view-main" class="hidden">
+  <div id="wrapper">
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <div class="d-flex align-items-center text-danger">
+          <i class="bi bi-mortarboard-fill fs-3 me-2"></i>
+          <h5 class="fw-bold mb-0">LMS NAKULA</h5>
+        </div>
+        <small class="text-muted ms-1">Versi Desktop</small>
+      </div>
+      
+      <div class="sidebar-menu">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a href="#" class="nav-link active">
+              <i class="bi bi-grid-fill"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item mt-3"><small class="text-uppercase text-muted fw-bold ms-3" style="font-size:0.7rem;">Menu Utama</small></li>
+          <li class="nav-item" id="nav-guru-tugas">
+            <a href="#section-tugas" class="nav-link"><i class="bi bi-list-check"></i> Tugas Saya</a>
+          </li>
+           <li class="nav-item" id="nav-ks-rapor">
+            <a href="#section-rapor" class="nav-link"><i class="bi bi-bar-chart-line"></i> Rapor Guru</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <button onclick="doLogout()" class="btn btn-outline-danger w-100 rounded-pill fw-bold">
+          <i class="bi bi-box-arrow-left me-2"></i> Keluar
+        </button>
+      </div>
+    </nav>
+
+    <div id="content">
+      <div class="top-bar">
+        <div>
+          <h4 class="fw-bold mb-0">Selamat Datang, <span id="txtNama">User</span></h4>
+          <p class="text-muted small mb-0" id="txtSekolah">Nama Sekolah</p>
+        </div>
+        <div class="user-pill">
+            <i class="bi bi-person-circle fs-5 me-2 text-secondary"></i>
+            <span class="small fw-bold text-dark">Akun Aktif</span>
+            <span id="txtRoleBadge" class="role-badge rb-guru">GURU</span>
+        </div>
+      </div>
+
+      <div id="panel-guru" class="hidden">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card-std h-100 p-4 bg-danger text-white position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 opacity-25 p-3">
+                        <i class="bi bi-graph-up-arrow" style="font-size: 8rem; margin-right: -20px;"></i>
+                    </div>
+                    <h6 class="text-uppercase text-white-50 fw-bold ls-1">Capaian Kinerja Anda</h6>
+                    <div class="d-flex align-items-end mt-2">
+                        <h1 class="display-3 fw-bold mb-0 me-3" id="txt-persen">0%</h1>
+                        <div class="mb-2">
+                            <span class="badge bg-white text-danger px-3 py-2 rounded-pill fs-6" id="txt-target">0/0 Selesai</span>
+                        </div>
+                    </div>
+                    <div class="progress mt-4" style="height: 10px; background: rgba(255,255,255,0.2);">
+                        <div id="bar-guru" class="progress-bar bg-white" role="progressbar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                 <div class="card-std h-100 p-4 d-flex flex-column justify-content-center text-center border-danger border-start border-5">
+                    <h5 class="fw-bold text-danger mb-3">Lapor Pengembangan</h5>
+                    <button class="btn btn-warning text-white fw-bold w-100 mb-2 py-2" data-bs-toggle="modal" data-bs-target="#mdlImplemen"><i class="bi bi-person-workspace me-2"></i> Implementasi</button>
+                    <button class="btn btn-success fw-bold w-100 py-2" data-bs-toggle="modal" data-bs-target="#mdlInovasi"><i class="bi bi-lightbulb me-2"></i> Karya Inovasi</button>
+                 </div>
+            </div>
+        </div>
+
+        <div class="card-std p-4" id="section-tugas">
+            <h5 class="fw-bold mb-4"><i class="bi bi-list-task me-2 text-primary"></i>Daftar Tugas & Agenda</h5>
+            <div class="table-responsive">
+                <table class="table table-hover table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%">No</th>
+                            <th style="width: 35%">Nama Kegiatan</th>
+                            <th style="width: 25%">Tenggat Waktu</th>
+                            <th style="width: 15%">Status</th>
+                            <th style="width: 20%" class="text-end">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-tugas-guru">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+
+      <div id="panel-ks" class="hidden">
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="card-std stat-card">
+                    <div class="stat-icon bg-danger-subtle text-danger"><i class="bi bi-file-earmark-text-fill"></i></div>
+                    <div>
+                        <h2 class="fw-bold mb-0" id="ks-total-laporan">0</h2>
+                        <span class="text-muted small">Total Laporan Masuk</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-std stat-card">
+                    <div class="stat-icon bg-primary-subtle text-primary"><i class="bi bi-person-video3"></i></div>
+                    <div>
+                        <h2 class="fw-bold mb-0" id="ks-count-imp">0</h2>
+                        <span class="text-muted small">Implementasi Guru</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-std stat-card">
+                    <div class="stat-icon bg-warning-subtle text-warning"><i class="bi bi-lightbulb-fill"></i></div>
+                    <div>
+                        <h2 class="fw-bold mb-0" id="ks-count-ino">0</h2>
+                        <span class="text-muted small">Karya Inovasi</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-std p-4 mb-4">
+            <h6 class="text-uppercase text-muted fw-bold mb-3 small">Manajemen Sekolah</h6>
+            <div class="row g-3">
+                <div class="col-md-4"><button onclick="bukaModalPrestasi()" class="btn btn-outline-warning w-100 py-3 fw-bold border-2"><i class="bi bi-trophy-fill me-2"></i> Input Prestasi</button></div>
+                <div class="col-md-4"><button onclick="bukaModalPembiasaan()" class="btn btn-outline-success w-100 py-3 fw-bold border-2"><i class="bi bi-calendar-check-fill me-2"></i> Lapor Pembiasaan</button></div>
+                <div class="col-md-4"><button onclick="bukaModalEvent()" class="btn btn-outline-primary w-100 py-3 fw-bold border-2"><i class="bi bi-balloon-fill me-2"></i> Event Sekolah</button></div>
+            </div>
+        </div>
+
+        <div class="row" id="section-rapor">
+            <div class="col-lg-8">
+                <div class="card-std p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">Rapor Kinerja Guru</h5>
+                        <div>
+                           <span class="text-muted small me-2">Rata-rata Sekolah:</span>
+                           <span class="badge bg-danger fs-6" id="ks-persen">0%</span>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-custom align-middle">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>Nama Guru</th>
+                                    <th>Progress Bar</th>
+                                    <th class="text-end">Angka</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl-ks">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card-std p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                         <h5 class="fw-bold mb-0">Riwayat Input</h5>
+                         <button onclick="loadKS()" class="btn btn-sm btn-light rounded-circle"><i class="bi bi-arrow-clockwise"></i></button>
+                    </div>
+                    <div id="list-riwayat-ks" style="max-height: 400px; overflow-y: auto;">
+                        </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="mdlUpload" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 p-3" style="border-radius: 20px;"><div class="modal-header border-0"><h5 class="modal-title fw-bold">Kirim Bukti Tugas</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="frmUpload" onsubmit="submitTugas(event)"><div class="mb-3"><label class="small fw-bold text-muted">KEGIATAN</label><input name="judul_dokumen" id="inpJudul" class="form-control form-control-std bg-light fw-bold" readonly><input type="hidden" name="jenis_laporan" value="Kegiatan Gugus"></div><div class="mb-3"><label class="small fw-bold text-muted">LINK BUKTI</label><input type="url" name="link_video" id="inpLink" class="form-control form-control-std" placeholder="Paste link Google Drive / Youtube disini..."></div><div class="mb-4"><label class="small fw-bold text-muted">RANGKUMAN</label><textarea name="catatan" id="inpCatatan" class="form-control form-control-std" rows="4" placeholder="Tuliskan rangkuman hasil kegiatan..."></textarea></div><div class="text-end"><button type="button" class="btn btn-light rounded-pill me-2" data-bs-dismiss="modal">Batal</button><button class="btn btn-gradient rounded-pill px-4">Kirim Tugas</button></div></form></div></div></div></div>
+
+<div class="modal fade" id="mdlImplemen"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content border-0 p-3" style="border-radius: 20px;"><div class="modal-header border-0"><h5 class="modal-title fw-bold text-primary"><i class="bi bi-person-workspace me-2"></i>Lapor Implementasi KKG</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="frmImplemen" onsubmit="submitPengembangan(event, 'Implementasi KKG')"><div class="row"><div class="col-md-6 mb-3"><label class="small fw-bold text-muted">PROGRAM SUMBER</label><select id="sel-prog-kkg" class="form-select form-control-std"></select></div><div class="col-md-6 mb-3"><label class="small fw-bold text-muted">KELAS / SASARAN</label><input type="text" id="imp-kelas" class="form-control form-control-std" placeholder="Contoh: Kelas 5B" required></div></div><div class="mb-3"><label class="small fw-bold text-muted">NAMA KEGIATAN</label><input type="text" id="imp-nama" class="form-control form-control-std" placeholder="Judul kegiatan implementasi..." required></div><div class="mb-3"><label class="small fw-bold text-muted">LINK DOKUMENTASI</label><input type="url" id="imp-link" class="form-control form-control-std" placeholder="Link Drive/Youtube" required></div><div class="mb-3"><label class="small fw-bold text-muted">DESKRIPSI</label><textarea id="imp-desc" class="form-control form-control-std" rows="3" required></textarea></div><div class="text-end"><button class="btn btn-primary rounded-pill px-5">Kirim Laporan</button></div></form></div></div></div></div>
+
+<div class="modal fade" id="mdlInovasi"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content border-0 p-3" style="border-radius: 20px;"><div class="modal-header border-0"><h5 class="modal-title fw-bold text-success"><i class="bi bi-lightbulb me-2"></i>Kirim Karya Inovasi</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="alert alert-success bg-success-subtle border-0 mb-3"><small>Karya Inovasi dapat berupa Video Pembelajaran, Alat Peraga, atau Artikel Ilmiah yang dipublikasikan.</small></div><form id="frmInovasi" onsubmit="submitPengembangan(event, 'Karya Inovasi')"><div class="mb-3"><label class="small fw-bold text-muted">JUDUL INOVASI</label><input type="text" id="ino-nama" class="form-control form-control-std" required></div><div class="mb-3"><label class="small fw-bold text-muted">LINK KARYA</label><input type="url" id="ino-link" class="form-control form-control-std" required></div><div class="mb-3"><label class="small fw-bold text-muted">DESKRIPSI SINGKAT</label><textarea id="ino-desc" class="form-control form-control-std" rows="4" required></textarea></div><div class="text-end"><button class="btn btn-success rounded-pill px-5">Kirim Karya</button></div></form></div></div></div></div>
+
+<div class="modal fade" id="mdlPrestasi"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-4 rounded-4"><h5 class="fw-bold mb-3 text-warning">Input Prestasi</h5><form id="frmPrestasi" onsubmit="submitPrestasi(event)"><div class="mb-3"><select id="inpSekolahPrestasi" class="form-select form-control-std"></select></div><div class="mb-3"><input type="text" name="nama_siswa" class="form-control form-control-std" placeholder="Nama Siswa" required></div><div class="row mb-3"><div class="col-6"><input type="text" name="cabang" class="form-control form-control-std" placeholder="Cabang Lomba" required></div><div class="col-6"><input type="text" name="penyelenggara" class="form-control form-control-std" placeholder="Penyelenggara" required></div></div><div class="row mb-3"><div class="col-6"><select name="tingkat" class="form-select form-control-std"><option value="Kecamatan">Kecamatan</option><option value="Kabupaten">Kabupaten</option><option value="Nasional">Nasional</option></select></div><div class="col-6"><select name="juara" class="form-select form-control-std"><option value="1">Juara 1</option><option value="2">Juara 2</option><option value="3">Juara 3</option></select></div></div><div class="mb-4"><input type="text" name="no_piagam" class="form-control form-control-std" placeholder="Nomor Piagam" required></div><button class="btn btn-warning w-100 py-2 text-white fw-bold">SIMPAN DATA</button></form></div></div></div>
+<div class="modal fade" id="mdlPembiasaan"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-4 rounded-4"><h5 class="fw-bold mb-3 text-success">Lapor Pembiasaan</h5><form id="frmPembiasaan" onsubmit="submitPembiasaan(event)"><div class="mb-3"><select id="inpSekolahBias" class="form-select form-control-std"></select></div><div class="mb-3"><input type="text" id="bias-nama" class="form-control form-control-std" placeholder="Nama Program" required></div><div class="row mb-3"><div class="col-6"><select id="bias-freq" class="form-select form-control-std"><option>Harian</option><option>Mingguan</option><option>Bulanan</option></select></div><div class="col-6"><input type="text" id="bias-karakter" class="form-control form-control-std" placeholder="Karakter" required></div></div><div class="mb-3"><input type="url" id="bias-link" class="form-control form-control-std" placeholder="Link Dokumentasi" required></div><div class="mb-4"><textarea id="bias-desc" class="form-control form-control-std" rows="3" placeholder="Keterangan..." required></textarea></div><button class="btn btn-success w-100 py-2 fw-bold">SIMPAN DATA</button></form></div></div></div>
+<div class="modal fade" id="mdlEvent"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-4 rounded-4"><h5 class="fw-bold mb-3 text-primary">Lapor Event Sekolah</h5><form id="frmEvent" onsubmit="submitEvent(event)"><div class="mb-3"><select id="inpSekolahEvent" class="form-select form-control-std"></select></div><div class="mb-3"><input type="text" id="evt-nama" class="form-control form-control-std" placeholder="Nama Event" required></div><div class="row mb-3"><div class="col-6"><input type="date" id="evt-date" class="form-control form-control-std" required></div><div class="col-6"><select id="evt-scale" class="form-select form-control-std"><option value="Internal">Internal</option><option value="Orang Tua">Orang Tua</option><option value="Umum">Umum/Pejabat</option></select></div></div><div class="mb-3"><input type="url" id="evt-link" class="form-control form-control-std" placeholder="Link Dokumentasi" required></div><div class="mb-4"><textarea id="evt-desc" class="form-control form-control-std" rows="3" placeholder="Dampak Kegiatan..." required></textarea></div><button class="btn btn-primary w-100 py-2 fw-bold">SIMPAN DATA</button></form></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ==========================================
+// 1. KONFIGURASI LINK GAS (SAMA SEPERTI ASLINYA)
+// ==========================================
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec"; 
+
+// ==========================================
+// 2. MAIN SCRIPT
+// ==========================================
+let USER={pin:"",nama:"",role:"",sekolah:""}, modalUp, modalPr, modalBs, modalEv;
+function showLoad(x){ let el=document.getElementById('loading'); if(x){el.classList.remove('d-none');el.classList.add('d-flex')}else{el.classList.add('d-none');el.classList.remove('d-flex')} }
+
+async function apiCall(action, params = {}) {
+  try {
+    let response = await fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action, ...params }) });
+    return await response.json();
+  } catch (error) { Swal.fire('Error', 'Gagal koneksi server.', 'error'); showLoad(false); return null; }
+}
+
+window.onload = () => {
+  modalUp = new bootstrap.Modal(document.getElementById('mdlUpload'));
+  modalPr = new bootstrap.Modal(document.getElementById('mdlPrestasi'));
+  modalBs = new bootstrap.Modal(document.getElementById('mdlPembiasaan'));
+  modalEv = new bootstrap.Modal(document.getElementById('mdlEvent'));
+  
+  let savedPin = localStorage.getItem('LMS_PIN');
+  if (savedPin) { document.getElementById('inputPIN').value = savedPin; doLogin(true); }
+}
+
+async function doLogin(isAuto){
+  let p=document.getElementById('inputPIN').value; if(!p) return Swal.fire('Perhatian','Isi PIN!','warning');
+  showLoad(true);
+  let r = await apiCall("login", { pin: p });
+  showLoad(false);
+  
+  if(r && r.sukses){
+    if(r.role === 'ADMIN' || r.role === 'PENILAI') {
+        if(!isAuto) { Swal.fire({ title: 'Akses Ditolak', text: 'Admin gunakan panel khusus.', icon: 'error' }); }
+        return; 
+    }
+    localStorage.setItem('LMS_PIN', p);
+    USER={pin:p, nama:r.nama, role:r.role, sekolah:r.sekolah};
+    
+    // UI Transition
+    document.getElementById('view-login').classList.add('hidden');
+    document.getElementById('view-main').classList.remove('hidden');
+    ['panel-guru','panel-ks'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+    ['nav-guru-tugas', 'nav-ks-rapor'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+
+    document.getElementById('txtNama').innerText = r.nama;
+    document.getElementById('txtSekolah').innerText = r.sekolah;
+    
+    let bdg = document.getElementById('txtRoleBadge');
+    if(r.role === 'KS') { 
+        bdg.innerText = "Kepala Sekolah"; bdg.className="role-badge rb-ks";
+        document.getElementById('panel-ks').classList.remove('hidden');
+        document.getElementById('nav-ks-rapor').classList.remove('hidden'); // Show menu KS
+        loadKS();
+    } else { 
+        bdg.innerText = "Guru Kelas"; bdg.className="role-badge rb-guru";
+        document.getElementById('panel-guru').classList.remove('hidden');
+        document.getElementById('nav-guru-tugas').classList.remove('hidden'); // Show menu Guru
+        loadGuru();
+    }
+  } else {
+    if(isAuto) { localStorage.removeItem('LMS_PIN'); document.getElementById('inputPIN').value=""; }
+    else { Swal.fire('Gagal', r.error || 'PIN Tidak Ditemukan', 'error'); }
+  }
+}
+
+function doLogout(){ localStorage.removeItem('LMS_PIN'); location.reload(); }
+
+// --- LOGIKA GURU (ADAPTASI DESKTOP: RENDER TABEL) ---
+async function loadGuru(){
+  showLoad(true);
+  let d = await apiCall("getDashboardGuru", { pin: USER.pin });
+  showLoad(false);
+  if(d) {
+    let mapTugas={}; d.riwayat.forEach(r=>{mapTugas[String(r[6]).trim()]=r[10]});
+    let acc=0, html="";
+    let sel = document.getElementById('sel-prog-kkg'); sel.innerHTML="";
+    
+    d.agenda.forEach((a, index)=>{
+       let n=String(a[1]).trim(); sel.innerHTML += `<option value="${n}">${n}</option>`;
+       let t=a[2], st=mapTugas[n], btnAction="";
+       
+       if(st==='Diterima') acc++;
+       
+       let statusBadge = "";
+       if(st){
+          let bg=st==='Diterima'?'st-ok':(st==='Revisi'?'st-rev':'st-wait');
+          statusBadge = `<span class="status-pill ${bg}">${st}</span>`;
+          if(st==='Revisi') btnAction = `<button onclick="bukaLapor('${n}', ${index})" class="btn btn-sm btn-outline-danger rounded-pill px-3"><i class="bi bi-pencil"></i> Revisi</button>`;
+          else btnAction = `<span class="text-muted small"><i class="bi bi-check-circle"></i> Selesai</span>`;
+       } else {
+          statusBadge = `<span class="badge bg-light text-secondary border">Belum Dikerjakan</span>`;
+          btnAction = `<button id="btn-kerjakan-${index}" onclick="bukaLapor('${n}', ${index})" class="btn btn-sm btn-gradient rounded-pill px-3 shadow-sm">Kerjakan</button>`;
+       }
+       
+       // Render Table Row untuk Desktop
+       html += `
+         <tr>
+            <td>${index+1}</td>
+            <td class="fw-bold text-dark">${n}</td>
+            <td class="text-muted"><i class="bi bi-clock me-1"></i>${t}</td>
+            <td>${statusBadge}</td>
+            <td class="text-end">${btnAction}</td>
+         </tr>
+       `;
+    });
+    
+    // Inject ke TBODY
+    document.getElementById('tbody-tugas-guru').innerHTML = html;
+    
+    // Logic Persen
+    let target = d.target || 0;
+    let pct = target > 0 ? Math.round((acc/target)*100) : 0;
+    if(pct > 100) pct = 100;
+    
+    document.getElementById('txt-persen').innerText = pct + "%";
+    document.getElementById('txt-target').innerText = acc + "/" + target + " Selesai";
+    
+    let bar = document.getElementById('bar-guru'); 
+    bar.style.width = pct + "%"; 
+    bar.className = pct < 50 ? "progress-bar bg-danger" : (pct < 80 ? "progress-bar bg-warning" : "progress-bar bg-success");
+  }
+}
+
+// --- LOGIKA KS (ADAPTASI DESKTOP) ---
+async function loadKS() {
+  showLoad(true);
+  let dataSekolah = await apiCall("getDataKS", { sekolah: USER.sekolah });
+  let dataPribadi = await apiCall("getDashboardGuru", { pin: USER.pin });
+  showLoad(false); 
+
+  if(dataSekolah) {
+    document.getElementById('ks-count-imp').innerText = dataSekolah.statsPengembangan.implemen;
+    document.getElementById('ks-count-ino').innerText = dataSekolah.statsPengembangan.inovasi;
+    
+    let tb = document.getElementById('tbl-ks'); let html = "";
+    let dG = dataSekolah.dataGuru; 
+    let totalLaporanMasuk = 0;
+
+    if (dG.length === 0) { tb.innerHTML = "<tr><td colspan='3' class='text-center py-4 text-muted'>Data guru tidak ditemukan.</td></tr>"; }
+    else {
+        dG.forEach(guru => {
+          totalLaporanMasuk += guru.selesai;
+          let bgBar = "bg-danger"; if(guru.persen >= 50) bgBar = "bg-warning"; if(guru.persen >= 80) bgBar = "bg-success";
+          // Desktop Table Row
+          html += `<tr>
+            <td class="fw-bold">${guru.nama}</td>
+            <td>
+                <div class="progress" style="height:10px; border-radius:10px;">
+                    <div class="progress-bar ${bgBar}" style="width: ${guru.persen}%"></div>
+                </div>
+            </td>
+            <td class="text-end fw-bold text-dark">${guru.persen}%</td>
+          </tr>`;
+        });
+        tb.innerHTML = html;
+        
+        let avg = dataSekolah.rataRataSekolah || 0;
+        document.getElementById('ks-persen').innerText = Math.round(avg) + "%";
+        document.getElementById('ks-total-laporan').innerText = totalLaporanMasuk;
+    }
+  }
+  
+  // Riwayat Pribadi KS (Tampil sebagai List di Card Kanan)
+  let divRiwayat = document.getElementById('list-riwayat-ks'); let htmlR = "";
+  if(dataPribadi && dataPribadi.riwayat.length > 0) {
+    dataPribadi.riwayat.forEach(item => {
+      let jenis = item[5], judul = item[6], status = item[10], waktu = item[1];
+      let bgSt = status==='Menunggu' ? 'bg-secondary' : (status==='Diterima'?'bg-success':'bg-danger');
+      let feedback = (status !== 'Menunggu' && item[11]) ? `<div class="mt-1 small text-success fst-italic"><i class="bi bi-chat-quote-fill me-1"></i>${item[11]}</div>` : '';
+      
+      htmlR += `
+      <div class="p-3 mb-2 border rounded-3 bg-light">
+         <div class="d-flex justify-content-between mb-1">
+            <span class="badge bg-white text-dark border">${jenis}</span>
+            <span class="badge ${bgSt} rounded-pill">${status}</span>
+         </div>
+         <div class="fw-bold text-dark small mb-1">${judul}</div>
+         <div class="text-muted small" style="font-size:0.7rem">${waktu}</div>
+         ${feedback}
+      </div>`;
+    });
+    divRiwayat.innerHTML = htmlR;
+  } else { divRiwayat.innerHTML = '<div class="text-center py-5 text-muted small">Belum ada riwayat aktivitas.</div>'; }
+}
+
+// --- LOGIKA SUBMIT (SAMA) ---
+let activeTaskIndex = -1;
+function bukaLapor(j, idx){ document.getElementById('frmUpload').reset(); document.getElementById('inpJudul').value=j; activeTaskIndex = idx; modalUp.show(); }
+
+async function submitTugas(e){
+  e.preventDefault();
+  let f=document.getElementById('frmUpload');
+  let obj={pin_user:USER.pin, nama_user:USER.nama, sekolah_user:document.getElementById('txtSekolah').innerText};
+  Array.from(f.elements).forEach(el=>{if(el.name)obj[el.name]=el.value});
+  
+  modalUp.hide();
+  Swal.fire({ title: 'Terkirim!', text: 'Sedang memproses...', icon: 'success', timer: 1000, showConfirmButton: false, toast: true, position: 'top-end' });
+
+  if(activeTaskIndex >= 0) {
+      let btn = document.getElementById(`btn-kerjakan-${activeTaskIndex}`);
+      // Update UI Table Button
+      if(btn) btn.parentElement.innerHTML = `<span class="status-pill st-wait">Menunggu</span>`;
+  }
+
+  try { await apiCall("simpanTugas", { data: obj }); } catch (e) { Swal.fire('Gagal', 'Koneksi terputus.', 'error'); }
+}
+
+async function submitPengembangan(e, jenis) {
+  e.preventDefault();
+  let data = {};
+  if(jenis === 'Implementasi KKG') {
+     data.judul_dokumen = "IMPLEMENTASI: " + document.getElementById('sel-prog-kkg').value;
+     data.catatan = `[KEGIATAN: ${document.getElementById('imp-nama').value}] [KELAS: ${document.getElementById('imp-kelas').value}] ` + document.getElementById('imp-desc').value;
+     data.link_video = document.getElementById('imp-link').value;
+     bootstrap.Modal.getInstance(document.getElementById('mdlImplemen')).hide();
+  } else {
+     data.judul_dokumen = "INOVASI: " + document.getElementById('ino-nama').value;
+     data.catatan = document.getElementById('ino-desc').value;
+     data.link_video = document.getElementById('ino-link').value;
+     bootstrap.Modal.getInstance(document.getElementById('mdlInovasi')).hide();
+  }
+  let objKirim = { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('txtSekolah').innerText, jenis_laporan: jenis, judul_dokumen: data.judul_dokumen, link_video: data.link_video, catatan: data.catatan };
+  
+  if(jenis==='Karya Inovasi') document.getElementById('frmInovasi').reset(); else document.getElementById('frmImplemen').reset();
+
+  Swal.fire({ title: 'Terkirim!', text: 'Data disimpan.', icon: 'success', timer: 1500, showConfirmButton: false });
+  await apiCall("simpanTugas", { data: objKirim });
+}
+
+function isiDropdownSekolah(idElement) {
+  let listSekolah = document.getElementById('txtSekolah').innerText.split(',');
+  let elSelect = document.getElementById(idElement); elSelect.innerHTML = "";
+  listSekolah.forEach(s => { if(s.trim()) { let opt = document.createElement('option'); opt.value = s.trim(); opt.innerText = s.trim(); elSelect.appendChild(opt); } });
+}
+
+function bukaModalPrestasi(){ document.getElementById('frmPrestasi').reset(); isiDropdownSekolah('inpSekolahPrestasi'); modalPr.show(); }
+function bukaModalPembiasaan(){ document.getElementById('frmPembiasaan').reset(); isiDropdownSekolah('inpSekolahBias'); modalBs.show(); }
+function bukaModalEvent(){ document.getElementById('frmEvent').reset(); isiDropdownSekolah('inpSekolahEvent'); modalEv.show(); }
+
+async function submitGenericKS(e, modal, obj) {
+    e.preventDefault(); modal.hide();
+    let counter = document.getElementById('ks-total-laporan');
+    if(counter) counter.innerText = (parseInt(counter.innerText) || 0) + 1;
+    Swal.fire({ title: 'Sukses!', text: 'Laporan ditambahkan.', icon: 'success', timer: 1000, showConfirmButton: false });
+    await apiCall("simpanTugas", { data: obj });
+}
+
+async function submitPrestasi(e){
+  let f = document.getElementById('frmPrestasi'); let dataRaw = {}; Array.from(f.elements).forEach(el=>{if(el.name) dataRaw[el.name]=el.value});
+  let obj = { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('inpSekolahPrestasi').value, jenis_laporan: "Laporan Prestasi", judul_dokumen: "PRESTASI: " + dataRaw.cabang.toUpperCase(), link_video: "-", catatan: `[SISWA: ${dataRaw.nama_siswa}] [JUARA: ${dataRaw.juara}] [TINGKAT: ${dataRaw.tingkat}] [NO: ${dataRaw.no_piagam}] [OLEH: ${dataRaw.penyelenggara}]` };
+  submitGenericKS(e, modalPr, obj);
+}
+async function submitPembiasaan(e){
+  let obj = { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('inpSekolahBias').value, jenis_laporan: "Laporan Pembiasaan", judul_dokumen: "PEMBIASAAN: " + document.getElementById('bias-nama').value, link_video: document.getElementById('bias-link').value, catatan: `[FREQ: ${document.getElementById('bias-freq').value}] [KARAKTER: ${document.getElementById('bias-karakter').value}] ` + document.getElementById('bias-desc').value };
+  submitGenericKS(e, modalBs, obj);
+}
+async function submitEvent(e){
+  let obj = { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('inpSekolahEvent').value, jenis_laporan: "Laporan Event", judul_dokumen: "EVENT: " + document.getElementById('evt-nama').value, link_video: document.getElementById('evt-link').value, catatan: `[SKALA: ${document.getElementById('evt-scale').value}] [TGL: ${document.getElementById('evt-date').value}] ` + document.getElementById('evt-desc').value };
+  submitGenericKS(e, modalEv, obj);
+}
+</script>
+</body>
+</html>
