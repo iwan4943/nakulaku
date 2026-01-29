@@ -45,15 +45,24 @@
     <style>
         body { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
         ::-webkit-scrollbar { width: 0px; background: transparent; }
+        
         .bento-card { transition: transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1), background-color 0.2s; border: 1px solid rgba(0,0,0,0.05); }
         .dark .bento-card { border: 1px solid #454545; background-color: #303030; }
         .bento-card:active { transform: scale(0.98); }
+        
         .icon-watermark { position: absolute; right: -20px; bottom: -20px; opacity: 0.03; transform: rotate(-15deg); transition: transform 0.3s; }
         .bento-card:hover .icon-watermark { transform: rotate(0deg) scale(1.2); opacity: 0.06; }
+        
         .modal-content { transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1); }
-        .school-slide { position: absolute; inset: 0; display: flex; align-items: center; gap: 1rem; padding: 1rem; opacity: 0; transform: translateY(15px) scale(0.98); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; }
+        
+        /* SLIDESHOW (Cinematic Slow) */
+        .school-slide {
+            position: absolute; inset: 0; display: flex; align-items: center; gap: 1rem; padding: 1rem;
+            opacity: 0; transform: translateY(20px) scale(0.95); 
+            transition: all 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events: none;
+        }
         .school-slide.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-        .school-slide.exit { opacity: 0; transform: translateY(-15px) scale(1.02); }
+        .school-slide.exit { opacity: 0; transform: translateY(-20px) scale(1.05); }
         
         .loader-ring { display: inline-block; position: relative; width: 80px; height: 80px; }
         .loader-ring div { box-sizing: border-box; display: block; position: absolute; width: 64px; height: 64px; margin: 8px; border: 4px solid #B3261E; border-radius: 50%; animation: loader-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite; border-color: #B3261E transparent transparent transparent; }
@@ -273,7 +282,7 @@
                 let currentIdx = 0; const container = document.getElementById('school-slides-container');
                 const createSlide = (school, isActive) => { const div = document.createElement('div'); div.className = `school-slide ${isActive ? 'active' : ''}`; const logoHtml = (school.logo && school.logo.trim() !== "") ? `<img src="${school.logo}" class="w-full h-full object-contain p-1">` : `<i data-lucide="school" class="w-6 h-6 text-white"></i>`; div.innerHTML = `<div class="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20 shrink-0 shadow-lg">${logoHtml}</div><div class="flex-1 min-w-0 text-left"><h2 class="text-lg md:text-xl font-bold leading-tight mb-0.5 line-clamp-1 text-white shadow-sm">${school.name}</h2><p class="text-[11px] md:text-xs text-white/90 font-medium italic line-clamp-1 opacity-90">"${school.jargon || 'Solid Bersinergi'}"</p></div>`; return div; };
                 container.innerHTML = ''; if (this.schools.length > 0) { container.appendChild(createSlide(this.schools[0], true)); lucide.createIcons(); }
-                this.schoolInterval = setInterval(() => { const nextIdx = (currentIdx + 1) % this.schools.length; const nextSchool = this.schools[nextIdx]; const newSlide = createSlide(nextSchool, false); container.appendChild(newSlide); lucide.createIcons(); const oldSlide = container.children[0]; requestAnimationFrame(() => { oldSlide.classList.remove('active'); oldSlide.classList.add('exit'); newSlide.classList.add('active'); }); setTimeout(() => { if(oldSlide && oldSlide.parentNode) oldSlide.remove(); }, 600); currentIdx = nextIdx; }, 7000); 
+                this.schoolInterval = setInterval(() => { const nextIdx = (currentIdx + 1) % this.schools.length; const nextSchool = this.schools[nextIdx]; const newSlide = createSlide(nextSchool, false); container.appendChild(newSlide); lucide.createIcons(); const oldSlide = container.children[0]; requestAnimationFrame(() => { oldSlide.classList.remove('active'); oldSlide.classList.add('exit'); newSlide.classList.add('active'); }); setTimeout(() => { if(oldSlide && oldSlide.parentNode) oldSlide.remove(); }, 1200); currentIdx = nextIdx; }, 7000); 
             },
 
             // --- REFRESH WITH LOADING OVERLAY ---
@@ -318,7 +327,7 @@
                 });
             },
 
-            // --- FUNGSI SYNC YANG SEMPAT HILANG ---
+            // --- FUNGSI SYNC YANG VITAL ---
             syncData: function() { 
                 const email = document.getElementById('sync-email').value; 
                 const pin = document.getElementById('sync-pin').value; 
@@ -367,11 +376,14 @@
                     if(item.role && item.role.toLowerCase() !== 'all' && !getRole.includes(item.role.toLowerCase())) return;
                     const hasChild = this.menuMap[item.judul.toLowerCase()];
                     const action = hasChild ? `onclick="app.openSubmenu('${item.judul}')"` : (item.url ? `onclick="app.handleLink('${item.url}')"` : `onclick="app.showAlert('info','Info','Fitur ini segera hadir')"`);
-                    const isLarge = index < 2 || (item.ukuran||'').toLowerCase() === 'wide';
+                    
+                    // --- DYNAMIC SIZE FROM SHEET ---
+                    const isLarge = (item.ukuran || '').toString().toLowerCase().trim() === 'wide';
                     const colClass = isLarge ? 'col-span-2' : 'col-span-1';
                     const heightClass = isLarge ? 'h-32' : 'h-32 md:h-40';
                     const bgClass = item.warna ? `bg-${item.warna}-50 dark:bg-${item.warna}-900/20` : 'bg-gnomecard dark:bg-darkcard';
                     const textClass = item.warna ? `text-${item.warna}-700 dark:text-${item.warna}-300` : 'text-stone-700 dark:text-stone-200';
+                    
                     html += `<div ${action} class="${colClass} ${heightClass} ${bgClass} bento-card rounded-[2.5rem] p-6 relative overflow-hidden cursor-pointer shadow-gnome dark:shadow-dark-soft hover:shadow-lg dark:hover:shadow-white/5 border border-stone-100 dark:border-darkborder group"><div class="relative z-10 flex flex-col h-full justify-center items-center text-center gap-2"><div class="w-12 h-12 rounded-[1.2rem] bg-stone-50 dark:bg-darkbg flex items-center justify-center shadow-sm ${textClass} border border-stone-200 dark:border-darkborder shrink-0"><i data-lucide="${item.icon||'box'}" class="w-6 h-6 stroke-[1.5]"></i></div><div><h4 class="font-bold text-sm leading-tight ${textClass} mb-0.5 line-clamp-1">${item.judul}</h4>${isLarge ? `<p class="text-[10px] text-stone-400 font-bold uppercase tracking-wide line-clamp-1">${item.deskripsi||'Akses layanan'}</p>` : ''}</div></div><i data-lucide="${item.icon||'box'}" class="icon-watermark w-28 h-28 text-stone-300 dark:text-stone-700"></i>${hasChild ? `<div class="absolute top-4 right-4 text-stone-300"><i data-lucide="arrow-up-right" class="w-4 h-4"></i></div>` : ''}</div>`;
                 });
                 container.innerHTML = html || '<div class="col-span-4 text-center py-10 text-stone-400 text-xs">Menu tidak tersedia</div>';
@@ -410,14 +422,7 @@
             handlePhotoUpload: function(input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = (e) => { const base64Img = e.target.result; document.getElementById('modal-photo').src = base64Img; document.getElementById('widget-user-photo').src = base64Img; let p = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); p.photo = base64Img; localStorage.setItem('nakula_profile', JSON.stringify(p)); this.showToast("Foto profil diperbarui"); }; reader.readAsDataURL(input.files[0]); } },
             
             // LOGOUT
-            confirmLogout: function() { 
-                if(confirm("Apakah Anda yakin ingin keluar?")) { 
-                    localStorage.removeItem('nakula_profile'); 
-                    localStorage.removeItem('nakula_role'); 
-                    localStorage.removeItem('nakula_cache'); 
-                    location.reload(); 
-                } 
-            },
+            confirmLogout: function() { if(confirm("Apakah Anda yakin ingin keluar?")) { localStorage.removeItem('nakula_profile'); localStorage.removeItem('nakula_role'); localStorage.removeItem('nakula_cache'); location.reload(); } },
             
             submitFeedback: function(e) { e.preventDefault(); const btn=document.getElementById('btn-feedback-submit'); const oldTxt=btn.innerHTML; btn.innerHTML='<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Mengirim...'; btn.disabled=true; lucide.createIcons(); const fd=new FormData(e.target); const obj=Object.fromEntries(fd.entries()); obj.isAnonim=document.getElementById('anonim-check').checked; const sendRequest=fetch(this.apiURL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}); const fakeDelay=new Promise(r=>setTimeout(r,1500)); Promise.race([sendRequest,fakeDelay]).then(()=>{ this.closeModal('feedback-modal'); this.showAlert('success','Terkirim','Terima kasih atas masukan Anda!'); e.target.reset(); this.setRating(5); }).catch(err=>{ console.error(err); this.showAlert('error','Gagal','Terjadi kesalahan jaringan'); }).finally(()=>{ btn.innerHTML=oldTxt; btn.disabled=false; }); },
             scrollToTop: function() { document.getElementById('main-scroll').scrollTo(0,0); },
