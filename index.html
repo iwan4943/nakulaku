@@ -25,7 +25,9 @@
                         'gnome': '0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)', 
                         'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
                         'dark-soft': '0 4px 12px rgba(0, 0, 0, 0.2)' 
-                    }
+                    },
+                    animation: { 'fade-in': 'fadeIn 0.6s ease-out forwards', 'pulse-slow': 'pulse 3s infinite' },
+                    keyframes: { fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } }
                 } 
             }
         }
@@ -130,7 +132,6 @@
             <div id="main-scroll" class="flex-1 overflow-y-auto px-6 pb-32 md:pb-10 md:px-8 scroll-smooth w-full">
                 
                 <div class="grid grid-cols-12 gap-4 mb-6 mt-4 fade-in">
-                    
                     <div class="col-span-12 md:col-span-7 xl:col-span-8 bg-gradient-to-br from-nakula-600 to-nakula-800 text-white dark:from-nakula-700 dark:to-nakula-900 rounded-[2rem] relative overflow-hidden shadow-gnome flex items-center min-h-[100px] lg:min-h-[160px] group">
                         <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-pulse-slow"></div>
                         <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-black/10 rounded-full blur-2xl"></div>
@@ -141,13 +142,18 @@
                         
                         <div id="widget-akun-mobile" class="md:hidden bg-gnomecard dark:bg-darkcard border border-stone-100 dark:border-darkborder rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden shadow-gnome dark:shadow-dark-soft min-h-[90px]">
                             <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-white/20 to-transparent pointer-events-none"></div>
+                            
                             <div id="mob-view-guest" class="relative z-10 w-full flex flex-row justify-between items-center h-full">
-                                <div><p id="greet-mobile" class="text-[9px] font-bold text-stone-400 uppercase tracking-wide mb-0.5">Selamat Datang</p><h3 class="font-extrabold text-stone-800 dark:text-white text-lg">Tamu</h3></div>
+                                <div><p class="text-[9px] font-bold text-stone-400 uppercase tracking-wide mb-0.5">Selamat Datang</p><h3 class="font-extrabold text-stone-800 dark:text-white text-lg">Tamu</h3></div>
                                 <button class="bg-stone-900 text-white dark:bg-white dark:text-darkbg px-5 py-2 rounded-xl text-xs font-bold shadow-sm relative z-20 cursor-pointer" onclick="app.openModal('profile-modal')">Masuk</button>
                             </div>
+
                             <div id="mob-view-user" class="relative z-10 w-full flex flex-row items-center gap-5 hidden h-full cursor-pointer relative z-20" onclick="app.openModal('profile-modal')">
                                 <div class="relative shrink-0"><img id="mob-user-photo" src="" class="w-14 h-14 rounded-full border-2 border-white/40 object-cover shadow-sm bg-white/50"></div>
-                                <div class="flex-1 min-w-0"><h3 id="mob-user-name" class="font-extrabold text-lg leading-tight truncate text-stone-800 dark:text-stone-100">User</h3><p id="mob-user-role" class="text-[11px] font-medium text-stone-600 dark:text-stone-400 mt-0.5 truncate">Guru • Instansi</p></div>
+                                <div class="flex-1 min-w-0">
+                                    <h3 id="mob-user-name" class="font-extrabold text-lg leading-tight truncate text-stone-800 dark:text-stone-100">User</h3>
+                                    <p id="mob-user-role" class="text-[11px] font-medium text-stone-600 dark:text-stone-400 mt-0.5 truncate">Guru • Instansi</p>
+                                </div>
                             </div>
                         </div>
 
@@ -215,12 +221,14 @@
 
     <script>
         const app = {
-            // !!!!!!! GANTI URL INI !!!!!!!
+            // !!!!!!! PENTING: GANTI URL DI BAWAH INI DENGAN URL DEPLOY TERBARU !!!!!!!
             apiURL: "https://script.google.com/macros/s/AKfycbzgyeCMcnsLzBMkVreP8mdw-ImRev9Q-hHn0eVpEBw6YYgD_JlOz8oXBFQ-6vtMPFAe/exec", 
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             menuMap: {}, backPressedTime: 0, schoolInterval: null, schools: [{ name: "NAKULAKU EKOSISTEM", jargon: '"Solid Bersinergi Menginspirasi"' }],
-            
+            currentUser: null, // MENYIMPAN DATA USER LOGIN
+            currentGreeting: 'Selamat Malam',
+
             init: function() {
                 this.initTheme(); this.initSchoolRotator(); this.initClock();
                 this.checkAutoLogin(); 
@@ -229,11 +237,12 @@
                 this.refreshData(false); this.setupBackButton(); this.setupInstallPrompt(); lucide.createIcons();
             },
 
+            // --- UTILITIES ---
             toggleTheme: function() { const isDark=document.documentElement.classList.toggle('dark'); localStorage.setItem('theme',isDark?'dark':'light'); this.updateStatusBar(isDark); },
             initTheme: function() { const saved=localStorage.getItem('theme'); const isDark=saved==='dark'||(!saved&&window.matchMedia('(prefers-color-scheme: dark)').matches); if(isDark)document.documentElement.classList.add('dark'); this.updateStatusBar(isDark); },
             updateStatusBar: function(isDark) { document.getElementById('theme-color-meta').setAttribute('content',isDark?'#1E1E1E':'#F6F5F4'); },
             
-            // --- TIME & GREETING LOGIC ---
+            // --- LOGIKA JAM & SAPAAN REAL-TIME ---
             initClock: function() {
                 const updateTime = () => {
                     const now = new Date();
@@ -249,17 +258,23 @@
                     if(elClock) elClock.innerText = tStr;
                     if(elDate) elDate.innerText = dStr;
 
-                    // Greeting Logic
+                    // Logika Sapaan
                     let greet = 'Selamat Malam';
                     if (hrs >= 4 && hrs < 11) greet = 'Selamat Pagi';
                     else if (hrs >= 11 && hrs < 15) greet = 'Selamat Siang';
                     else if (hrs >= 15 && hrs < 18) greet = 'Selamat Sore';
+                    this.currentGreeting = greet;
 
-                    const elGreetMob = document.getElementById('greet-mobile');
-                    if(elGreetMob) elGreetMob.innerText = greet;
+                    // Update JIKA ADA USER (Format: "Sapaan, Nama")
+                    if (this.currentUser && this.currentUser.realName) {
+                        const mobName = document.getElementById('mob-user-name');
+                        // Ambil nama depan saja untuk kerapian
+                        const shortName = this.currentUser.realName.split(' ')[0];
+                        if (mobName) mobName.innerText = `${greet}, ${shortName}`;
+                    }
                 };
-                updateTime();
                 setInterval(updateTime, 1000);
+                updateTime(); // Run once immediately
             },
 
             checkAutoLogin: function() { const p = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); if(p.nama) { this.updateUIForUser(p); this.refreshUserPerformance(p.nama); } else { this.updateUIForGuest(); } },
@@ -279,21 +294,38 @@
             getRoleBg: function(role) { const r = (role || '').toLowerCase(); if(r.includes('kepala')) return 'bg-gradient-to-br from-indigo-100 to-purple-200 dark:from-indigo-900/30 dark:to-purple-900/30'; if(r.includes('pjok')) return 'bg-gradient-to-br from-orange-100 to-red-200 dark:from-orange-900/30 dark:to-red-900/30'; if(r.includes('agama')) return 'bg-gradient-to-br from-emerald-100 to-teal-200 dark:from-emerald-900/30 dark:to-teal-900/30'; if(r.includes('kelas')) return 'bg-gradient-to-br from-blue-100 to-cyan-200 dark:from-blue-900/30 dark:to-cyan-900/30'; return 'bg-gradient-to-br from-slate-200 to-zinc-300 dark:from-slate-800 dark:to-zinc-800'; },
             
             updateUIForUser: function(p) {
-                document.getElementById('mob-view-guest').classList.add('hidden'); document.getElementById('mob-view-user').classList.remove('hidden'); document.getElementById('mob-view-user').classList.add('flex');
-                document.getElementById('mob-user-name').innerText = p.realName ? p.realName.split(' ')[0] : 'User'; document.getElementById('mob-user-role').innerText = `${p.role || '-'} • ${p.instansi || '-'}`;
+                // Simpan user ke variabel global agar bisa dibaca clock
+                this.currentUser = p; 
+
+                // Update Mobile
+                document.getElementById('mob-view-guest').classList.add('hidden'); 
+                document.getElementById('mob-view-user').classList.remove('hidden'); 
+                document.getElementById('mob-view-user').classList.add('flex');
+                
+                // Format Nama Sapaan Langsung (agar tidak menunggu detik jam)
+                const shortName = p.realName ? p.realName.split(' ')[0] : 'User';
+                document.getElementById('mob-user-name').innerText = `${this.currentGreeting}, ${shortName}`;
+                
+                document.getElementById('mob-user-role').innerText = `${p.role || '-'} • ${p.instansi || '-'}`;
                 if(p.photo) document.getElementById('mob-user-photo').src = p.photo;
                 const widgetMobile = document.getElementById('widget-akun-mobile'); if(widgetMobile) widgetMobile.className = `md:hidden col-span-12 border border-transparent rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden shadow-gnome hover:shadow-md min-h-[90px] ${this.getRoleBg(p.role)}`;
+                
+                // Update Desktop
                 document.getElementById('desk-view-guest').classList.add('hidden'); document.getElementById('desk-view-user').classList.remove('hidden');
                 const deskProfileContainer = document.getElementById('desktop-profile-container'); deskProfileContainer.className = `bg-gradient-to-br from-slate-100 to-zinc-200 dark:from-slate-800 dark:to-zinc-800 rounded-[2rem] p-4 xl:p-6 text-center shadow-gnome dark:shadow-dark-soft border border-white/20 dark:border-white/5 relative overflow-hidden group ${this.getRoleBg(p.role)}`;
                 document.getElementById('desk-user-name').innerText = p.realName; document.getElementById('desk-user-role').innerText = `${p.role || '-'} • ${p.instansi || '-'}`;
                 if(p.photo) document.getElementById('desk-user-photo').src = p.photo;
+                
                 document.getElementById('sync-email').value = p.nama; 
                 const widget = document.getElementById('widget-performa'); widget.classList.remove('hidden'); if(p.performa) this.updatePerformanceWidget(p.performa);
             },
             
             updateUIForGuest: function() {
+                this.currentUser = null; // Reset user
+                // Mobile
                 document.getElementById('mob-view-guest').classList.remove('hidden'); document.getElementById('mob-view-user').classList.add('hidden'); document.getElementById('mob-view-user').classList.remove('flex');
                 const widgetMobile = document.getElementById('widget-akun-mobile'); widgetMobile.className = "md:hidden col-span-12 bg-gnomecard dark:bg-darkcard border border-stone-100 dark:border-darkborder rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden shadow-gnome dark:shadow-dark-soft min-h-[90px]";
+                // Desktop
                 document.getElementById('desk-view-guest').classList.remove('hidden'); document.getElementById('desk-view-user').classList.add('hidden');
                 const deskProfileContainer = document.getElementById('desktop-profile-container'); deskProfileContainer.className = "bg-gradient-to-br from-slate-100 to-zinc-200 dark:from-slate-800 dark:to-zinc-800 rounded-[2rem] p-4 xl:p-6 text-center shadow-gnome dark:shadow-dark-soft border border-white/20 dark:border-white/5 relative overflow-hidden group";
                 document.getElementById('widget-performa').classList.add('hidden');
@@ -302,9 +334,14 @@
             initSchoolRotator: function() { if (this.schoolInterval) clearInterval(this.schoolInterval); let currentIdx = 0; const container = document.getElementById('school-slides-container'); const createSlide = (school, isActive) => { const div = document.createElement('div'); div.className = `school-slide ${isActive ? 'active' : ''}`; const logoHtml = (school.logo && school.logo.trim() !== "") ? `<img src="${school.logo}" class="w-full h-full object-contain p-1">` : `<i data-lucide="school" class="w-6 h-6 text-white"></i>`; div.innerHTML = `<div class="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20 shrink-0 shadow-lg">${logoHtml}</div><div class="flex-1 min-w-0 text-left"><h2 class="text-lg md:text-xl font-bold leading-tight mb-0.5 line-clamp-1 text-white shadow-sm">${school.name}</h2><p class="text-[11px] md:text-xs text-white/90 font-medium italic line-clamp-1 opacity-90">"${school.jargon || 'Solid Bersinergi'}"</p></div>`; return div; }; container.innerHTML = ''; if (this.schools.length > 0) { container.appendChild(createSlide(this.schools[0], true)); lucide.createIcons(); } this.schoolInterval = setInterval(() => { const nextIdx = (currentIdx + 1) % this.schools.length; const nextSchool = this.schools[nextIdx]; const newSlide = createSlide(nextSchool, false); container.appendChild(newSlide); lucide.createIcons(); const oldSlide = container.children[0]; requestAnimationFrame(() => { oldSlide.classList.remove('active'); oldSlide.classList.add('exit'); newSlide.classList.add('active'); }); setTimeout(() => { if(oldSlide && oldSlide.parentNode) oldSlide.remove(); }, 1200); currentIdx = nextIdx; }, 7000); },
             
             renderAgenda: function(agendaList) {
-                const container = document.getElementById('desktop-agenda-list'); if(!container) return;
+                const container = document.getElementById('desktop-agenda-list');
+                if(!container) return;
                 if(!agendaList || agendaList.length === 0) { container.innerHTML = `<div class="p-6 text-center text-stone-400"><i data-lucide="calendar-off" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>Belum ada agenda</div>`; lucide.createIcons(); return; }
-                let html = ''; agendaList.forEach(item => { html += `<div class="timeline-item group"><div class="timeline-dot transition-transform group-hover:scale-125"></div><div class="flex items-start justify-between group-hover:bg-stone-50 dark:group-hover:bg-stone-800/50 p-2 rounded-lg transition-colors -mt-2"><div><span class="text-[10px] font-bold text-nakula-600 uppercase tracking-widest">${item.tanggal}</span><h4 class="text-sm font-bold text-stone-800 dark:text-white leading-tight">${item.kegiatan}</h4></div>${item.ket ? `<div class="text-[10px] text-stone-400 text-right max-w-[100px] truncate">${item.ket}</div>` : ''}</div></div>`; }); container.innerHTML = html;
+                let html = '';
+                agendaList.forEach(item => {
+                    html += `<div class="timeline-item group"><div class="timeline-dot transition-transform group-hover:scale-125"></div><div class="flex items-start justify-between group-hover:bg-stone-50 dark:group-hover:bg-stone-800/50 p-2 rounded-lg transition-colors -mt-2"><div><span class="text-[10px] font-bold text-nakula-600 uppercase tracking-widest">${item.tanggal}</span><h4 class="text-sm font-bold text-stone-800 dark:text-white leading-tight">${item.kegiatan}</h4></div>${item.ket ? `<div class="text-[10px] text-stone-400 text-right max-w-[100px] truncate">${item.ket}</div>` : ''}</div></div>`;
+                });
+                container.innerHTML = html;
             },
 
             refreshData: function(manual) {
@@ -312,6 +349,7 @@
                 const container = document.getElementById('mobile-menu-container');
                 const dockContainer = document.getElementById('dock-container');
                 if(dockContainer) dockContainer.innerHTML = '';
+                
                 if(!localStorage.getItem('nakula_cache') || manual) { if(!container.children.length) container.innerHTML = `<div class="col-span-2 h-32 bg-stone-200 dark:bg-darkcard rounded-[2rem] animate-pulse"></div>`; }
                 const p = JSON.parse(localStorage.getItem('nakula_profile') || '{}');
                 const promises = [fetch(`${this.apiURL}?action=content&t=${Date.now()}`).then(r => r.json())];
