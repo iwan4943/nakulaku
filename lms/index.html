@@ -217,9 +217,6 @@
                     <option value="Juara 1">Juara 1</option>
                     <option value="Juara 2">Juara 2</option>
                     <option value="Juara 3">Juara 3</option>
-                    <option value="Harapan 1">Harapan 1</option>
-                    <option value="Harapan 2">Harapan 2</option>
-                    <option value="Harapan 3">Harapan 3</option>
                 </select>
             </div>
 
@@ -247,6 +244,17 @@
         <form onsubmit="submitGeneric(event, 'Laporan Pembiasaan', 'mdl-bias')">
             <select class="sel-sekolah" name="sekolah"></select>
             <input name="a" placeholder="Nama Program" required>
+            
+            <div class="flex" style="gap:5px">
+               <select name="freq" required>
+                  <option value="" disabled selected>Frekuensi</option>
+                  <option value="Harian">Harian</option>
+                  <option value="Mingguan">Mingguan</option>
+                  <option value="Bulanan">Bulanan</option>
+               </select>
+               <input name="karakter" placeholder="Karakter (Mis: Disiplin)" required>
+            </div>
+
             <input name="link_video" placeholder="Link Foto" required>
             <textarea name="desc" placeholder="Keterangan"></textarea>
             <button class="btn btn-primary w-100" style="background:var(--success)">SIMPAN</button>
@@ -484,7 +492,8 @@ async function submitGeneric(e, jenis, modalId) {
         catatan = `[SISWA: ${obj.nama_siswa}] [JUARA: ${obj.juara}] [TINGKAT: ${obj.tingkat}] [NO: ${obj.no_piagam}] [OLEH: ${obj.penyelenggara}]`;
     } else if(jenis === 'Laporan Pembiasaan') {
         judul = "PEMBIASAAN: " + obj.a;
-        catatan = `[KET: ${obj.desc}]`;
+        // FORMAT DATA DIKEMBALIKAN KE ASAL
+        catatan = `[FREQ: ${obj.freq}] [KARAKTER: ${obj.karakter}] ${obj.desc}`;
     } else {
         judul = "EVENT: " + obj.a;
         catatan = `[TGL: ${obj.b}] [DAMPAK: ${obj.desc}]`;
