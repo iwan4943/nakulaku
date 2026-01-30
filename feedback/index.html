@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title>Umpan Balik Peserta</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    /* --- CSS RINGAN (VANILLA) - TANPA FRAMEWORK --- */
+    :root {
+      --primary: #B3261E;
+      --on-primary: #FFFFFF;
+      --surface: #FFF8F7;
+      --surface-variant: #F2DEDC;
+      --on-surface: #201A1A;
+      --outline: #857372;
+      --container-low: #FCEAE9;
+      --radius-lg: 24px;
+      --radius-md: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Roboto', sans-serif; background-color: var(--surface); color: var(--on-surface); line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+    h1, h2, h3, .font-head { font-family: 'Google Sans', sans-serif; }
+
+    /* Layout Wrapper */
+    .app-container {
+      width: 100%; max-width: 480px; background: #FFF8F7; min-height: 100vh; position: relative; display: flex; flex-direction: column;
+    }
+    @media (min-width: 481px) {
+      .app-container { min-height: auto; height: 90vh; border-radius: 32px; border: 1px solid var(--surface-variant); box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-top: 2rem; overflow: hidden; }
+    }
+
+    /* Components */
+    .header { padding: 1.5rem 1rem 0.5rem; text-align: center; background: var(--surface); position: sticky; top: 0; z-index: 10; }
+    .header h1 { font-size: 1.25rem; font-weight: 500; }
+    .header p { color: var(--primary); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; }
+
+    .btn {
+      display: inline-flex; justify-content: center; align-items: center; width: 100%; padding: 1rem;
+      border: none; border-radius: 50px; font-family: 'Google Sans', sans-serif; font-weight: 500; font-size: 1rem;
+      cursor: pointer; transition: transform 0.1s, opacity 0.2s; gap: 8px;
+    }
+    .btn:active { transform: scale(0.98); opacity: 0.9; }
+    .btn-primary { background-color: var(--primary); color: var(--on-primary); box-shadow: 0 2px 6px rgba(179, 38, 30, 0.3); }
+    .btn-text { background: transparent; color: var(--outline); font-size: 0.875rem; width: auto; padding: 0.5rem 1rem; }
+    .btn-text:hover { background-color: rgba(0,0,0,0.05); }
+
+    .card { background: #FFFFFF; border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    
+    .input-group { margin-bottom: 1rem; position: relative; }
+    .input-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--outline); width: 18px; height: 18px; pointer-events: none; }
+    .form-select, .form-area {
+      width: 100%; background-color: var(--container-low); border: 1px solid transparent; border-radius: var(--radius-md);
+      padding: 1rem 1rem 1rem 3rem; color: var(--on-surface); font-size: 0.9rem; font-weight: 500; appearance: none;
+      transition: 0.2s; outline: none;
+    }
+    .form-area { padding: 1rem; resize: none; font-family: inherit; }
+    .form-select:focus, .form-area:focus { background-color: #FFF; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(179, 38, 30, 0.1); }
+
+    /* Icons SVG */
+    svg { fill: currentColor; }
+    
+    /* Star Rating */
+    .star-wrapper { display: flex; justify-content: center; padding: 5px 0; }
+    .star-rating { display: inline-flex; flex-direction: row-reverse; gap: 6px; }
+    .star-rating input { display: none; }
+    .star-rating label { color: #E0E0E0; cursor: pointer; transition: color 0.2s, transform 0.2s; width: 32px; height: 32px; }
+    .star-rating label svg { width: 100%; height: 100%; }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label { color: var(--primary); transform: scale(1.1); }
+
+    /* Utilities & Animations */
+    .hidden { display: none !important; }
+    .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .loading-overlay { position: absolute; inset: 0; background: var(--surface); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 50; }
+    .spinner { width: 40px; height: 40px; border: 4px solid var(--container-low); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: #322F35; color: #F5EFF7; padding: 12px 24px; border-radius: 50px; font-size: 0.85rem; font-weight: 500;
+      opacity: 0; transition: 0.3s; pointer-events: none; z-index: 100; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .scroll-area { flex: 1; overflow-y: auto; padding: 1.5rem; padding-bottom: 6rem; -webkit-overflow-scrolling: touch; }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <div class="header">
+      <h1>Umpan Balik</h1>
+      <p>KKG Gugus Nakula</p>
+    </div>
+
+    <div id="loading" class="loading-overlay">
+      <div class="spinner"></div>
+      <p style="font-size: 0.85rem; color: var(--outline); font-weight: 500;">Memuat Data...</p>
+    </div>
+
+    <div id="view-identitas" class="scroll-area hidden fade-in" style="display: flex; flex-direction: column; justify-content: center;">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="width: 64px; height: 64px; background: var(--container-low); color: #410002; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+           <svg viewBox="0 0 24 24" width="28" height="28"><path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm-9 14c0 2.67 5.33 4 9 4 3.67 0 9-1.33 9-4v-2c0-2.67-5.33-4-9-4-3.67 0-9 1.33-9 4v2z"/></svg>
+        </div>
+        <h2 class="font-head" style="font-size: 1.5rem; color: var(--on-surface); margin-bottom: 0.5rem;">Identitas</h2>
+        <p style="font-size: 0.875rem; color: var(--outline);">Silakan lengkapi data kegiatan.</p>
+      </div>
+
+      <div class="input-group">
+        <div class="input-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+        <select id="sel-lokasi" class="form-select"><option value="" disabled selected>Pilih Lokasi</option></select>
+      </div>
+
+      <div class="input-group">
+        <div class="input-icon"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div>
+        <select id="sel-nara" class="form-select"><option value="" disabled selected>Pilih Narasumber</option></select>
+      </div>
+
+      <div class="input-group">
+        <div class="input-icon"><svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72l5 2.73 5-2.73v3.72z"/></svg></div>
+        <select id="sel-sekolah" class="form-select"><option value="" disabled selected>Pilih Asal Sekolah</option></select>
+      </div>
+
+      <button onclick="toForm()" class="btn btn-primary" style="margin-top: 1rem;">
+        Mulai Penilaian 
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+      </button>
+
+      </div>
+
+    <form id="form-peserta" onsubmit="submitPeserta(event)" class="scroll-area hidden fade-in" style="padding-top: 0;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--surface-variant); padding: 1rem 0; background: var(--surface); position: sticky; top: -1.5rem; z-index: 5;">
+        <button type="button" onclick="toIdentitas()" class="btn btn-text">
+          <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right: 4px;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg> Kembali
+        </button>
+        <span style="font-size: 0.75rem; font-weight: 700; color: #410002; background: var(--container-low); padding: 4px 12px; border-radius: 50px;">Peserta</span>
+      </div>
+
+      <input type="hidden" name="lokasi" id="inp-lokasi">
+      <input type="hidden" name="narasumber" id="inp-nara">
+      <input type="hidden" name="asal_sekolah" id="inp-sekolah">
+
+      <script>
+        const makeStar = (name) => `
+          <div class="star-wrapper"><div class="star-rating">
+            <input type="radio" name="${name}" id="${name}5" value="5"><label for="${name}5"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></label>
+            <input type="radio" name="${name}" id="${name}4" value="4"><label for="${name}4"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></label>
+            <input type="radio" name="${name}" id="${name}3" value="3"><label for="${name}3"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></label>
+            <input type="radio" name="${name}" id="${name}2" value="2"><label for="${name}2"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></label>
+            <input type="radio" name="${name}" id="${name}1" value="1"><label for="${name}1"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></label>
+          </div></div>`;
+      </script>
+
+      <div id="form-content"></div>
+
+      <div class="card">
+         <label style="display:block; font-size:0.875rem; font-weight:700; margin-bottom:0.5rem;">Masukan & Saran</label>
+         <textarea name="saran" rows="3" class="form-area" placeholder="Tuliskan saran untuk perbaikan..."></textarea>
+      </div>
+
+      <button type="submit" id="btn-submit" class="btn btn-primary" style="margin-top: 1rem; margin-bottom: 2rem;">Kirim Penilaian</button>
+    </form>
+    
+  </div>
+
+  <div id="toast"><svg viewBox="0 0 24 24" width="20" height="20" style="fill:#C4EED0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><span id="toast-msg">Pesan</span></div>
+
+  <script>
+    // URL Sesuai Permintaan
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKg0VRlRs-ipgvVX1ma-rJ5RYowThx4w3z_lOwa8552cWdYTLmJfkzxMMt1SVP2JNN/exec";
+    const CACHE_KEY = 'kkg_data_v1';
+
+    // Data Structure untuk Rating (l=label, n=name)
+    const sections = [
+      { t: 'Narasumber', i: '<path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v3c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-3h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H4V4h16v12z"/>', list: [
+        {l:'Penguasaan Materi', n:'rating_materi'}, {l:'Cara Penyajian', n:'rating_presentasi'}, {l:'Interaksi', n:'rating_interaksi'}, {l:'Waktu', n:'rating_waktu'}
+      ]},
+      { t: 'Panitia', i: '<path d="M12 5.9c1.16 0 2.1.94 2.1 2.1s-.94 2.1-2.1 2.1S9.9 9.16 9.9 8s.94-2.1 2.1-2.1m0 9c2.97 0 6.1 1.46 6.1 2.1v1.1H5.9V17c0-.64 3.13-2.1 6.1-2.1M12 4C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>', list: [
+        {l:'Sarana Prasarana', n:'rating_sarana'}, {l:'Pelayanan', n:'rating_pelayanan'}, {l:'Susunan Acara', n:'rating_acara'}
+      ]},
+      { t: 'Tuan Rumah', i: '<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>', list: [
+        {l:'Tempat', n:'rating_tempat'}, {l:'Budaya & Ciri Khas', n:'rating_budaya'}, {l:'Pengemasan', n:'rating_pengemasan'}, {l:'Kebersihan', n:'rating_kebersihan'}
+      ]}
+    ];
+
+    // Generator HTML
+    const makeSection = (title, iconPath, items) => {
+      let html = `<div class="card"><div style="display:flex; gap:12px; align-items:center; margin-bottom:1.5rem;"><div style="width:40px; height:40px; border-radius:50%; background:var(--container-low); color:var(--primary); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" width="20" height="20">${iconPath}</svg></div><h3 style="font-size:1.1rem; color:var(--on-surface); font-weight:500;">${title}</h3></div><div style="display:flex; flex-direction:column; gap:1.5rem;">`;
+      items.forEach(i => html += `<div style="text-align:center;"><p style="font-size:0.875rem; font-weight:700; margin-bottom:4px;">${i.l}</p>${makeStar(i.n)}</div>`);
+      return html + '</div></div>';
+    };
+
+    // Render ke DOM
+    document.getElementById('form-content').innerHTML = sections.map(s => makeSection(s.t, s.i, s.list)).join('');
+
+    // --- LOGIC APLIKASI UTAMA ---
+    
+    function init() {
+      // 1. Cek Cache dulu (Agar Load Instan)
+      const cached = localStorage.getItem(CACHE_KEY);
+      if(cached) {
+        try {
+          populateData(JSON.parse(cached));
+          hideLoading();
+        } catch(e) { console.log('Cache error'); }
+      }
+
+      // 2. Ambil Data Baru dari Server (Background)
+      fetch(SCRIPT_URL + '?action=getDataOptions')
+        .then(r => r.json())
+        .then(data => {
+          localStorage.setItem(CACHE_KEY, JSON.stringify(data)); 
+          if(!cached) { populateData(data); hideLoading(); } 
+          else { populateData(data); }
+        })
+        .catch(e => {
+          if(!cached) { showToast("Gagal koneksi. Cek internet."); }
+        });
+    }
+
+    function populateData(data) {
+      if(!data) return;
+      fillSelect('sel-lokasi', data.lokasi);
+      fillSelect('sel-nara', data.narasumber);
+      fillSelect('sel-sekolah', data.sekolah);
+    }
+
+    function fillSelect(id, list) {
+      const sel = document.getElementById(id);
+      const currentVal = sel.value; 
+      sel.innerHTML = `<option value="" disabled selected>${sel.options[0].text}</option>`;
+      if(list) list.forEach(item => { 
+        let o = document.createElement('option'); 
+        o.value = item; o.text = item; 
+        sel.add(o); 
+      });
+      if(currentVal && list.includes(currentVal)) sel.value = currentVal;
+    }
+
+    function hideLoading() {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('view-identitas').classList.remove('hidden');
+    }
+
+    // --- NAVIGASI ---
+    function toForm() {
+      const l = document.getElementById('sel-lokasi').value;
+      const n = document.getElementById('sel-nara').value;
+      const s = document.getElementById('sel-sekolah').value;
+
+      if(!l || !n || !s) { showToast('Lengkapi identitas dulu'); return; }
+      
+      document.getElementById('inp-lokasi').value = l;
+      document.getElementById('inp-nara').value = n;
+      document.getElementById('inp-sekolah').value = s;
+
+      document.getElementById('view-identitas').classList.add('hidden');
+      document.getElementById('form-peserta').classList.remove('hidden');
+      window.scrollTo(0,0);
+    }
+
+    function toIdentitas() {
+      document.getElementById('form-peserta').classList.add('hidden');
+      document.getElementById('view-identitas').classList.remove('hidden');
+    }
+
+    // --- SUBMIT DATA ---
+    function submitPeserta(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit');
+      const originalText = btn.innerHTML;
+      
+      btn.innerHTML = 'Mengirim...';
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+
+      const form = document.getElementById('form-peserta');
+      const data = {};
+      new FormData(form).forEach((v,k) => data[k] = v);
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'simpanData', payload: data }),
+        headers: { "Content-Type": "text/plain;charset=utf-8" }
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res && res.success) {
+           showToast('Terima kasih! Data tersimpan.');
+           setTimeout(() => location.reload(), 1500);
+        } else { throw new Error('Gagal'); }
+      })
+      .catch(err => {
+        console.error(err);
+        showToast('Gagal mengirim. Coba lagi.');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        btn.style.opacity = '1';
+      });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('toast-msg').innerText = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // Jalankan aplikasi saat load
+    window.onload = init;
+  </script>
+</body>
+</html>
