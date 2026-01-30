@@ -2,606 +2,561 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LMS Nakula - Desktop Portal</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<title>LMS Nakula - Desktop</title>
 <style>
+  /* --- 1. CORE VARIABLES & RESET --- */
   :root {
-    --primary: #B3261E; 
-    --primary-hover: #901B15;
-    --primary-container: #FFDAD6;
-    --on-primary-container: #410E0B;
-    --bg-body: #F5F7FA;
-    --sidebar-bg: #FFFFFF;
-    --card-bg: #FFFFFF;
-    --text-main: #201A19;
+    --primary: #B3261E; --primary-dark: #901B15;
+    --primary-light: #FFDAD6; --text-on-primary: #410E0B;
+    --bg-body: #F5F7FA; --bg-sidebar: #FFFFFF; --card-bg: #FFFFFF;
+    --text-main: #201A19; --text-muted: #757575;
+    --border: #E0E0E0;
     --sidebar-width: 260px;
+    --radius: 12px; --shadow: 0 4px 12px rgba(0,0,0,0.03);
+    --success: #2e7d32; --warning: #ed6c02; --info: #0288d1;
   }
+  * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg-body); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; font-size: 14px; line-height: 1.5; }
 
-  body { 
-    background-color: var(--bg-body); 
-    font-family: 'Poppins', sans-serif; 
-    color: var(--text-main); 
-    overflow-x: hidden;
-  }
-  
+  /* --- 2. UTILITIES --- */
   .hidden { display: none !important; }
-
-  /* --- LOGIN STYLE --- */
-  .login-wrapper {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--primary) 0%, #601410 100%);
-  }
-  .login-card {
-    background: white;
-    padding: 3rem;
-    border-radius: 24px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-    width: 100%;
-    max-width: 450px;
-    text-align: center;
-  }
-
-  /* --- LAYOUT UTAMA --- */
-  #wrapper { display: flex; width: 100%; transition: all 0.3s; }
+  .flex { display: flex; align-items: center; }
+  .flex-col { display: flex; flex-direction: column; }
+  .between { justify-content: space-between; }
+  .center { justify-content: center; align-items: center; }
+  .fw-bold { font-weight: 600; }
+  .text-muted { color: var(--text-muted); font-size: 0.85rem; }
+  .text-primary { color: var(--primary); }
+  .w-100 { width: 100%; }
+  .mb-3 { margin-bottom: 1rem; } .mb-4 { margin-bottom: 1.5rem; }
   
+  /* --- 3. COMPONENTS --- */
+  /* Buttons */
+  .btn { border: none; padding: 10px 20px; border-radius: 50px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.9rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(179,38,30,0.2); }
+  .btn-outline { border: 1px solid var(--border); background: white; color: var(--text-main); }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+  
+  /* Inputs */
+  input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); background: #fff; border-radius: 8px; font-size: 0.95rem; font-family: inherit; margin-bottom: 1rem; transition: 0.2s; }
+  input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(179,38,30,0.1); }
+
+  /* Cards */
+  .card { background: var(--card-bg); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); height: 100%; border: 1px solid rgba(0,0,0,0.02); }
+  
+  /* Badges */
+  .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+  .bg-ok { background: #C3EED0; color: #0F5223; }
+  .bg-wait { background: #FEE4C1; color: #744C00; }
+  .bg-rev { background: #F9DEDC; color: #8C1D18; }
+
+  /* Table (Desktop Specific) */
+  .table-container { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+  th { text-align: left; padding: 12px; border-bottom: 2px solid var(--border); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
+  td { padding: 12px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafafa; }
+
+  /* Icons (SVG) */
+  svg { width: 20px; height: 20px; fill: currentColor; }
+  .icon-lg { width: 48px; height: 48px; }
+
+  /* --- 4. LAYOUT STRUCTURE --- */
   /* Sidebar */
-  #sidebar {
-    min-width: var(--sidebar-width);
-    max-width: var(--sidebar-width);
-    background: var(--sidebar-bg);
-    color: var(--text-main);
-    min-height: 100vh;
-    border-right: 1px solid #eee;
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    z-index: 1000;
-  }
-  
-  .sidebar-header { padding: 2rem 1.5rem; border-bottom: 1px solid #f0f0f0; }
-  .sidebar-menu { padding: 1rem; flex-grow: 1; }
-  .nav-item { margin-bottom: 0.5rem; }
-  .nav-link { 
-    color: #555; font-weight: 500; border-radius: 12px; padding: 12px 16px; transition: all 0.2s; 
-    display: flex; align-items: center;
-  }
-  .nav-link i { font-size: 1.2rem; margin-right: 12px; }
-  .nav-link:hover { background-color: #FFF0EE; color: var(--primary); }
-  .nav-link.active { background-color: var(--primary-container); color: var(--on-primary-container); font-weight: 600; }
-  .sidebar-footer { padding: 1.5rem; border-top: 1px solid #f0f0f0; }
+  #sidebar { width: var(--sidebar-width); background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 10; transition: 0.3s; flex-shrink: 0; }
+  .sidebar-header { padding: 24px; border-bottom: 1px solid var(--border); }
+  .nav-menu { flex: 1; padding: 20px 12px; list-style: none; }
+  .nav-item { margin-bottom: 4px; }
+  .nav-link { display: flex; align-items: center; padding: 12px 16px; color: #555; text-decoration: none; border-radius: 8px; transition: 0.2s; font-weight: 500; cursor: pointer; }
+  .nav-link svg { margin-right: 12px; opacity: 0.7; }
+  .nav-link:hover { background: #FFF0EE; color: var(--primary); }
+  .nav-link.active { background: var(--primary-light); color: var(--text-on-primary); }
+  .nav-link.active svg { opacity: 1; }
+  .sidebar-footer { padding: 20px; border-top: 1px solid var(--border); }
 
-  /* Content */
-  #content {
-    width: 100%;
-    margin-left: var(--sidebar-width);
-    padding: 2rem;
-    min-height: 100vh;
-  }
+  /* Main Content */
+  #content { flex: 1; overflow-y: auto; padding: 30px; position: relative; }
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+  .user-badge { background: white; padding: 6px 12px 6px 6px; border-radius: 50px; border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.85rem; }
+  .avatar { width: 32px; height: 32px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-  /* Components */
-  .card-std {
-    border: none; border-radius: 16px;
-    background: var(--card-bg);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    margin-bottom: 1.5rem;
-    transition: transform 0.2s;
-  }
-  
-  .stat-card { display: flex; align-items: center; padding: 1.5rem; }
-  .stat-icon { 
-    width: 60px; height: 60px; border-radius: 16px; 
-    display: flex; align-items: center; justify-content: center; 
-    font-size: 1.8rem; margin-right: 1rem;
-  }
+  /* Grids */
+  .grid-guru { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .grid-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+  .grid-split { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
 
-  .table-custom th { font-weight: 600; color: #777; font-size: 0.85rem; text-transform: uppercase; border-bottom: 2px solid #eee; }
-  .table-custom td { padding: 1rem 0.5rem; vertical-align: middle; font-size: 0.95rem; }
-  .status-pill { padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; display: inline-block;}
-  .st-ok { background: #C3EED0; color: #0F5223; }
-  .st-wait { background: #FEE4C1; color: #744C00; }
-  .st-rev { background: #F9DEDC; color: #8C1D18; }
+  /* Login Screen */
+  .login-wrapper { position: fixed; inset: 0; background: linear-gradient(135deg, var(--primary), #601410); z-index: 100; display: flex; align-items: center; justify-content: center; }
+  .login-card { background: white; width: 400px; padding: 40px; border-radius: 24px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
 
-  .btn-gradient { background: var(--primary); color: white; border: none; }
-  .btn-gradient:hover { background: var(--primary-hover); color: white; }
-  
-  /* Input Styles */
-  .form-control-std { background-color: #f8f9fa; border: 1px solid #eee; border-radius: 10px; padding: 10px 15px; }
-  .form-control-std:focus { background-color: #fff; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.1); }
+  /* Modal Overlay */
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+  .modal-box { background: white; width: 500px; max-width: 90%; max-height: 90vh; overflow-y: auto; border-radius: 20px; padding: 30px; animation: popUp 0.2s; }
+  @keyframes popUp { from{transform: scale(0.95); opacity: 0;} to{transform: scale(1); opacity: 1;} }
 
-  /* Header Top */
-  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-  .user-pill {
-    background: white; padding: 8px 16px; border-radius: 50px;
-    display: flex; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  }
-  .role-badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 6px; margin-left: 10px; font-weight: 700; text-transform: uppercase;}
-  .rb-guru { background: #E8DEF8; color: #1D192B; }
-  .rb-ks { background: #FEE4C1; color: #744C00; }
+  /* Loading & Toast */
+  #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 3000; display: flex; align-items: center; justify-content: center; }
+  .spinner { width: 40px; height: 40px; border: 4px solid #ddd; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 24px; border-radius: 50px; z-index: 4000; opacity: 0; pointer-events: none; transition: 0.3s; font-size: 0.9rem; }
+  #toast.show { opacity: 1; top: 40px; }
 
 </style>
 </head>
 <body>
 
-<div id="loading" class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-none justify-content-center align-items-center" style="z-index:9999;">
-  <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;"></div>
-</div>
+<div id="loader"><div class="spinner"></div></div>
+<div id="toast">Notifikasi</div>
 
 <div id="view-login" class="login-wrapper">
   <div class="login-card">
-    <div class="bg-danger-subtle text-danger d-inline-flex p-3 rounded-4 mb-3">
-        <i class="bi bi-mortarboard-fill fs-1"></i>
+    <div style="color: var(--primary); margin-bottom: 20px;">
+       <svg style="width: 64px; height: 64px;" viewBox="0 0 16 16"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5ZM8 8.46 1.758 5.965 8 3.052l6.242 2.913L8 8.46Z"/></svg>
     </div>
-    <h3 class="fw-bold text-dark mb-1">LMS NAKULA</h3>
+    <h2 class="fw-bold" style="margin-bottom: 5px;">LMS NAKULA</h2>
     <p class="text-muted mb-4">Portal Kinerja Desktop</p>
-    
-    <label class="d-block text-start small fw-bold text-muted mb-2">MASUKKAN PIN AKSES</label>
-    <input type="number" id="inputPIN" class="form-control form-control-lg text-center fw-bold mb-4" placeholder="• • • • • •" style="letter-spacing: 5px; font-size: 1.5rem; background:#f8f9fa; border:2px solid #eee;">
-    
-    <button onclick="doLogin()" class="btn btn-gradient w-100 py-3 rounded-pill fw-bold shadow-sm">MASUK DASHBOARD</button>
+    <label class="text-muted fw-bold" style="font-size: 0.75rem; display: block; text-align: left; margin-bottom: 8px;">MASUKKAN PIN</label>
+    <input type="tel" id="inputPIN" style="text-align: center; font-size: 1.5rem; letter-spacing: 5px; font-weight: bold;" placeholder="••••••" maxlength="6">
+    <button onclick="handleLogin()" class="btn btn-primary w-100" style="padding: 14px;">MASUK DASHBOARD</button>
   </div>
 </div>
 
-<div id="view-main" class="hidden">
-  <div id="wrapper">
-    <nav id="sidebar">
-      <div class="sidebar-header">
-        <div class="d-flex align-items-center text-danger">
-          <i class="bi bi-mortarboard-fill fs-3 me-2"></i>
-          <h5 class="fw-bold mb-0">LMS NAKULA</h5>
+<div id="view-main" class="hidden" style="display: flex; width: 100%;">
+  <nav id="sidebar">
+    <div class="sidebar-header flex">
+      <div style="color: var(--primary); margin-right: 10px;">
+        <svg viewBox="0 0 16 16"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5ZM8 8.46 1.758 5.965 8 3.052l6.242 2.913L8 8.46Z"/></svg>
+      </div>
+      <div><div class="fw-bold">LMS NAKULA</div><div style="font-size: 0.7rem; color: #888;">Versi Desktop</div></div>
+    </div>
+    <ul class="nav-menu">
+      <li class="nav-item"><a class="nav-link active"><svg viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3A1.5 1.5 0 0 1 15 10.5v3A1.5 1.5 0 0 1 13.5 15h-3A1.5 1.5 0 0 1 9 13.5v-3z"/></svg> Dashboard</a></li>
+      <li class="nav-item" style="margin-top: 15px; padding-left: 16px; font-size: 0.75rem; color: #aaa; font-weight: bold; text-transform: uppercase;">Menu Utama</li>
+      <li class="nav-item hidden" id="menu-guru"><a class="nav-link"><svg viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/></svg> Tugas Saya</a></li>
+      <li class="nav-item hidden" id="menu-ks"><a class="nav-link"><svg viewBox="0 0 16 16"><path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2z"/></svg> Rapor Guru</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <button onclick="doLogout()" class="btn btn-outline w-100" style="color: var(--primary); border-color: var(--primary);">
+        <svg viewBox="0 0 16 16"><path d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/><path d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/></svg> Keluar
+      </button>
+    </div>
+  </nav>
+
+  <div id="content">
+    <div class="top-bar">
+      <div>
+        <h2 class="fw-bold mb-0">Selamat Datang, <span id="txtNama">User</span></h2>
+        <p class="text-muted mb-0" id="txtSekolah">Sekolah</p>
+      </div>
+      <div class="user-badge">
+        <div class="avatar"><svg viewBox="0 0 16 16"><path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg></div>
+        <div class="flex-col" style="align-items: flex-start; line-height: 1.1;">
+            <span style="font-size: 0.7rem; color: #888;">Akun Aktif</span>
+            <span id="txtRole" class="text-primary">GURU</span>
         </div>
-        <small class="text-muted ms-1">Versi Desktop</small>
+      </div>
+    </div>
+
+    <div id="panel-guru" class="hidden">
+      <div class="grid-guru">
+        <div class="card" style="background: var(--primary); color: white; position: relative; overflow: hidden; border: none;">
+          <div style="position: absolute; right: -20px; top: -20px; opacity: 0.15;">
+            <svg style="width: 200px; height: 200px;" viewBox="0 0 16 16"><path d="M6 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1zm9 0v3a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1zm-9 8v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1zm9 0v3a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1z"/></svg>
+          </div>
+          <div style="position: relative; z-index: 2;">
+            <div style="font-size: 0.9rem; font-weight: 600; opacity: 0.8; margin-bottom: 10px;">CAPAIAN KINERJA ANDA</div>
+            <div class="flex" style="align-items: baseline;">
+                <h1 style="font-size: 4rem; margin: 0; line-height: 1;" id="g-persen">0%</h1>
+                <span id="g-target" style="background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 50px; margin-left: 20px; font-weight: 600;">0/0 Selesai</span>
+            </div>
+            <div style="background: rgba(255,255,255,0.3); height: 8px; border-radius: 10px; margin-top: 20px; overflow: hidden;">
+                <div id="g-bar" style="width: 0%; height: 100%; background: white;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card flex-col center" style="border-left: 5px solid var(--warning);">
+          <h4 class="fw-bold mb-3" style="color: var(--text-main);">Lapor Pengembangan</h4>
+          <button onclick="openModal('mdl-imp')" class="btn btn-primary w-100 mb-3" style="background: var(--warning);">Implementasi</button>
+          <button onclick="openModal('mdl-ino')" class="btn btn-primary w-100" style="background: var(--success);">Karya Inovasi</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4 class="fw-bold mb-4" style="border-bottom: 1px solid #eee; padding-bottom: 15px;">Daftar Tugas & Agenda</h4>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>No</th><th>Nama Kegiatan</th><th>Tenggat</th><th>Status</th><th style="text-align: right;">Aksi</th></tr></thead>
+                <tbody id="tbl-tugas"></tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-ks" class="hidden">
+      <div class="grid-stats">
+        <div class="card flex between">
+            <div><h2 class="fw-bold mb-0" id="ks-total">0</h2><span class="text-muted">Total Laporan</span></div>
+            <div style="background: #FFF0EE; color: var(--primary); padding: 15px; border-radius: 12px;"><svg class="icon-lg" viewBox="0 0 16 16"><path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/><path d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/></svg></div>
+        </div>
+        <div class="card flex between">
+            <div><h2 class="fw-bold mb-0" id="ks-imp">0</h2><span class="text-muted">Implementasi</span></div>
+            <div style="background: #E3F2FD; color: var(--info); padding: 15px; border-radius: 12px;"><svg class="icon-lg" viewBox="0 0 16 16"><path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/></svg></div>
+        </div>
+        <div class="card flex between">
+            <div><h2 class="fw-bold mb-0" id="ks-ino">0</h2><span class="text-muted">Inovasi</span></div>
+            <div style="background: #E8F5E9; color: var(--success); padding: 15px; border-radius: 12px;"><svg class="icon-lg" viewBox="0 0 16 16"><path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a1.964 1.964 0 0 0-.453-.618A5.984 5.984 0 0 1 2 6zm6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1z"/></svg></div>
+        </div>
       </div>
       
-      <div class="sidebar-menu">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a href="#" class="nav-link active">
-              <i class="bi bi-grid-fill"></i> Dashboard
-            </a>
-          </li>
-          <li class="nav-item mt-3"><small class="text-uppercase text-muted fw-bold ms-3" style="font-size:0.7rem;">Menu Utama</small></li>
-          <li class="nav-item" id="nav-guru-tugas">
-            <a href="#section-tugas" class="nav-link"><i class="bi bi-list-check"></i> Tugas Saya</a>
-          </li>
-           <li class="nav-item" id="nav-ks-rapor">
-            <a href="#section-rapor" class="nav-link"><i class="bi bi-bar-chart-line"></i> Rapor Guru</a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="sidebar-footer">
-        <button onclick="doLogout()" class="btn btn-outline-danger w-100 rounded-pill fw-bold">
-          <i class="bi bi-box-arrow-left me-2"></i> Keluar
-        </button>
-      </div>
-    </nav>
-
-    <div id="content">
-      <div class="top-bar">
-        <div>
-          <h4 class="fw-bold mb-0">Selamat Datang, <span id="txtNama">User</span></h4>
-          <p class="text-muted small mb-0" id="txtSekolah">Nama Sekolah</p>
-        </div>
-        <div class="user-pill">
-            <i class="bi bi-person-circle fs-5 me-2 text-secondary"></i>
-            <span class="small fw-bold text-dark">Akun Aktif</span>
-            <span id="txtRoleBadge" class="role-badge rb-guru">GURU</span>
+      <div class="card mb-4" style="padding: 20px;">
+        <h6 class="fw-bold text-muted mb-3" style="text-transform: uppercase; font-size: 0.8rem;">Manajemen Sekolah</h6>
+        <div class="grid-stats" style="margin-bottom: 0;">
+            <button onclick="openModal('mdl-pres')" class="btn btn-outline" style="border-width: 2px;">🏆 Input Prestasi</button>
+            <button onclick="openModal('mdl-bias')" class="btn btn-outline" style="border-width: 2px;">📅 Lapor Pembiasaan</button>
+            <button onclick="openModal('mdl-event')" class="btn btn-outline" style="border-width: 2px;">🎈 Event Sekolah</button>
         </div>
       </div>
 
-      <div id="panel-guru" class="hidden">
-        <div class="row mb-4">
-            <div class="col-md-8">
-                <div class="card-std h-100 p-4 bg-danger text-white position-relative overflow-hidden">
-                    <div class="position-absolute top-0 end-0 opacity-25 p-3">
-                        <i class="bi bi-graph-up-arrow" style="font-size: 8rem; margin-right: -20px;"></i>
-                    </div>
-                    <h6 class="text-uppercase text-white-50 fw-bold ls-1">Capaian Kinerja Anda</h6>
-                    <div class="d-flex align-items-end mt-2">
-                        <h1 class="display-3 fw-bold mb-0 me-3" id="txt-persen">0%</h1>
-                        <div class="mb-2">
-                            <span class="badge bg-white text-danger px-3 py-2 rounded-pill fs-6" id="txt-target">0/0 Selesai</span>
-                        </div>
-                    </div>
-                    <div class="progress mt-4" style="height: 10px; background: rgba(255,255,255,0.2);">
-                        <div id="bar-guru" class="progress-bar bg-white" role="progressbar" style="width: 0%"></div>
-                    </div>
-                </div>
+      <div class="grid-split">
+         <div class="card">
+            <div class="flex between mb-4">
+                <h4 class="fw-bold">Rapor Kinerja Guru</h4>
+                <div><span class="text-muted">Rata-rata: </span><span id="ks-avg" class="badge bg-rev" style="font-size: 1rem;">0%</span></div>
             </div>
-            <div class="col-md-4">
-                 <div class="card-std h-100 p-4 d-flex flex-column justify-content-center text-center border-danger border-start border-5">
-                    <h5 class="fw-bold text-danger mb-3">Lapor Pengembangan</h5>
-                    <button class="btn btn-warning text-white fw-bold w-100 mb-2 py-2" data-bs-toggle="modal" data-bs-target="#mdlImplemen"><i class="bi bi-person-workspace me-2"></i> Implementasi</button>
-                    <button class="btn btn-success fw-bold w-100 py-2" data-bs-toggle="modal" data-bs-target="#mdlInovasi"><i class="bi bi-lightbulb me-2"></i> Karya Inovasi</button>
-                 </div>
-            </div>
-        </div>
-
-        <div class="card-std p-4" id="section-tugas">
-            <h5 class="fw-bold mb-4"><i class="bi bi-list-task me-2 text-primary"></i>Daftar Tugas & Agenda</h5>
-            <div class="table-responsive">
-                <table class="table table-hover table-custom">
-                    <thead>
-                        <tr>
-                            <th style="width: 5%">No</th>
-                            <th style="width: 35%">Nama Kegiatan</th>
-                            <th style="width: 25%">Tenggat Waktu</th>
-                            <th style="width: 15%">Status</th>
-                            <th style="width: 20%" class="text-end">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbody-tugas-guru">
-                        </tbody>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Nama Guru</th><th>Progress</th><th style="text-align: right;">%</th></tr></thead>
+                    <tbody id="tbl-ks"></tbody>
                 </table>
             </div>
-        </div>
-      </div>
-
-      <div id="panel-ks" class="hidden">
-        <div class="row g-4 mb-4">
-            <div class="col-md-4">
-                <div class="card-std stat-card">
-                    <div class="stat-icon bg-danger-subtle text-danger"><i class="bi bi-file-earmark-text-fill"></i></div>
-                    <div>
-                        <h2 class="fw-bold mb-0" id="ks-total-laporan">0</h2>
-                        <span class="text-muted small">Total Laporan Masuk</span>
-                    </div>
-                </div>
+         </div>
+         <div class="card">
+            <div class="flex between mb-3">
+                <h4 class="fw-bold">Riwayat</h4>
+                <button onclick="loadKS(true)" class="btn btn-sm btn-outline">Refresh</button>
             </div>
-            <div class="col-md-4">
-                <div class="card-std stat-card">
-                    <div class="stat-icon bg-primary-subtle text-primary"><i class="bi bi-person-video3"></i></div>
-                    <div>
-                        <h2 class="fw-bold mb-0" id="ks-count-imp">0</h2>
-                        <span class="text-muted small">Implementasi Guru</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card-std stat-card">
-                    <div class="stat-icon bg-warning-subtle text-warning"><i class="bi bi-lightbulb-fill"></i></div>
-                    <div>
-                        <h2 class="fw-bold mb-0" id="ks-count-ino">0</h2>
-                        <span class="text-muted small">Karya Inovasi</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="card-std p-4 mb-4">
-            <h6 class="text-uppercase text-muted fw-bold mb-3 small">Manajemen Sekolah</h6>
-            <div class="row g-3">
-                <div class="col-md-4"><button onclick="bukaModalPrestasi()" class="btn btn-outline-warning w-100 py-3 fw-bold border-2"><i class="bi bi-trophy-fill me-2"></i> Input Prestasi</button></div>
-                <div class="col-md-4"><button onclick="bukaModalPembiasaan()" class="btn btn-outline-success w-100 py-3 fw-bold border-2"><i class="bi bi-calendar-check-fill me-2"></i> Lapor Pembiasaan</button></div>
-                <div class="col-md-4"><button onclick="bukaModalEvent()" class="btn btn-outline-primary w-100 py-3 fw-bold border-2"><i class="bi bi-balloon-fill me-2"></i> Event Sekolah</button></div>
-            </div>
-        </div>
-
-        <div class="row" id="section-rapor">
-            <div class="col-lg-8">
-                <div class="card-std p-4 h-100">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5 class="fw-bold mb-0">Rapor Kinerja Guru</h5>
-                        <div>
-                           <span class="text-muted small me-2">Rata-rata Sekolah:</span>
-                           <span class="badge bg-danger fs-6" id="ks-persen">0%</span>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover table-custom align-middle">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th>Nama Guru</th>
-                                    <th>Progress Bar</th>
-                                    <th class="text-end">Angka</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbl-ks">
-                                </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card-std p-4 h-100">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                         <h5 class="fw-bold mb-0">Riwayat Input</h5>
-                         <button onclick="loadKS()" class="btn btn-sm btn-light rounded-circle"><i class="bi bi-arrow-clockwise"></i></button>
-                    </div>
-                    <div id="list-riwayat-ks" style="max-height: 400px; overflow-y: auto;">
-                        </div>
-                </div>
-            </div>
-        </div>
+            <div id="list-riwayat" style="max-height: 400px; overflow-y: auto;"></div>
+         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal fade" id="mdlUpload" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 p-3" style="border-radius: 20px;"><div class="modal-header border-0"><h5 class="modal-title fw-bold">Kirim Bukti Tugas</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="frmUpload" onsubmit="submitTugas(event)"><div class="mb-3"><label class="small fw-bold text-muted">KEGIATAN</label><input name="judul_dokumen" id="inpJudul" class="form-control form-control-std bg-light fw-bold" readonly><input type="hidden" name="jenis_laporan" value="Kegiatan Gugus"></div><div class="mb-3"><label class="small fw-bold text-muted">LINK BUKTI</label><input type="url" name="link_video" id="inpLink" class="form-control form-control-std" placeholder="Paste link Google Drive / Youtube disini..."></div><div class="mb-4"><label class="small fw-bold text-muted">RANGKUMAN</label><textarea name="catatan" id="inpCatatan" class="form-control form-control-std" rows="4" placeholder="Tuliskan rangkuman hasil kegiatan..."></textarea></div><div class="text-end"><button type="button" class="btn btn-light rounded-pill me-2" data-bs-dismiss="modal">Batal</button><button class="btn btn-gradient rounded-pill px-4">Kirim Tugas</button></div></form></div></div></div></div>
+<div id="mdl-up" class="modal-overlay">
+  <div class="modal-box">
+    <div class="flex between mb-3"><h3 class="fw-bold">Kirim Tugas</h3><button onclick="closeModal('mdl-up')" class="btn btn-sm">✕</button></div>
+    <form onsubmit="submitTugas(event)">
+      <input type="hidden" id="t-idx">
+      <label class="text-muted small">KEGIATAN</label>
+      <input id="t-judul" readonly style="background: #f0f0f0; font-weight: bold;">
+      <label class="text-muted small">LINK BUKTI</label>
+      <input id="t-link" type="url" placeholder="Paste link Drive/Youtube..." required>
+      <label class="text-muted small">RANGKUMAN</label>
+      <textarea id="t-cat" rows="4" placeholder="Tulis rangkuman..." required></textarea>
+      <div style="text-align: right;"><button class="btn btn-primary">Kirim Tugas</button></div>
+    </form>
+  </div>
+</div>
 
-<div class="modal fade" id="mdlImplemen"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content border-0 p-3" style="border-radius: 20px;"><div class="modal-header border-0"><h5 class="modal-title fw-bold text-primary"><i class="bi bi-person-workspace me-2"></i>Lapor Implementasi KKG</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="frmImplemen" onsubmit="submitPengembangan(event, 'Implementasi KKG')"><div class="row"><div class="col-md-6 mb-3"><label class="small fw-bold text-muted">PROGRAM SUMBER</label><select id="sel-prog-kkg" class="form-select form-control-std"></select></div><div class="col-md-6 mb-3"><label class="small fw-bold text-muted">KELAS / SASARAN</label><input type="text" id="imp-kelas" class="form-control form-control-std" placeholder="Contoh: Kelas 5B" required></div></div><div class="mb-3"><label class="small fw-bold text-muted">NAMA KEGIATAN</label><input type="text" id="imp-nama" class="form-control form-control-std" placeholder="Judul kegiatan implementasi..." required></div><div class="mb-3"><label class="small fw-bold text-muted">LINK DOKUMENTASI</label><input type="url" id="imp-link" class="form-control form-control-std" placeholder="Link Drive/Youtube" required></div><div class="mb-3"><label class="small fw-bold text-muted">DESKRIPSI</label><textarea id="imp-desc" class="form-control form-control-std" rows="3" required></textarea></div><div class="text-end"><button class="btn btn-primary rounded-pill px-5">Kirim Laporan</button></div></form></div></div></div></div>
+<div id="mdl-imp" class="modal-overlay">
+  <div class="modal-box">
+    <div class="flex between mb-3"><h3 class="fw-bold text-primary">Implementasi KKG</h3><button onclick="closeModal('mdl-imp')" class="btn btn-sm">✕</button></div>
+    <form onsubmit="submitDev(event, 'Implementasi KKG')">
+      <div class="grid-guru" style="gap: 10px; margin-bottom: 0;">
+        <div><select id="sel-prog-kkg"></select></div>
+        <div><input id="imp-kelas" placeholder="Kelas/Sasaran" required></div>
+      </div>
+      <input id="imp-nama" placeholder="Nama Kegiatan" required>
+      <input id="imp-link" type="url" placeholder="Link Dokumentasi" required>
+      <textarea id="imp-desc" rows="3" placeholder="Deskripsi..." required></textarea>
+      <button class="btn btn-primary w-100">Kirim Laporan</button>
+    </form>
+  </div>
+</div>
 
-<div class="modal fade" id="mdlInovasi"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content border-0 p-3" style="border-radius: 20px;"><div class="modal-header border-0"><h5 class="modal-title fw-bold text-success"><i class="bi bi-lightbulb me-2"></i>Kirim Karya Inovasi</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="alert alert-success bg-success-subtle border-0 mb-3"><small>Karya Inovasi dapat berupa Video Pembelajaran, Alat Peraga, atau Artikel Ilmiah yang dipublikasikan.</small></div><form id="frmInovasi" onsubmit="submitPengembangan(event, 'Karya Inovasi')"><div class="mb-3"><label class="small fw-bold text-muted">JUDUL INOVASI</label><input type="text" id="ino-nama" class="form-control form-control-std" required></div><div class="mb-3"><label class="small fw-bold text-muted">LINK KARYA</label><input type="url" id="ino-link" class="form-control form-control-std" required></div><div class="mb-3"><label class="small fw-bold text-muted">DESKRIPSI SINGKAT</label><textarea id="ino-desc" class="form-control form-control-std" rows="4" required></textarea></div><div class="text-end"><button class="btn btn-success rounded-pill px-5">Kirim Karya</button></div></form></div></div></div></div>
+<div id="mdl-ino" class="modal-overlay">
+  <div class="modal-box">
+    <div class="flex between mb-3"><h3 class="fw-bold" style="color: var(--success);">Karya Inovasi</h3><button onclick="closeModal('mdl-ino')" class="btn btn-sm">✕</button></div>
+    <p class="text-muted mb-3" style="background: #E8F5E9; padding: 10px; border-radius: 8px;">Karya dapat berupa Video, Alat Peraga, atau Artikel.</p>
+    <form onsubmit="submitDev(event, 'Karya Inovasi')">
+      <input id="ino-nama" placeholder="Judul Inovasi" required>
+      <input id="ino-link" type="url" placeholder="Link Karya" required>
+      <textarea id="ino-desc" rows="4" placeholder="Deskripsi Singkat..." required></textarea>
+      <button class="btn btn-primary w-100" style="background: var(--success);">Kirim Karya</button>
+    </form>
+  </div>
+</div>
 
-<div class="modal fade" id="mdlPrestasi"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-4 rounded-4"><h5 class="fw-bold mb-3 text-warning">Input Prestasi</h5><form id="frmPrestasi" onsubmit="submitPrestasi(event)"><div class="mb-3"><select id="inpSekolahPrestasi" class="form-select form-control-std"></select></div><div class="mb-3"><input type="text" name="nama_siswa" class="form-control form-control-std" placeholder="Nama Siswa" required></div><div class="row mb-3"><div class="col-6"><input type="text" name="cabang" class="form-control form-control-std" placeholder="Cabang Lomba" required></div><div class="col-6"><input type="text" name="penyelenggara" class="form-control form-control-std" placeholder="Penyelenggara" required></div></div><div class="row mb-3"><div class="col-6"><select name="tingkat" class="form-select form-control-std"><option value="Kecamatan">Kecamatan</option><option value="Kabupaten">Kabupaten</option><option value="Nasional">Nasional</option></select></div><div class="col-6"><select name="juara" class="form-select form-control-std"><option value="1">Juara 1</option><option value="2">Juara 2</option><option value="3">Juara 3</option></select></div></div><div class="mb-4"><input type="text" name="no_piagam" class="form-control form-control-std" placeholder="Nomor Piagam" required></div><button class="btn btn-warning w-100 py-2 text-white fw-bold">SIMPAN DATA</button></form></div></div></div>
-<div class="modal fade" id="mdlPembiasaan"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-4 rounded-4"><h5 class="fw-bold mb-3 text-success">Lapor Pembiasaan</h5><form id="frmPembiasaan" onsubmit="submitPembiasaan(event)"><div class="mb-3"><select id="inpSekolahBias" class="form-select form-control-std"></select></div><div class="mb-3"><input type="text" id="bias-nama" class="form-control form-control-std" placeholder="Nama Program" required></div><div class="row mb-3"><div class="col-6"><select id="bias-freq" class="form-select form-control-std"><option>Harian</option><option>Mingguan</option><option>Bulanan</option></select></div><div class="col-6"><input type="text" id="bias-karakter" class="form-control form-control-std" placeholder="Karakter" required></div></div><div class="mb-3"><input type="url" id="bias-link" class="form-control form-control-std" placeholder="Link Dokumentasi" required></div><div class="mb-4"><textarea id="bias-desc" class="form-control form-control-std" rows="3" placeholder="Keterangan..." required></textarea></div><button class="btn btn-success w-100 py-2 fw-bold">SIMPAN DATA</button></form></div></div></div>
-<div class="modal fade" id="mdlEvent"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-4 rounded-4"><h5 class="fw-bold mb-3 text-primary">Lapor Event Sekolah</h5><form id="frmEvent" onsubmit="submitEvent(event)"><div class="mb-3"><select id="inpSekolahEvent" class="form-select form-control-std"></select></div><div class="mb-3"><input type="text" id="evt-nama" class="form-control form-control-std" placeholder="Nama Event" required></div><div class="row mb-3"><div class="col-6"><input type="date" id="evt-date" class="form-control form-control-std" required></div><div class="col-6"><select id="evt-scale" class="form-select form-control-std"><option value="Internal">Internal</option><option value="Orang Tua">Orang Tua</option><option value="Umum">Umum/Pejabat</option></select></div></div><div class="mb-3"><input type="url" id="evt-link" class="form-control form-control-std" placeholder="Link Dokumentasi" required></div><div class="mb-4"><textarea id="evt-desc" class="form-control form-control-std" rows="3" placeholder="Dampak Kegiatan..." required></textarea></div><button class="btn btn-primary w-100 py-2 fw-bold">SIMPAN DATA</button></form></div></div></div>
+<div id="mdl-pres" class="modal-overlay">
+  <div class="modal-box">
+    <div class="flex between mb-3"><h3 class="fw-bold" style="color: var(--warning);">Input Prestasi</h3><button onclick="closeModal('mdl-pres')" class="btn btn-sm">✕</button></div>
+    <form onsubmit="submitGeneric(event, 'Laporan Prestasi', 'mdl-pres')">
+      <select class="sel-sekolah" name="sekolah"></select>
+      <input name="nama_siswa" placeholder="Nama Siswa" required>
+      <div class="flex" style="gap: 10px;">
+         <input name="cabang" placeholder="Cabang Lomba" required>
+         <select name="juara" required><option value="" disabled selected>Juara</option><option value="Juara 1">Juara 1</option><option value="Juara 2">Juara 2</option><option value="Juara 3">Juara 3</option></select>
+      </div>
+      <input name="penyelenggara" placeholder="Penyelenggara" required>
+      <div class="flex" style="gap: 10px;">
+         <select name="tingkat"><option>Kecamatan</option><option>Kabupaten</option><option>Nasional</option></select>
+         <input name="no_piagam" placeholder="No Piagam" required>
+      </div>
+      <button class="btn btn-primary w-100" style="background: var(--warning);">Simpan Data</button>
+    </form>
+  </div>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div id="mdl-bias" class="modal-overlay">
+  <div class="modal-box">
+    <div class="flex between mb-3"><h3 class="fw-bold" style="color: var(--success);">Pembiasaan</h3><button onclick="closeModal('mdl-bias')" class="btn btn-sm">✕</button></div>
+    <form onsubmit="submitGeneric(event, 'Laporan Pembiasaan', 'mdl-bias')">
+      <select class="sel-sekolah" name="sekolah"></select>
+      <input name="a" placeholder="Nama Program" required>
+      <div class="flex" style="gap: 10px;">
+        <select name="freq" required><option value="" disabled selected>Frekuensi</option><option>Harian</option><option>Mingguan</option><option>Bulanan</option></select>
+        <input name="karakter" placeholder="Karakter" required>
+      </div>
+      <input name="link_video" placeholder="Link Foto" required>
+      <textarea name="desc" placeholder="Keterangan"></textarea>
+      <button class="btn btn-primary w-100" style="background: var(--success);">Simpan</button>
+    </form>
+  </div>
+</div>
+
+<div id="mdl-event" class="modal-overlay">
+  <div class="modal-box">
+    <div class="flex between mb-3"><h3 class="fw-bold text-primary">Event Sekolah</h3><button onclick="closeModal('mdl-event')" class="btn btn-sm">✕</button></div>
+    <form onsubmit="submitGeneric(event, 'Laporan Event', 'mdl-event')">
+      <select class="sel-sekolah" name="sekolah"></select>
+      <input name="a" placeholder="Nama Event" required>
+      <div class="flex" style="gap: 10px;">
+        <input name="b" type="date" required>
+        <select name="scale" required><option value="Internal">Internal</option><option value="Orang Tua">Orang Tua</option><option value="Umum">Umum</option></select>
+      </div>
+      <input name="link_video" placeholder="Link Dokumentasi" required>
+      <textarea name="desc" placeholder="Dampak Kegiatan"></textarea>
+      <button class="btn btn-primary w-100">Simpan</button>
+    </form>
+  </div>
+</div>
+
 <script>
-// ==========================================
-// 1. KONFIGURASI LINK GAS (SAMA SEPERTI ASLINYA)
-// ==========================================
-const GAS_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec"; 
+/* --- 1. CONFIG --- */
+const API_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec";
 
-// ==========================================
-// 2. MAIN SCRIPT
-// ==========================================
-let USER={pin:"",nama:"",role:"",sekolah:""}, modalUp, modalPr, modalBs, modalEv;
-function showLoad(x){ let el=document.getElementById('loading'); if(x){el.classList.remove('d-none');el.classList.add('d-flex')}else{el.classList.add('d-none');el.classList.remove('d-flex')} }
+/* --- 2. HELPERS --- */
+const $ = id => document.getElementById(id);
+const ls = { get: k => JSON.parse(localStorage.getItem(k)||'null'), set: (k,v) => localStorage.setItem(k, JSON.stringify(v)) };
+const show = (id, s=true) => $(id).classList.toggle('hidden', !s);
+const toast = msg => { const t = $('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); };
+const loading = s => $('loader').style.display = s ? 'flex' : 'none';
 
-async function apiCall(action, params = {}) {
-  try {
-    let response = await fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action, ...params }) });
-    return await response.json();
-  } catch (error) { Swal.fire('Error', 'Gagal koneksi server.', 'error'); showLoad(false); return null; }
-}
+/* --- 3. STATE --- */
+let USER = ls.get('LMS_USER') || {};
 
+/* --- 4. INIT --- */
 window.onload = () => {
-  modalUp = new bootstrap.Modal(document.getElementById('mdlUpload'));
-  modalPr = new bootstrap.Modal(document.getElementById('mdlPrestasi'));
-  modalBs = new bootstrap.Modal(document.getElementById('mdlPembiasaan'));
-  modalEv = new bootstrap.Modal(document.getElementById('mdlEvent'));
-  
-  let savedPin = localStorage.getItem('LMS_PIN');
-  if (savedPin) { document.getElementById('inputPIN').value = savedPin; doLogin(true); }
+    loading(false);
+    if(USER.pin) { $('inputPIN').value = USER.pin; handleLogin(true); }
+};
+
+/* --- 5. API --- */
+async function req(action, data={}) {
+    try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action, ...data }) });
+        return await res.json();
+    } catch(e) { toast("Gagal koneksi server"); return null; }
 }
 
-async function doLogin(isAuto){
-  let p=document.getElementById('inputPIN').value; if(!p) return Swal.fire('Perhatian','Isi PIN!','warning');
-  showLoad(true);
-  let r = await apiCall("login", { pin: p });
-  showLoad(false);
-  
-  if(r && r.sukses){
-    if(r.role === 'ADMIN' || r.role === 'PENILAI') {
-        if(!isAuto) { Swal.fire({ title: 'Akses Ditolak', text: 'Admin gunakan panel khusus.', icon: 'error' }); }
-        return; 
-    }
-    localStorage.setItem('LMS_PIN', p);
-    USER={pin:p, nama:r.nama, role:r.role, sekolah:r.sekolah};
-    
-    // UI Transition
-    document.getElementById('view-login').classList.add('hidden');
-    document.getElementById('view-main').classList.remove('hidden');
-    ['panel-guru','panel-ks'].forEach(id=>document.getElementById(id).classList.add('hidden'));
-    ['nav-guru-tugas', 'nav-ks-rapor'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+/* --- 6. AUTH --- */
+async function handleLogin(auto=false) {
+    const pin = $('inputPIN').value;
+    if(!pin) return toast("Isi PIN!");
+    if(!auto) loading(true);
 
-    document.getElementById('txtNama').innerText = r.nama;
-    document.getElementById('txtSekolah').innerText = r.sekolah;
-    
-    let bdg = document.getElementById('txtRoleBadge');
-    if(r.role === 'KS') { 
-        bdg.innerText = "Kepala Sekolah"; bdg.className="role-badge rb-ks";
-        document.getElementById('panel-ks').classList.remove('hidden');
-        document.getElementById('nav-ks-rapor').classList.remove('hidden'); // Show menu KS
-        loadKS();
-    } else { 
-        bdg.innerText = "Guru Kelas"; bdg.className="role-badge rb-guru";
-        document.getElementById('panel-guru').classList.remove('hidden');
-        document.getElementById('nav-guru-tugas').classList.remove('hidden'); // Show menu Guru
-        loadGuru();
-    }
-  } else {
-    if(isAuto) { localStorage.removeItem('LMS_PIN'); document.getElementById('inputPIN').value=""; }
-    else { Swal.fire('Gagal', r.error || 'PIN Tidak Ditemukan', 'error'); }
-  }
-}
+    const r = await req("login", { pin });
+    loading(false);
 
-function doLogout(){ localStorage.removeItem('LMS_PIN'); location.reload(); }
-
-// --- LOGIKA GURU (ADAPTASI DESKTOP: RENDER TABEL) ---
-async function loadGuru(){
-  showLoad(true);
-  let d = await apiCall("getDashboardGuru", { pin: USER.pin });
-  showLoad(false);
-  if(d) {
-    let mapTugas={}; d.riwayat.forEach(r=>{mapTugas[String(r[6]).trim()]=r[10]});
-    let acc=0, html="";
-    let sel = document.getElementById('sel-prog-kkg'); sel.innerHTML="";
-    
-    d.agenda.forEach((a, index)=>{
-       let n=String(a[1]).trim(); sel.innerHTML += `<option value="${n}">${n}</option>`;
-       let t=a[2], st=mapTugas[n], btnAction="";
-       
-       if(st==='Diterima') acc++;
-       
-       let statusBadge = "";
-       if(st){
-          let bg=st==='Diterima'?'st-ok':(st==='Revisi'?'st-rev':'st-wait');
-          statusBadge = `<span class="status-pill ${bg}">${st}</span>`;
-          if(st==='Revisi') btnAction = `<button onclick="bukaLapor('${n}', ${index})" class="btn btn-sm btn-outline-danger rounded-pill px-3"><i class="bi bi-pencil"></i> Revisi</button>`;
-          else btnAction = `<span class="text-muted small"><i class="bi bi-check-circle"></i> Selesai</span>`;
-       } else {
-          statusBadge = `<span class="badge bg-light text-secondary border">Belum Dikerjakan</span>`;
-          btnAction = `<button id="btn-kerjakan-${index}" onclick="bukaLapor('${n}', ${index})" class="btn btn-sm btn-gradient rounded-pill px-3 shadow-sm">Kerjakan</button>`;
-       }
-       
-       // Render Table Row untuk Desktop
-       html += `
-         <tr>
-            <td>${index+1}</td>
-            <td class="fw-bold text-dark">${n}</td>
-            <td class="text-muted"><i class="bi bi-clock me-1"></i>${t}</td>
-            <td>${statusBadge}</td>
-            <td class="text-end">${btnAction}</td>
-         </tr>
-       `;
-    });
-    
-    // Inject ke TBODY
-    document.getElementById('tbody-tugas-guru').innerHTML = html;
-    
-    // Logic Persen
-    let target = d.target || 0;
-    let pct = target > 0 ? Math.round((acc/target)*100) : 0;
-    if(pct > 100) pct = 100;
-    
-    document.getElementById('txt-persen').innerText = pct + "%";
-    document.getElementById('txt-target').innerText = acc + "/" + target + " Selesai";
-    
-    let bar = document.getElementById('bar-guru'); 
-    bar.style.width = pct + "%"; 
-    bar.className = pct < 50 ? "progress-bar bg-danger" : (pct < 80 ? "progress-bar bg-warning" : "progress-bar bg-success");
-  }
-}
-
-// --- LOGIKA KS (ADAPTASI DESKTOP) ---
-async function loadKS() {
-  showLoad(true);
-  let dataSekolah = await apiCall("getDataKS", { sekolah: USER.sekolah });
-  let dataPribadi = await apiCall("getDashboardGuru", { pin: USER.pin });
-  showLoad(false); 
-
-  if(dataSekolah) {
-    document.getElementById('ks-count-imp').innerText = dataSekolah.statsPengembangan.implemen;
-    document.getElementById('ks-count-ino').innerText = dataSekolah.statsPengembangan.inovasi;
-    
-    let tb = document.getElementById('tbl-ks'); let html = "";
-    let dG = dataSekolah.dataGuru; 
-    let totalLaporanMasuk = 0;
-
-    if (dG.length === 0) { tb.innerHTML = "<tr><td colspan='3' class='text-center py-4 text-muted'>Data guru tidak ditemukan.</td></tr>"; }
-    else {
-        dG.forEach(guru => {
-          totalLaporanMasuk += guru.selesai;
-          let bgBar = "bg-danger"; if(guru.persen >= 50) bgBar = "bg-warning"; if(guru.persen >= 80) bgBar = "bg-success";
-          // Desktop Table Row
-          html += `<tr>
-            <td class="fw-bold">${guru.nama}</td>
-            <td>
-                <div class="progress" style="height:10px; border-radius:10px;">
-                    <div class="progress-bar ${bgBar}" style="width: ${guru.persen}%"></div>
-                </div>
-            </td>
-            <td class="text-end fw-bold text-dark">${guru.persen}%</td>
-          </tr>`;
-        });
-        tb.innerHTML = html;
+    if(r && r.sukses) {
+        if(r.role === 'ADMIN') return toast("Akses ditolak (Admin).");
+        USER = { ...r, pin }; ls.set('LMS_USER', USER);
         
-        let avg = dataSekolah.rataRataSekolah || 0;
-        document.getElementById('ks-persen').innerText = Math.round(avg) + "%";
-        document.getElementById('ks-total-laporan').innerText = totalLaporanMasuk;
+        show('view-login', false); show('view-main', true);
+        $('txtNama').innerText = r.nama; $('txtSekolah').innerText = r.sekolah;
+        $('txtRole').innerText = r.role === 'KS' ? 'KEPALA SEKOLAH' : 'GURU KELAS';
+        
+        // Setup Dropdowns
+        document.querySelectorAll('.sel-sekolah').forEach(s => {
+            s.innerHTML = r.sekolah.split(',').map(x=>`<option value="${x.trim()}">${x.trim()}</option>`).join('');
+        });
+
+        if(r.role === 'KS') { 
+            show('panel-ks'); show('menu-ks'); loadKS(); 
+        } else { 
+            show('panel-guru'); show('menu-guru'); loadGuru(); 
+        }
+    } else {
+        if(auto) { ls.set('LMS_USER', null); show('view-login'); }
+        else toast(r?.error || "PIN Salah");
     }
-  }
-  
-  // Riwayat Pribadi KS (Tampil sebagai List di Card Kanan)
-  let divRiwayat = document.getElementById('list-riwayat-ks'); let htmlR = "";
-  if(dataPribadi && dataPribadi.riwayat.length > 0) {
-    dataPribadi.riwayat.forEach(item => {
-      let jenis = item[5], judul = item[6], status = item[10], waktu = item[1];
-      let bgSt = status==='Menunggu' ? 'bg-secondary' : (status==='Diterima'?'bg-success':'bg-danger');
-      let feedback = (status !== 'Menunggu' && item[11]) ? `<div class="mt-1 small text-success fst-italic"><i class="bi bi-chat-quote-fill me-1"></i>${item[11]}</div>` : '';
-      
-      htmlR += `
-      <div class="p-3 mb-2 border rounded-3 bg-light">
-         <div class="d-flex justify-content-between mb-1">
-            <span class="badge bg-white text-dark border">${jenis}</span>
-            <span class="badge ${bgSt} rounded-pill">${status}</span>
-         </div>
-         <div class="fw-bold text-dark small mb-1">${judul}</div>
-         <div class="text-muted small" style="font-size:0.7rem">${waktu}</div>
-         ${feedback}
-      </div>`;
+}
+
+function doLogout() { if(confirm("Keluar aplikasi?")) { localStorage.clear(); location.reload(); } }
+
+/* --- 7. LOGIC GURU (TABLE VIEW) --- */
+async function loadGuru() {
+    const c = ls.get('CACHE_GURU'); if(c) renderGuru(c); else loading(true);
+    const d = await req("getDashboardGuru", { pin: USER.pin });
+    loading(false);
+    if(d) { ls.set('CACHE_GURU', d); renderGuru(d); }
+}
+
+function renderGuru(d) {
+    const map = {}; d.riwayat.forEach(r => map[r[6].trim()] = r[10]); 
+    let done = 0;
+    
+    // Render Table
+    const html = d.agenda.map((a, i) => {
+        const judul = a[1].trim();
+        const status = map[judul];
+        if(status === 'Diterima') done++;
+        
+        let stBadge = `<span class="badge" style="background:#eee; color:#666;">Belum</span>`;
+        let actBtn = `<button onclick="openUpload('${judul}', ${i})" class="btn btn-sm btn-primary">Kerjakan</button>`;
+        
+        if(status) {
+            let color = status==='Diterima'?'bg-ok':(status==='Revisi'?'bg-rev':'bg-wait');
+            stBadge = `<span class="badge ${color}">${status}</span>`;
+            if(status === 'Revisi') actBtn = `<button onclick="openUpload('${judul}', ${i})" class="btn btn-sm btn-outline" style="color:red; border-color:red;">Revisi</button>`;
+            else actBtn = `<span class="text-primary fw-bold" style="font-size:0.8rem">✔ Selesai</span>`;
+        }
+        
+        return `<tr>
+            <td style="width:50px; text-align:center;">${i+1}</td>
+            <td class="fw-bold">${judul}</td>
+            <td class="text-muted">${a[2]}</td>
+            <td>${stBadge}</td>
+            <td style="text-align:right;">${actBtn}</td>
+        </tr>`;
+    }).join('');
+    
+    $('tbl-tugas').innerHTML = html;
+    $('sel-prog-kkg').innerHTML = d.agenda.map(a => `<option>${a[1]}</option>`).join('');
+    
+    const pct = Math.min(100, Math.round((done / (d.target||1)) * 100));
+    $('g-persen').innerText = pct + "%"; $('g-bar').style.width = pct + "%"; $('g-target').innerText = `${done}/${d.target} Selesai`;
+}
+
+/* --- 8. LOGIC KS (SPLIT VIEW) --- */
+async function loadKS(force=false) {
+    if(!force) { const c = ls.get('CACHE_KS'); if(c) renderKS(c); else loading(true); } else loading(true);
+    
+    // Fetch parallel
+    const [ds, dp] = await Promise.all([
+        req("getDataKS", { sekolah: USER.sekolah }),
+        req("getDashboardGuru", { pin: USER.pin })
+    ]);
+    
+    loading(false);
+    if(ds) { ls.set('CACHE_KS', ds); renderKS(ds); }
+    if(dp) { renderHistoryKS(dp); }
+}
+
+function renderKS(d) {
+    $('ks-avg').innerText = Math.round(d.rataRataSekolah||0) + "%";
+    $('ks-total').innerText = d.dataGuru.reduce((a,b) => a + b.selesai, 0);
+    $('ks-imp').innerText = d.statsPengembangan.implemen;
+    $('ks-ino').innerText = d.statsPengembangan.inovasi;
+
+    if(d.dataGuru.length === 0) $('tbl-ks').innerHTML = "<tr><td colspan='3' class='text-center p-3'>Belum ada data.</td></tr>";
+    else {
+        $('tbl-ks').innerHTML = d.dataGuru.map(g => {
+            let color = g.persen >= 80 ? 'var(--success)' : (g.persen >= 50 ? 'var(--warning)' : 'var(--primary)');
+            return `<tr>
+                <td class="fw-bold">${g.nama}</td>
+                <td><div style="background:#eee; height:8px; border-radius:10px;"><div style="width:${g.persen}%; height:100%; background:${color}; border-radius:10px;"></div></div></td>
+                <td style="text-align:right; font-weight:bold; color:${color}">${g.persen}%</td>
+            </tr>`;
+        }).join('');
+    }
+}
+
+function renderHistoryKS(dp) {
+    if(dp && dp.riwayat && dp.riwayat.length > 0) {
+        $('list-riwayat').innerHTML = dp.riwayat.map(r => {
+             let st = r[10];
+             let color = st==='Diterima'?'bg-ok':(st==='Revisi'?'bg-rev':'bg-wait');
+             return `<div style="padding: 12px; border-bottom: 1px solid #f0f0f0;">
+                <div class="flex between mb-1">
+                    <span class="badge" style="background:#f5f5f5; color:#555;">${r[5]}</span>
+                    <span class="badge ${color}">${st}</span>
+                </div>
+                <div class="fw-bold" style="font-size:0.9rem;">${r[6]}</div>
+                <div class="text-muted" style="font-size:0.75rem;">${r[1]}</div>
+             </div>`;
+        }).join('');
+    } else {
+        $('list-riwayat').innerHTML = "<div class='text-muted text-center p-3'>Belum ada aktivitas.</div>";
+    }
+}
+
+/* --- 9. MODALS & SUBMITS --- */
+function openModal(id) { $(id).style.display = 'flex'; }
+function closeModal(id) { $(id).style.display = 'none'; }
+function openUpload(judul, idx) { $('mdl-up').querySelector('form').reset(); $('t-judul').value=judul; $('t-idx').value=idx; openModal('mdl-up'); }
+
+async function submitTugas(e) {
+    e.preventDefault(); closeModal('mdl-up'); toast("Mengirim...");
+    await req("simpanTugas", { 
+        data: { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, jenis_laporan: "Kegiatan Gugus", judul_dokumen: $('t-judul').value, link_video: $('t-link').value, catatan: $('t-cat').value }
     });
-    divRiwayat.innerHTML = htmlR;
-  } else { divRiwayat.innerHTML = '<div class="text-center py-5 text-muted small">Belum ada riwayat aktivitas.</div>'; }
+    toast("Tugas terkirim!"); loadGuru();
 }
 
-// --- LOGIKA SUBMIT (SAMA) ---
-let activeTaskIndex = -1;
-function bukaLapor(j, idx){ document.getElementById('frmUpload').reset(); document.getElementById('inpJudul').value=j; activeTaskIndex = idx; modalUp.show(); }
-
-async function submitTugas(e){
-  e.preventDefault();
-  let f=document.getElementById('frmUpload');
-  let obj={pin_user:USER.pin, nama_user:USER.nama, sekolah_user:document.getElementById('txtSekolah').innerText};
-  Array.from(f.elements).forEach(el=>{if(el.name)obj[el.name]=el.value});
-  
-  modalUp.hide();
-  Swal.fire({ title: 'Terkirim!', text: 'Sedang memproses...', icon: 'success', timer: 1000, showConfirmButton: false, toast: true, position: 'top-end' });
-
-  if(activeTaskIndex >= 0) {
-      let btn = document.getElementById(`btn-kerjakan-${activeTaskIndex}`);
-      // Update UI Table Button
-      if(btn) btn.parentElement.innerHTML = `<span class="status-pill st-wait">Menunggu</span>`;
-  }
-
-  try { await apiCall("simpanTugas", { data: obj }); } catch (e) { Swal.fire('Gagal', 'Koneksi terputus.', 'error'); }
+async function submitDev(e, jenis) {
+    e.preventDefault();
+    const isImp = jenis.includes('Implementasi');
+    const nama = $(isImp?'imp-nama':'ino-nama').value;
+    const extra = isImp ? `[PROG: ${$('sel-prog-kkg').value}] [KELAS: ${$('imp-kelas').value}] ` : '';
+    closeModal(isImp?'mdl-imp':'mdl-ino'); toast("Mengirim...");
+    
+    await req("simpanTugas", {
+        data: {
+            pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah,
+            jenis_laporan: jenis, judul_dokumen: (isImp?"IMPL: ":"INOV: ")+nama,
+            link_video: $(isImp?'imp-link':'ino-link').value, catatan: extra + $(isImp?'imp-desc':'ino-desc').value
+        }
+    });
+    toast("Tersimpan!"); 
+    if(isImp) $('imp-nama').value=""; else $('ino-nama').value="";
+    loadGuru();
 }
 
-async function submitPengembangan(e, jenis) {
-  e.preventDefault();
-  let data = {};
-  if(jenis === 'Implementasi KKG') {
-     data.judul_dokumen = "IMPLEMENTASI: " + document.getElementById('sel-prog-kkg').value;
-     data.catatan = `[KEGIATAN: ${document.getElementById('imp-nama').value}] [KELAS: ${document.getElementById('imp-kelas').value}] ` + document.getElementById('imp-desc').value;
-     data.link_video = document.getElementById('imp-link').value;
-     bootstrap.Modal.getInstance(document.getElementById('mdlImplemen')).hide();
-  } else {
-     data.judul_dokumen = "INOVASI: " + document.getElementById('ino-nama').value;
-     data.catatan = document.getElementById('ino-desc').value;
-     data.link_video = document.getElementById('ino-link').value;
-     bootstrap.Modal.getInstance(document.getElementById('mdlInovasi')).hide();
-  }
-  let objKirim = { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('txtSekolah').innerText, jenis_laporan: jenis, judul_dokumen: data.judul_dokumen, link_video: data.link_video, catatan: data.catatan };
-  
-  if(jenis==='Karya Inovasi') document.getElementById('frmInovasi').reset(); else document.getElementById('frmImplemen').reset();
+async function submitGeneric(e, jenis, modalId) {
+    e.preventDefault(); closeModal(modalId); toast("Menyimpan...");
+    const fd = new FormData(e.target); const obj = Object.fromEntries(fd.entries());
+    
+    let judul = jenis.toUpperCase(), catatan = "";
+    if(jenis === 'Laporan Prestasi') {
+        judul = "PRESTASI: " + obj.cabang.toUpperCase();
+        catatan = `[SISWA: ${obj.nama_siswa}] [JUARA: ${obj.juara}] [TINGKAT: ${obj.tingkat}] [NO: ${obj.no_piagam}] [OLEH: ${obj.penyelenggara}]`;
+    } else if(jenis === 'Laporan Pembiasaan') {
+        judul = "PEMBIASAAN: " + obj.a;
+        catatan = `[FREQ: ${obj.freq}] [KARAKTER: ${obj.karakter}] ${obj.desc}`;
+    } else {
+        judul = "EVENT: " + obj.a;
+        catatan = `[SKALA: ${obj.scale}] [TGL: ${obj.b}] ${obj.desc}`;
+    }
 
-  Swal.fire({ title: 'Terkirim!', text: 'Data disimpan.', icon: 'success', timer: 1500, showConfirmButton: false });
-  await apiCall("simpanTugas", { data: objKirim });
-}
-
-function isiDropdownSekolah(idElement) {
-  let listSekolah = document.getElementById('txtSekolah').innerText.split(',');
-  let elSelect = document.getElementById(idElement); elSelect.innerHTML = "";
-  listSekolah.forEach(s => { if(s.trim()) { let opt = document.createElement('option'); opt.value = s.trim(); opt.innerText = s.trim(); elSelect.appendChild(opt); } });
-}
-
-function bukaModalPrestasi(){ document.getElementById('frmPrestasi').reset(); isiDropdownSekolah('inpSekolahPrestasi'); modalPr.show(); }
-function bukaModalPembiasaan(){ document.getElementById('frmPembiasaan').reset(); isiDropdownSekolah('inpSekolahBias'); modalBs.show(); }
-function bukaModalEvent(){ document.getElementById('frmEvent').reset(); isiDropdownSekolah('inpSekolahEvent'); modalEv.show(); }
-
-async function submitGenericKS(e, modal, obj) {
-    e.preventDefault(); modal.hide();
-    let counter = document.getElementById('ks-total-laporan');
-    if(counter) counter.innerText = (parseInt(counter.innerText) || 0) + 1;
-    Swal.fire({ title: 'Sukses!', text: 'Laporan ditambahkan.', icon: 'success', timer: 1000, showConfirmButton: false });
-    await apiCall("simpanTugas", { data: obj });
-}
-
-async function submitPrestasi(e){
-  let f = document.getElementById('frmPrestasi'); let dataRaw = {}; Array.from(f.elements).forEach(el=>{if(el.name) dataRaw[el.name]=el.value});
-  let obj = { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('inpSekolahPrestasi').value, jenis_laporan: "Laporan Prestasi", judul_dokumen: "PRESTASI: " + dataRaw.cabang.toUpperCase(), link_video: "-", catatan: `[SISWA: ${dataRaw.nama_siswa}] [JUARA: ${dataRaw.juara}] [TINGKAT: ${dataRaw.tingkat}] [NO: ${dataRaw.no_piagam}] [OLEH: ${dataRaw.penyelenggara}]` };
-  submitGenericKS(e, modalPr, obj);
-}
-async function submitPembiasaan(e){
-  let obj = { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('inpSekolahBias').value, jenis_laporan: "Laporan Pembiasaan", judul_dokumen: "PEMBIASAAN: " + document.getElementById('bias-nama').value, link_video: document.getElementById('bias-link').value, catatan: `[FREQ: ${document.getElementById('bias-freq').value}] [KARAKTER: ${document.getElementById('bias-karakter').value}] ` + document.getElementById('bias-desc').value };
-  submitGenericKS(e, modalBs, obj);
-}
-async function submitEvent(e){
-  let obj = { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('inpSekolahEvent').value, jenis_laporan: "Laporan Event", judul_dokumen: "EVENT: " + document.getElementById('evt-nama').value, link_video: document.getElementById('evt-link').value, catatan: `[SKALA: ${document.getElementById('evt-scale').value}] [TGL: ${document.getElementById('evt-date').value}] ` + document.getElementById('evt-desc').value };
-  submitGenericKS(e, modalEv, obj);
+    await req("simpanTugas", {
+        data: { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: obj.sekolah, jenis_laporan: jenis, judul_dokumen: judul, link_video: obj.link_video || "-", catatan: catatan }
+    });
+    toast("Data tersimpan!"); loadKS(true);
 }
 </script>
 </body>
