@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Penilai Mutu - LMS Nakula</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+  :root { --primary: #0d6efd; --bg: #F0F2F5; --card: #FFFFFF; }
+  body { background-color: var(--bg); font-family: 'Poppins', sans-serif; padding-bottom: 80px; }
+  .hidden { display: none !important; }
+  .card-pro { border: none; border-radius: 20px; background: var(--card); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+
+  /* CARD MATERI RESPONSIVE */
+  .card-materi {
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.05);
+    text-align: center;
+    padding: 1rem;
+    background: #fff;
+    display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 190px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card-materi:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0, 0.08); border-color: var(--primary); }
+  
+  .txt-judul { font-size: clamp(0.85rem, 2.5vw, 1rem); font-weight: 700; color: #333; line-height: 1.3; margin-bottom: 0.5rem; }
+  .txt-desc { font-size: clamp(0.65rem, 2vw, 0.75rem); color: #6c757d; }
+  
+  .icon-circle-lg { width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem auto; font-size: 1.5rem; background-color: #E3F2FD; color: #1565C0; }
+  
+  .header-card { background: var(--card); padding: 1rem; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+  .nav-pills .nav-link.active { background-color: var(--primary); }
+</style>
+</head>
+<body>
+
+<div id="loading" class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-none justify-content-center align-items-center" style="z-index:9999;"><div class="spinner-border text-primary"></div></div>
+
+<div id="view-login" class="container d-flex flex-column justify-content-center" style="min-height: 100vh;">
+  <div class="text-center mb-4"><div class="icon-circle-lg mx-auto mb-3"><i class="bi bi-award"></i></div><h4 class="fw-bold text-primary">PENILAI MUTU</h4></div>
+  <div class="card-pro p-4 mx-auto" style="max-width: 400px; width: 100%;">
+    <input type="number" id="inputPIN" class="form-control text-center mb-3" placeholder="PIN ANDA">
+    <button onclick="doLogin()" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">MASUK</button>
+  </div>
+</div>
+
+<div id="view-main" class="hidden container mt-3">
+    <div class="header-card">
+      <div class="d-flex align-items-center"><i class="bi bi-person-badge text-primary fs-3 me-3"></i><div><div class="fw-bold">Penilai Mutu</div><div class="text-muted small" id="txtNama">...</div></div></div>
+      <button onclick="doLogout()" class="btn btn-sm btn-outline-danger rounded-pill px-3">Keluar</button>
+    </div>
+
+    <ul class="nav nav-pills mb-3">
+      <li class="nav-item"><button class="nav-link active rounded-pill px-4 me-2" data-bs-toggle="pill" data-bs-target="#p-tab-imp" onclick="resetView()">IMPLEMENTASI</button></li>
+      <li class="nav-item"><button class="nav-link rounded-pill px-4" data-bs-toggle="pill" data-bs-target="#p-tab-ino">INOVASI</button></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="p-tab-imp">
+        <div id="view-grid">
+           <div class="d-flex justify-content-between mb-3 align-items-center"><h6 class="fw-bold m-0">Folder Implementasi</h6><span class="badge bg-primary-subtle text-primary border border-primary" id="badge-pending">...</span></div>
+           <div class="row g-2 g-md-3" id="grid-cont"></div>
+        </div>
+        <div id="view-list" class="hidden">
+           <div class="card-pro p-3 mb-3 bg-primary text-white d-flex align-items-center shadow-sm">
+              <button onclick="backToGrid()" class="btn btn-sm btn-light text-primary rounded-circle me-3"><i class="bi bi-arrow-left"></i></button>
+              <div class="fw-bold text-truncate" id="lbl-active">...</div>
+           </div>
+           <div id="list-cont"></div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="p-tab-ino">
+         <div class="alert alert-info border-0 small fw-bold"><i class="bi bi-lightbulb me-2"></i>Karya Inovasi Guru</div>
+         <div id="list-inovasi"></div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mdlNilai"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-4">
+  <input type="hidden" id="n_id"><input type="hidden" id="n_type">
+  <h5 class="fw-bold text-center mb-4 text-primary">Penilaian Mutu</h5>
+  <label class="small fw-bold text-muted">KUALITAS IMPLEMENTASI</label>
+  <select id="n_kual" class="form-select mb-3 text-center fw-bold fs-5 text-primary">
+    <option value="A">A - Sangat Baik</option><option value="B">B - Baik</option><option value="C">C - Cukup</option><option value="D">D - Kurang (Revisi)</option>
+  </select>
+  <label class="small fw-bold text-muted">UMPAN BALIK</label>
+  <textarea id="n_feed" class="form-control mb-4" rows="3" placeholder="Saran perbaikan..."></textarea>
+  <button onclick="saveNilai()" class="btn btn-primary w-100 rounded-pill fw-bold">SIMPAN KEPUTUSAN</button>
+</div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec"; 
+let USER={}, modalNi, DATA_IMP=[], DATA_INOV=[], AGENDA=[];
+
+window.onload = () => {
+  modalNi = new bootstrap.Modal(document.getElementById('mdlNilai'));
+  let s = localStorage.getItem('LMS_MUTU_PIN'); if(s) { document.getElementById('inputPIN').value = s; doLogin(true); }
+}
+
+async function apiCall(a, p = {}) { try { let r = await fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: a, ...p }) }); return await r.json(); } catch(e) { return null; } }
+function showLoad(x){ document.getElementById('loading').className = x ? 'position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-flex justify-content-center align-items-center' : 'd-none'; }
+
+async function doLogin(auto){
+  let p = document.getElementById('inputPIN').value;
+  showLoad(true); let r = await apiCall("login", { pin: p }); showLoad(false);
+  if(r && r.sukses && r.role === 'PENILAI') {
+    localStorage.setItem('LMS_MUTU_PIN', p); USER = { nama: r.nama };
+    document.getElementById('view-login').classList.add('hidden'); document.getElementById('view-main').classList.remove('hidden');
+    document.getElementById('txtNama').innerText = r.nama; loadPenilai();
+  } else if(!auto) { Swal.fire('Error','Akses Ditolak','error'); }
+}
+function doLogout(){ localStorage.removeItem('LMS_MUTU_PIN'); location.reload(); }
+
+async function loadPenilai() {
+  showLoad(true); let data = await apiCall("getDashboardPenilai"); showLoad(false);
+  if(data) {
+    DATA_IMP = data.implementasi; DATA_INOV = data.inovasi; AGENDA = data.agenda;
+    renderFolders(); renderList(DATA_INOV, 'list-inovasi', 'INOVASI');
+  }
+}
+
+function renderFolders() {
+    let grid = document.getElementById('grid-cont'); grid.innerHTML = ""; let total = 0;
+    AGENDA.forEach(a => {
+        let tasks = DATA_IMP.filter(t => t.judul.includes(a.materi));
+        let pending = tasks.filter(t => t.status === 'Menunggu').length; total += pending;
+        
+        let narsum = a.narsum || "Koordinator";
+        let jadwal = a.tanggal || "Terjadwal";
+
+        grid.innerHTML += `
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card-pro card-materi h-100 position-relative" onclick="openFolder('${a.materi}')">
+                ${pending > 0 ? `<span class="badge bg-danger shadow-sm position-absolute" style="top:10px; right:10px; font-size:0.65rem;">${pending}</span>` : ''}
+                <div class="w-100 d-flex justify-content-center"><div class="icon-circle-lg"><i class="bi bi-journal-check"></i></div></div>
+                <div class="txt-judul text-clamp-2">${a.materi}</div>
+                <div class="mt-auto border-top pt-2 w-100">
+                    <div class="d-flex align-items-center justify-content-center txt-desc mb-1">
+                        <i class="bi bi-person-video3 me-1 text-primary"></i><span class="text-truncate" style="max-width:85%">${narsum}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center txt-desc">
+                        <i class="bi bi-calendar-event me-1 text-warning"></i><span class="text-truncate">${jadwal}</span>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    });
+    document.getElementById('badge-pending').innerText = total + " Pending";
+}
+
+function openFolder(m) {
+    document.getElementById('view-grid').classList.add('hidden'); document.getElementById('view-list').classList.remove('hidden');
+    document.getElementById('lbl-active').innerText = m;
+    renderList(DATA_IMP.filter(t => t.judul.includes(m)), 'list-cont', 'IMP'); 
+}
+function backToGrid() { document.getElementById('view-list').classList.add('hidden'); document.getElementById('view-grid').classList.remove('hidden'); }
+function resetView() { backToGrid(); }
+
+function renderList(data, id, type) {
+  let el = document.getElementById(id); let html = "";
+  data.sort((a,b) => (a.status==='Menunggu' ? -1 : 1));
+  data.forEach(item => {
+    let st = item.status, bg = st==='Menunggu'?'bg-warning':(st==='Diterima'?'bg-success':'bg-danger');
+    let link = (item.link && item.link.length>5) ? `<a href="${item.link}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill py-0 px-2 mt-1" style="font-size:0.7rem">Lihat Bukti</a>` : "";
+    html += `<div class="card-pro p-3 mb-2 border-start border-4 border-primary"><div class="d-flex justify-content-between align-items-start">
+      <div class="pe-2"><span class="badge ${bg} mb-1" style="font-size:0.65rem">${st}</span><div class="fw-bold small">${item.judul}</div><div class="small text-muted mb-1">#${item.id.substring(0,5)}</div>${link}</div>
+      <button onclick="popNilai('${item.id}', '${type}')" class="btn btn-sm btn-primary rounded-pill px-3 shadow-sm" style="font-size:0.8rem">Nilai Mutu</button>
+    </div></div>`;
+  });
+  el.innerHTML = html || "<div class='text-center py-4 small text-muted'>Tidak ada data</div>";
+}
+
+function popNilai(id, type){ document.getElementById('n_id').value = id; document.getElementById('n_type').value = type; document.getElementById('n_feed').value = ""; modalNi.show(); }
+
+async function saveNilai(){
+  let id = document.getElementById('n_id').value, type = document.getElementById('n_type').value, h = document.getElementById('n_kual').value, note = document.getElementById('n_feed').value;
+  if(!note){ Swal.fire('Perhatian','Berikan umpan balik mutu!','warning'); return; }
+  let st = h==='D'?'Revisi':'Diterima', feed = `[Kualitas: ${h}] ` + note;
+  modalNi.hide(); Swal.fire({title:'Tersimpan', icon:'success', timer:1000, toast:true, position:'top-end'});
+  
+  let targetArr = type === 'IMP' ? DATA_IMP : DATA_INOV;
+  let idx = targetArr.findIndex(i => i.id === id); if(idx !== -1) { targetArr[idx].status = st; }
+  
+  if(type==='IMP') renderList(DATA_IMP.filter(t => t.judul.includes(document.getElementById('lbl-active').innerText)), 'list-cont', 'IMP');
+  else renderList(DATA_INOV, 'list-inovasi', 'INOVASI');
+
+  await apiCall("simpanNilai", { id: id, status: st, feedback: feed, adminName: USER.nama });
+}
+</script>
+</body>
+</html>
