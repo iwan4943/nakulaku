@@ -214,6 +214,7 @@
     <div id="dialog-modal" class="fixed inset-0 z-[90] hidden flex items-center justify-center p-6"><div class="absolute inset-0 bg-stone-900/30 dark:bg-black/60 backdrop-blur-sm transition-opacity opacity-0 modal-overlay" onclick="app.closeModal('dialog-modal')"></div><div class="bg-white/90 dark:bg-darkcard/90 backdrop-blur-xl w-full max-w-xs rounded-[2.5rem] p-8 text-center transform scale-75 opacity-0 modal-content shadow-glass border border-white/20 dark:border-white/5 transition-all duration-300"><div id="dialog-icon-container" class="mb-5 mx-auto w-20 h-20 rounded-full flex items-center justify-center shadow-lg relative"><div class="absolute inset-0 rounded-full bg-current opacity-20 animate-ping"></div><div id="dialog-icon" class="relative z-10 w-full h-full flex items-center justify-center rounded-full bg-white dark:bg-darkbg text-2xl"></div></div><h3 id="dialog-title" class="font-black text-2xl mb-2 text-stone-800 dark:text-white tracking-tight">Info</h3><p id="dialog-msg" class="text-sm text-stone-500 dark:text-stone-400 mb-8 leading-relaxed font-medium">Pesan...</p><div id="dialog-actions"></div></div></div>
     
     <div id="profile-modal" class="fixed inset-0 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4"><div class="absolute inset-0 bg-stone-900/20 dark:bg-black/50 transition-opacity opacity-0 modal-overlay" onclick="app.closeModal('profile-modal')"></div><div class="bg-white dark:bg-darkcard w-full md:max-w-sm rounded-t-[2.5rem] md:rounded-[2.5rem] p-8 shadow-2xl transform translate-y-full md:translate-y-0 scale-95 opacity-0 modal-content transition-all z-10 border-t dark:border-darkborder md:border-none"><div class="w-12 h-1.5 bg-stone-200 dark:bg-darkbg rounded-full mx-auto mb-8 md:hidden"></div><div class="flex items-center gap-5 mb-8"><div class="relative group"><img id="modal-photo" src="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png" class="w-20 h-20 rounded-full object-cover bg-stone-50 dark:bg-darkbg border-4 border-white dark:border-darkborder shadow-lg"><label class="absolute bottom-0 right-0 bg-stone-900 text-white p-1.5 rounded-full cursor-pointer hover:bg-nakula-600 transition shadow-md"><i data-lucide="camera" class="w-3.5 h-3.5"></i><input type="file" id="upload-photo" hidden accept="image/*" onchange="app.handlePhotoUpload(this)"></label></div><div><h3 class="text-xl font-bold text-stone-800 dark:text-white leading-tight">Profil<br>Pengguna</h3><p id="modal-status" class="text-xs font-bold text-stone-400 mt-1 uppercase tracking-wider">Belum Terhubung</p></div></div><div class="space-y-4 mb-8"><div class="bg-stone-50 dark:bg-darkbg px-5 py-3.5 rounded-2xl border border-stone-100 dark:border-darkborder focus-within:border-nakula-500 transition-colors"><label class="text-[10px] font-bold text-stone-400 uppercase block mb-1">Email</label><input type="email" id="sync-email" class="w-full bg-transparent text-sm font-bold text-stone-800 dark:text-white outline-none placeholder:text-stone-300"></div><div class="bg-stone-50 dark:bg-darkbg px-5 py-3.5 rounded-2xl border border-stone-100 dark:border-darkborder focus-within:border-nakula-500 transition-colors"><label class="text-[10px] font-bold text-stone-400 uppercase block mb-1">PIN Akses</label><input type="text" id="sync-pin" class="w-full bg-transparent text-sm font-bold text-stone-800 dark:text-white outline-none placeholder:text-stone-300"></div></div><button onclick="app.syncData()" id="btn-sync" class="w-full bg-nakula-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition cursor-pointer">Sinkronisasi Data</button><button type="button" onclick="app.confirmLogout()" class="w-full py-4 text-xs font-bold text-red-500 mt-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition cursor-pointer">Keluar / Reset Akun</button></div></div>
+    
     <div id="submenu-modal" class="fixed inset-0 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4"><div class="absolute inset-0 bg-stone-900/20 dark:bg-black/50 backdrop-blur-sm modal-overlay opacity-0" onclick="app.closeModal('submenu-modal')"></div><div class="bg-white dark:bg-darkcard w-full md:max-w-md rounded-t-[2.5rem] md:rounded-[2.5rem] p-0 shadow-2xl transform translate-y-full md:translate-y-0 scale-95 opacity-0 modal-content transition-all z-10 max-h-[85vh] flex flex-col border-t dark:border-darkborder md:border-none"><div class="p-8 border-b border-stone-100 dark:border-darkborder"><h3 id="submenu-title" class="text-2xl font-bold text-stone-800 dark:text-white">Detail Menu</h3></div><div id="submenu-list" class="p-6 overflow-y-auto space-y-3"></div><div class="p-6 border-t border-stone-100 dark:border-darkborder"><button onclick="app.closeModal('submenu-modal')" class="w-full py-4 bg-stone-100 dark:bg-darkbg rounded-2xl text-sm font-bold text-stone-600 dark:text-stone-300 hover:bg-stone-200 transition cursor-pointer">Tutup</button></div></div></div>
     <div id="feedback-modal" class="fixed inset-0 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4"><div class="absolute inset-0 bg-stone-900/20 dark:bg-black/50 backdrop-blur-sm modal-overlay opacity-0" onclick="app.closeModal('feedback-modal')"></div><div class="bg-white dark:bg-darkcard w-full md:w-auto md:max-w-md rounded-t-[2.5rem] rounded-b-none md:rounded-[2rem] shadow-2xl relative z-10 overflow-hidden transform translate-y-full md:translate-y-0 scale-95 opacity-0 modal-content transition-all duration-300 border-t dark:border-darkborder md:border-none"><div class="p-6 border-b border-stone-100 dark:border-darkborder flex justify-between items-center"><div><h3 class="text-lg font-bold text-stone-800 dark:text-white">Bantuan</h3></div><button onclick="app.closeModal('feedback-modal')" class="p-2 bg-stone-100 dark:bg-darkbg rounded-full"><i data-lucide="x" class="w-5 h-5 dark:text-stone-300"></i></button></div><div class="p-6"><form onsubmit="app.submitFeedback(event)" class="space-y-4"><textarea name="pesan" required rows="3" class="w-full bg-stone-50 dark:bg-darkbg border border-stone-200 dark:border-darkborder rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-nakula-500 outline-none resize-none dark:text-white" placeholder="Pesan Anda..."></textarea><div class="flex items-center justify-between pt-2"><label class="flex items-center gap-2 cursor-pointer select-none"><input type="checkbox" id="anonim-check" name="isAnonim" class="w-4 h-4 rounded border-stone-300" onchange="app.toggleAnonim()"><span class="text-sm text-stone-500 font-medium">Anonim</span></label><button type="submit" id="btn-feedback-submit" class="bg-stone-900 dark:bg-nakula-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg active:scale-95 transition flex items-center gap-2 text-sm cursor-pointer"><span>Kirim</span><i data-lucide="send" class="w-4 h-4"></i></button></div></form></div></div></div>
     
@@ -226,8 +227,8 @@
             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             menuMap: {}, backPressedTime: 0, schoolInterval: null, schools: [{ name: "NAKULAKU EKOSISTEM", jargon: '"Solid Bersinergi Menginspirasi"' }],
-            currentUser: null, // MENYIMPAN DATA USER LOGIN
-            currentGreeting: 'Selamat Malam',
+            currentUser: null,
+            currentGreeting: 'Selamat Pagi',
 
             init: function() {
                 this.initTheme(); this.initSchoolRotator(); this.initClock();
@@ -242,7 +243,7 @@
             initTheme: function() { const saved=localStorage.getItem('theme'); const isDark=saved==='dark'||(!saved&&window.matchMedia('(prefers-color-scheme: dark)').matches); if(isDark)document.documentElement.classList.add('dark'); this.updateStatusBar(isDark); },
             updateStatusBar: function(isDark) { document.getElementById('theme-color-meta').setAttribute('content',isDark?'#1E1E1E':'#F6F5F4'); },
             
-            // --- LOGIKA JAM & SAPAAN REAL-TIME ---
+            // --- LOGIKA JAM & SAPAAN (Mobile User Inline) ---
             initClock: function() {
                 const updateTime = () => {
                     const now = new Date();
@@ -265,16 +266,30 @@
                     else if (hrs >= 15 && hrs < 18) greet = 'Selamat Sore';
                     this.currentGreeting = greet;
 
-                    // Update JIKA ADA USER (Format: "Sapaan, Nama")
+                    // Update Nama User di Mobile (Format: "Sapaan, Nama")
                     if (this.currentUser && this.currentUser.realName) {
                         const mobName = document.getElementById('mob-user-name');
-                        // Ambil nama depan saja untuk kerapian
                         const shortName = this.currentUser.realName.split(' ')[0];
                         if (mobName) mobName.innerText = `${greet}, ${shortName}`;
                     }
                 };
                 setInterval(updateTime, 1000);
                 updateTime(); // Run once immediately
+            },
+
+            // --- PHOTO UPLOAD (Local Preview) ---
+            handlePhotoUpload: function(input) {
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('modal-photo').src = e.target.result;
+                        const p = JSON.parse(localStorage.getItem('nakula_profile') || '{}');
+                        p.photo = e.target.result; 
+                        localStorage.setItem('nakula_profile', JSON.stringify(p));
+                        app.updateUIForUser(p); 
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
             },
 
             checkAutoLogin: function() { const p = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); if(p.nama) { this.updateUIForUser(p); this.refreshUserPerformance(p.nama); } else { this.updateUIForGuest(); } },
@@ -294,23 +309,22 @@
             getRoleBg: function(role) { const r = (role || '').toLowerCase(); if(r.includes('kepala')) return 'bg-gradient-to-br from-indigo-100 to-purple-200 dark:from-indigo-900/30 dark:to-purple-900/30'; if(r.includes('pjok')) return 'bg-gradient-to-br from-orange-100 to-red-200 dark:from-orange-900/30 dark:to-red-900/30'; if(r.includes('agama')) return 'bg-gradient-to-br from-emerald-100 to-teal-200 dark:from-emerald-900/30 dark:to-teal-900/30'; if(r.includes('kelas')) return 'bg-gradient-to-br from-blue-100 to-cyan-200 dark:from-blue-900/30 dark:to-cyan-900/30'; return 'bg-gradient-to-br from-slate-200 to-zinc-300 dark:from-slate-800 dark:to-zinc-800'; },
             
             updateUIForUser: function(p) {
-                // Simpan user ke variabel global agar bisa dibaca clock
-                this.currentUser = p; 
-
-                // Update Mobile
+                this.currentUser = p; // Store user global
+                
+                // Mobile
                 document.getElementById('mob-view-guest').classList.add('hidden'); 
                 document.getElementById('mob-view-user').classList.remove('hidden'); 
                 document.getElementById('mob-view-user').classList.add('flex');
                 
-                // Format Nama Sapaan Langsung (agar tidak menunggu detik jam)
-                const shortName = p.realName ? p.realName.split(' ')[0] : 'User';
+                // Sapaan Inline
+                const shortName = p.realName ? p.realName.split(' ')[0] : 'User'; 
                 document.getElementById('mob-user-name').innerText = `${this.currentGreeting}, ${shortName}`;
                 
                 document.getElementById('mob-user-role').innerText = `${p.role || '-'} • ${p.instansi || '-'}`;
                 if(p.photo) document.getElementById('mob-user-photo').src = p.photo;
                 const widgetMobile = document.getElementById('widget-akun-mobile'); if(widgetMobile) widgetMobile.className = `md:hidden col-span-12 border border-transparent rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden shadow-gnome hover:shadow-md min-h-[90px] ${this.getRoleBg(p.role)}`;
                 
-                // Update Desktop
+                // Desktop
                 document.getElementById('desk-view-guest').classList.add('hidden'); document.getElementById('desk-view-user').classList.remove('hidden');
                 const deskProfileContainer = document.getElementById('desktop-profile-container'); deskProfileContainer.className = `bg-gradient-to-br from-slate-100 to-zinc-200 dark:from-slate-800 dark:to-zinc-800 rounded-[2rem] p-4 xl:p-6 text-center shadow-gnome dark:shadow-dark-soft border border-white/20 dark:border-white/5 relative overflow-hidden group ${this.getRoleBg(p.role)}`;
                 document.getElementById('desk-user-name').innerText = p.realName; document.getElementById('desk-user-role').innerText = `${p.role || '-'} • ${p.instansi || '-'}`;
@@ -321,7 +335,7 @@
             },
             
             updateUIForGuest: function() {
-                this.currentUser = null; // Reset user
+                this.currentUser = null;
                 // Mobile
                 document.getElementById('mob-view-guest').classList.remove('hidden'); document.getElementById('mob-view-user').classList.add('hidden'); document.getElementById('mob-view-user').classList.remove('flex');
                 const widgetMobile = document.getElementById('widget-akun-mobile'); widgetMobile.className = "md:hidden col-span-12 bg-gnomecard dark:bg-darkcard border border-stone-100 dark:border-darkborder rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden shadow-gnome dark:shadow-dark-soft min-h-[90px]";
