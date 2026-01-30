@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#F6F5F4" id="theme-color-meta">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>NAKULAKU ADMIN</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/admin/nkladm.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -403,6 +404,15 @@
             openSubmenu: function(parentTitle) { const list = this.menuMap[parentTitle.toLowerCase()] || []; const container = document.getElementById('submenu-list'); document.getElementById('submenu-title').innerText = parentTitle; container.innerHTML = list.map(m => `<div onclick="window.open('${m.url}','_blank')" class="flex items-center gap-5 p-4 rounded-[2rem] bg-stone-50 dark:bg-darkbg active:bg-stone-200 transition cursor-pointer border border-stone-100 dark:border-darkborder relative z-10"><div class="w-10 h-10 rounded-2xl bg-white dark:bg-darkcard flex items-center justify-center text-nakula-600 shadow-sm"><i data-lucide="${m.icon||'link'}" class="w-5 h-5"></i></div><div class="flex-1"><h5 class="font-bold text-sm text-stone-700 dark:text-white">${m.judul}</h5></div><i data-lucide="chevron-right" class="w-4 h-4 text-stone-300"></i></div>`).join(''); lucide.createIcons(); this.openModal('submenu-modal'); },
             showAlert: function(type, title, msg) { const modal = document.getElementById('dialog-modal'); const iconContainer = document.getElementById('dialog-icon'); const iconBg = document.getElementById('dialog-icon-container'); let colorClass = type === 'error' ? 'text-red-500' : (type === 'success' ? 'text-green-500' : 'text-blue-500'); let iconName = type === 'error' ? 'alert-triangle' : (type === 'success' ? 'check' : 'info'); iconContainer.innerHTML = `<i data-lucide="${iconName}" class="w-10 h-10 ${colorClass}"></i>`; iconBg.className = `mb-5 mx-auto w-20 h-20 rounded-full flex items-center justify-center shadow-lg relative ${colorClass.replace('text','bg')}/10`; document.getElementById('dialog-title').innerText = title; document.getElementById('dialog-msg').innerText = msg; document.getElementById('dialog-actions').innerHTML = `<button onclick="app.closeModal('dialog-modal')" class="w-full py-3.5 bg-stone-900 text-white rounded-[1.5rem] font-bold text-sm shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer">OK</button>`; lucide.createIcons(); this.openModal('dialog-modal'); const content = modal.querySelector('.modal-content'); content.classList.remove('scale-75', 'opacity-0'); content.classList.add('scale-100', 'opacity-100'); }
         };
+
+        // PWA Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW Admin registered:', reg.scope))
+                    .catch(err => console.log('SW Admin failed:', err));
+            });
+        }
 
         document.addEventListener('DOMContentLoaded', () => app.init());
     </script>
