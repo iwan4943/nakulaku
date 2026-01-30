@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title>Dashboard Panitia</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* --- SYSTEM STYLE: Hybrid Responsive --- */
+    :root {
+      --primary: #B3261E;
+      --on-primary: #FFFFFF;
+      --surface: #FFF8F7;
+      --surface-variant: #F2DEDC;
+      --on-surface: #201A1A;
+      --outline: #857372;
+      --container-low: #FCEAE9;
+      --container-high: #FFFFFF;
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { 
+      font-family: 'Roboto', sans-serif; 
+      background-color: var(--surface); 
+      color: var(--on-surface); 
+      line-height: 1.4; 
+      min-height: 100vh; 
+      font-size: 15px;
+    }
+    h1, h2, h3, .font-head { font-family: 'Google Sans', sans-serif; }
+
+    /* LAYOUT UTAMA */
+    .app-wrapper { 
+      width: 100%; 
+      min-height: 100vh; 
+      display: flex; 
+      flex-direction: column; 
+    }
+
+    /* HEADER */
+    .header { 
+      position: sticky; top: 0; z-index: 50; 
+      background: rgba(255, 248, 247, 0.95); 
+      backdrop-filter: blur(10px); 
+      padding: 1rem 1.5rem; 
+      border-bottom: 1px solid var(--surface-variant);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .header-logo h2 { font-size: 1.25rem; font-weight: 700; color: var(--on-surface); }
+    .header-logo p { font-size: 0.75rem; color: var(--outline); font-weight: 500; }
+    
+    .btn-logout { 
+      background: var(--container-low); color: var(--primary); 
+      padding: 8px 20px; border-radius: 50px; 
+      text-decoration: none; font-weight: 700; font-size: 0.85rem; 
+      transition: 0.2s;
+    }
+    .btn-logout:hover { background: var(--primary); color: white; }
+
+    /* DASHBOARD GRID SYSTEM (INTI RESPONSIVE) */
+    .dashboard-grid {
+      display: grid;
+      padding: 1.5rem;
+      gap: 1.5rem;
+      /* Default Mobile: 1 Kolom */
+      grid-template-columns: 1fr; 
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* DESKTOP MODE (Layar > 1024px) */
+    @media (min-width: 1024px) {
+      .dashboard-grid {
+        /* Grid 4 Kolom di Desktop */
+        grid-template-columns: repeat(4, 1fr); 
+        grid-template-rows: auto auto 1fr; /* Baris otomatis */
+      }
+      
+      /* Pengaturan Posisi Card di Desktop (Span) */
+      .area-filter { grid-column: span 4; display: flex; justify-content: flex-end; }
+      .area-hero { grid-column: span 1; }
+      .area-highlights { grid-column: span 3; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+      
+      .area-chart { grid-column: span 1; } /* Masing-masing chart ambil 1 kolom */
+      .area-chart-full { grid-column: span 1; } 
+
+      .area-rank { grid-column: span 2; } /* Tabel Ranking ambil 2 kolom */
+      .area-log { grid-column: span 2; }
+    }
+
+    /* COMPONENTS */
+    .card { 
+      background: var(--container-high); 
+      border-radius: var(--radius-xl); 
+      padding: 1.5rem; 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03); 
+      border: 1px solid rgba(0,0,0,0.03);
+      display: flex; flex-direction: column;
+    }
+
+    /* 1. FILTER */
+    .select-style { 
+      padding: 0.8rem 1.5rem; font-size: 0.9rem; font-weight: 700; 
+      border-radius: 50px; border: 1px solid var(--outline); 
+      background: #FFF; color: var(--on-surface); outline: none; cursor: pointer;
+      min-width: 200px;
+    }
+
+    /* 2. HERO STATS (Dark Card) */
+    .card-dark { background: var(--primary); color: white; position: relative; overflow: hidden; }
+    .stat-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; margin-bottom: 0.5rem; }
+    .stat-val-huge { font-size: 4.5rem; font-weight: 700; line-height: 1; font-family: 'Google Sans'; margin-bottom: 1rem; }
+    .stat-footer { font-size: 0.75rem; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; margin-top: auto; }
+
+    /* 3. HIGHLIGHT CARDS */
+    .highlight-card { 
+      background: #FFF; border: 1px solid var(--surface-variant); 
+      padding: 1rem; border-radius: var(--radius-lg); 
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .h-icon { 
+      width: 56px; height: 56px; background: var(--container-low); color: var(--primary); 
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .h-content { flex: 1; }
+    .h-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--outline); }
+    .h-val { font-size: 1.1rem; font-weight: 700; color: var(--on-surface); line-height: 1.2; margin: 4px 0; }
+    .h-badge { 
+      display: inline-block; background: var(--primary); color: white; 
+      font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; 
+    }
+
+    /* 4. CHARTS (Progress Bars) */
+    .score-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; }
+    .score-big { font-size: 2.5rem; font-weight: 700; color: var(--primary); line-height: 1; }
+    .bar-item { margin-bottom: 10px; }
+    .bar-meta { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 500; color: var(--outline); margin-bottom: 4px; }
+    .progress-track { height: 8px; background: var(--container-low); border-radius: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--primary); border-radius: 10px; transition: width 1s ease; }
+
+    /* 5. TABLES / LISTS */
+    .rank-list { display: flex; flex-direction: column; gap: 0; }
+    .rank-item { 
+      display: flex; align-items: center; gap: 1rem; padding: 0.8rem 0; 
+      border-bottom: 1px solid var(--surface-variant); 
+    }
+    .rank-item:last-child { border-bottom: none; }
+    .rank-num { 
+      width: 28px; height: 28px; background: var(--container-low); color: var(--primary); 
+      border-radius: 8px; font-weight: 700; display: flex; align-items: center; justify-content: center; 
+      font-size: 0.9rem; flex-shrink: 0; 
+    }
+    .rank-num.top { background: var(--primary); color: white; }
+    .rank-info { flex: 1; overflow: hidden; }
+    .rank-name { font-weight: 700; font-size: 0.95rem; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rank-sub { font-size: 0.8rem; color: var(--outline); }
+    .rank-score { font-size: 1rem; font-weight: 700; color: var(--primary); }
+
+    /* UTILS */
+    .hidden { display: none !important; }
+    .loading-container { 
+      position: fixed; inset: 0; background: var(--surface); z-index: 40; 
+      display: flex; flex-direction: column; align-items: center; justify-content: center; 
+    }
+    .spinner { width: 40px; height: 40px; border: 4px solid var(--container-low); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* AUTH MODAL */
+    .modal-overlay { 
+      position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; 
+      display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); 
+    }
+    .modal-box { background: var(--surface); width: 90%; max-width: 320px; padding: 2rem; border-radius: 28px; text-align: center; }
+    .input-pass { 
+      width: 100%; background: var(--container-low); border: none; padding: 1rem; 
+      border-radius: 12px; font-size: 1.5rem; letter-spacing: 5px; text-align: center; 
+      font-weight: 700; margin-bottom: 1.5rem; outline: none; 
+    }
+    .btn-auth { 
+      width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; 
+      border-radius: 50px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s;
+    }
+    .btn-auth:hover { box-shadow: 0 4px 12px rgba(179,38,30,0.3); }
+
+    /* SCROLLBAR DESKTOP */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--surface); }
+    ::-webkit-scrollbar-thumb { background: var(--outline); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+  </style>
+</head>
+<body>
+
+  <div id="modal-auth" class="modal-overlay">
+    <div class="modal-box">
+      <h3 class="font-head" style="margin-bottom: 0.5rem; font-size: 1.5rem;">Admin Panel</h3>
+      <p style="color: var(--outline); margin-bottom: 1.5rem;">Masukkan PIN Panitia.</p>
+      <input type="password" id="auth-pass" class="input-pass" placeholder="••••" inputmode="numeric">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <a href="index.html" style="padding: 1rem; text-align: center; color: var(--primary); font-weight: 700; text-decoration: none; border: 1px solid var(--primary); border-radius: 50px;">Batal</a>
+        <button onclick="submitAuth()" id="btn-auth" class="btn-auth">Masuk</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="loading" class="loading-container hidden">
+      <div class="spinner"></div>
+      <p style="margin-top:1rem; font-size:0.9rem; color:var(--outline); font-weight:500;">Sinkronisasi Data...</p>
+  </div>
+
+  <div id="app-view" class="app-wrapper hidden">
+    
+    <div class="header">
+      <div class="header-logo">
+          <h2>Dashboard</h2>
+          <p>Realtime Monitoring</p>
+      </div>
+      <a href="index.html" class="btn-logout">Keluar</a>
+    </div>
+
+    <div class="dashboard-grid">
+
+      <div class="area-filter">
+          <select id="filter-lokasi" onchange="loadData()" class="select-style">
+            <option value="Semua">Semua Lokasi</option>
+          </select>
+      </div>
+
+      <div class="card card-dark area-hero">
+         <div class="stat-label">Total Responden</div>
+         <div class="stat-val-huge" id="stat-count">0</div>
+         <div class="stat-footer">Update: <span id="last-update">Barusan</span></div>
+      </div>
+
+      <div class="area-highlights">
+          <div class="highlight-card">
+              <div class="h-icon">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M12 2L1 21h22M12 6l7.53 13H4.47"/></svg>
+              </div>
+              <div class="h-content">
+                  <div class="h-label">Terkompak</div>
+                  <div class="h-val" id="hl-kompak-nama">-</div>
+                  <div class="h-badge" id="hl-kompak-skor">0 Poin</div>
+              </div>
+          </div>
+          <div class="highlight-card">
+              <div class="h-icon">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+              </div>
+              <div class="h-content">
+                  <div class="h-label">Tergiat</div>
+                  <div class="h-val" id="hl-aktif-nama">-</div>
+                  <div class="h-badge" id="hl-aktif-skor">0 Aksi</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="card area-chart">
+          <div class="score-head">
+              <div><div class="stat-label" style="color:var(--primary)">Narasumber</div><div style="font-size:0.8rem; color:var(--outline);">Rata-rata</div></div>
+              <div class="score-big" id="avg-nara">0.0</div>
+          </div>
+          <div id="bars-nara"></div>
+      </div>
+
+      <div class="card area-chart">
+          <div class="score-head">
+              <div><div class="stat-label" style="color:var(--primary)">Panitia</div><div style="font-size:0.8rem; color:var(--outline);">Rata-rata</div></div>
+              <div class="score-big" id="avg-panitia">0.0</div>
+          </div>
+          <div id="bars-panitia"></div>
+      </div>
+
+      <div class="card area-chart">
+          <div class="score-head">
+              <div><div class="stat-label" style="color:var(--primary)">Tuan Rumah</div><div style="font-size:0.8rem; color:var(--outline);">Rata-rata</div></div>
+              <div class="score-big" id="avg-tr">0.0</div>
+          </div>
+          <div id="bars-tr"></div>
+      </div>
+
+      <div class="card area-rank">
+          <h3 class="font-head" style="margin-bottom:1rem; color:var(--primary);">🏆 Top Narasumber</h3>
+          <div class="rank-list" id="list-nara"></div>
+      </div>
+
+      <div class="card area-rank">
+          <h3 class="font-head" style="margin-bottom:1rem; color:var(--primary);">📍 Top Lokasi</h3>
+          <div class="rank-list" id="list-lokasi"></div>
+      </div>
+
+      <div class="card area-log">
+          <h3 class="font-head" style="margin-bottom:1rem; color:var(--primary);">💬 Log Keaktifan</h3>
+          <div class="rank-list" id="list-log"></div>
+      </div>
+
+      <div class="card area-log" style="background:#FFF8E1; border-color:#FFE082;">
+          <h3 class="font-head" style="margin-bottom:1rem; color:#F57F17;">📝 Masukan Terbaru</h3>
+          <div id="list-komen" style="display:flex; flex-direction:column; gap:10px;"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // URL Sesuai Permintaan
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKg0VRlRs-ipgvVX1ma-rJ5RYowThx4w3z_lOwa8552cWdYTLmJfkzxMMt1SVP2JNN/exec"; 
+
+    // --- AUTHENTICATION ---
+    function submitAuth() {
+        const p = document.getElementById('auth-pass').value;
+        if(!p) return;
+        const btn = document.getElementById('btn-auth');
+        btn.innerText = '...'; btn.disabled = true;
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'verifyPassword', payload: { pass: p, type: 'panitia' } }),
+            headers: { "Content-Type": "text/plain;charset=utf-8" }
+        })
+        .then(r => r.json())
+        .then(res => {
+            if(res === true) {
+                document.getElementById('modal-auth').classList.add('hidden');
+                document.getElementById('app-view').classList.remove('hidden');
+                loadData();
+            } else {
+                alert("PIN Salah");
+                document.getElementById('auth-pass').value = '';
+                btn.innerText = 'Masuk'; btn.disabled = false;
+            }
+        })
+        .catch(e => { alert("Gagal koneksi"); btn.disabled=false; });
+    }
+
+    // --- DATA FETCHER ---
+    function loadData() {
+        document.getElementById('loading').classList.remove('hidden');
+        const filter = document.getElementById('filter-lokasi').value;
+        
+        fetch(SCRIPT_URL + '?action=getRekapData&filterLokasi=' + filter)
+        .then(r => r.json())
+        .then(data => {
+            renderDashboard(data);
+            document.getElementById('loading').classList.add('hidden');
+        })
+        .catch(e => {
+            console.error(e);
+            document.getElementById('loading').classList.add('hidden');
+        });
+    }
+
+    // --- RENDER LOGIC ---
+    function renderDashboard(data) {
+        if(!data || !data.peserta) return;
+        
+        const stats = data.peserta;
+        const schools = data.sekolah;
+        const logs = data.latest_logs;
+        
+        // Populate Filter
+        const sel = document.getElementById('filter-lokasi');
+        if(sel.options.length === 1 && data.locations) {
+            data.locations.forEach(l => {
+                let o = document.createElement('option'); o.value = l; o.text = l; sel.add(o);
+            });
+        }
+
+        // 1. Hero
+        animateValue("stat-count", 0, stats.count, 1000);
+        const d = new Date();
+        document.getElementById('last-update').innerText = d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes();
+
+        // 2. Highlights
+        if(schools.kompak.length > 0) {
+            document.getElementById('hl-kompak-nama').innerText = schools.kompak[0].nama;
+            document.getElementById('hl-kompak-skor').innerText = schools.kompak[0].skor_kompak + " Poin";
+        }
+        if(schools.aktif.length > 0) {
+            document.getElementById('hl-aktif-nama').innerText = schools.aktif[0].nama;
+            document.getElementById('hl-aktif-skor').innerText = schools.aktif[0].skor_aktif + " Aksi";
+        }
+
+        // 3. Bars
+        document.getElementById('avg-nara').innerText = stats.avgNara;
+        renderBars('bars-nara', stats.details.nara);
+        
+        document.getElementById('avg-panitia').innerText = stats.avgPanitia;
+        renderBars('bars-panitia', stats.details.panitia);
+
+        document.getElementById('avg-tr').innerText = stats.avgTuanRumah;
+        renderBars('bars-tr', stats.details.tr);
+
+        // 4. Rankings
+        renderList('list-nara', stats.ranking, 'responden');
+        renderList('list-lokasi', stats.rankPanitia, 'responden');
+
+        // 5. Logs & Comments
+        const logContainer = document.getElementById('list-log');
+        logContainer.innerHTML = logs.length ? logs.map((l, i) => `
+            <div class="rank-item">
+                <div class="rank-info">
+                    <div class="rank-name">${l.nama}</div>
+                    <div class="rank-sub">${l.sd}</div>
+                </div>
+                <div class="rank-score" style="font-size:0.75rem; background:var(--container-low); padding:4px 10px; border-radius:50px;">${l.aksi}</div>
+            </div>
+        `).join('') : '<p style="text-align:center; color:var(--outline); font-style:italic; padding:1rem;">Belum ada data.</p>';
+
+        const comContainer = document.getElementById('list-komen');
+        comContainer.innerHTML = stats.comments.length ? stats.comments.map(c => `
+            <div style="background:white; padding:12px; border-radius:12px; font-size:0.9rem; font-style:italic; margin-bottom:8px;">"${c.teks}"</div>
+        `).join('') : '<p style="text-align:center; color:#F57F17; opacity:0.7; padding:1rem;">Belum ada masukan.</p>';
+    }
+
+    function renderBars(id, obj) {
+        let html = '';
+        for (const [key, val] of Object.entries(obj)) {
+            let pct = (parseFloat(val) / 5) * 100;
+            html += `
+            <div class="bar-item">
+                <div class="bar-meta"><span>${key}</span><span>${val}</span></div>
+                <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+            </div>`;
+        }
+        document.getElementById(id).innerHTML = html;
+    }
+
+    function renderList(id, arr, subLabel) {
+        const c = document.getElementById(id);
+        if(!arr || arr.length === 0) { c.innerHTML = '<p style="text-align:center; color:var(--outline); padding:1rem;">Data kosong</p>'; return; }
+        
+        c.innerHTML = arr.slice(0, 5).map((item, idx) => `
+            <div class="rank-item">
+                <div class="rank-num ${idx===0?'top':''}">${idx+1}</div>
+                <div class="rank-info">
+                    <div class="rank-name">${item.nama}</div>
+                    <div class="rank-sub">${item[subLabel]} Responden</div>
+                </div>
+                <div class="rank-score">${item.skor}</div>
+            </div>
+        `).join('');
+    }
+
+    function animateValue(id, start, end, duration) {
+        if (start === end) return;
+        const range = end - start;
+        let current = start;
+        const increment = end > start ? 1 : -1;
+        const stepTime = Math.abs(Math.floor(duration / range));
+        const obj = document.getElementById(id);
+        const timer = setInterval(function() {
+            current += increment;
+            obj.innerHTML = current;
+            if (current == end) clearInterval(timer);
+        }, stepTime > 0 ? stepTime : 10);
+        setTimeout(() => { obj.innerHTML = end; clearInterval(timer); }, duration + 100);
+    }
+  </script>
+</body>
+</html>
