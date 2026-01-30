@@ -2,447 +2,501 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Portal Guru & KS - LMS Nakula</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<title>LMS Nakula - Pro</title>
 <style>
+  /* --- 1. CORE VARIABLES & RESET --- */
   :root {
-    --primary: #B3261E; 
-    --primary-container: #FFDAD6;
-    --on-primary-container: #410E0B;
-    --bg: #FFF8F6; 
-    --card: #FFFFFF; 
-    --text: #201A19;
+    --primary: #B3261E; --primary-dark: #901B15;
+    --bg: #FFF8F6; --card: #FFFFFF; --text: #201A19;
+    --subtle: #F3E5E5; --success: #2e7d32; --warning: #ed6c02;
+    --radius: 16px; --shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
-
-  body { background-color: var(--bg); font-family: 'Poppins', sans-serif; color: var(--text); padding-bottom: 80px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; line-height: 1.5; }
+  
+  /* --- 2. UTILITIES --- */
   .hidden { display: none !important; }
+  .flex { display: flex; align-items: center; }
+  .between { justify-content: space-between; }
+  .center { justify-content: center; text-align: center; }
+  .col { display: flex; flex-direction: column; }
+  .mb-2 { margin-bottom: 0.5rem; } .mb-4 { margin-bottom: 1.5rem; }
+  .text-muted { color: #757575; font-size: 0.85rem; }
+  .fw-bold { font-weight: 600; }
+  .w-100 { width: 100%; }
 
-  /* Card Style */
-  .card-pro { 
-    border: none; border-radius: 24px; 
-    background: var(--card); 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
-    margin-bottom: 1rem; 
-    transition: transform 0.2s;
-  }
+  /* --- 3. COMPONENTS --- */
+  /* Card */
+  .card { background: var(--card); border-radius: 20px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 1rem; position: relative; }
   
-  /* HEADER ICON FIX (AGAR TIDAK LONJONG) */
-  .header-icon {
-    width: 50px; height: 50px; /* Ukuran Fix */
-    min-width: 50px; /* Mencegah penyusutan */
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.5rem;
-  }
-
-  /* LOGO LOGIN FIX */
-  .login-logo {
-    width: 80px; height: 80px;
-    min-width: 80px;
-    border-radius: 20px; /* Rounded kotak */
-    display: flex; align-items: center; justify-content: center;
-    font-size: 2.5rem;
-  }
-
-  .header-card {
-    background: var(--card); padding: 1rem 1.2rem; 
-    border-radius: 24px; 
-    display: flex; justify-content: space-between; align-items: center; 
-    margin-bottom: 1.5rem; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  }
-
-  /* Form Elements */
-  .form-control-pro { background-color: #F3E5E5; border: 2px solid transparent; border-radius: 16px; padding: 12px; font-size: 0.95rem; }
-  .form-control-pro:focus { background-color: #fff; border-color: var(--primary); box-shadow: none; }
+  /* Input & Select */
+  input, select, textarea { width: 100%; padding: 12px 16px; border: 2px solid transparent; background: var(--subtle); border-radius: 12px; font-size: 1rem; font-family: inherit; transition: 0.2s; margin-bottom: 1rem; }
+  input:focus, select:focus, textarea:focus { background: #fff; border-color: var(--primary); }
   
-  /* Buttons */
-  .btn-gradient { 
-    background: var(--primary); color: white; 
-    border-radius: 50px; padding: 12px 24px; 
-    font-weight: 600; border: none; width: 100%;
-    box-shadow: 0 4px 10px rgba(179, 38, 30, 0.2); 
-  }
-  .btn-gradient:hover { background: #901B15; transform: translateY(-1px); }
-
-  /* Navigation Pills */
-  .nav-pills .nav-link { color: #524343; border-radius: 50px; padding: 10px 16px; font-weight: 600; font-size: 0.85rem; transition: all 0.2s; }
-  .nav-pills .nav-link.active { background-color: var(--primary-container); color: var(--on-primary-container); }
-
-  /* Badges & Status */
-  .badge-role { padding: 6px 14px; border-radius: 12px; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; }
-  .role-guru { background: #E8DEF8; color: #1D192B; } 
-  .role-ks { background: #FEE4C1; color: #744C00; } 
+  /* Button */
+  .btn { border: none; padding: 12px 24px; border-radius: 50px; font-weight: 600; cursor: pointer; transition: transform 0.1s; font-size: 0.95rem; }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(179,38,30,0.25); width: 100%; }
+  .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
   
-  .status-pill { padding: 5px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; display: inline-block;}
-  .st-ok { background: #C3EED0; color: #0F5223; }
-  .st-wait { background: #FEE4C1; color: #744C00; }
-  .st-rev { background: #F9DEDC; color: #8C1D18; }
+  /* Tabs */
+  .nav-pills { display: flex; gap: 8px; margin-bottom: 1rem; background: #fff; padding: 4px; border-radius: 50px; }
+  .nav-item { flex: 1; text-align: center; padding: 8px; border-radius: 50px; font-size: 0.85rem; cursor: pointer; color: #555; transition: 0.2s; }
+  .nav-item.active { background: #FFDAD6; color: #410E0B; font-weight: 600; }
+
+  /* Progress Bar */
+  .progress-wrap { background: rgba(255,255,255,0.2); height: 8px; border-radius: 10px; margin: 10px 0; overflow: hidden; }
+  .progress-bar { height: 100%; background: #fff; transition: width 0.5s ease; }
   
-  .modal-content { border-radius: 28px; border: none; }
-  .text-primary-custom { color: var(--primary) !important; }
+  /* Badges */
+  .badge { padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+  .bg-ok { background: #C3EED0; color: #0F5223; }
+  .bg-wait { background: #FEE4C1; color: #744C00; }
+  .bg-rev { background: #F9DEDC; color: #8C1D18; }
+  
+  /* --- 4. MODAL & TOAST --- */
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+  .modal-box { background: #fff; width: 90%; max-width: 400px; padding: 24px; border-radius: 24px; animation: popUp 0.2s ease-out; max-height: 90vh; overflow-y: auto; }
+  @keyframes popUp { from{transform: scale(0.9); opacity: 0;} to{transform: scale(1); opacity: 1;} }
+
+  #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #323232; color: #fff; padding: 10px 20px; border-radius: 50px; z-index: 2000; font-size: 0.9rem; opacity: 0; pointer-events: none; transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  #toast.show { opacity: 1; top: 40px; }
+  
+  /* Icons (SVG) */
+  svg { width: 20px; height: 20px; fill: currentColor; display: inline-block; vertical-align: middle; }
+  .icon-lg { width: 64px; height: 64px; }
+  
+  /* Layout Specifics */
+  .header { display: flex; align-items: center; gap: 12px; padding: 10px; }
+  .avatar { width: 48px; height: 48px; background: #FFDAD6; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; }
+  .dash-stat { background: var(--primary); color: white; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .grid-btn { background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 16px; text-align: center; font-size: 0.7rem; font-weight: bold; cursor: pointer; }
 </style>
 </head>
 <body>
 
-<div id="loading" class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-none justify-content-center align-items-center" style="z-index:9999;">
-  <div class="spinner-border text-danger" role="status"></div>
+<div id="toast">Notifikasi</div>
+<div id="loader" class="modal-overlay" style="z-index: 9999; background: rgba(255,255,255,0.9);">
+    <div style="width: 40px; height: 40px; border: 4px solid #ddd; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 </div>
 
-<div id="view-login" class="container d-flex flex-column justify-content-center" style="min-height: 100vh;">
-  <div class="row justify-content-center"><div class="col-md-5">
-    <div class="text-center mb-5">
-        <div class="login-logo bg-danger-subtle text-danger mx-auto mb-3">
-            <i class="bi bi-mortarboard-fill"></i>
-        </div>
-        <h4 class="fw-bold" style="color: var(--text);">LMS GUGUS NAKULA</h4>
-        <p class="small text-muted">Portal Kinerja Guru & KS</p>
+<div id="view-login" class="col center" style="min-height: 100vh; padding: 20px; align-items: center;">
+    <div style="background: #FFDAD6; color: var(--primary); width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+        <svg class="icon-lg" viewBox="0 0 16 16"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5ZM8 8.46 1.758 5.965 8 3.052l6.242 2.913L8 8.46Z"/></svg>
     </div>
-    <div class="card-pro px-4 py-5 mx-2">
-      <label class="d-block text-center small fw-bold mb-3 text-primary-custom" style="letter-spacing: 1px;">MASUKKAN PIN ANDA</label>
-      <input type="number" id="inputPIN" class="form-control form-control-pro text-center mb-4 fw-bold" placeholder="• • • • • •" style="letter-spacing: 5px; font-size: 1.5rem;">
-      <button onclick="doLogin()" class="btn btn-gradient">MASUK APLIKASI</button>
+    <h3 class="fw-bold">LMS GUGUS NAKULA</h3>
+    <p class="text-muted mb-4">Portal Kinerja Guru & KS</p>
+    <div class="card w-100" style="max-width: 320px;">
+        <label class="text-muted fw-bold" style="font-size: 0.75rem; display: block; margin-bottom: 8px;">MASUKKAN PIN</label>
+        <input type="tel" id="inputPIN" style="text-align: center; font-size: 1.5rem; font-weight: bold; letter-spacing: 4px;" placeholder="••••••" maxlength="6">
+        <button onclick="handleLogin()" class="btn btn-primary">MASUK APLIKASI</button>
     </div>
-  </div></div>
 </div>
 
-<div id="view-main" class="hidden container mt-3">
-    <div class="header-card">
-      <div class="d-flex align-items-center">
-        <div class="header-icon bg-danger-subtle text-danger me-3">
-            <i class="bi bi-person-circle"></i>
+<div id="view-main" class="hidden" style="padding: 16px; max-width: 600px; margin: 0 auto;">
+    <div class="card header">
+        <div class="avatar"><svg viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg></div>
+        <div style="flex: 1;">
+            <div class="fw-bold" id="txtNama">User</div>
+            <div class="text-muted" style="font-size: 0.75rem;" id="txtSekolah">Sekolah</div>
         </div>
-        <div style="line-height: 1.1;">
-            <div class="fw-bold text-dark">LMS Nakula</div>
-            <div class="text-muted small" id="txtNama">User</div>
+        <div class="col" style="align-items: flex-end;">
+            <span id="txtRole" class="badge bg-rev mb-2">ROLE</span>
+            <small onclick="doLogout()" style="color: var(--primary); font-weight: bold; font-size: 0.7rem; cursor: pointer;">KELUAR</small>
         </div>
-      </div>
-      <div class="text-end">
-        <span id="txtRoleBadge" class="badge-role role-guru mb-1 d-block">GURU</span>
-        <a href="#" onclick="doLogout()" class="text-danger fw-bold small text-decoration-none" style="font-size: 0.7rem;">Keluar</a>
-      </div>
     </div>
-    <span id="txtSekolah" class="hidden"></span>
-    
+
     <div id="panel-guru" class="hidden">
-      <div class="card-pro p-4 mb-3" style="background-color: var(--primary); color: white;">
-        <div class="row align-items-center">
-          <div class="col-8">
-            <span class="small fw-bold text-white-50 text-uppercase">CAPAIAN KINERJA</span>
-            <h1 class="fw-bold mt-1 mb-0 display-4" id="txt-persen">0%</h1>
-            <div class="progress mt-3 mb-3" style="height: 8px; border-radius: 20px; background-color: rgba(255,255,255,0.2);">
-                <div id="bar-guru" class="progress-bar bg-white" role="progressbar" style="width: 0%; border-radius: 20px;"></div>
+        <div class="card dash-stat">
+            <small style="opacity: 0.8; font-weight: 600;">CAPAIAN KINERJA</small>
+            <div class="flex between">
+                <h1 style="font-size: 3rem; margin: 0;" id="g-persen">0%</h1>
+                <svg style="width: 50px; height: 50px; opacity: 0.5;" viewBox="0 0 16 16"><path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2z"/></svg>
             </div>
-            <div class="d-flex align-items-center"><span class="badge bg-white text-danger border-0 me-2 rounded-pill px-3" id="txt-target">0/0</span><small class="text-white-50">Selesai</small></div>
-          </div>
-          <div class="col-4 text-end opacity-25"><i class="bi bi-bar-chart-fill" style="font-size: 4rem; color: #fff;"></i></div>
+            <div class="progress-wrap"><div id="g-bar" class="progress-bar" style="width: 0%;"></div></div>
+            <small><span id="g-target" style="background:white; color:var(--primary); padding:2px 8px; border-radius:10px; font-weight:bold; margin-right:5px;">0/0</span> Selesai</small>
         </div>
-      </div>
-      
-      <ul class="nav nav-pills nav-fill mb-3 p-1">
-        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#g-tab-tugas">Tugas</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#g-tab-implemen">Implemen</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#g-tab-inovasi">Inovasi</button></li>
-      </ul>
 
-      <div class="tab-content">
-        <div class="tab-pane fade show active" id="g-tab-tugas"><div id="list-kegiatan-guru"></div></div>
-        
-        <div class="tab-pane fade" id="g-tab-implemen">
-           <div class="card-pro p-4">
-             <h6 class="fw-bold text-dark mb-4"><i class="bi bi-person-workspace me-2 text-primary"></i>Lapor Implementasi</h6>
-             <form id="frmImplemen" onsubmit="submitPengembangan(event, 'Implementasi KKG')">
-               <div class="mb-3"><label class="small fw-bold text-muted ms-1">PROGRAM KKG</label><select id="sel-prog-kkg" class="form-select form-control-pro"></select></div>
-               <div class="mb-3"><input type="text" id="imp-nama" class="form-control form-control-pro" placeholder="Nama Kegiatan" required></div>
-               <div class="mb-3"><input type="text" id="imp-kelas" class="form-control form-control-pro" placeholder="Kelas / Sasaran" required></div>
-               <div class="mb-3"><input type="url" id="imp-link" class="form-control form-control-pro" placeholder="Link Bukti (Drive/Youtube)" required></div>
-               <div class="mb-4"><textarea id="imp-desc" class="form-control form-control-pro" rows="3" placeholder="Deskripsi Singkat..." required></textarea></div>
-               <button class="btn btn-gradient">KIRIM LAPORAN</button>
-             </form>
-           </div>
+        <div class="nav-pills">
+            <div class="nav-item active" onclick="switchTab('g-tab', 0, this)">Tugas</div>
+            <div class="nav-item" onclick="switchTab('g-tab', 1, this)">Implemen</div>
+            <div class="nav-item" onclick="switchTab('g-tab', 2, this)">Inovasi</div>
         </div>
+
+        <div id="g-tab-0"><div id="list-tugas"></div></div>
         
-        <div class="tab-pane fade" id="g-tab-inovasi">
-           <div class="card-pro p-4">
-             <h6 class="fw-bold text-dark mb-3"><i class="bi bi-lightbulb me-2 text-warning"></i>Karya Inovasi</h6>
-             <div class="alert alert-light small border mb-3 text-muted">Kirimkan karya terbaik untuk poin tambahan.</div>
-             <form id="frmInovasi" onsubmit="submitPengembangan(event, 'Karya Inovasi')">
-               <div class="mb-3"><input type="text" id="ino-nama" class="form-control form-control-pro" placeholder="Judul Inovasi" required></div>
-               <div class="mb-3"><input type="url" id="ino-link" class="form-control form-control-pro" placeholder="Link Karya" required></div>
-               <div class="mb-4"><textarea id="ino-desc" class="form-control form-control-pro" rows="3" placeholder="Deskripsi Inovasi..." required></textarea></div>
-               <button class="btn btn-success w-100 py-3 rounded-pill fw-bold">KIRIM KARYA</button>
-             </form>
-           </div>
+        <div id="g-tab-1" class="hidden">
+            <div class="card">
+                <h4 class="mb-4">Lapor Implementasi</h4>
+                <form onsubmit="submitDev(event, 'Implementasi KKG')">
+                    <label class="text-muted small">PROGRAM KKG</label>
+                    <select id="sel-prog-kkg"></select>
+                    <input id="imp-nama" placeholder="Nama Kegiatan" required>
+                    <input id="imp-kelas" placeholder="Kelas / Sasaran" required>
+                    <input id="imp-link" type="url" placeholder="Link Bukti (Drive/Youtube)" required>
+                    <textarea id="imp-desc" rows="3" placeholder="Deskripsi Singkat..." required></textarea>
+                    <button class="btn btn-primary">KIRIM LAPORAN</button>
+                </form>
+            </div>
         </div>
-      </div>
+
+        <div id="g-tab-2" class="hidden">
+            <div class="card">
+                <h4 class="mb-4">Karya Inovasi</h4>
+                <form onsubmit="submitDev(event, 'Karya Inovasi')">
+                    <input id="ino-nama" placeholder="Judul Inovasi" required>
+                    <input id="ino-link" type="url" placeholder="Link Karya" required>
+                    <textarea id="ino-desc" rows="3" placeholder="Deskripsi Inovasi..." required></textarea>
+                    <button class="btn btn-primary" style="background: var(--success);">KIRIM KARYA</button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <div id="panel-ks" class="hidden">
-      <div class="card-pro p-4 mb-3">
-        <div class="d-flex justify-content-between align-items-start">
-          <div><span class="text-muted small fw-bold text-uppercase">Capaian Sekolah</span><h1 class="fw-bold mt-1 mb-0 display-4 text-danger" id="ks-persen">0%</h1></div>
-          <div class="text-end bg-danger-subtle p-3 rounded-4">
-              <h2 class="mb-0 fw-bold text-danger" id="ks-total-laporan">0</h2>
-              <small class="fw-bold text-danger-emphasis">LAPORAN</small>
-          </div>
+        <div class="card">
+            <div class="flex between">
+                <div><div class="text-muted fw-bold">CAPAIAN SEKOLAH</div><h1 class="text-primary mb-0" style="color:var(--primary); font-size:2.5rem;" id="ks-persen">0%</h1></div>
+                <div style="background:#FEE4C1; padding:15px; border-radius:15px; text-align:center;">
+                    <h2 class="mb-0" style="color:#744C00" id="ks-total">0</h2><small style="color:#744C00; font-weight:bold;">LAPORAN</small>
+                </div>
+            </div>
         </div>
-      </div>
-      
-      <div class="card-pro p-3 mb-4 bg-primary-subtle border border-primary-subtle">
-        <div class="row text-center">
-          <div class="col-6 border-end border-primary"><h3 class="fw-bold mb-0 text-primary" id="ks-count-imp">0</h3><small class="text-primary-emphasis">Implementasi</small></div>
-          <div class="col-6"><h3 class="fw-bold mb-0 text-primary" id="ks-count-ino">0</h3><small class="text-primary-emphasis">Inovasi</small></div>
+
+        <div class="grid-3 mb-4">
+            <div class="grid-btn" style="border-color:#ffc107; color:#b88804;" onclick="openModal('mdl-pres')">🏆<br>PRESTASI</div>
+            <div class="grid-btn" style="border-color:#2e7d32; color:#2e7d32;" onclick="openModal('mdl-bias')">📅<br>BIAS</div>
+            <div class="grid-btn" style="border-color:#1976d2; color:#1976d2;" onclick="openModal('mdl-event')">🎈<br>EVENT</div>
         </div>
-      </div>
-      
-      <h6 class="fw-bold text-dark small mb-3 px-2">MANAJEMEN SEKOLAH</h6>
-      <div class="row gx-2 mb-4">
-        <div class="col-4"><button onclick="bukaModalPrestasi()" class="btn btn-warning w-100 h-100 py-3 text-white fw-bold d-flex flex-column align-items-center justify-content-center"><i class="bi bi-trophy-fill fs-3 mb-1"></i><span style="font-size:0.65rem">PRESTASI</span></button></div>
-        <div class="col-4"><button onclick="bukaModalPembiasaan()" class="btn btn-success w-100 h-100 py-3 text-white fw-bold d-flex flex-column align-items-center justify-content-center"><i class="bi bi-calendar-check-fill fs-3 mb-1"></i><span style="font-size:0.65rem">BIAS</span></button></div>
-        <div class="col-4"><button onclick="bukaModalEvent()" class="btn btn-primary w-100 h-100 py-3 text-white fw-bold d-flex flex-column align-items-center justify-content-center"><i class="bi bi-balloon-fill fs-3 mb-1"></i><span style="font-size:0.65rem">EVENT</span></button></div>
-      </div>
 
-      <div class="d-flex justify-content-between align-items-center mb-2 px-1">
-         <ul class="nav nav-pills"><li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#ks-tab-rapor">Rapor Guru</button></li><li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#ks-tab-riwayat">Riwayat Saya</button></li></ul>
-         <button onclick="loadKS()" class="btn btn-sm btn-light text-danger rounded-circle shadow-sm" style="width:36px;height:36px"><i class="bi bi-arrow-clockwise"></i></button>
-      </div>
+        <div class="nav-pills">
+            <div class="nav-item active" onclick="switchTab('ks-tab', 0, this)">Rapor Guru</div>
+            <div class="nav-item" onclick="switchTab('ks-tab', 1, this)">Riwayat Saya</div>
+        </div>
+        <div style="text-align:right; margin-bottom:10px;"><button class="btn btn-sm" onclick="loadKS(true)" style="background:#eee;">🔄 Refresh Data</button></div>
 
-      <div class="tab-content mt-2">
-        <div class="tab-pane fade show active" id="ks-tab-rapor"><div class="card-pro p-0 overflow-hidden"><div class="table-responsive"><table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;"><thead class="table-light"><tr><th class="ps-3 py-3 border-0">Nama Guru</th><th style="width:35%" class="border-0">Progress</th><th class="text-end pe-4 border-0">Capaian</th></tr></thead><tbody id="tbl-ks" class="border-0"></tbody></table></div></div></div>
-        <div class="tab-pane fade" id="ks-tab-riwayat"><div id="list-riwayat-ks"></div></div>
-      </div>
+        <div id="ks-tab-0">
+            <div class="card" style="padding:0; overflow:hidden;"><div id="list-guru-ks"></div></div>
+        </div>
+        <div id="ks-tab-1" class="hidden">
+            <div id="list-riwayat-ks"></div>
+        </div>
     </div>
 </div>
 
-<div class="modal fade" id="mdlUpload"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-4"><h5 class="fw-bold mb-3">Lapor Tugas Gugus</h5><form id="frmUpload" onsubmit="submitTugas(event)"><div class="mb-3"><label class="small fw-bold text-muted ms-1 mb-1">KEGIATAN</label><input name="judul_dokumen" id="inpJudul" class="form-control form-control-pro bg-light fw-bold" readonly><input type="hidden" name="jenis_laporan" value="Kegiatan Gugus"></div><div class="mb-3"><label class="small fw-bold text-muted ms-1 mb-1">LINK BUKTI</label><input type="url" name="link_video" id="inpLink" class="form-control form-control-pro" placeholder="Google Drive / Youtube"></div><div class="mb-4"><label class="small fw-bold text-muted ms-1 mb-1">RANGKUMAN MATERI</label><textarea name="catatan" id="inpCatatan" class="form-control form-control-pro" rows="4" placeholder="Tuliskan rangkuman hasil kegiatan..."></textarea></div><button class="btn btn-gradient">KIRIM TUGAS</button></form></div></div></div>
-<div class="modal fade" id="mdlPrestasi"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-4"><h5 class="fw-bold mb-3 text-warning">Input Prestasi</h5><form id="frmPrestasi" onsubmit="submitPrestasi(event)"><div class="mb-3"><select id="inpSekolahPrestasi" class="form-select form-control-pro"></select></div><div class="mb-3"><input type="text" name="nama_siswa" class="form-control form-control-pro" placeholder="Nama Siswa" required></div><div class="row mb-3"><div class="col-6"><input type="text" name="cabang" class="form-control form-control-pro" placeholder="Cabang" required></div><div class="col-6"><input type="text" name="penyelenggara" class="form-control form-control-pro" placeholder="Penyelenggara" required></div></div><div class="row mb-3"><div class="col-6"><select name="tingkat" class="form-select form-control-pro"><option value="Kecamatan">Kecamatan</option><option value="Kabupaten">Kabupaten</option><option value="Nasional">Nasional</option></select></div><div class="col-6"><select name="juara" class="form-select form-control-pro"><option value="1">Juara 1</option><option value="2">Juara 2</option><option value="3">Juara 3</option></select></div></div><div class="mb-4"><input type="text" name="no_piagam" class="form-control form-control-pro" placeholder="No Piagam" required></div><button class="btn btn-warning w-100 py-3 text-white fw-bold">KIRIM DATA</button></form></div></div></div>
-<div class="modal fade" id="mdlPembiasaan"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-4"><h5 class="fw-bold mb-3 text-success">Lapor Pembiasaan</h5><form id="frmPembiasaan" onsubmit="submitPembiasaan(event)"><div class="mb-3"><select id="inpSekolahBias" class="form-select form-control-pro"></select></div><div class="mb-3"><input type="text" id="bias-nama" class="form-control form-control-pro" placeholder="Nama Program" required></div><div class="row mb-3"><div class="col-6"><select id="bias-freq" class="form-select form-control-pro"><option>Harian</option><option>Mingguan</option><option>Bulanan</option></select></div><div class="col-6"><input type="text" id="bias-karakter" class="form-control form-control-pro" placeholder="Karakter" required></div></div><div class="mb-3"><input type="url" id="bias-link" class="form-control form-control-pro" placeholder="Link Foto/Video" required></div><div class="mb-4"><textarea id="bias-desc" class="form-control form-control-pro" rows="3" placeholder="Keterangan..." required></textarea></div><button class="btn btn-success w-100 py-3 fw-bold">KIRIM DATA</button></form></div></div></div>
-<div class="modal fade" id="mdlEvent"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-4"><h5 class="fw-bold mb-3 text-primary">Lapor Event Sekolah</h5><form id="frmEvent" onsubmit="submitEvent(event)"><div class="mb-3"><select id="inpSekolahEvent" class="form-select form-control-pro"></select></div><div class="mb-3"><input type="text" id="evt-nama" class="form-control form-control-pro" placeholder="Nama Event" required></div><div class="row mb-3"><div class="col-6"><input type="date" id="evt-date" class="form-control form-control-pro" required></div><div class="col-6"><select id="evt-scale" class="form-select form-control-pro"><option value="Internal">Internal</option><option value="Orang Tua">Orang Tua</option><option value="Umum">Umum/Pejabat</option></select></div></div><div class="mb-3"><input type="url" id="evt-link" class="form-control form-control-pro" placeholder="Link Dokumentasi" required></div><div class="mb-4"><textarea id="evt-desc" class="form-control form-control-pro" rows="3" placeholder="Dampak Kegiatan..." required></textarea></div><button class="btn btn-primary w-100 py-3 fw-bold">KIRIM DATA</button></form></div></div></div>
+<div id="mdl-upload" class="modal-overlay">
+    <div class="modal-box">
+        <h4 class="mb-4">Lapor Tugas</h4>
+        <form onsubmit="submitTugas(event)">
+            <input type="hidden" id="tugas-idx">
+            <input id="t-judul" readonly style="font-weight:bold; background:#eee;">
+            <input id="t-link" type="url" placeholder="Link Bukti" required>
+            <textarea id="t-cat" rows="4" placeholder="Rangkuman Materi..." required></textarea>
+            <div class="flex" style="gap:10px;">
+                <button type="button" onclick="closeModal('mdl-upload')" class="btn" style="background:#eee; flex:1;">Batal</button>
+                <button class="btn btn-primary" style="flex:1;">Kirim</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div id="mdl-pres" class="modal-overlay">
+    <div class="modal-box">
+        <h4 class="mb-2 text-warning">Input Prestasi</h4>
+        <form onsubmit="submitGeneric(event, 'Laporan Prestasi', 'mdl-pres')">
+            <select class="sel-sekolah" name="sekolah"></select>
+            <input name="nama_siswa" placeholder="Nama Siswa" required>
+            
+            <div class="flex" style="gap:5px">
+                <input name="cabang" placeholder="Cabang Lomba" required>
+                <select name="juara" required>
+                    <option value="" disabled selected>Pilih Juara</option>
+                    <option value="Juara 1">Juara 1</option>
+                    <option value="Juara 2">Juara 2</option>
+                    <option value="Juara 3">Juara 3</option>
+                    <option value="Harapan 1">Harapan 1</option>
+                    <option value="Harapan 2">Harapan 2</option>
+                    <option value="Harapan 3">Harapan 3</option>
+                </select>
+            </div>
+
+            <input name="penyelenggara" placeholder="Penyelenggara" required>
+            
+            <div class="flex" style="gap:5px">
+                 <select name="tingkat">
+                    <option value="Kecamatan">Kecamatan</option>
+                    <option value="Kabupaten">Kabupaten</option>
+                    <option value="Provinsi">Provinsi</option>
+                    <option value="Nasional">Nasional</option>
+                 </select>
+                 <input name="no_piagam" placeholder="No Piagam" required>
+            </div>
+            
+            <button class="btn btn-primary w-100 mt-3" style="background:var(--warning)">SIMPAN DATA</button>
+            <button type="button" onclick="closeModal('mdl-pres')" class="btn w-100 mt-2" style="color:#888;">Batal</button>
+        </form>
+    </div>
+</div>
+
+<div id="mdl-bias" class="modal-overlay">
+    <div class="modal-box">
+        <h4 class="text-success">Pembiasaan</h4>
+        <form onsubmit="submitGeneric(event, 'Laporan Pembiasaan', 'mdl-bias')">
+            <select class="sel-sekolah" name="sekolah"></select>
+            <input name="a" placeholder="Nama Program" required>
+            <input name="link_video" placeholder="Link Foto" required>
+            <textarea name="desc" placeholder="Keterangan"></textarea>
+            <button class="btn btn-primary w-100" style="background:var(--success)">SIMPAN</button>
+            <button type="button" onclick="closeModal('mdl-bias')" class="btn w-100 mt-2" style="color:#888">Batal</button>
+        </form>
+    </div>
+</div>
+
+<div id="mdl-event" class="modal-overlay">
+    <div class="modal-box">
+        <h4 class="text-primary">Event Sekolah</h4>
+        <form onsubmit="submitGeneric(event, 'Laporan Event', 'mdl-event')">
+            <select class="sel-sekolah" name="sekolah"></select>
+            <input name="a" placeholder="Nama Event" required>
+            <input name="b" type="date" required>
+            <textarea name="desc" placeholder="Dampak Kegiatan"></textarea>
+            <button class="btn btn-primary w-100">SIMPAN</button>
+            <button type="button" onclick="closeModal('mdl-event')" class="btn w-100 mt-2" style="color:#888">Batal</button>
+        </form>
+    </div>
+</div>
+
 <script>
-// ==========================================
-// 1. KONFIGURASI LINK GAS (WAJIB GANTI!)
-// ==========================================
-const GAS_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec"; 
+/* --- 1. KONFIGURASI API (WAJIB DIISI) --- */
+const API_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec";
 
-// ==========================================
-// 2. MAIN SCRIPT
-// ==========================================
-let USER={pin:"",nama:"",role:"",sekolah:""}, modalUp, modalPr, modalBs, modalEv;
-function showLoad(x){ let el=document.getElementById('loading'); if(x){el.classList.remove('d-none');el.classList.add('d-flex')}else{el.classList.add('d-none');el.classList.remove('d-flex')} }
+/* --- 2. UTILITIES --- */
+const $ = id => document.getElementById(id);
+const ls = { get: k => JSON.parse(localStorage.getItem(k)||'null'), set: (k,v) => localStorage.setItem(k, JSON.stringify(v)) };
+const show = (id, s=true) => $(id).classList.toggle('hidden', !s);
+const toast = msg => { const t = $('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); };
+const loading = s => $('loader').style.display = s ? 'flex' : 'none';
 
-async function apiCall(action, params = {}) {
-  try {
-    let response = await fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action, ...params }) });
-    return await response.json();
-  } catch (error) { Swal.fire('Error', 'Gagal koneksi server.', 'error'); showLoad(false); return null; }
-}
+/* --- 3. STATE --- */
+let USER = ls.get('LMS_USER') || {};
 
+/* --- 4. INITIALIZATION --- */
 window.onload = () => {
-  modalUp = new bootstrap.Modal(document.getElementById('mdlUpload'));
-  modalPr = new bootstrap.Modal(document.getElementById('mdlPrestasi'));
-  modalBs = new bootstrap.Modal(document.getElementById('mdlPembiasaan'));
-  modalEv = new bootstrap.Modal(document.getElementById('mdlEvent'));
-  
-  let savedPin = localStorage.getItem('LMS_PIN');
-  if (savedPin) { document.getElementById('inputPIN').value = savedPin; doLogin(true); }
+    loading(false);
+    if(USER.pin) { $('inputPIN').value = USER.pin; handleLogin(true); }
+};
+
+/* --- 5. CORE API CALL --- */
+async function req(action, data={}) {
+    try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action, ...data }) });
+        return await res.json();
+    } catch(e) { toast("Gagal koneksi server"); return null; }
 }
 
-async function doLogin(isAuto){
-  let p=document.getElementById('inputPIN').value; if(!p) return Swal.fire('Perhatian','Isi PIN!','warning');
-  showLoad(true);
-  let r = await apiCall("login", { pin: p });
-  showLoad(false);
-  
-  if(r && r.sukses){
-    if(r.role === 'ADMIN' || r.role === 'PENILAI') {
-        if(!isAuto) { Swal.fire({ title: 'Salah Kamar!', text: 'Anda adalah Admin/Penilai. Login di halaman khusus.', icon: 'error', confirmButtonColor: '#d33' }); }
-        return; 
-    }
-    localStorage.setItem('LMS_PIN', p);
-    USER={pin:p, nama:r.nama, role:r.role, sekolah:r.sekolah};
-    document.getElementById('view-login').classList.add('hidden');
-    document.getElementById('view-main').classList.remove('hidden');
-    ['panel-guru','panel-ks'].forEach(id=>document.getElementById(id).classList.add('hidden'));
-    
-    document.getElementById('txtNama').innerText = r.nama;
-    document.getElementById('txtSekolah').innerText = r.sekolah;
-    
-    let bdg = document.getElementById('txtRoleBadge');
-    if(r.role === 'KS') { 
-        bdg.innerText = "Kepala Sekolah"; bdg.className="badge-role role-ks mb-1 d-block";
-        document.getElementById('panel-ks').classList.remove('hidden'); loadKS();
-    } else { 
-        bdg.innerText = "Guru Kelas"; bdg.className="badge-role role-guru mb-1 d-block";
-        document.getElementById('panel-guru').classList.remove('hidden'); loadGuru();
-    }
-  } else {
-    if(isAuto) { localStorage.removeItem('LMS_PIN'); document.getElementById('inputPIN').value=""; }
-    else { Swal.fire('Gagal', r.error || 'PIN Tidak Ditemukan', 'error'); }
-  }
-}
+/* --- 6. AUTHENTICATION --- */
+async function handleLogin(auto=false) {
+    const pin = $('inputPIN').value;
+    if(!pin) return toast("Isi PIN dulu!");
+    if(!auto) loading(true);
 
-function doLogout(){ localStorage.removeItem('LMS_PIN'); location.reload(); }
+    const r = await req("login", { pin });
+    loading(false);
 
-// --- LOGIKA GURU (FIX NaN%) ---
-async function loadGuru(){
-  showLoad(true);
-  let d = await apiCall("getDashboardGuru", { pin: USER.pin });
-  showLoad(false);
-  if(d) {
-    let mapTugas={}; d.riwayat.forEach(r=>{mapTugas[String(r[6]).trim()]=r[10]});
-    let acc=0, html="";
-    let sel = document.getElementById('sel-prog-kkg'); sel.innerHTML="";
-    d.agenda.forEach((a, index)=>{
-       let n=String(a[1]).trim(); sel.innerHTML += `<option value="${n}">${n}</option>`;
-       let t=a[2], st=mapTugas[n], ui="";
-       if(st==='Diterima')acc++;
-       
-       if(st){
-          let bg=st==='Diterima'?'st-ok':(st==='Revisi'?'st-rev':'st-wait'); 
-          let btnRevisi = st==='Revisi' ? `<button onclick="bukaLapor('${n}', ${index})" class="btn btn-sm btn-outline-danger mt-2 w-100 rounded-pill"><i class="bi bi-pencil-square"></i> Revisi</button>` : '';
-          ui=`<span class="status-pill ${bg}" id="status-${index}">${st}</span>${btnRevisi}`;
-       } else ui=`<button id="btn-kerjakan-${index}" onclick="bukaLapor('${n}', ${index})" class="btn btn-sm btn-gradient shadow-sm" style="font-size:0.75rem">KERJAKAN</button>`;
-       
-       html+=`<div class="card-pro p-3 mb-3 border-start border-4 border-danger"><div class="d-flex justify-content-between align-items-center"><div><div class="fw-bold text-dark small">${n}</div><div class="text-muted small"><i class="bi bi-clock me-1"></i>${t}</div></div><div class="text-end ps-2">${ui}</div></div></div>`;
-    });
-    document.getElementById('list-kegiatan-guru').innerHTML=html;
-    
-    // Perbaikan Logika Persen (Cegah NaN)
-    let target = d.target || 0;
-    let pct = target > 0 ? Math.round((acc/target)*100) : 0;
-    if(pct > 100) pct = 100;
-    
-    document.getElementById('txt-persen').innerText = pct + "%";
-    document.getElementById('txt-target').innerText = acc + "/" + target;
-    
-    let bar = document.getElementById('bar-guru'); 
-    bar.style.width = pct + "%"; 
-    bar.className = pct < 50 ? "progress-bar bg-danger" : (pct < 80 ? "progress-bar bg-warning" : "progress-bar bg-success");
-  }
-}
-
-// --- LOGIKA KS (FIX NaN%) ---
-async function loadKS() {
-  showLoad(true);
-  let dataSekolah = await apiCall("getDataKS", { sekolah: USER.sekolah });
-  let dataPribadi = await apiCall("getDashboardGuru", { pin: USER.pin });
-  showLoad(false); 
-
-  if(dataSekolah) {
-    document.getElementById('ks-count-imp').innerText = dataSekolah.statsPengembangan.implemen;
-    document.getElementById('ks-count-ino').innerText = dataSekolah.statsPengembangan.inovasi;
-    
-    let tb = document.getElementById('tbl-ks'); let html = "";
-    let dG = dataSekolah.dataGuru; 
-    let totalLaporanMasuk = 0;
-
-    if (dG.length === 0) { tb.innerHTML = "<tr><td colspan='3' class='text-center py-4 text-muted small'>Data guru tidak ditemukan.</td></tr>"; }
-    else {
-        dG.forEach(guru => {
-          totalLaporanMasuk += guru.selesai;
-          let bgBar = "bg-danger"; if(guru.persen >= 50) bgBar = "bg-warning"; if(guru.persen >= 80) bgBar = "bg-success";
-          html += `<tr><td class="ps-3"><div class="fw-bold text-dark small">${guru.nama}</div></td><td><div class="progress" style="height:6px;border-radius:10px;"><div class="progress-bar ${bgBar}" style="width: ${guru.persen}%"></div></div></td><td class="text-end pe-3"><span class="badge ${bgBar} rounded-pill" style="font-size:0.65rem">${guru.persen}%</span></td></tr>`;
-        });
-        tb.innerHTML = html;
+    if(r && r.sukses) {
+        if(r.role === 'ADMIN' || r.role === 'PENILAI') return toast("Admin/Penilai login di web khusus!");
         
-        let avg = dataSekolah.rataRataSekolah || 0;
-        let avgSekolah = Math.round(avg);
-        document.getElementById('ks-persen').innerText = (isNaN(avgSekolah) ? 0 : avgSekolah) + "%";
-        document.getElementById('ks-total-laporan').innerText = totalLaporanMasuk;
+        USER = { ...r, pin }; 
+        ls.set('LMS_USER', USER);
+        
+        show('view-login', false); show('view-main', true);
+        $('txtNama').innerText = r.nama;
+        $('txtSekolah').innerText = r.sekolah;
+        $('txtRole').innerText = r.role === 'KS' ? 'Kepala Sekolah' : 'Guru Kelas';
+        $('txtRole').className = `badge ${r.role === 'KS' ? 'bg-wait' : 'bg-ok'} mb-2`;
+
+        // Setup Dropdowns Sekolah
+        document.querySelectorAll('.sel-sekolah').forEach(s => {
+            s.innerHTML = r.sekolah.split(',').map(x=>`<option value="${x.trim()}">${x.trim()}</option>`).join('');
+        });
+
+        if(r.role === 'KS') { show('panel-ks'); loadKS(); }
+        else { show('panel-guru'); loadGuru(); }
+    } else {
+        if(auto) { ls.set('LMS_USER', null); show('view-login'); }
+        else toast(r?.error || "PIN Salah");
     }
-  }
-  
-  let divRiwayat = document.getElementById('list-riwayat-ks'); let htmlR = "";
-  if(dataPribadi && dataPribadi.riwayat.length > 0) {
-    dataPribadi.riwayat.forEach(item => {
-      let jenis = item[5], judul = item[6], status = item[10], waktu = item[1];
-      let bgSt = status==='Menunggu' ? 'bg-secondary' : (status==='Diterima'?'bg-success':'bg-danger');
-      let feedback = (status !== 'Menunggu' && item[11]) ? `<div class="mt-2 small text-success fst-italic border-top pt-1"><i class="bi bi-chat-quote-fill me-1"></i>${item[11]}</div>` : '';
-      htmlR += `<div class="card-pro p-3 mb-2"><div class="d-flex justify-content-between"><div><span class="badge bg-light text-secondary border mb-1" style="font-size:0.6rem">${jenis}</span><div class="fw-bold text-dark small">${judul}</div><div class="text-muted small" style="font-size:0.65rem">${waktu}</div></div><span class="badge ${bgSt} rounded-pill align-self-start" style="font-size:0.6rem">${status}</span></div>${feedback}</div>`;
+}
+
+function doLogout() { if(confirm("Keluar aplikasi?")) { localStorage.clear(); location.reload(); } }
+
+/* --- 7. LOGIC GURU --- */
+async function loadGuru() {
+    const cache = ls.get('CACHE_GURU');
+    if(cache) renderGuru(cache); else loading(true);
+
+    const data = await req("getDashboardGuru", { pin: USER.pin });
+    loading(false);
+    
+    if(data) { ls.set('CACHE_GURU', data); renderGuru(data); }
+}
+
+function renderGuru(d) {
+    const map = {}; d.riwayat.forEach(r => map[r[6].trim()] = r[10]); 
+    let done = 0;
+    
+    const html = d.agenda.map((a, i) => {
+        const judul = a[1].trim();
+        const status = map[judul];
+        if(status === 'Diterima') done++;
+        
+        let act = `<button onclick="openUpload('${judul}', ${i})" class="btn btn-primary btn-sm">KERJAKAN</button>`;
+        if(status) {
+            let cls = status === 'Diterima' ? 'bg-ok' : (status === 'Revisi' ? 'bg-rev' : 'bg-wait');
+            act = `<span class="badge ${cls}">${status}</span>`;
+            if(status === 'Revisi') act += `<br><small onclick="openUpload('${judul}', ${i})" style="color:red;cursor:pointer">Perbaiki</small>`;
+        }
+        return `<div class="card mb-2" style="padding:15px; border-left: 4px solid var(--primary);">
+            <div class="flex between">
+                <div><div class="fw-bold" style="font-size:0.9rem">${judul}</div><div class="text-muted" style="font-size:0.75rem">Tenggat: ${a[2]}</div></div>
+                <div style="text-align:right">${act}</div>
+            </div>
+        </div>`;
+    }).join('');
+    
+    $('list-tugas').innerHTML = html;
+    $('sel-prog-kkg').innerHTML = d.agenda.map(a => `<option>${a[1]}</option>`).join('');
+    
+    const pct = Math.min(100, Math.round((done / (d.target||1)) * 100));
+    $('g-persen').innerText = pct + "%"; $('g-bar').style.width = pct + "%"; $('g-target').innerText = `${done}/${d.target}`;
+}
+
+/* --- 8. LOGIC KS --- */
+async function loadKS(force=false) {
+    if(!force) { const c = ls.get('CACHE_KS'); if(c) renderKS(c); else loading(true); } else loading(true);
+
+    // KS butuh 2 data: Data Sekolah (untuk rapor) & Data Pribadi (untuk riwayat)
+    const [ds, dp] = await Promise.all([
+        req("getDataKS", { sekolah: USER.sekolah }),
+        req("getDashboardGuru", { pin: USER.pin })
+    ]);
+    
+    loading(false);
+    if(ds) { ls.set('CACHE_KS', ds); renderKS(ds); }
+    if(dp) { ls.set('CACHE_KS_HISTORY', dp); renderHistoryKS(dp); }
+}
+
+function renderKS(d) {
+    $('ks-persen').innerText = Math.round(d.rataRataSekolah||0) + "%";
+    $('ks-total').innerText = d.dataGuru.reduce((a,b) => a + b.selesai, 0);
+
+    if(d.dataGuru.length === 0) $('list-guru-ks').innerHTML = "<div class='p-3 text-center text-muted'>Belum ada data guru.</div>";
+    else {
+        $('list-guru-ks').innerHTML = d.dataGuru.map(g => {
+            let color = g.persen >= 80 ? 'green' : (g.persen >= 50 ? 'orange' : 'red');
+            return `<div style="padding:12px 15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-size:0.85rem; font-weight:600;">${g.nama}</div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:60px; height:6px; background:#eee; border-radius:4px;"><div style="width:${g.persen}%; height:100%; background:${color}; border-radius:4px;"></div></div>
+                    <span style="font-size:0.75rem; color:${color}; font-weight:bold;">${g.persen}%</span>
+                </div>
+            </div>`;
+        }).join('');
+    }
+}
+
+function renderHistoryKS(dp) {
+    if(dp && dp.riwayat && dp.riwayat.length > 0) {
+        $('list-riwayat-ks').innerHTML = dp.riwayat.map(r => {
+             // r[5]=Jenis, r[6]=Judul, r[1]=Waktu, r[10]=Status, r[11]=Catatan Penilai
+             let st = r[10];
+             let bg = st==='Diterima'?'bg-ok':(st==='Revisi'?'bg-rev':'bg-wait');
+             let fb = (st!=='Menunggu' && r[11]) ? `<div class="mt-2 small text-success fst-italic border-top pt-1"><i style="width:12px">💬</i> ${r[11]}</div>` : '';
+             return `<div class="card mb-2" style="padding:12px;">
+                <div class="flex between">
+                    <div><span class="badge" style="background:#eee;color:#555;margin-bottom:4px;display:inline-block">${r[5]}</span><div class="fw-bold small">${r[6]}</div><div class="text-muted small">${r[1]}</div></div>
+                    <span class="badge ${bg}">${st}</span>
+                </div>
+                ${fb}
+             </div>`;
+        }).join('');
+    } else {
+        $('list-riwayat-ks').innerHTML = "<div class='p-3 text-center text-muted'>Belum ada riwayat.</div>";
+    }
+}
+
+/* --- 9. UI ACTIONS --- */
+function switchTab(prefix, idx, el) {
+    [0,1,2].forEach(i => { let pane=$(prefix+'-'+i); if(pane) show(prefix+'-'+i, i===idx); });
+    el.parentNode.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
+    el.classList.add('active');
+}
+
+function openModal(id) { $(id).style.display = 'flex'; }
+function closeModal(id) { $(id).style.display = 'none'; }
+function openUpload(judul, idx) { $('mdl-upload').querySelector('form').reset(); $('t-judul').value=judul; $('tugas-idx').value=idx; openModal('mdl-upload'); }
+
+/* --- 10. SUBMISSION LOGIC --- */
+async function submitTugas(e) {
+    e.preventDefault();
+    closeModal('mdl-upload'); toast("Mengirim data...");
+    await req("simpanTugas", { 
+        data: { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, jenis_laporan: "Kegiatan Gugus", judul_dokumen: $('t-judul').value, link_video: $('t-link').value, catatan: $('t-cat').value }
     });
-    divRiwayat.innerHTML = htmlR;
-  } else { divRiwayat.innerHTML = '<div class="text-center py-5 text-muted small">Belum ada riwayat.</div>'; }
+    toast("Tugas terkirim!"); loadGuru();
 }
 
-// --- OPTIMISTIC SUBMIT (SAT SET!) ---
-let activeTaskIndex = -1;
-function bukaLapor(j, idx){ document.getElementById('frmUpload').reset(); document.getElementById('inpJudul').value=j; activeTaskIndex = idx; modalUp.show(); }
-
-async function submitTugas(e){
-  e.preventDefault();
-  let f=document.getElementById('frmUpload');
-  let obj={pin_user:USER.pin, nama_user:USER.nama, sekolah_user:document.getElementById('txtSekolah').innerText};
-  Array.from(f.elements).forEach(el=>{if(el.name)obj[el.name]=el.value});
-  
-  modalUp.hide();
-  Swal.fire({ title: 'Terkirim!', text: 'Sedang memproses...', icon: 'success', timer: 1000, showConfirmButton: false, toast: true, position: 'top-end' });
-
-  if(activeTaskIndex >= 0) {
-      let btn = document.getElementById(`btn-kerjakan-${activeTaskIndex}`);
-      if(btn) btn.outerHTML = `<span class="status-pill st-wait">Menunggu</span>`;
-  }
-
-  try { await apiCall("simpanTugas", { data: obj }); } catch (e) { Swal.fire('Gagal', 'Koneksi terputus.', 'error'); }
+async function submitDev(e, jenis) {
+    e.preventDefault();
+    const isImp = jenis.includes('Implementasi');
+    const nama = $(isImp?'imp-nama':'ino-nama').value;
+    const extra = isImp ? `[PROG: ${$('sel-prog-kkg').value}] [KELAS: ${$('imp-kelas').value}] ` : '';
+    closeModal(isImp?'':''); 
+    toast("Mengirim...");
+    
+    await req("simpanTugas", {
+        data: {
+            pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah,
+            jenis_laporan: jenis, judul_dokumen: (isImp?"IMPL: ":"INOV: ")+nama,
+            link_video: $(isImp?'imp-link':'ino-link').value, catatan: extra + $(isImp?'imp-desc':'ino-desc').value
+        }
+    });
+    toast("Berhasil disimpan!"); 
+    if(isImp) $('imp-nama').value=""; else $('ino-nama').value="";
+    loadGuru();
 }
 
-async function submitPengembangan(e, jenis) {
-  e.preventDefault();
-  let data = {};
-  if(jenis === 'Implementasi KKG') {
-     data.judul_dokumen = "IMPLEMENTASI: " + document.getElementById('sel-prog-kkg').value;
-     data.catatan = `[KEGIATAN: ${document.getElementById('imp-nama').value}] [KELAS: ${document.getElementById('imp-kelas').value}] ` + document.getElementById('imp-desc').value;
-     data.link_video = document.getElementById('imp-link').value;
-  } else {
-     data.judul_dokumen = "INOVASI: " + document.getElementById('ino-nama').value;
-     data.catatan = document.getElementById('ino-desc').value;
-     data.link_video = document.getElementById('ino-link').value;
-  }
-  let objKirim = { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('txtSekolah').innerText, jenis_laporan: jenis, judul_dokumen: data.judul_dokumen, link_video: data.link_video, catatan: data.catatan };
-  
-  if(jenis==='Karya Inovasi') document.getElementById('frmInovasi').reset(); else document.getElementById('frmImplemen').reset();
+async function submitGeneric(e, jenis, modalId) {
+    e.preventDefault();
+    closeModal(modalId); toast("Menyimpan...");
+    
+    const f = e.target;
+    const fd = new FormData(f);
+    const obj = Object.fromEntries(fd.entries());
+    
+    let judul = jenis.toUpperCase(), catatan = "";
+    
+    if(jenis === 'Laporan Prestasi') {
+        judul = "PRESTASI: " + obj.cabang.toUpperCase();
+        catatan = `[SISWA: ${obj.nama_siswa}] [JUARA: ${obj.juara}] [TINGKAT: ${obj.tingkat}] [NO: ${obj.no_piagam}] [OLEH: ${obj.penyelenggara}]`;
+    } else if(jenis === 'Laporan Pembiasaan') {
+        judul = "PEMBIASAAN: " + obj.a;
+        catatan = `[KET: ${obj.desc}]`;
+    } else {
+        judul = "EVENT: " + obj.a;
+        catatan = `[TGL: ${obj.b}] [DAMPAK: ${obj.desc}]`;
+    }
 
-  Swal.fire({ title: 'Terkirim!', text: 'Data disimpan.', icon: 'success', timer: 1500, showConfirmButton: false });
-  await apiCall("simpanTugas", { data: objKirim });
-}
-
-function isiDropdownSekolah(idElement) {
-  let listSekolah = document.getElementById('txtSekolah').innerText.split(',');
-  let elSelect = document.getElementById(idElement); elSelect.innerHTML = "";
-  listSekolah.forEach(s => { if(s.trim()) { let opt = document.createElement('option'); opt.value = s.trim(); opt.innerText = s.trim(); elSelect.appendChild(opt); } });
-}
-
-function bukaModalPrestasi(){ document.getElementById('frmPrestasi').reset(); isiDropdownSekolah('inpSekolahPrestasi'); modalPr.show(); }
-function bukaModalPembiasaan(){ document.getElementById('frmPembiasaan').reset(); isiDropdownSekolah('inpSekolahBias'); modalBs.show(); }
-function bukaModalEvent(){ document.getElementById('frmEvent').reset(); isiDropdownSekolah('inpSekolahEvent'); modalEv.show(); }
-
-async function submitGenericKS(e, modal, obj) {
-    e.preventDefault(); modal.hide();
-    let counter = document.getElementById('ks-total-laporan');
-    if(counter) counter.innerText = (parseInt(counter.innerText) || 0) + 1;
-    Swal.fire({ title: 'Sukses!', text: 'Laporan ditambahkan.', icon: 'success', timer: 1000, showConfirmButton: false });
-    await apiCall("simpanTugas", { data: obj });
-}
-
-async function submitPrestasi(e){
-  let f = document.getElementById('frmPrestasi'); let dataRaw = {}; Array.from(f.elements).forEach(el=>{if(el.name) dataRaw[el.name]=el.value});
-  let obj = { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('inpSekolahPrestasi').value, jenis_laporan: "Laporan Prestasi", judul_dokumen: "PRESTASI: " + dataRaw.cabang.toUpperCase(), link_video: "-", catatan: `[SISWA: ${dataRaw.nama_siswa}] [JUARA: ${dataRaw.juara}] [TINGKAT: ${dataRaw.tingkat}] [NO: ${dataRaw.no_piagam}] [OLEH: ${dataRaw.penyelenggara}]` };
-  submitGenericKS(e, modalPr, obj);
-}
-async function submitPembiasaan(e){
-  let obj = { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('inpSekolahBias').value, jenis_laporan: "Laporan Pembiasaan", judul_dokumen: "PEMBIASAAN: " + document.getElementById('bias-nama').value, link_video: document.getElementById('bias-link').value, catatan: `[FREQ: ${document.getElementById('bias-freq').value}] [KARAKTER: ${document.getElementById('bias-karakter').value}] ` + document.getElementById('bias-desc').value };
-  submitGenericKS(e, modalBs, obj);
-}
-async function submitEvent(e){
-  let obj = { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: document.getElementById('inpSekolahEvent').value, jenis_laporan: "Laporan Event", judul_dokumen: "EVENT: " + document.getElementById('evt-nama').value, link_video: document.getElementById('evt-link').value, catatan: `[SKALA: ${document.getElementById('evt-scale').value}] [TGL: ${document.getElementById('evt-date').value}] ` + document.getElementById('evt-desc').value };
-  submitGenericKS(e, modalEv, obj);
+    await req("simpanTugas", {
+        data: {
+            pin_user: USER.pin, nama_user: USER.nama, sekolah_user: obj.sekolah,
+            jenis_laporan: jenis, judul_dokumen: judul, link_video: obj.link_video || "-", catatan: catatan
+        }
+    });
+    toast("Data tersimpan!"); loadKS(true);
 }
 </script>
 </body>
