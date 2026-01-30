@@ -244,7 +244,6 @@
         <form onsubmit="submitGeneric(event, 'Laporan Pembiasaan', 'mdl-bias')">
             <select class="sel-sekolah" name="sekolah"></select>
             <input name="a" placeholder="Nama Program" required>
-            
             <div class="flex" style="gap:5px">
                <select name="freq" required>
                   <option value="" disabled selected>Frekuensi</option>
@@ -252,9 +251,8 @@
                   <option value="Mingguan">Mingguan</option>
                   <option value="Bulanan">Bulanan</option>
                </select>
-               <input name="karakter" placeholder="Karakter (Mis: Disiplin)" required>
+               <input name="karakter" placeholder="Karakter" required>
             </div>
-
             <input name="link_video" placeholder="Link Foto" required>
             <textarea name="desc" placeholder="Keterangan"></textarea>
             <button class="btn btn-primary w-100" style="background:var(--success)">SIMPAN</button>
@@ -269,7 +267,15 @@
         <form onsubmit="submitGeneric(event, 'Laporan Event', 'mdl-event')">
             <select class="sel-sekolah" name="sekolah"></select>
             <input name="a" placeholder="Nama Event" required>
-            <input name="b" type="date" required>
+            <div class="flex" style="gap:5px">
+               <input name="b" type="date" required>
+               <select name="scale" required>
+                   <option value="Internal">Internal</option>
+                   <option value="Orang Tua">Orang Tua</option>
+                   <option value="Umum">Umum/Pejabat</option>
+               </select>
+            </div>
+            <input name="link_video" placeholder="Link Dokumentasi" required>
             <textarea name="desc" placeholder="Dampak Kegiatan"></textarea>
             <button class="btn btn-primary w-100">SIMPAN</button>
             <button type="button" onclick="closeModal('mdl-event')" class="btn w-100 mt-2" style="color:#888">Batal</button>
@@ -496,7 +502,8 @@ async function submitGeneric(e, jenis, modalId) {
         catatan = `[FREQ: ${obj.freq}] [KARAKTER: ${obj.karakter}] ${obj.desc}`;
     } else {
         judul = "EVENT: " + obj.a;
-        catatan = `[TGL: ${obj.b}] [DAMPAK: ${obj.desc}]`;
+        // FORMAT DATA DIKEMBALIKAN KE ASAL
+        catatan = `[SKALA: ${obj.scale}] [TGL: ${obj.b}] ${obj.desc}`;
     }
 
     await req("simpanTugas", {
