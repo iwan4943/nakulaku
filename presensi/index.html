@@ -201,8 +201,30 @@
       <div id="view-riwayat" class="view-section" style="display:none;">
          <div class="d-flex justify-content-between align-items-center mb-3">
              <h6 class="fw-bold m-0 text-dark">Riwayat Saya</h6>
-             <button class="btn btn-sm btn-light rounded-pill px-3 fw-bold text-secondary" onclick="loadRiwayat()">Refresh</button>
          </div>
+         
+         <div class="card card-menu p-3 mb-3">
+            <div class="row g-2">
+                <div class="col-5">
+                    <select id="riw_bulan" class="form-select form-select-sm">
+                        <option value="">Bulan...</option>
+                        <option value="1">Januari</option><option value="2">Februari</option>
+                        <option value="3">Maret</option><option value="4">April</option>
+                        <option value="5">Mei</option><option value="6">Juni</option>
+                        <option value="7">Juli</option><option value="8">Agustus</option>
+                        <option value="9">September</option><option value="10">Oktober</option>
+                        <option value="11">November</option><option value="12">Desember</option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <input type="number" id="riw_tahun" class="form-control form-control-sm" placeholder="Tahun">
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-sm btn-danger w-100" onclick="loadRiwayat()"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+         </div>
+         
          <div id="listRiwayatContainer"></div>
       </div>
       
@@ -249,7 +271,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   
   <script>
-    // --- WAJIB: PASTIKAN URL INI ADALAH URL DEPLOYMENT TERBARU ANDA ---
+    // --- WAJIB: DEPLOY ULANG DAN GANTI URL INI ---
     const API_URL = "https://script.google.com/macros/s/AKfycbweTTiW0sPe1SAnJZlUK4KCiiks4cDhc420PWmvf1IOJ7mIKGUhudz42SpAJ1KZP4__cg/exec"; 
 
     var userData = null; var targetLokasi = null;
@@ -258,13 +280,10 @@
     async function callAPI(action, data = {}) {
         data.action = action;
         try {
-            // PERBAIKAN CORS: Menggunakan method POST, redirect follow, dan text/plain
             const response = await fetch(API_URL, { 
                 method: "POST", 
                 redirect: "follow", 
-                headers: {
-                  "Content-Type": "text/plain;charset=utf-8" 
-                },
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify(data) 
             });
             return await response.json();
@@ -302,7 +321,6 @@
        document.getElementById('dispUnit').innerText = userData.unitKerja;
        document.getElementById('dispJabatan').innerText = userData.jabatan || "Guru";
 
-       // --- LOGIKA MENAMPILKAN MENU MONITOR ---
        if(userData.isAdmin || (userData.jabatan && userData.jabatan.toString().toLowerCase().includes("kepala"))) {
            document.getElementById('navMonitor').style.display = 'flex';
        }
@@ -327,13 +345,10 @@
           document.getElementById('infoBar').style.display = 'block';
           document.getElementById('textInfo').innerText = res.info;
        }
-       
        var sel = document.getElementById('selectJenisIzin');
        if (res.listOpsiIzin && res.listOpsiIzin.length > 0) {
            sel.innerHTML = '<option value="">-- Pilih Kategori --</option>';
-           res.listOpsiIzin.forEach(opsi => {
-               var opt = document.createElement('option'); opt.value = opsi; opt.innerText = opsi; sel.appendChild(opt);
-           });
+           res.listOpsiIzin.forEach(opsi => { var opt = document.createElement('option'); opt.value = opsi; opt.innerText = opsi; sel.appendChild(opt); });
        } else {
            sel.innerHTML = '<option value="">-- Pilih Kategori --</option><option>Izin Pribadi</option><option>Sakit</option><option>Dinas Luar</option>';
        }
@@ -355,7 +370,6 @@
        if(viewName === 'setting') loadSettings();
     }
 
-    // --- LOGIKA MAPS & GPS ---
     function toggleMap() {
         var c = document.getElementById('mapContainer');
         c.style.display = (c.style.display === 'none' || c.style.display === '') ? 'block' : 'none';
@@ -366,7 +380,6 @@
        userLat = pos.coords.latitude; userLong = pos.coords.longitude;
        document.getElementById('lat').value = userLat; document.getElementById('long').value = userLong;
        document.getElementById('lokasiStatusText').innerText = userLat.toFixed(5) + ", " + userLong.toFixed(5);
-       
        if(!targetLokasi) return;
        var dist = hitungJarak(userLat, userLong, targetLokasi.lat, targetLokasi.long);
        if (dist <= targetLokasi.radius) {
@@ -389,7 +402,6 @@
         return 2 * R * Math.asin(Math.sqrt(a));
     }
 
-    // --- LOGIKA KAMERA (DIPERBARUI DENGAN TOAST SUKSES) ---
     function openCameraModal() {
         document.getElementById('cameraModal').style.display = 'flex';
         navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s => { 
@@ -401,44 +413,30 @@
         document.getElementById('cameraModal').style.display='none'; 
     }
     
-    // --- FUNGSI SNAPSHOT BARU (ADA NOTIFIKASI) ---
+    // UPDATE: TOAST 3 DETIK & TOMBOL OK
     function takeSnapshot() { 
         var v = document.getElementById('video'); 
         var c = document.getElementById('canvas'); 
-        
-        // 1. Validasi Kamera Siap
         if (v.videoWidth === 0 || v.videoHeight === 0) {
             return Swal.fire('Gagal', 'Tunggu kamera loading sebentar...', 'warning');
         }
-
-        // 2. Ambil Gambar
-        c.width = v.videoWidth; 
-        c.height = v.videoHeight; 
+        c.width = v.videoWidth; c.height = v.videoHeight; 
         c.getContext('2d').drawImage(v, 0, 0); 
-        
-        // 3. Simpan Data
         var d = c.toDataURL('image/jpeg', 0.7); 
         document.getElementById('foto_base64').value = d; 
         document.getElementById('photo-preview').src = d; 
         
-        // 4. Tutup & Update UI
         closeCameraModal();
         document.getElementById('camera-btn-start').style.display = 'none'; 
         document.getElementById('result-container').style.display = 'block'; 
 
-        // 5. Toast Sukses
         Swal.fire({
-            icon: 'success',
-            title: 'Foto Berhasil Diambil!',
-            toast: true,
-            position: 'top',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true
+            icon: 'success', title: 'Foto Tersimpan!', text: 'Silakan lanjut isi catatan & kirim.',
+            timer: 3000, showConfirmButton: true
         });
     }
 
-    // --- TRANSAKSI DATA (ABSEN, IZIN) ---
+    // UPDATE: RELOAD HANYA SETELAH KLIK OK
     async function kirimPresensi() {
        if(!document.getElementById('foto_base64').value) return Swal.fire('Foto Wajib', 'Ambil foto selfie dulu.', 'warning');
        document.getElementById('loadingOverlay').style.display = 'flex';
@@ -452,14 +450,18 @@
        };
        const r = await callAPI('absen', payload);
        document.getElementById('loadingOverlay').style.display = 'none';
-       Swal.fire(r.includes("SUKSES")?"Berhasil":"Gagal", r, r.includes("SUKSES")?"success":"error");
-       if(r.includes("SUKSES")) location.reload();
+       
+       Swal.fire({
+           title: r.includes("SUKSES") ? "Berhasil" : "Gagal", text: r, icon: r.includes("SUKSES") ? "success" : "error",
+           confirmButtonText: "OK", allowOutsideClick: false
+       }).then((result) => {
+           if (result.isConfirmed && r.includes("SUKSES")) location.reload();
+       });
     }
 
     async function kirimIzin() {
        var j = document.getElementById('selectJenisIzin').value;
        if(!j) return Swal.fire('Pilih Kategori', 'Harap pilih jenis izin.', 'warning');
-       
        document.getElementById('loadingOverlay').style.display = 'flex';
        var payload = { 
            nama: userData.nama, email: userData.email, unit: userData.unitKerja, jabatan: userData.jabatan,
@@ -471,10 +473,14 @@
        if(r.includes("SUKSES")) { document.getElementById('formIzin').reset(); switchView('home'); }
     }
 
-    // --- FUNGSI LOAD DATA ---
+    // UPDATE: FILTER BULAN & TAHUN
     async function loadRiwayat() {
        document.getElementById('loadingOverlay').style.display = 'flex';
-       const list = await callAPI('riwayat', { nama: userData.nama });
+       var bln = document.getElementById('riw_bulan').value;
+       var thn = document.getElementById('riw_tahun').value;
+       if(!thn) { thn = new Date().getFullYear(); document.getElementById('riw_tahun').value = thn; }
+
+       const list = await callAPI('riwayat', { nama: userData.nama, bulan: bln, tahun: thn });
        document.getElementById('loadingOverlay').style.display = 'none';
        var html = "";
        if(list && list.length > 0) {
@@ -483,7 +489,7 @@
              var btnFoto = ""; if(i.foto && i.foto.includes("http")) btnFoto = `<button class="btn-view-foto-pill" onclick="lihatFoto(event, '${i.foto}')"><i class="fas fa-image me-1"></i>Bukti</button>`;
              html += `<div class="history-item"><div class="d-flex justify-content-between mb-2"><span class="fw-bold small">${i.tanggal}</span><span class="badge badge-status ${cls}">${i.status}</span></div><div class="d-flex justify-content-between align-items-center"><div class="small text-muted"><i class="fas fa-clock me-1"></i> ${i.jam} - ${i.lokasi}</div>${btnFoto}</div></div>`;
           });
-       } else { html = "<div class='text-center py-5 text-muted'>Belum ada data.</div>"; }
+       } else { html = "<div class='text-center py-5 text-muted'>Tidak ada data pada periode ini.</div>"; }
        document.getElementById('listRiwayatContainer').innerHTML = html;
     }
 
@@ -496,7 +502,6 @@
     function renderMonitoring(data) {
         document.getElementById('loadingOverlay').style.display = 'none';
         var html = ""; var allGuru = data.listSudah.concat(data.listBelum);
-        
         if(allGuru.length === 0) { document.getElementById('listMonitoringContainer').innerHTML = "<div class='text-center py-5 text-muted'>Tidak ada data.</div>"; return; }
         
         allGuru.forEach(g => {
@@ -517,7 +522,6 @@
                     </div>`; 
                 }
             }
-            
             if(g.maps && g.maps.includes("http")) btnBukti += `<a href="${g.maps}" target="_blank" class="btn-view-foto-pill me-1" style="text-decoration:none;"><i class="fas fa-map-marker-alt text-danger"></i></a>`; 
             if(g.foto && g.foto.includes("http")) btnBukti += `<button type="button" class="btn-view-foto-pill" onclick="lihatFoto(event, '${g.foto}')"><i class="fas fa-image text-primary"></i></button>`; 
 
@@ -546,7 +550,7 @@
                 document.getElementById('loadingOverlay').style.display = 'flex';
                 const res = await callAPI('updateIzin', { nama: namaGuru, status: newStatus });
                 document.getElementById('loadingOverlay').style.display = 'none';
-                if(res === 'SUKSES') { await loadMonitoring(); Swal.fire('Selesai','Data diperbarui','success'); } else { Swal.fire('Gagal', res, 'error'); }
+                if(res.includes('SUKSES')) { await loadMonitoring(); Swal.fire('Selesai','Data diperbarui','success'); } else { Swal.fire('Gagal', res, 'error'); }
             }
         });
     }
