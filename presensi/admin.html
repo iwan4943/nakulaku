@@ -6,26 +6,33 @@
   <title>Admin Dashboard Gugus Nakula (Ultimate)</title>
   
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏫</text></svg>">
+  
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
   <style>
     :root { --primary: #B3261E; --bg: #FFF8F7; --sidebar-width: 260px; }
     body { font-family: 'Google Sans', sans-serif; background: var(--bg); display: flex; min-height: 100vh; overflow-x: hidden; }
+    
+    /* SIDEBAR */
     .sidebar { width: var(--sidebar-width); background: white; border-right: 1px solid #eee; position: fixed; height: 100vh; z-index: 100; display: flex; flex-direction: column; transition: 0.3s; }
     .sidebar-header { padding: 25px; border-bottom: 1px solid #f0f0f0; }
     .menu-item { padding: 12px 25px; color: #555; cursor: pointer; display: flex; align-items: center; transition: 0.2s; text-decoration: none; font-weight: 500; }
     .menu-item:hover, .menu-item.active { background: #ffeaea; color: var(--primary); border-right: 4px solid var(--primary); }
     .menu-item i { width: 30px; }
+    
+    /* CONTENT */
     .content { margin-left: var(--sidebar-width); padding: 30px; width: 100%; transition: 0.3s; }
     .card-stat { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); height: 100%; }
     
-    /* GRID TABLE STYLES */
-    .table-grid th, .table-grid td { text-align: center; vertical-align: middle; font-size: 0.85rem; padding: 5px; }
-    .table-grid th:first-child, .table-grid td:first-child { text-align: left; min-width: 150px; position: sticky; left: 0; background: white; z-index: 10; border-right: 2px solid #eee; }
+    /* GRID TABLE (REKAP 1-31) */
+    .table-grid th, .table-grid td { text-align: center; vertical-align: middle; font-size: 0.8rem; padding: 4px; border: 1px solid #dee2e6; }
+    .table-grid th:first-child, .table-grid td:first-child { text-align: left; min-width: 180px; position: sticky; left: 0; background: white; z-index: 10; border-right: 2px solid #ccc; }
     .cell-h { background-color: #d1e7dd; color: #0f5132; font-weight: bold; } /* Hadir */
     .cell-t { background-color: #fff3cd; color: #856404; font-weight: bold; } /* Telat */
     .cell-i { background-color: #cfe2ff; color: #084298; } /* Izin */
@@ -39,11 +46,11 @@
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <h5 class="fw-bold mb-0 text-danger"><i class="fas fa-school me-2"></i>Gugus Nakula</h5>
-      <small class="text-muted">Admin Panel V.Ultimate</small>
+      <small class="text-muted">Admin Ultimate</small>
     </div>
     <div class="mt-3">
       <div class="menu-item active" onclick="switchPage('dashboard')"><i class="fas fa-home"></i> Dashboard</div>
-      <div class="menu-item" onclick="switchPage('rekap')"><i class="fas fa-calendar-alt"></i> Rekap Bulanan</div>
+      <div class="menu-item" onclick="switchPage('rekap')"><i class="fas fa-calendar-alt"></i> Rekap Grid & Excel</div>
       <div class="menu-item" onclick="switchPage('settings')"><i class="fas fa-cog"></i> Pengaturan</div>
       <hr class="mx-3">
       <div class="menu-item text-warning" onclick="cetakAward()"><i class="fas fa-trophy"></i> Nominasi Award</div>
@@ -56,9 +63,9 @@
 
     <div id="page-dashboard">
       <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <h4 class="fw-bold m-0">Monitoring Harian</h4>
+        <h4 class="fw-bold m-0">Monitoring Presensi</h4>
         <div class="d-flex gap-2">
-           <input type="date" id="filterTanggal" class="form-control shadow-sm" onchange="loadDashboard()">
+           <input type="date" id="filterTanggal" class="form-control shadow-sm" onchange="loadDashboard()" title="Pilih Tanggal">
            <select id="filterSekolah" class="form-select w-auto shadow-sm" onchange="loadDashboard()"><option value="SEMUA">Semua Sekolah</option></select>
         </div>
       </div>
@@ -66,7 +73,7 @@
       <div class="row g-3 mb-4">
         <div class="col-md-3 col-6"><div class="card-stat border-start border-5 border-success"><small class="text-muted fw-bold">SUDAH HADIR</small><h2 class="fw-bold mt-2 mb-0 text-success" id="count-hadir">0</h2></div></div>
         <div class="col-md-3 col-6"><div class="card-stat border-start border-5 border-secondary"><small class="text-muted fw-bold">BELUM HADIR</small><h2 class="fw-bold mt-2 mb-0 text-secondary" id="count-belum">0</h2></div></div>
-        <div class="col-md-6"><div class="card-stat d-flex align-items-center justify-content-between"><div><h6 class="fw-bold">Persentase</h6><small class="text-muted">Realtime</small></div><div style="height:80px; width:80px;"><canvas id="chartHarian"></canvas></div></div></div>
+        <div class="col-md-6"><div class="card-stat d-flex align-items-center justify-content-between"><div><h6 class="fw-bold">Statistik Harian</h6><small class="text-muted">Update Realtime</small></div><div style="height:80px; width:80px;"><canvas id="chartHarian"></canvas></div></div></div>
       </div>
 
       <div class="card border-0 shadow-sm mb-4">
@@ -77,43 +84,46 @@
       <div class="card border-0 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="fw-bold m-0"><i class="fas fa-list me-2"></i>Detail Presensi</h6>
+            <h6 class="fw-bold m-0"><i class="fas fa-list me-2"></i>Data Presensi</h6>
             <input type="text" id="searchTable" class="form-control form-control-sm w-auto" placeholder="Cari Nama..." onkeyup="filterTable()">
           </div>
           <div class="table-responsive">
-            <table class="table table-hover align-middle"><thead class="table-light"><tr><th>Nama Guru</th><th>Status</th><th>Jam</th><th>Bukti</th><th>Aksi</th></tr></thead><tbody id="tabel-monitor"></tbody></table>
+            <table class="table table-hover align-middle">
+                <thead class="table-light"><tr><th>Nama Guru</th><th>Status</th><th>Jam</th><th class="text-center">Bukti</th><th>Aksi</th></tr></thead>
+                <tbody id="tabel-monitor"></tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
 
     <div id="page-rekap" style="display:none;">
-      <h4 class="fw-bold mb-4">Rekapitulasi Bulanan</h4>
+      <h4 class="fw-bold mb-4">Rekapitulasi & Excel</h4>
       <div class="card border-0 shadow-sm p-3 mb-4">
          <div class="row g-2 align-items-end">
-             <div class="col-md-3"><label>Bulan</label><select id="grid_bulan" class="form-select"><option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option><option value="4">April</option><option value="5">Mei</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">Agustus</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option></select></div>
-             <div class="col-md-3"><label>Tahun</label><input type="number" id="grid_tahun" class="form-control" value="2026"></div>
-             <div class="col-md-3"><label>Filter Sekolah</label><select id="grid_sekolah" class="form-select"><option value="SEMUA">Semua Sekolah</option></select></div>
+             <div class="col-md-3"><label class="small fw-bold">Bulan</label><select id="grid_bulan" class="form-select"><option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option><option value="4">April</option><option value="5">Mei</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">Agustus</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option></select></div>
+             <div class="col-md-3"><label class="small fw-bold">Tahun</label><input type="number" id="grid_tahun" class="form-control" value="2026"></div>
+             <div class="col-md-3"><label class="small fw-bold">Filter Sekolah</label><select id="grid_sekolah" class="form-select"><option value="SEMUA">Semua Sekolah</option></select></div>
              <div class="col-md-3 d-flex gap-2">
-                 <button onclick="loadRekapGrid()" class="btn btn-primary flex-grow-1"><i class="fas fa-table me-1"></i> Tampil Grid</button>
-                 <button onclick="downloadExcel()" class="btn btn-success"><i class="fas fa-file-excel me-1"></i> Excel</button>
+                 <button onclick="loadRekapGrid()" class="btn btn-primary flex-grow-1"><i class="fas fa-search me-1"></i> Tampil</button>
+                 <button onclick="downloadExcel()" class="btn btn-success" title="Download Excel"><i class="fas fa-file-excel"></i></button>
              </div>
          </div>
       </div>
       
       <div class="card border-0 shadow-sm">
          <div class="card-body p-0">
-             <div class="table-responsive" style="max-height: 500px;">
-                 <table class="table table-bordered table-grid mb-0">
-                     <thead class="table-light text-center">
+             <div class="table-responsive" style="max-height: 600px;">
+                 <table class="table table-grid mb-0">
+                     <thead class="table-light">
                          <tr id="grid-header"><th>Nama Guru</th></tr>
                      </thead>
                      <tbody id="grid-body"></tbody>
                  </table>
              </div>
          </div>
-         <div class="card-footer bg-white">
-             <small class="text-muted"><span class="badge bg-success">H</span> Hadir Tepat &bull; <span class="badge bg-warning text-dark">T</span> Terlambat &bull; <span class="badge bg-primary">I</span> Izin/Sakit &bull; <span class="badge bg-danger">A</span> Belum Hadir</small>
+         <div class="card-footer bg-white text-end">
+             <small class="text-muted"><span class="badge bg-success">H</span> Tepat • <span class="badge bg-warning text-dark">T</span> Telat • <span class="badge bg-primary">I</span> Izin • <span class="badge bg-danger">A</span> Alpha</small>
          </div>
       </div>
     </div>
@@ -128,7 +138,7 @@
             <div class="col-md-4 mb-3"><label class="fw-bold">Jam Selesai</label><input type="time" id="set_selesai" class="form-control"></div>
             <div class="col-md-4 mb-3"><label class="fw-bold">Batas Terlambat</label><input type="time" id="set_batas" class="form-control"></div>
         </div>
-        <button onclick="simpanSettings()" class="btn btn-danger"><i class="fas fa-save me-2"></i> Simpan</button>
+        <button onclick="simpanSettings()" class="btn btn-danger"><i class="fas fa-save me-2"></i> Simpan Pengaturan</button>
       </div>
     </div>
 
@@ -136,7 +146,7 @@
 
   <script>
     // ==========================================
-    // CONFIG: MASUKKAN URL DEPLOYMENT DI SINI
+    // CONFIG: GANTI URL DEPLOYMENT DI SINI
     // ==========================================
     const API_URL = "https://script.google.com/macros/s/AKfycbweTTiW0sPe1SAnJZlUK4KCiiks4cDhc420PWmvf1IOJ7mIKGUhudz42SpAJ1KZP4__cg/exec"; 
     // ==========================================
@@ -146,7 +156,9 @@
     document.addEventListener("DOMContentLoaded", function() {
         checkLogin();
         initDashboard();
-        // Set Bulan Sekarang di Filter Rekap
+        // Set Default Date hari ini
+        document.getElementById('filterTanggal').valueAsDate = new Date();
+        // Set Default Bulan sekarang
         document.getElementById('grid_bulan').value = new Date().getMonth() + 1;
     });
 
@@ -169,7 +181,7 @@
         } catch(e) { console.error(e); Swal.fire('Error', 'Gagal koneksi server', 'error'); return null; }
     }
 
-    // --- DASHBOARD ---
+    // --- DASHBOARD LOGIC ---
     async function initDashboard() {
         let d = await callAPI('listSekolah');
         let sel = document.getElementById('filterSekolah');
@@ -183,7 +195,6 @@
             sel2.innerHTML += `<option value="${s}">${s}</option>`;
             let opt = document.createElement('option'); opt.value = s; opt.innerText = s; sel3.appendChild(opt);
         });
-        document.getElementById('filterTanggal').valueAsDate = new Date();
         loadDashboard(); loadSettings();
     }
 
@@ -199,12 +210,21 @@
             
             let html = "";
             let gabung = [...res.listSudah, ...res.listBelum].sort((a,b) => (a.status.includes("Menunggu") ? -1 : 1));
+            
             gabung.forEach(g => {
                 let bg = g.status.includes('Belum')?'bg-secondary':g.status.includes('Terlambat')?'bg-warning text-dark':g.status.includes('Tepat')?'bg-success':g.status.includes('Menunggu')?'bg-info text-dark':'bg-danger';
+                
+                // --- KLIK FOTO (FIXED) ---
+                let bukti = '-';
+                if(g.foto && g.foto.includes('http')) {
+                    bukti = `<a href="${g.foto}" target="_blank" title="Lihat Foto"><i class="fas fa-check-circle text-success fa-lg"></i></a>`;
+                }
+
                 let btn = "";
                 if(g.status.includes("Menunggu")) btn = `<button class="btn btn-sm btn-success me-1" onclick="accIzin('${g.nama}','Disetujui')"><i class="fas fa-check"></i></button><button class="btn btn-sm btn-danger" onclick="accIzin('${g.nama}','Ditolak')"><i class="fas fa-times"></i></button>`;
                 else if(g.maps) btn = `<a href="${g.maps}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-map-marker-alt"></i></a>`;
-                html += `<tr><td><strong>${g.nama}</strong></td><td><span class="badge ${bg}">${g.status}</span></td><td>${g.jam}</td><td>${g.foto?'✅':'-'}</td><td>${btn}</td></tr>`;
+                
+                html += `<tr><td><strong>${g.nama}</strong></td><td><span class="badge ${bg}">${g.status}</span></td><td>${g.jam}</td><td class="text-center">${bukti}</td><td>${btn}</td></tr>`;
             });
             document.getElementById('tabel-monitor').innerHTML = html;
 
@@ -224,34 +244,29 @@
       });
     }
 
-    // --- REKAP GRID (FITUR BARU) ---
+    // --- REKAP GRID (1-31) ---
     function loadRekapGrid() {
         let bln = document.getElementById('grid_bulan').value;
         let thn = document.getElementById('grid_tahun').value;
         let sek = document.getElementById('grid_sekolah').value;
-        
         Swal.fire({title:'Memuat Data...', didOpen:()=>Swal.showLoading()});
         
-        // 1. Setup Header Tanggal (1-31)
         let daysInMonth = new Date(thn, bln, 0).getDate();
         let headerHtml = `<th>Nama Guru</th>`;
-        for(let i=1; i<=daysInMonth; i++) headerHtml += `<th style="min-width:30px;">${i}</th>`;
+        for(let i=1; i<=daysInMonth; i++) headerHtml += `<th style="min-width:25px;">${i}</th>`;
         document.getElementById('grid-header').innerHTML = headerHtml;
         
         callAPI('rekapGrid', { bulan: bln, tahun: thn, sekolah: sek }).then(data => {
-            Swal.close();
-            if(!data) return;
+            Swal.close(); if(!data) return;
             let bodyHtml = "";
             data.forEach(u => {
-                let row = `<tr><td><strong>${u.nama}</strong><br><small class="text-muted" style="font-size:0.7em">${u.sekolah}</small></td>`;
+                let row = `<tr><td><div style="line-height:1.1"><strong>${u.nama}</strong><br><small class="text-muted" style="font-size:0.7em">${u.sekolah}</small></div></td>`;
                 for(let i=1; i<=daysInMonth; i++) {
                     let st = u.presensi[i] || "-";
-                    let cls = "";
-                    if(st=="H") cls="cell-h"; else if(st=="T") cls="cell-t"; else if(st=="I") cls="cell-i"; else if(st=="-") cls="cell-a";
+                    let cls = st=="H"?"cell-h":st=="T"?"cell-t":st=="I"?"cell-i":"cell-a";
                     row += `<td class="${cls}">${st}</td>`;
                 }
-                row += `</tr>`;
-                bodyHtml += row;
+                bodyHtml += row + `</tr>`;
             });
             document.getElementById('grid-body').innerHTML = bodyHtml;
         });
@@ -263,24 +278,19 @@
         Swal.fire({title:'Mengunduh...', didOpen:()=>Swal.showLoading()});
         
         callAPI('exportData', { bulan: bln, tahun: thn }).then(data => {
-            Swal.close();
-            if(!data || data.length === 0) { Swal.fire('Info','Data kosong','info'); return; }
-            
-            // Convert JSON to CSV
-            const header = ["Waktu", "Nama Lengkap", "Sekolah", "Jabatan", "Status", "Alasan/Keterangan", "Lokasi"];
+            Swal.close(); if(!data || data.length === 0) { Swal.fire('Info','Data kosong','info'); return; }
+            const header = ["Waktu", "Nama Lengkap", "Sekolah", "Jabatan", "Status", "Alasan", "Lokasi"];
             let csvContent = header.join(",") + "\n";
             data.forEach(row => {
                 let r = [row.waktu, row.nama, row.sekolah, row.jabatan, row.status, row.alasan, row.lokasi].map(f => `"${String(f).replace(/"/g, '""')}"`);
                 csvContent += r.join(",") + "\n";
             });
-            
-            // Trigger Download
             let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             let link = document.createElement("a");
             if (link.download !== undefined) {
                 let url = URL.createObjectURL(blob);
                 link.setAttribute("href", url);
-                link.setAttribute("download", `Rekap_Presensi_${bln}_${thn}.csv`);
+                link.setAttribute("download", `Rekap_${bln}_${thn}.csv`);
                 link.style.visibility = 'hidden';
                 document.body.appendChild(link);
                 link.click();
@@ -289,7 +299,21 @@
         });
     }
 
-    // --- OTHER ---
+    // --- CETAK AWARD ---
+    function cetakAward() {
+        let y = new Date().getFullYear(); Swal.fire({title:'Menghitung...',didOpen:()=>Swal.showLoading()});
+        callAPI('laporanAward',{tahun:y}).then(d=>{
+            Swal.close(); if(!d) return;
+            let hS=`<table class="table table-bordered table-striped"><thead class="table-dark"><tr><th>#</th><th>Instansi</th><th>Guru</th><th>Skor</th></tr></thead><tbody>`;
+            d.sekolah.forEach((s,i)=> hS+=`<tr><td>${i+1}</td><td>${s.sekolah}</td><td>${s.populasi}</td><td>${s.skorAkhir}</td></tr>`); hS+=`</tbody></table>`;
+            let hG=`<table class="table table-bordered table-sm mt-3"><thead class="table-primary"><tr><th>#</th><th>Nama</th><th>Sekolah</th><th>Hadir</th><th>Tepat</th><th>Poin</th></tr></thead><tbody>`;
+            d.guru.forEach((g,i)=>{ if(i<50) hG+=`<tr><td>${i+1}</td><td>${g.nama}</td><td>${g.sekolah}</td><td>${g.hadir}</td><td>${g.tepat}</td><td>${g.totalPoin}</td></tr>`; }); hG+=`</tbody></table>`;
+            let w=window.open('','','width=900,height=600');
+            w.document.write(`<html><head><title>Award ${y}</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></head><body class="p-4"><h3>🏆 AWARD GUGUS ${y}</h3><h5>KATEGORI INSTANSI</h5>${hS}<h5>KATEGORI GURU</h5>${hG}<script>window.print();`+'<'+'/script>'+'<'+'/body>'+'<'+'/html>');
+            w.document.close();
+        });
+    }
+
     function accIzin(nama, status) {
         Swal.fire({title:'Konfirmasi', text:`Ubah status ${nama} jadi ${status}?`, icon:'question', showCancelButton:true}).then((res)=>{
             if(res.isConfirmed) callAPI('updateIzin',{nama:nama,status:status}).then(r=>{ if(r.includes('SUKSES')) loadDashboard(); });
@@ -317,19 +341,6 @@
         let f = { set_lokasi:document.getElementById('set_lokasi').value, set_info:document.getElementById('set_info').value, set_mulai:document.getElementById('set_mulai').value, set_selesai:document.getElementById('set_selesai').value, set_batas:document.getElementById('set_batas').value };
         Swal.fire({title:'Menyimpan...',didOpen:()=>Swal.showLoading()});
         callAPI('saveSettings',f).then(r => Swal.fire(r==='SUKSES'?'Berhasil':'Gagal', r, r==='SUKSES'?'success':'error'));
-    }
-    function cetakAward() {
-        let y = new Date().getFullYear(); Swal.fire({title:'Menghitung...',didOpen:()=>Swal.showLoading()});
-        callAPI('laporanAward',{tahun:y}).then(d=>{
-            Swal.close(); if(!d) return;
-            let hS=`<table class="table table-bordered table-striped"><thead class="table-dark"><tr><th>#</th><th>Instansi</th><th>Guru</th><th>Skor</th></tr></thead><tbody>`;
-            d.sekolah.forEach((s,i)=> hS+=`<tr><td>${i+1}</td><td>${s.sekolah}</td><td>${s.populasi}</td><td>${s.skorAkhir}</td></tr>`); hS+=`</tbody></table>`;
-            let hG=`<table class="table table-bordered table-sm mt-3"><thead class="table-primary"><tr><th>#</th><th>Nama</th><th>Sekolah</th><th>Hadir</th><th>Tepat</th><th>Poin</th></tr></thead><tbody>`;
-            d.guru.forEach((g,i)=>{ if(i<50) hG+=`<tr><td>${i+1}</td><td>${g.nama}</td><td>${g.sekolah}</td><td>${g.hadir}</td><td>${g.tepat}</td><td>${g.totalPoin}</td></tr>`; }); hG+=`</tbody></table>`;
-            let w=window.open('','','width=900,height=600');
-            w.document.write(`<html><head><title>Award ${y}</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></head><body class="p-4"><h3>🏆 AWARD GUGUS ${y}</h3><h5>KATEGORI INSTANSI</h5>${hS}<h5>KATEGORI GURU</h5>${hG}<script>window.print();`+'<'+'/script>'+'<'+'/body>'+'<'+'/html>');
-            w.document.close();
-        });
     }
     function logout() { sessionStorage.removeItem('admin_login'); location.reload(); }
   </script>
