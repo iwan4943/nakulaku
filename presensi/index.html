@@ -249,7 +249,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   
   <script>
-    // --- WAJIB: PASTE URL WEB APP BARU DISINI ---
+    // --- WAJIB: PASTIKAN URL INI ADALAH URL DEPLOYMENT TERBARU ANDA ---
     const API_URL = "https://script.google.com/macros/s/AKfycbweTTiW0sPe1SAnJZlUK4KCiiks4cDhc420PWmvf1IOJ7mIKGUhudz42SpAJ1KZP4__cg/exec"; 
 
     var userData = null; var targetLokasi = null;
@@ -258,9 +258,21 @@
     async function callAPI(action, data = {}) {
         data.action = action;
         try {
-            const response = await fetch(API_URL, { method: "POST", body: JSON.stringify(data) });
+            // PERBAIKAN CORS: Menggunakan method POST, redirect follow, dan text/plain
+            const response = await fetch(API_URL, { 
+                method: "POST", 
+                redirect: "follow", 
+                headers: {
+                  "Content-Type": "text/plain;charset=utf-8" 
+                },
+                body: JSON.stringify(data) 
+            });
             return await response.json();
-        } catch (error) { Swal.fire('Error', 'Koneksi gagal.', 'error'); return null; }
+        } catch (error) { 
+            console.error("Fetch Error:", error); 
+            Swal.fire('Error', 'Koneksi gagal.', 'error'); 
+            return null; 
+        }
     }
 
     window.onload = function() {
@@ -291,7 +303,6 @@
        document.getElementById('dispJabatan').innerText = userData.jabatan || "Guru";
 
        // --- LOGIKA MENAMPILKAN MENU MONITOR ---
-       // Menu monitor muncul jika isAdmin = true ATAU Jabatan mengandung "Kepala"
        if(userData.isAdmin || (userData.jabatan && userData.jabatan.toString().toLowerCase().includes("kepala"))) {
            document.getElementById('navMonitor').style.display = 'flex';
        }
@@ -378,7 +389,7 @@
         return 2 * R * Math.asin(Math.sqrt(a));
     }
 
-    // --- LOGIKA KAMERA ---
+    // --- LOGIKA KAMERA (DIPERBARUI DENGAN TOAST SUKSES) ---
     function openCameraModal() {
         document.getElementById('cameraModal').style.display = 'flex';
         navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s => { 
@@ -389,14 +400,42 @@
         if(streamKamera) { streamKamera.getTracks().forEach(t => t.stop()); streamKamera = null; }
         document.getElementById('cameraModal').style.display='none'; 
     }
+    
+    // --- FUNGSI SNAPSHOT BARU (ADA NOTIFIKASI) ---
     function takeSnapshot() { 
-        var v = document.getElementById('video'); var c = document.getElementById('canvas'); 
-        c.width = v.videoWidth; c.height = v.videoHeight; 
+        var v = document.getElementById('video'); 
+        var c = document.getElementById('canvas'); 
+        
+        // 1. Validasi Kamera Siap
+        if (v.videoWidth === 0 || v.videoHeight === 0) {
+            return Swal.fire('Gagal', 'Tunggu kamera loading sebentar...', 'warning');
+        }
+
+        // 2. Ambil Gambar
+        c.width = v.videoWidth; 
+        c.height = v.videoHeight; 
         c.getContext('2d').drawImage(v, 0, 0); 
+        
+        // 3. Simpan Data
         var d = c.toDataURL('image/jpeg', 0.7); 
-        document.getElementById('foto_base64').value = d; document.getElementById('photo-preview').src = d; 
+        document.getElementById('foto_base64').value = d; 
+        document.getElementById('photo-preview').src = d; 
+        
+        // 4. Tutup & Update UI
         closeCameraModal();
-        document.getElementById('camera-btn-start').style.display='none'; document.getElementById('result-container').style.display='block'; 
+        document.getElementById('camera-btn-start').style.display = 'none'; 
+        document.getElementById('result-container').style.display = 'block'; 
+
+        // 5. Toast Sukses
+        Swal.fire({
+            icon: 'success',
+            title: 'Foto Berhasil Diambil!',
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true
+        });
     }
 
     // --- TRANSAKSI DATA (ABSEN, IZIN) ---
@@ -454,7 +493,6 @@
         if(d) renderMonitoring(d);
     }
 
-    // --- RENDER MONITORING (FIXED BUTTON LOGIC) ---
     function renderMonitoring(data) {
         document.getElementById('loadingOverlay').style.display = 'none';
         var html = ""; var allGuru = data.listSudah.concat(data.listBelum);
@@ -464,14 +502,12 @@
         allGuru.forEach(g => {
             var badgeClass = "bg-secondary"; var actionButtons = ""; var btnBukti = ""; var safeNama = g.nama.replace(/'/g, "\\'");
             
-            // Logika Warna Badge
             if(g.status === "Belum Hadir") badgeClass = "bg-belum";
             else if(g.status.includes("Tepat")) badgeClass = "bg-hadir";
             else if(g.status.includes("Terlambat")) badgeClass = "bg-telat";
             else if(g.status.includes("Luar")) badgeClass = "bg-luar";
             else if(g.status.includes("Izin") || g.status.includes("Sakit")) { 
                 badgeClass = "bg-izin"; 
-                // --- LOGIKA PENTING TOMBOL ACC ---
                 if(g.status.includes("Menunggu")) { 
                     actionButtons = `
                     <div class="mt-2 d-flex justify-content-end border-top pt-2">
@@ -482,11 +518,9 @@
                 }
             }
             
-            // Logika Tombol Bukti
             if(g.maps && g.maps.includes("http")) btnBukti += `<a href="${g.maps}" target="_blank" class="btn-view-foto-pill me-1" style="text-decoration:none;"><i class="fas fa-map-marker-alt text-danger"></i></a>`; 
             if(g.foto && g.foto.includes("http")) btnBukti += `<button type="button" class="btn-view-foto-pill" onclick="lihatFoto(event, '${g.foto}')"><i class="fas fa-image text-primary"></i></button>`; 
 
-            // Susun HTML
             html += `
             <div class="history-item">
                 <div class="d-flex justify-content-between align-items-center mb-1">
