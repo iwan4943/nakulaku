@@ -2,193 +2,411 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Penilai Mutu - LMS Nakula</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<style>
-  :root { --primary: #0d6efd; --bg: #F0F2F5; --card: #FFFFFF; }
-  body { background-color: var(--bg); font-family: 'Poppins', sans-serif; padding-bottom: 80px; }
-  .hidden { display: none !important; }
-  .card-pro { border: none; border-radius: 20px; background: var(--card); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
 
-  /* CARD MATERI RESPONSIVE */
-  .card-materi {
-    cursor: pointer;
-    border: 1px solid rgba(0,0,0,0.05);
-    text-align: center;
-    padding: 1rem;
-    background: #fff;
-    display: flex; flex-direction: column; justify-content: space-between;
-    min-height: 190px;
-    transition: transform 0.2s, box-shadow 0.2s;
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+  /* --- THEME VARIABLES (Royal Blue for Quality) --- */
+  :root { 
+    --primary: #2563eb; /* Royal Blue */
+    --primary-light: #dbeafe; 
+    --accent: #f59e0b; /* Amber */
+    --bg-body: #f8fafc; 
+    --surface: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --radius: 16px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
-  .card-materi:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0, 0.08); border-color: var(--primary); }
+
+  body { 
+    background-color: var(--bg-body); 
+    font-family: 'Poppins', sans-serif; 
+    color: var(--text-main);
+    padding-bottom: 80px; 
+  }
+
+  .hidden { display: none !important; }
+  .fw-medium { font-weight: 500; }
   
-  .txt-judul { font-size: clamp(0.85rem, 2.5vw, 1rem); font-weight: 700; color: #333; line-height: 1.3; margin-bottom: 0.5rem; }
-  .txt-desc { font-size: clamp(0.65rem, 2vw, 0.75rem); color: #6c757d; }
+  /* --- COMPONENTS --- */
+  .btn-gradient { 
+    background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%); 
+    color: white; border: none; border-radius: 50px; 
+    padding: 12px 24px; font-weight: 600; width: 100%; 
+    transition: all 0.3s ease; box-shadow: var(--shadow-md);
+  }
+  .btn-gradient:active { transform: scale(0.98); }
   
-  .icon-circle-lg { width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem auto; font-size: 1.5rem; background-color: #E3F2FD; color: #1565C0; }
-  
-  .header-card { background: var(--card); padding: 1rem; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-  .nav-pills .nav-link.active { background-color: var(--primary); }
+  .card-pro { 
+    border: none; border-radius: var(--radius); 
+    background: var(--surface); 
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+    overflow: hidden; 
+  }
+
+  /* --- LOGIN --- */
+  .login-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #eff6ff 0%, #f1f5f9 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .card-login {
+    width: 100%; max-width: 400px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem; border-radius: 24px; box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+
+  /* --- DASHBOARD --- */
+  .header-card { 
+    background: var(--surface); padding: 1rem 1.5rem; 
+    border-radius: var(--radius); display: flex; justify-content: space-between; align-items: center; 
+    margin-bottom: 2rem; box-shadow: var(--shadow-sm); border-bottom: 3px solid var(--primary-light);
+  }
+
+  .card-category {
+    cursor: pointer; padding: 2rem; height: 100%;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    border: 2px solid transparent; transition: all 0.3s;
+    background: var(--surface);
+  }
+  .card-category:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: var(--shadow-md); }
+  .cat-icon { font-size: 3rem; margin-bottom: 1rem; color: var(--primary); }
+
+  /* List Item */
+  .list-item { border-left: 4px solid transparent; transition: background 0.2s; cursor: pointer;}
+  .list-item:hover { background-color: #f1f5f9; }
+  .list-item.status-wait { border-left-color: var(--accent); }
+  .list-item.status-done { border-left-color: var(--primary); }
+  .list-item.status-rev { border-left-color: #ef4444; }
+
+  .badge-soft-warning { background-color: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
+  .badge-soft-success { background-color: #ecfdf5; color: #047857; border: 1px solid #6ee7b7; }
+  .badge-soft-danger { background-color: #fef2f2; color: #b91c1c; border: 1px solid #fca5a5; }
+
+  #loading { z-index: 9999; backdrop-filter: blur(2px); }
 </style>
 </head>
 <body>
 
-<div id="loading" class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-none justify-content-center align-items-center" style="z-index:9999;"><div class="spinner-border text-primary"></div></div>
+<div id="loading" class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-none justify-content-center align-items-center">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+</div>
 
-<div id="view-login" class="container d-flex flex-column justify-content-center" style="min-height: 100vh;">
-  <div class="text-center mb-4"><div class="icon-circle-lg mx-auto mb-3"><i class="bi bi-award"></i></div><h4 class="fw-bold text-primary">PENILAI MUTU</h4></div>
-  <div class="card-pro p-4 mx-auto" style="max-width: 400px; width: 100%;">
-    <input type="number" id="inputPIN" class="form-control text-center mb-3" placeholder="PIN ANDA">
-    <button onclick="doLogin()" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">MASUK</button>
+<div id="view-login" class="login-wrapper">
+  <div class="card-login">
+    <div class="bg-primary bg-opacity-10 text-primary rounded-4 d-inline-flex p-3 mb-3">
+        <i class="bi bi-patch-check-fill fs-1"></i>
+    </div>
+    <h3 class="fw-bold mb-1" style="color:var(--primary)">Penilai Mutu</h3>
+    <p class="text-muted small mb-4">Evaluasi Inovasi & Implementasi</p>
+    
+    <div class="form-floating mb-4">
+      <input type="number" id="inputPIN" class="form-control fw-bold text-center" placeholder="PIN" style="letter-spacing: 4px; height: 60px; font-size: 1.5rem;">
+      <label for="inputPIN" class="w-100 text-center">PIN AKSES</label>
+    </div>
+    
+    <button onclick="doLogin()" class="btn-gradient">MASUK PANEL MUTU</button>
   </div>
 </div>
 
-<div id="view-main" class="hidden container mt-3">
+<div id="view-main" class="hidden container mt-4">
+    
     <div class="header-card">
-      <div class="d-flex align-items-center"><i class="bi bi-person-badge text-primary fs-3 me-3"></i><div><div class="fw-bold">Penilai Mutu</div><div class="text-muted small" id="txtNama">...</div></div></div>
-      <button onclick="doLogout()" class="btn btn-sm btn-outline-danger rounded-pill px-3">Keluar</button>
+      <div class="d-flex align-items-center gap-3">
+        <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:45px;height:45px;">
+            <i class="bi bi-shield-check fs-5"></i>
+        </div>
+        <div style="min-width: 0;">
+            <div class="text-muted small lh-1">Validator Mutu,</div>
+            <div class="fw-bold text-dark text-truncate" id="txtNama">...</div>
+        </div>
+      </div>
+      <button onclick="doLogout()" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-medium">
+        <i class="bi bi-box-arrow-right"></i> Keluar
+      </button>
     </div>
 
-    <ul class="nav nav-pills mb-3">
-      <li class="nav-item"><button class="nav-link active rounded-pill px-4 me-2" data-bs-toggle="pill" data-bs-target="#p-tab-imp" onclick="resetView()">IMPLEMENTASI</button></li>
-      <li class="nav-item"><button class="nav-link rounded-pill px-4" data-bs-toggle="pill" data-bs-target="#p-tab-ino">INOVASI</button></li>
-    </ul>
-
-    <div class="tab-content">
-      <div class="tab-pane fade show active" id="p-tab-imp">
-        <div id="view-grid">
-           <div class="d-flex justify-content-between mb-3 align-items-center"><h6 class="fw-bold m-0">Folder Implementasi</h6><span class="badge bg-primary-subtle text-primary border border-primary" id="badge-pending">...</span></div>
-           <div class="row g-2 g-md-3" id="grid-cont"></div>
-        </div>
-        <div id="view-list" class="hidden">
-           <div class="card-pro p-3 mb-3 bg-primary text-white d-flex align-items-center shadow-sm">
-              <button onclick="backToGrid()" class="btn btn-sm btn-light text-primary rounded-circle me-3"><i class="bi bi-arrow-left"></i></button>
-              <div class="fw-bold text-truncate" id="lbl-active">...</div>
+    <div id="view-home">
+       <h5 class="fw-bold mb-4 text-dark">Kategori Penilaian</h5>
+       <div class="row g-4">
+           <div class="col-md-6">
+               <div class="card-pro card-category" onclick="openCategory('Implementasi KKG')">
+                   <div class="cat-icon"><i class="bi bi-person-video3"></i></div>
+                   <h4 class="fw-bold mb-2">Implementasi KKG</h4>
+                   <p class="text-muted small mb-3">Laporan penerapan hasil materi diklat di kelas.</p>
+                   <span class="badge rounded-pill bg-light text-dark border px-3 py-2" id="badge-imp">Memuat...</span>
+               </div>
            </div>
-           <div id="list-cont"></div>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="p-tab-ino">
-         <div class="alert alert-info border-0 small fw-bold"><i class="bi bi-lightbulb me-2"></i>Karya Inovasi Guru</div>
-         <div id="list-inovasi"></div>
-      </div>
+           <div class="col-md-6">
+               <div class="card-pro card-category" onclick="openCategory('Karya Inovasi')">
+                   <div class="cat-icon"><i class="bi bi-lightbulb"></i></div>
+                   <h4 class="fw-bold mb-2">Karya Inovasi</h4>
+                   <p class="text-muted small mb-3">Karya orisinil, alat peraga, atau metode baru.</p>
+                   <span class="badge rounded-pill bg-light text-dark border px-3 py-2" id="badge-inov">Memuat...</span>
+               </div>
+           </div>
+       </div>
+    </div>
+
+    <div id="view-list" class="hidden">
+       <div class="card-pro p-3 mb-4 d-flex align-items-center shadow-sm" style="border-left: 5px solid var(--primary);">
+          <button onclick="backToHome()" class="btn btn-light rounded-circle me-3 shadow-sm border flex-shrink-0" style="width:40px;height:40px;">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <div style="min-width: 0;">
+              <div class="text-muted small lh-1">Kategori Aktif</div>
+              <div class="fw-bold text-dark text-truncate" id="lbl-active-cat">...</div>
+          </div>
+       </div>
+       
+       <div id="list-container"></div>
     </div>
 </div>
 
-<div class="modal fade" id="mdlNilai"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-4">
-  <input type="hidden" id="n_id"><input type="hidden" id="n_type">
-  <h5 class="fw-bold text-center mb-4 text-primary">Penilaian Mutu</h5>
-  <label class="small fw-bold text-muted">KUALITAS IMPLEMENTASI</label>
-  <select id="n_kual" class="form-select mb-3 text-center fw-bold fs-5 text-primary">
-    <option value="A">A - Sangat Baik</option><option value="B">B - Baik</option><option value="C">C - Cukup</option><option value="D">D - Kurang (Revisi)</option>
-  </select>
-  <label class="small fw-bold text-muted">UMPAN BALIK</label>
-  <textarea id="n_feed" class="form-control mb-4" rows="3" placeholder="Saran perbaikan..."></textarea>
-  <button onclick="saveNilai()" class="btn btn-primary w-100 rounded-pill fw-bold">SIMPAN KEPUTUSAN</button>
-</div></div></div>
+<div class="modal fade" id="mdlNilai" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"> 
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+            
+            <div class="modal-header text-white border-0" style="background: var(--primary);">
+                <div style="min-width: 0;">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-award me-2"></i>Penilaian Mutu</h5>
+                    <small class="opacity-75">Blind Review (Identitas Disembunyikan)</small>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-0">
+                <div class="bg-light p-4 border-bottom">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="badge bg-white text-primary border shadow-sm px-2 py-1">ID PESERTA</span>
+                        <small class="text-muted fw-bold" id="n_display_nama">#ID-XXXX</small>
+                    </div>
+                    
+                    <h6 class="fw-bold text-dark mb-3 lh-base text-break" id="n_display_judul">Judul Karya...</h6>
+                    
+                    <div class="p-3 bg-white rounded border border-light shadow-sm">
+                        <small class="text-muted d-block mb-1 fw-bold" style="font-size: 0.7rem;">DESKRIPSI KARYA / IMPLEMENTASI:</small>
+                        <div id="n_display_desc" class="text-secondary small text-break" style="line-height: 1.6; max-height: 200px; overflow-y:auto; white-space: pre-wrap;">...</div>
+                    </div>
+
+                    <div id="n_display_link_container" class="mt-3 hidden">
+                         <a href="#" target="_blank" id="n_display_link" class="btn btn-outline-primary btn-sm w-100 border-2 fw-medium text-truncate">
+                            <i class="bi bi-box-arrow-up-right me-2"></i>Lihat Bukti Karya
+                         </a>
+                    </div>
+                </div>
+
+                <div class="p-4">
+                    <input type="hidden" id="n_id">
+                    
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted ls-1">KUALITAS KARYA</label>
+                        <select id="n_huruf" class="form-select form-select-lg fw-bold border-2" style="color:var(--primary);">
+                            <option value="A">A - Sangat Baik (Inovatif)</option>
+                            <option value="B">B - Baik (Sesuai Standar)</option>
+                            <option value="C">C - Cukup (Perlu Peningkatan)</option>
+                            <option value="D" class="text-danger">D - Revisi (Belum Layak)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted ls-1">UMPAN BALIK MUTU (WAJIB)</label>
+                        <textarea id="n_feed" class="form-control bg-light" rows="3" placeholder="Berikan masukan konstruktif untuk pengembangan..."></textarea>
+                    </div>
+
+                    <button onclick="saveNilai()" class="btn btn-gradient py-3 shadow-md">
+                        <i class="bi bi-send-check-fill me-2"></i>KIRIM HASIL
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+// --- KONFIGURASI ---
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec"; 
-let USER={}, modalNi, DATA_IMP=[], DATA_INOV=[], AGENDA=[];
+
+let USER={}, modalNi, ALL_TASKS=[];
+
+window.onpopstate = function(event) {
+    if (!document.getElementById('view-list').classList.contains('hidden')) backToHome();
+};
 
 window.onload = () => {
   modalNi = new bootstrap.Modal(document.getElementById('mdlNilai'));
-  let s = localStorage.getItem('LMS_MUTU_PIN'); if(s) { document.getElementById('inputPIN').value = s; doLogin(true); }
+  let s = localStorage.getItem('LMS_MUTU_PIN'); 
+  if(s) { document.getElementById('inputPIN').value = s; doLogin(true); }
 }
 
-async function apiCall(a, p = {}) { try { let r = await fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: a, ...p }) }); return await r.json(); } catch(e) { return null; } }
-function showLoad(x){ document.getElementById('loading').className = x ? 'position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-flex justify-content-center align-items-center' : 'd-none'; }
+async function apiCall(a, p = {}) { 
+    try { 
+        let r = await fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: a, ...p }) }); 
+        return await r.json(); 
+    } catch(e) { console.error(e); return null; } 
+}
 
+function showLoad(x){ 
+    const el = document.getElementById('loading');
+    x ? (el.classList.remove('d-none'), el.classList.add('d-flex')) : (el.classList.add('d-none'), el.classList.remove('d-flex'));
+}
+
+/* --- AUTH --- */
 async function doLogin(auto){
   let p = document.getElementById('inputPIN').value;
-  showLoad(true); let r = await apiCall("login", { pin: p }); showLoad(false);
-  if(r && r.sukses && r.role === 'PENILAI') {
-    localStorage.setItem('LMS_MUTU_PIN', p); USER = { nama: r.nama };
-    document.getElementById('view-login').classList.add('hidden'); document.getElementById('view-main').classList.remove('hidden');
-    document.getElementById('txtNama').innerText = r.nama; loadPenilai();
-  } else if(!auto) { Swal.fire('Error','Akses Ditolak','error'); }
-}
-function doLogout(){ localStorage.removeItem('LMS_MUTU_PIN'); location.reload(); }
+  if(!p) return Swal.fire('Perhatian', 'Masukkan PIN', 'warning');
 
-async function loadPenilai() {
-  showLoad(true); let data = await apiCall("getDashboardPenilai"); showLoad(false);
-  if(data) {
-    DATA_IMP = data.implementasi; DATA_INOV = data.inovasi; AGENDA = data.agenda;
-    renderFolders(); renderList(DATA_INOV, 'list-inovasi', 'INOVASI');
+  showLoad(true); 
+  let r = await apiCall("login", { pin: p }); 
+  showLoad(false);
+
+  if(r && r.sukses && (r.role === 'PENILAI' || r.role === 'ADMIN')) {
+    localStorage.setItem('LMS_MUTU_PIN', p); 
+    USER = { nama: r.nama, pin: p };
+    
+    document.getElementById('view-login').classList.add('hidden');
+    document.getElementById('view-main').classList.remove('hidden');
+    document.getElementById('txtNama').innerText = r.nama; 
+    loadData(); 
+  } else if(!auto) { 
+    Swal.fire('Akses Ditolak','PIN Tidak Valid','error'); 
   }
 }
 
-function renderFolders() {
-    let grid = document.getElementById('grid-cont'); grid.innerHTML = ""; let total = 0;
-    AGENDA.forEach(a => {
-        let tasks = DATA_IMP.filter(t => t.judul.includes(a.materi));
-        let pending = tasks.filter(t => t.status === 'Menunggu').length; total += pending;
-        
-        let narsum = a.narsum || "Koordinator";
-        let jadwal = a.tanggal || "Terjadwal";
-
-        grid.innerHTML += `
-        <div class="col-6 col-md-4 col-lg-3">
-            <div class="card-pro card-materi h-100 position-relative" onclick="openFolder('${a.materi}')">
-                ${pending > 0 ? `<span class="badge bg-danger shadow-sm position-absolute" style="top:10px; right:10px; font-size:0.65rem;">${pending}</span>` : ''}
-                <div class="w-100 d-flex justify-content-center"><div class="icon-circle-lg"><i class="bi bi-journal-check"></i></div></div>
-                <div class="txt-judul text-clamp-2">${a.materi}</div>
-                <div class="mt-auto border-top pt-2 w-100">
-                    <div class="d-flex align-items-center justify-content-center txt-desc mb-1">
-                        <i class="bi bi-person-video3 me-1 text-primary"></i><span class="text-truncate" style="max-width:85%">${narsum}</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center txt-desc">
-                        <i class="bi bi-calendar-event me-1 text-warning"></i><span class="text-truncate">${jadwal}</span>
-                    </div>
-                </div>
-            </div>
-        </div>`;
-    });
-    document.getElementById('badge-pending').innerText = total + " Pending";
+function doLogout(){ 
+    if(confirm('Keluar dari panel mutu?')) { localStorage.removeItem('LMS_MUTU_PIN'); location.reload(); }
 }
 
-function openFolder(m) {
-    document.getElementById('view-grid').classList.add('hidden'); document.getElementById('view-list').classList.remove('hidden');
-    document.getElementById('lbl-active').innerText = m;
-    renderList(DATA_IMP.filter(t => t.judul.includes(m)), 'list-cont', 'IMP'); 
-}
-function backToGrid() { document.getElementById('view-list').classList.add('hidden'); document.getElementById('view-grid').classList.remove('hidden'); }
-function resetView() { backToGrid(); }
+/* --- DATA LOGIC --- */
+async function loadData() {
+  showLoad(true); 
+  let data = await apiCall("getDashboardPenilai"); 
+  showLoad(false);
 
-function renderList(data, id, type) {
+  if(data && data.tugas) {
+    ALL_TASKS = data.tugas;
+    updateBadges();
+  } else { Swal.fire('Error', 'Gagal memuat data', 'error'); }
+}
+
+function updateBadges() {
+    let imp = ALL_TASKS.filter(t => t.jenis === 'Implementasi KKG' && t.status === 'Menunggu').length;
+    let inov = ALL_TASKS.filter(t => t.jenis === 'Karya Inovasi' && t.status === 'Menunggu').length;
+    
+    document.getElementById('badge-imp').innerText = imp > 0 ? `${imp} Menunggu` : 'Semua Dinilai';
+    document.getElementById('badge-imp').className = imp > 0 ? "badge rounded-pill bg-danger border px-3 py-2" : "badge rounded-pill bg-light text-dark border px-3 py-2";
+    
+    document.getElementById('badge-inov').innerText = inov > 0 ? `${inov} Menunggu` : 'Semua Dinilai';
+    document.getElementById('badge-inov').className = inov > 0 ? "badge rounded-pill bg-danger border px-3 py-2" : "badge rounded-pill bg-light text-dark border px-3 py-2";
+}
+
+function openCategory(cat) {
+    history.pushState({page: 'list'}, '', '#list');
+    document.getElementById('view-home').classList.add('hidden'); 
+    document.getElementById('view-list').classList.remove('hidden');
+    document.getElementById('lbl-active-cat').innerText = cat;
+    
+    // Filter hanya jenis yang sesuai
+    let filtered = ALL_TASKS.filter(t => t.jenis === cat);
+    renderList(filtered, 'list-container'); 
+    window.scrollTo(0,0);
+}
+
+function backToHome() { 
+    history.back(); 
+    document.getElementById('view-list').classList.add('hidden'); 
+    document.getElementById('view-home').classList.remove('hidden'); 
+    updateBadges();
+}
+
+function renderList(data, id) {
   let el = document.getElementById(id); let html = "";
+  // Sort: Menunggu paling atas
   data.sort((a,b) => (a.status==='Menunggu' ? -1 : 1));
+  
   data.forEach(item => {
-    let st = item.status, bg = st==='Menunggu'?'bg-warning':(st==='Diterima'?'bg-success':'bg-danger');
-    let link = (item.link && item.link.length>5) ? `<a href="${item.link}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill py-0 px-2 mt-1" style="font-size:0.7rem">Lihat Bukti</a>` : "";
-    html += `<div class="card-pro p-3 mb-2 border-start border-4 border-primary"><div class="d-flex justify-content-between align-items-start">
-      <div class="pe-2"><span class="badge ${bg} mb-1" style="font-size:0.65rem">${st}</span><div class="fw-bold small">${item.judul}</div><div class="small text-muted mb-1">#${item.id.substring(0,5)}</div>${link}</div>
-      <button onclick="popNilai('${item.id}', '${type}')" class="btn btn-sm btn-primary rounded-pill px-3 shadow-sm" style="font-size:0.8rem">Nilai Mutu</button>
-    </div></div>`;
+    let st = item.status;
+    let badgeClass = st==='Menunggu' ? 'badge-soft-warning' : (st==='Diterima' ? 'badge-soft-success' : 'badge-soft-danger');
+    let borderClass = st==='Menunggu' ? 'status-wait' : (st==='Diterima' ? 'status-done' : 'status-rev');
+    let iconStatus = st==='Menunggu' ? '<i class="bi bi-hourglass-split me-1"></i>' : '<i class="bi bi-check-circle me-1"></i>';
+
+    // BLIND REVIEW: Masking Nama
+    let displayID = "Peserta #" + item.id.substring(0, 8);
+
+    html += `
+    <div class="card-pro p-3 mb-3 list-item ${borderClass}" onclick="popNilai('${item.id}')">
+      <div class="d-flex justify-content-between align-items-start">
+        <div class="pe-2 w-100" style="min-width:0;">
+           <div class="d-flex align-items-center mb-2">
+               <span class="badge ${badgeClass} rounded-pill py-1 px-2 d-flex align-items-center" style="font-size:0.65rem">${iconStatus} ${st.toUpperCase()}</span>
+               <span class="text-muted ms-2 small fw-bold" style="font-size:0.7rem">${displayID}</span>
+           </div>
+           <div class="fw-bold text-dark mb-1 text-break" style="font-size: 0.95rem;">${item.judul}</div>
+           <div class="text-muted small text-truncate">${item.catatan ? item.catatan : '<i>Tidak ada deskripsi</i>'}</div>
+        </div>
+        <button class="btn btn-light text-primary rounded-circle shadow-sm ms-2 flex-shrink-0" style="width:40px; height:40px;">
+            <i class="bi bi-star"></i>
+        </button>
+      </div>
+    </div>`;
   });
-  el.innerHTML = html || "<div class='text-center py-4 small text-muted'>Tidak ada data</div>";
+  el.innerHTML = html || `<div class="text-center py-5"><h6 class="text-muted">Tidak ada data di kategori ini.</h6></div>`;
 }
 
-function popNilai(id, type){ document.getElementById('n_id').value = id; document.getElementById('n_type').value = type; document.getElementById('n_feed').value = ""; modalNi.show(); }
+function popNilai(id){ 
+    let item = ALL_TASKS.find(t => t.id === id);
+    if(!item) return;
+
+    document.getElementById('n_display_nama').innerText = "Peserta #" + item.id.substring(0, 8);
+    document.getElementById('n_display_judul').innerText = item.judul;
+    document.getElementById('n_display_desc').innerText = item.catatan || "Tidak ada deskripsi.";
+
+    let linkContainer = document.getElementById('n_display_link_container');
+    let linkBtn = document.getElementById('n_display_link');
+    if(item.link && item.link.length > 5) {
+        linkContainer.classList.remove('hidden');
+        linkBtn.href = item.link;
+    } else { linkContainer.classList.add('hidden'); }
+
+    document.getElementById('n_id').value = id; 
+    document.getElementById('n_feed').value = ""; 
+    document.getElementById('n_huruf').value = "A"; 
+    modalNi.show(); 
+}
 
 async function saveNilai(){
-  let id = document.getElementById('n_id').value, type = document.getElementById('n_type').value, h = document.getElementById('n_kual').value, note = document.getElementById('n_feed').value;
-  if(!note){ Swal.fire('Perhatian','Berikan umpan balik mutu!','warning'); return; }
-  let st = h==='D'?'Revisi':'Diterima', feed = `[Kualitas: ${h}] ` + note;
-  modalNi.hide(); Swal.fire({title:'Tersimpan', icon:'success', timer:1000, toast:true, position:'top-end'});
+  let id = document.getElementById('n_id').value;
+  let h = document.getElementById('n_huruf').value;
+  let note = document.getElementById('n_feed').value;
   
-  let targetArr = type === 'IMP' ? DATA_IMP : DATA_INOV;
-  let idx = targetArr.findIndex(i => i.id === id); if(idx !== -1) { targetArr[idx].status = st; }
-  
-  if(type==='IMP') renderList(DATA_IMP.filter(t => t.judul.includes(document.getElementById('lbl-active').innerText)), 'list-cont', 'IMP');
-  else renderList(DATA_INOV, 'list-inovasi', 'INOVASI');
+  if(!note && h === 'D') { Swal.fire('Wajib','Berikan alasan jika Revisi','warning'); return; }
 
+  let st = (h==='D') ? 'Revisi' : 'Diterima';
+  let feed = `[Kualitas: ${h}] ` + note;
+
+  modalNi.hide(); 
+  // Update UI lokal
+  let idx = ALL_TASKS.findIndex(i => i.id === id); 
+  if(idx !== -1) { ALL_TASKS[idx].status = st; }
+  
+  // Refresh List
+  let currentCat = document.getElementById('lbl-active-cat').innerText;
+  renderList(ALL_TASKS.filter(t => t.jenis === currentCat), 'list-container');
+  
+  Swal.fire({title:'Tersimpan', icon:'success', timer:1000, showConfirmButton: false, toast:true, position:'top-end'});
+  
   await apiCall("simpanNilai", { id: id, status: st, feedback: feed, adminName: USER.nama });
 }
 </script>
