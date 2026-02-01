@@ -119,8 +119,8 @@
                     <select id="sel-prog-kkg"></select>
                     <input id="imp-nama" placeholder="Nama Kegiatan" required>
                     <input id="imp-kelas" placeholder="Kelas / Sasaran" required>
-                    <input id="imp-link" type="url" placeholder="Link Bukti (Drive/Youtube)" required>
-                    <textarea id="imp-desc" rows="3" placeholder="Deskripsi Singkat..." required></textarea>
+                    <input id="imp-link" type="url" placeholder="Link Bukti (Wajib)" required>
+                    <textarea id="imp-desc" rows="3" placeholder="Deskripsi Singkat (Wajib)..." required></textarea>
                     <button class="btn btn-primary">KIRIM LAPORAN</button>
                 </form>
             </div>
@@ -131,8 +131,8 @@
                 <h4 class="mb-4">Karya Inovasi</h4>
                 <form onsubmit="submitDev(event, 'Karya Inovasi')">
                     <input id="ino-nama" placeholder="Judul Inovasi" required>
-                    <input id="ino-link" type="url" placeholder="Link Karya" required>
-                    <textarea id="ino-desc" rows="3" placeholder="Deskripsi Inovasi..." required></textarea>
+                    <input id="ino-link" type="url" placeholder="Link Karya (Wajib)" required>
+                    <textarea id="ino-desc" rows="3" placeholder="Deskripsi Inovasi (Wajib)..." required></textarea>
                     <button class="btn btn-primary" style="background: var(--success);">KIRIM KARYA</button>
                 </form>
             </div>
@@ -176,8 +176,8 @@
         <form onsubmit="submitTugas(event)">
             <input type="hidden" id="tugas-idx">
             <input id="t-judul" readonly style="font-weight:bold; background:#eee;">
-            <input id="t-link" type="url" placeholder="Link Bukti (GDrive)" required>
-            <textarea id="t-cat" rows="4" placeholder="Rangkuman Materi / Catatan..." required></textarea>
+            <input id="t-link" type="url" placeholder="Link Bukti (Opsional)">
+            <textarea id="t-cat" rows="4" placeholder="Rangkuman Materi / Catatan (Wajib)..." required></textarea>
             <div class="flex" style="gap:10px;">
                 <button type="button" onclick="closeModal('mdl-upload')" class="btn" style="background:#eee; flex:1;">Batal</button>
                 <button class="btn btn-primary" style="flex:1;">Kirim</button>
@@ -211,7 +211,7 @@
                  </select>
                  <input name="no_piagam" placeholder="No Piagam" required>
             </div>
-            <input name="link_video" type="url" placeholder="Link Foto/Piagam (GDrive)" class="mt-2" required>
+            <input name="link_video" type="url" placeholder="Link Foto/Piagam (Wajib)" class="mt-2" required>
             <button class="btn btn-primary w-100 mt-3" style="background:var(--warning)">SIMPAN DATA</button>
             <button type="button" onclick="closeModal('mdl-pres')" class="btn w-100 mt-2" style="color:#888;">Batal</button>
         </form>
@@ -232,8 +232,8 @@
                </select>
                <input name="karakter" placeholder="Karakter" required>
             </div>
-            <input name="link_video" placeholder="Link Foto" required>
-            <textarea name="desc" placeholder="Keterangan"></textarea>
+            <input name="link_video" placeholder="Link Foto (Wajib)" required>
+            <textarea name="desc" placeholder="Keterangan (Wajib)" required></textarea>
             <button class="btn btn-primary w-100" style="background:var(--success)">SIMPAN</button>
             <button type="button" onclick="closeModal('mdl-bias')" class="btn w-100 mt-2" style="color:#888">Batal</button>
         </form>
@@ -254,8 +254,8 @@
                    <option value="Umum">Umum/Pejabat</option>
                </select>
             </div>
-            <input name="link_video" placeholder="Link Dokumentasi" required>
-            <textarea name="desc" placeholder="Dampak Kegiatan"></textarea>
+            <input name="link_video" placeholder="Link Dokumentasi (Wajib)" required>
+            <textarea name="desc" placeholder="Dampak Kegiatan (Wajib)" required></textarea>
             <button class="btn btn-primary w-100">SIMPAN</button>
             <button type="button" onclick="closeModal('mdl-event')" class="btn w-100 mt-2" style="color:#888">Batal</button>
         </form>
