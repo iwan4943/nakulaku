@@ -163,12 +163,12 @@
                              <input id="imp-kelas" placeholder="Cth: Kelas 4" required>
                         </div>
                         <div class="w-100">
-                             <label class="fw-bold small mb-1">Link Bukti (Drive/Youtube)</label>
+                             <label class="fw-bold small mb-1">Link Bukti (Wajib)</label>
                              <input id="imp-link" type="url" placeholder="https://..." required>
                         </div>
                     </div>
                     
-                    <label class="fw-bold small mb-1">Deskripsi & Refleksi</label>
+                    <label class="fw-bold small mb-1">Deskripsi & Refleksi (Wajib)</label>
                     <textarea id="imp-desc" rows="4" placeholder="Ceritakan singkat pelaksanaan dan dampaknya..." required></textarea>
                     
                     <div class="text-end">
@@ -185,10 +185,10 @@
                     <label class="fw-bold small mb-1">Judul Inovasi</label>
                     <input id="ino-nama" placeholder="Judul Karya..." required>
                     
-                    <label class="fw-bold small mb-1">Link File / Video Karya</label>
+                    <label class="fw-bold small mb-1">Link File / Video Karya (Wajib)</label>
                     <input id="ino-link" type="url" placeholder="https://..." required>
                     
-                    <label class="fw-bold small mb-1">Deskripsi Inovasi</label>
+                    <label class="fw-bold small mb-1">Deskripsi Inovasi (Wajib)</label>
                     <textarea id="ino-desc" rows="4" placeholder="Jelaskan kebaruan dan manfaat inovasi ini..." required></textarea>
                     
                     <div class="text-end">
@@ -260,10 +260,10 @@
             <label class="small fw-bold">Judul Kegiatan</label>
             <input id="t-judul" readonly style="background:#eee; border:none; font-weight:bold;">
             
-            <label class="small fw-bold">Link Bukti (Google Drive)</label>
-            <input id="t-link" type="url" placeholder="https://..." required>
+            <label class="small fw-bold">Link Bukti (Opsional)</label>
+            <input id="t-link" type="url" placeholder="https://...">
             
-            <label class="small fw-bold">Rangkuman / Catatan</label>
+            <label class="small fw-bold">Rangkuman / Catatan (Wajib)</label>
             <textarea id="t-cat" rows="4" placeholder="Tulis rangkuman materi..." required></textarea>
             
             <div class="flex" style="gap:10px; justify-content:flex-end; margin-top:20px;">
@@ -299,7 +299,7 @@
                  </select>
                  <input name="no_piagam" placeholder="No Piagam" required>
             </div>
-            <input name="link_video" type="url" placeholder="Link Foto/Piagam (GDrive)" class="mt-2" required>
+            <input name="link_video" type="url" placeholder="Link Foto/Piagam (Wajib)" class="mt-2" required>
             
             <div class="flex mt-3" style="gap:10px">
                 <button type="button" onclick="closeModal('mdl-pres')" class="btn btn-light w-100">Batal</button>
@@ -323,8 +323,8 @@
                </select>
                <input name="karakter" placeholder="Nilai Karakter" required>
             </div>
-            <input name="link_video" placeholder="Link Foto Kegiatan" required>
-            <textarea name="desc" placeholder="Keterangan pelaksanaan..."></textarea>
+            <input name="link_video" placeholder="Link Foto (Wajib)" required>
+            <textarea name="desc" placeholder="Keterangan pelaksanaan (Wajib)..." required></textarea>
             
             <div class="flex mt-3" style="gap:10px">
                 <button type="button" onclick="closeModal('mdl-bias')" class="btn btn-light w-100">Batal</button>
@@ -348,8 +348,8 @@
                    <option value="Umum">Umum/Pejabat</option>
                </select>
             </div>
-            <input name="link_video" placeholder="Link Dokumentasi" required>
-            <textarea name="desc" placeholder="Dampak Kegiatan"></textarea>
+            <input name="link_video" placeholder="Link Dokumentasi (Wajib)" required>
+            <textarea name="desc" placeholder="Dampak Kegiatan (Wajib)" required></textarea>
             
             <div class="flex mt-3" style="gap:10px">
                 <button type="button" onclick="closeModal('mdl-event')" class="btn btn-light w-100">Batal</button>
