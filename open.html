@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Buka Nakulaku App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script>
+    function openApp() {
+      // Buka aplikasi jika sudah terpasang
+      window.location.href = "ac24://open3833934-vu6745";
+
+      // Jika belum terpasang → buka halaman resmi AC24
+      setTimeout(function () {
+        window.location.href =
+          "https://www.appcreator24.com/app3833934-vu6745";
+      }, 1500);
+    }
+  </script>
+</head>
+
+<body onload="openApp()"
+      style="display:flex;justify-content:center;align-items:center;
+             height:100vh;font-family:Arial;text-align:center;">
+  <div>
+    <h3>Membuka Aplikasi Sekolah…</h3>
+    <p>Jika tidak terbuka otomatis,<br>
+       silakan tunggu proses pemasangan.</p>
+  </div>
+</body>
+</html>
