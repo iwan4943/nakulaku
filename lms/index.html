@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 <title>LMS Nakula - Pro</title>
 <style>
-  /* --- 1. CORE VARIABLES & RESET --- */
   :root {
     --primary: #B3261E; --primary-dark: #901B15;
     --bg: #FFF8F6; --card: #FFFFFF; --text: #201A19;
@@ -14,8 +13,6 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; line-height: 1.5; }
-  
-  /* --- 2. UTILITIES --- */
   .hidden { display: none !important; }
   .flex { display: flex; align-items: center; }
   .between { justify-content: space-between; }
@@ -26,48 +23,33 @@
   .fw-bold { font-weight: 600; }
   .w-100 { width: 100%; }
 
-  /* --- 3. COMPONENTS --- */
-  /* Card */
   .card { background: var(--card); border-radius: 20px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 1rem; position: relative; }
-  
-  /* Input & Select */
   input, select, textarea { width: 100%; padding: 12px 16px; border: 2px solid transparent; background: var(--subtle); border-radius: 12px; font-size: 1rem; font-family: inherit; transition: 0.2s; margin-bottom: 1rem; }
   input:focus, select:focus, textarea:focus { background: #fff; border-color: var(--primary); }
-  
-  /* Button */
   .btn { border: none; padding: 12px 24px; border-radius: 50px; font-weight: 600; cursor: pointer; transition: transform 0.1s; font-size: 0.95rem; }
   .btn:active { transform: scale(0.98); }
   .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(179,38,30,0.25); width: 100%; }
   .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
   
-  /* Tabs */
   .nav-pills { display: flex; gap: 8px; margin-bottom: 1rem; background: #fff; padding: 4px; border-radius: 50px; }
   .nav-item { flex: 1; text-align: center; padding: 8px; border-radius: 50px; font-size: 0.85rem; cursor: pointer; color: #555; transition: 0.2s; }
   .nav-item.active { background: #FFDAD6; color: #410E0B; font-weight: 600; }
 
-  /* Progress Bar */
   .progress-wrap { background: rgba(255,255,255,0.2); height: 8px; border-radius: 10px; margin: 10px 0; overflow: hidden; }
   .progress-bar { height: 100%; background: #fff; transition: width 0.5s ease; }
-  
-  /* Badges */
   .badge { padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
   .bg-ok { background: #C3EED0; color: #0F5223; }
   .bg-wait { background: #FEE4C1; color: #744C00; }
   .bg-rev { background: #F9DEDC; color: #8C1D18; }
   
-  /* --- 4. MODAL & TOAST --- */
   .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
   .modal-box { background: #fff; width: 90%; max-width: 400px; padding: 24px; border-radius: 24px; animation: popUp 0.2s ease-out; max-height: 90vh; overflow-y: auto; }
   @keyframes popUp { from{transform: scale(0.9); opacity: 0;} to{transform: scale(1); opacity: 1;} }
 
   #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #323232; color: #fff; padding: 10px 20px; border-radius: 50px; z-index: 2000; font-size: 0.9rem; opacity: 0; pointer-events: none; transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
   #toast.show { opacity: 1; top: 40px; }
-  
-  /* Icons (SVG) */
   svg { width: 20px; height: 20px; fill: currentColor; display: inline-block; vertical-align: middle; }
   .icon-lg { width: 64px; height: 64px; }
-  
-  /* Layout Specifics */
   .header { display: flex; align-items: center; gap: 12px; padding: 10px; }
   .avatar { width: 48px; height: 48px; background: #FFDAD6; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; }
   .dash-stat { background: var(--primary); color: white; }
@@ -78,10 +60,7 @@
 <body>
 
 <div id="toast">Notifikasi</div>
-<div id="loader" class="modal-overlay" style="z-index: 9999; background: rgba(255,255,255,0.9);">
-    <div style="width: 40px; height: 40px; border: 4px solid #ddd; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
-    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
-</div>
+<div id="loader" class="modal-overlay" style="z-index: 9999; background: rgba(255,255,255,0.9);"><div style="width: 40px; height: 40px; border: 4px solid #ddd; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite;"></div><style>@keyframes spin { to { transform: rotate(360deg); } }</style></div>
 
 <div id="view-login" class="col center" style="min-height: 100vh; padding: 20px; align-items: center;">
     <div style="background: #FFDAD6; color: var(--primary); width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
@@ -126,7 +105,11 @@
             <div class="nav-item" onclick="switchTab('g-tab', 2, this)">Inovasi</div>
         </div>
 
-        <div id="g-tab-0"><div id="list-tugas"></div></div>
+        <div id="g-tab-0">
+            <div id="list-tugas"></div>
+            <div class="mt-4 mb-2 small text-muted fw-bold" style="letter-spacing:1px;">RIWAYAT LAINNYA</div>
+            <div id="list-tugas-extra"></div>
+        </div>
         
         <div id="g-tab-1" class="hidden">
             <div class="card">
@@ -193,8 +176,8 @@
         <form onsubmit="submitTugas(event)">
             <input type="hidden" id="tugas-idx">
             <input id="t-judul" readonly style="font-weight:bold; background:#eee;">
-            <input id="t-link" type="url" placeholder="Link Bukti" required>
-            <textarea id="t-cat" rows="4" placeholder="Rangkuman Materi..." required></textarea>
+            <input id="t-link" type="url" placeholder="Link Bukti (GDrive)" required>
+            <textarea id="t-cat" rows="4" placeholder="Rangkuman Materi / Catatan..." required></textarea>
             <div class="flex" style="gap:10px;">
                 <button type="button" onclick="closeModal('mdl-upload')" class="btn" style="background:#eee; flex:1;">Batal</button>
                 <button class="btn btn-primary" style="flex:1;">Kirim</button>
@@ -209,7 +192,6 @@
         <form onsubmit="submitGeneric(event, 'Laporan Prestasi', 'mdl-pres')">
             <select class="sel-sekolah" name="sekolah"></select>
             <input name="nama_siswa" placeholder="Nama Siswa" required>
-            
             <div class="flex" style="gap:5px">
                 <input name="cabang" placeholder="Cabang Lomba" required>
                 <select name="juara" required>
@@ -219,9 +201,7 @@
                     <option value="Juara 3">Juara 3</option>
                 </select>
             </div>
-
             <input name="penyelenggara" placeholder="Penyelenggara" required>
-            
             <div class="flex" style="gap:5px">
                  <select name="tingkat">
                     <option value="Kecamatan">Kecamatan</option>
@@ -231,7 +211,7 @@
                  </select>
                  <input name="no_piagam" placeholder="No Piagam" required>
             </div>
-            
+            <input name="link_video" type="url" placeholder="Link Foto/Piagam (GDrive)" class="mt-2" required>
             <button class="btn btn-primary w-100 mt-3" style="background:var(--warning)">SIMPAN DATA</button>
             <button type="button" onclick="closeModal('mdl-pres')" class="btn w-100 mt-2" style="color:#888;">Batal</button>
         </form>
@@ -246,7 +226,6 @@
             <input name="a" placeholder="Nama Program" required>
             <div class="flex" style="gap:5px">
                <select name="freq" required>
-                  <option value="" disabled selected>Frekuensi</option>
                   <option value="Harian">Harian</option>
                   <option value="Mingguan">Mingguan</option>
                   <option value="Bulanan">Bulanan</option>
@@ -284,26 +263,21 @@
 </div>
 
 <script>
-/* --- 1. KONFIGURASI API (WAJIB DIISI) --- */
 const API_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec";
-
-/* --- 2. UTILITIES --- */
 const $ = id => document.getElementById(id);
 const ls = { get: k => JSON.parse(localStorage.getItem(k)||'null'), set: (k,v) => localStorage.setItem(k, JSON.stringify(v)) };
 const show = (id, s=true) => $(id).classList.toggle('hidden', !s);
 const toast = msg => { const t = $('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); };
 const loading = s => $('loader').style.display = s ? 'flex' : 'none';
 
-/* --- 3. STATE --- */
 let USER = ls.get('LMS_USER') || {};
+let GLOBAL_TASKS_MAP = {};
 
-/* --- 4. INITIALIZATION --- */
 window.onload = () => {
     loading(false);
     if(USER.pin) { $('inputPIN').value = USER.pin; handleLogin(true); }
 };
 
-/* --- 5. CORE API CALL --- */
 async function req(action, data={}) {
     try {
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action, ...data }) });
@@ -311,7 +285,6 @@ async function req(action, data={}) {
     } catch(e) { toast("Gagal koneksi server"); return null; }
 }
 
-/* --- 6. AUTHENTICATION --- */
 async function handleLogin(auto=false) {
     const pin = $('inputPIN').value;
     if(!pin) return toast("Isi PIN dulu!");
@@ -321,197 +294,163 @@ async function handleLogin(auto=false) {
     loading(false);
 
     if(r && r.sukses) {
-        if(r.role === 'ADMIN' || r.role === 'PENILAI') return toast("Admin/Penilai login di web khusus!");
-        
+        if(r.role === 'ADMIN' || r.role === 'PENILAI') return toast("Akses Admin/Penilai di web khusus!");
         USER = { ...r, pin }; 
         ls.set('LMS_USER', USER);
-        
         show('view-login', false); show('view-main', true);
-        $('txtNama').innerText = r.nama;
-        $('txtSekolah').innerText = r.sekolah;
+        $('txtNama').innerText = r.nama; $('txtSekolah').innerText = r.sekolah;
         $('txtRole').innerText = r.role === 'KS' ? 'Kepala Sekolah' : 'Guru Kelas';
         $('txtRole').className = `badge ${r.role === 'KS' ? 'bg-wait' : 'bg-ok'} mb-2`;
-
-        // Setup Dropdowns Sekolah
         document.querySelectorAll('.sel-sekolah').forEach(s => {
             s.innerHTML = r.sekolah.split(',').map(x=>`<option value="${x.trim()}">${x.trim()}</option>`).join('');
         });
-
         if(r.role === 'KS') { show('panel-ks'); loadKS(); }
         else { show('panel-guru'); loadGuru(); }
     } else {
         if(auto) { ls.set('LMS_USER', null); show('view-login'); }
-        else toast(r?.error || "PIN Salah");
+        else toast(r?.msg || "PIN Salah/Tidak Ditemukan");
     }
 }
 
 function doLogout() { if(confirm("Keluar aplikasi?")) { localStorage.clear(); location.reload(); } }
 
-/* --- 7. LOGIC GURU --- */
-async function loadGuru() {
-    const cache = ls.get('CACHE_GURU');
-    if(cache) renderGuru(cache); else loading(true);
-
-    const data = await req("getDashboardGuru", { pin: USER.pin });
-    loading(false);
-    
-    if(data) { ls.set('CACHE_GURU', data); renderGuru(data); }
-}
-
-function renderGuru(d) {
-    const map = {}; d.riwayat.forEach(r => map[r[6].trim()] = r[10]); 
-    let done = 0;
-    
-    const html = d.agenda.map((a, i) => {
-        const judul = a[1].trim();
-        const status = map[judul];
-        if(status === 'Diterima') done++;
-        
-        let act = `<button onclick="openUpload('${judul}', ${i})" class="btn btn-primary btn-sm">KERJAKAN</button>`;
-        if(status) {
-            let cls = status === 'Diterima' ? 'bg-ok' : (status === 'Revisi' ? 'bg-rev' : 'bg-wait');
-            act = `<span class="badge ${cls}">${status}</span>`;
-            if(status === 'Revisi') act += `<br><small onclick="openUpload('${judul}', ${i})" style="color:red;cursor:pointer">Perbaiki</small>`;
-        }
-        return `<div class="card mb-2" style="padding:15px; border-left: 4px solid var(--primary);">
-            <div class="flex between">
-                <div><div class="fw-bold" style="font-size:0.9rem">${judul}</div><div class="text-muted" style="font-size:0.75rem">Tenggat: ${a[2]}</div></div>
-                <div style="text-align:right">${act}</div>
-            </div>
-        </div>`;
-    }).join('');
-    
-    $('list-tugas').innerHTML = html;
-    $('sel-prog-kkg').innerHTML = d.agenda.map(a => `<option>${a[1]}</option>`).join('');
-    
-    const pct = Math.min(100, Math.round((done / (d.target||1)) * 100));
-    $('g-persen').innerText = pct + "%"; $('g-bar').style.width = pct + "%"; $('g-target').innerText = `${done}/${d.target}`;
-}
-
-/* --- 8. LOGIC KS --- */
-async function loadKS(force=false) {
-    if(!force) { const c = ls.get('CACHE_KS'); if(c) renderKS(c); else loading(true); } else loading(true);
-
-    // KS butuh 2 data: Data Sekolah (untuk rapor) & Data Pribadi (untuk riwayat)
-    const [ds, dp] = await Promise.all([
-        req("getDataKS", { sekolah: USER.sekolah }),
-        req("getDashboardGuru", { pin: USER.pin })
-    ]);
-    
-    loading(false);
-    if(ds) { ls.set('CACHE_KS', ds); renderKS(ds); }
-    if(dp) { ls.set('CACHE_KS_HISTORY', dp); renderHistoryKS(dp); }
-}
-
-function renderKS(d) {
-    $('ks-persen').innerText = Math.round(d.rataRataSekolah||0) + "%";
-    $('ks-total').innerText = d.dataGuru.reduce((a,b) => a + b.selesai, 0);
-
-    if(d.dataGuru.length === 0) $('list-guru-ks').innerHTML = "<div class='p-3 text-center text-muted'>Belum ada data guru.</div>";
-    else {
-        $('list-guru-ks').innerHTML = d.dataGuru.map(g => {
-            let color = g.persen >= 80 ? 'green' : (g.persen >= 50 ? 'orange' : 'red');
-            return `<div style="padding:12px 15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                <div style="font-size:0.85rem; font-weight:600;">${g.nama}</div>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div style="width:60px; height:6px; background:#eee; border-radius:4px;"><div style="width:${g.persen}%; height:100%; background:${color}; border-radius:4px;"></div></div>
-                    <span style="font-size:0.75rem; color:${color}; font-weight:bold;">${g.persen}%</span>
-                </div>
-            </div>`;
-        }).join('');
-    }
-}
-
-function renderHistoryKS(dp) {
-    if(dp && dp.riwayat && dp.riwayat.length > 0) {
-        $('list-riwayat-ks').innerHTML = dp.riwayat.map(r => {
-             // r[5]=Jenis, r[6]=Judul, r[1]=Waktu, r[10]=Status, r[11]=Catatan Penilai
-             let st = r[10];
-             let bg = st==='Diterima'?'bg-ok':(st==='Revisi'?'bg-rev':'bg-wait');
-             let fb = (st!=='Menunggu' && r[11]) ? `<div class="mt-2 small text-success fst-italic border-top pt-1"><i style="width:12px">💬</i> ${r[11]}</div>` : '';
-             return `<div class="card mb-2" style="padding:12px;">
-                <div class="flex between">
-                    <div><span class="badge" style="background:#eee;color:#555;margin-bottom:4px;display:inline-block">${r[5]}</span><div class="fw-bold small">${r[6]}</div><div class="text-muted small">${r[1]}</div></div>
-                    <span class="badge ${bg}">${st}</span>
-                </div>
-                ${fb}
-             </div>`;
-        }).join('');
-    } else {
-        $('list-riwayat-ks').innerHTML = "<div class='p-3 text-center text-muted'>Belum ada riwayat.</div>";
-    }
-}
-
-/* --- 9. UI ACTIONS --- */
 function switchTab(prefix, idx, el) {
     [0,1,2].forEach(i => { let pane=$(prefix+'-'+i); if(pane) show(prefix+'-'+i, i===idx); });
     el.parentNode.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
     el.classList.add('active');
 }
 
+/* LOGIC GURU */
+async function loadGuru() {
+    loading(true);
+    const data = await req("getDashboardGuru", { pin: USER.pin });
+    loading(false);
+    if(data) renderGuru(data);
+}
+
+function renderGuru(d) {
+    GLOBAL_TASKS_MAP = {};
+    d.tugas.forEach(t => { GLOBAL_TASKS_MAP[t.judul.trim()] = t; }); 
+
+    // Render Tugas Rutin (Agenda)
+    let done = 0, acc = 0;
+    const html = d.agenda.map((a, i) => {
+        const judul = a.kegiatan.trim(), task = GLOBAL_TASKS_MAP[judul];
+        const status = task ? task.status : null;
+        if(status === 'Diterima' || status === 'Menunggu' || status === 'Revisi') done++;
+        if(status === 'Diterima') acc++;
+
+        let act = `<button onclick="openUpload('${judul}')" class="btn btn-primary btn-sm">KERJAKAN</button>`;
+        let feedbackHTML = "";
+        if(status) {
+            let cls = status === 'Diterima' ? 'bg-ok' : (status === 'Revisi' ? 'bg-rev' : 'bg-wait');
+            act = `<span class="badge ${cls}">${status}</span>`;
+            if(status === 'Revisi') {
+                act += `<br><small onclick="openUpload('${judul}')" style="color:red;cursor:pointer;font-weight:bold">✍️ PERBAIKI</small>`;
+                if(task.feedback && task.feedback!=='-') feedbackHTML = `<div class="mt-2 p-2 bg-rev small" style="border:1px dashed red;border-radius:8px">⚠️ ${task.feedback}</div>`;
+            }
+        }
+        return `<div class="card mb-2" style="padding:15px; border-left: 4px solid var(--primary);"><div class="flex between"><div><div class="fw-bold" style="font-size:0.9rem">${judul}</div><div class="text-muted" style="font-size:0.75rem">Tenggat: ${a.tanggal}</div></div><div style="text-align:right">${act}</div></div>${feedbackHTML}</div>`;
+    }).join('');
+    $('list-tugas').innerHTML = html;
+
+    // Render Riwayat Lain (Extra)
+    const agendaTitles = d.agenda.map(a => a.kegiatan.trim());
+    const extraTasks = d.tugas.filter(t => !agendaTitles.includes(t.judul.trim()));
+    if(extraTasks.length > 0) {
+        $('list-tugas-extra').innerHTML = extraTasks.map(t => {
+            let cls = t.status==='Diterima'?'bg-ok':(t.status==='Revisi'?'bg-rev':'bg-wait');
+            return `<div class="card mb-2 p-3" style="border-left:4px solid #555;"><div class="flex between"><div><div class="fw-bold small">${t.judul}</div><div class="text-muted small">Status</div></div><div><span class="badge ${cls}">${t.status}</span></div></div>${t.feedback&&t.feedback!=='-'?`<div class="mt-2 small text-success border-top pt-1">💬 ${t.feedback}</div>`:''}</div>`;
+        }).join('');
+    } else { $('list-tugas-extra').innerHTML = "<div class='text-center small text-muted p-3'>Belum ada riwayat lain</div>"; }
+
+    $('sel-prog-kkg').innerHTML = d.agenda.map(a => `<option>${a.kegiatan}</option>`).join('');
+    let target = d.agenda.length, pct = target > 0 ? Math.min(100, Math.round((acc/target)*100)) : 0;
+    $('g-persen').innerText = pct + "%"; $('g-bar').style.width = pct + "%"; $('g-target').innerText = `${acc}/${target}`;
+}
+
+/* LOGIC KS (Menampilkan Guru Belum Setor) */
+async function loadKS(force=false) {
+    loading(true);
+    const [ds, dp] = await Promise.all([ req("getDataKS", { sekolah: USER.sekolah }), req("getDashboardGuru", { pin: USER.pin }) ]);
+    loading(false);
+    if(ds) renderKS(ds); if(dp) renderHistoryKS(dp);
+}
+
+function renderKS(d) {
+    let guruMap = {};
+    if (d.master_guru) d.master_guru.forEach(n => guruMap[n] = { nama: n, poin: 0, tugas: 0 });
+    if (d.data_tugas) d.data_tugas.forEach(x => {
+        if(guruMap[x.nama]) {
+            if(x.status==='Diterima') { guruMap[x.nama].poin+=x.skor; guruMap[x.nama].tugas++; }
+        } else {
+            guruMap[x.nama] = { nama:x.nama, poin:(x.status==='Diterima'?x.skor:0), tugas:(x.status==='Diterima'?1:0) };
+        }
+    });
+    
+    let listGuru = Object.values(guruMap).sort((a,b) => b.poin - a.poin);
+    $('ks-total').innerText = d.data_tugas.length;
+    
+    if(listGuru.length === 0) $('list-guru-ks').innerHTML = "<div class='p-3 text-center text-muted'>Belum ada data guru.</div>";
+    else {
+        $('list-guru-ks').innerHTML = listGuru.map(g => {
+            let pct = Math.min(100, g.tugas * 10);
+            let color = g.tugas===0 ? '#B71C1C' : (pct>=80 ? '#2e7d32' : '#ed6c02');
+            let txt = g.tugas===0 ? 'BELUM SETOR' : `${g.tugas} Tugas`;
+            return `<div style="padding:12px 15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div style="font-size:0.85rem; font-weight:600;">${g.nama}</div><span style="font-size:0.7rem; color:${color}">${txt}</span></div><div style="display:flex; align-items:center; gap:8px;"><div style="width:60px; height:6px; background:#eee; border-radius:4px;"><div style="width:${pct}%; height:100%; background:${color}; border-radius:4px;"></div></div><span style="font-size:0.8rem; color:${color}; font-weight:bold;">${g.poin}</span></div></div>`;
+        }).join('');
+    }
+}
+
+function renderHistoryKS(dp) {
+    if(dp && dp.tugas && dp.tugas.length > 0) {
+        $('list-riwayat-ks').innerHTML = dp.tugas.map(r => {
+             let st = r.status, bg = st==='Diterima'?'bg-ok':(st==='Revisi'?'bg-rev':'bg-wait');
+             return `<div class="card mb-2" style="padding:12px;"><div class="flex between"><div><div class="fw-bold small">${r.judul}</div></div><span class="badge ${bg}">${st}</span></div>${r.feedback&&r.feedback!=='-'?`<div class="mt-2 small text-success border-top pt-1">💬 ${r.feedback}</div>`:''}</div>`;
+        }).join('');
+    } else { $('list-riwayat-ks').innerHTML = "<div class='p-3 text-center text-muted'>Belum ada riwayat.</div>"; }
+}
+
+/* ACTIONS */
 function openModal(id) { $(id).style.display = 'flex'; }
 function closeModal(id) { $(id).style.display = 'none'; }
-function openUpload(judul, idx) { $('mdl-upload').querySelector('form').reset(); $('t-judul').value=judul; $('tugas-idx').value=idx; openModal('mdl-upload'); }
+function openUpload(judul) { 
+    $('mdl-upload').querySelector('form').reset();
+    $('t-judul').value=judul; 
+    let t = GLOBAL_TASKS_MAP[judul];
+    if(t) { $('t-link').value=t.link&&t.link!=='-'?t.link:''; $('t-cat').value=t.catatan&&t.catatan!=='-'?t.catatan:''; toast("Mode Edit: Data lama dimuat"); }
+    openModal('mdl-upload'); 
+}
 
-/* --- 10. SUBMISSION LOGIC --- */
 async function submitTugas(e) {
-    e.preventDefault();
-    closeModal('mdl-upload'); toast("Mengirim data...");
-    await req("simpanTugas", { 
-        data: { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, jenis_laporan: "Kegiatan Gugus", judul_dokumen: $('t-judul').value, link_video: $('t-link').value, catatan: $('t-cat').value }
-    });
+    e.preventDefault(); closeModal('mdl-upload'); toast("Mengirim...");
+    await req("simpanTugas", { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, jenis_laporan: "Kegiatan Gugus", judul_dokumen: $('t-judul').value, link_video: $('t-link').value, catatan: $('t-cat').value });
     toast("Tugas terkirim!"); loadGuru();
 }
 
 async function submitDev(e, jenis) {
-    e.preventDefault();
-    const isImp = jenis.includes('Implementasi');
-    const nama = $(isImp?'imp-nama':'ino-nama').value;
-    const extra = isImp ? `[PROG: ${$('sel-prog-kkg').value}] [KELAS: ${$('imp-kelas').value}] ` : '';
-    closeModal(isImp?'':''); 
-    toast("Mengirim...");
-    
-    await req("simpanTugas", {
-        data: {
-            pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah,
-            jenis_laporan: jenis, judul_dokumen: (isImp?"IMPL: ":"INOV: ")+nama,
-            link_video: $(isImp?'imp-link':'ino-link').value, catatan: extra + $(isImp?'imp-desc':'ino-desc').value
-        }
-    });
-    toast("Berhasil disimpan!"); 
-    if(isImp) $('imp-nama').value=""; else $('ino-nama').value="";
-    loadGuru();
+    e.preventDefault(); 
+    let isImp=jenis.includes('Implementasi'), nama=$(isImp?'imp-nama':'ino-nama').value, extra=isImp?`[PROG: ${$('sel-prog-kkg').value}] [KELAS: ${$('imp-kelas').value}] `:'';
+    closeModal(isImp?'':''); toast("Mengirim...");
+    await req("simpanTugas", { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, jenis_laporan: jenis, judul_dokumen: (isImp?"IMPL: ":"INOV: ")+nama, link_video: $(isImp?'imp-link':'ino-link').value, catatan: extra + $(isImp?'imp-desc':'ino-desc').value });
+    toast("Berhasil disimpan!"); if(isImp)$('imp-nama').value=""; else $('ino-nama').value=""; loadGuru();
 }
 
 async function submitGeneric(e, jenis, modalId) {
-    e.preventDefault();
-    closeModal(modalId); toast("Menyimpan...");
-    
-    const f = e.target;
-    const fd = new FormData(f);
-    const obj = Object.fromEntries(fd.entries());
-    
+    e.preventDefault(); closeModal(modalId); toast("Menyimpan...");
+    const fd = new FormData(e.target); const obj = Object.fromEntries(fd.entries());
     let judul = jenis.toUpperCase(), catatan = "";
-    
     if(jenis === 'Laporan Prestasi') {
         judul = "PRESTASI: " + obj.cabang.toUpperCase();
         catatan = `[SISWA: ${obj.nama_siswa}] [JUARA: ${obj.juara}] [TINGKAT: ${obj.tingkat}] [NO: ${obj.no_piagam}] [OLEH: ${obj.penyelenggara}]`;
     } else if(jenis === 'Laporan Pembiasaan') {
         judul = "PEMBIASAAN: " + obj.a;
-        // FORMAT DATA DIKEMBALIKAN KE ASAL
         catatan = `[FREQ: ${obj.freq}] [KARAKTER: ${obj.karakter}] ${obj.desc}`;
     } else {
         judul = "EVENT: " + obj.a;
-        // FORMAT DATA DIKEMBALIKAN KE ASAL
         catatan = `[SKALA: ${obj.scale}] [TGL: ${obj.b}] ${obj.desc}`;
     }
-
-    await req("simpanTugas", {
-        data: {
-            pin_user: USER.pin, nama_user: USER.nama, sekolah_user: obj.sekolah,
-            jenis_laporan: jenis, judul_dokumen: judul, link_video: obj.link_video || "-", catatan: catatan
-        }
-    });
+    await req("simpanTugas", { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: obj.sekolah, jenis_laporan: jenis, judul_dokumen: judul, link_video: obj.link_video || "-", catatan: catatan });
     toast("Data tersimpan!"); loadKS(true);
 }
 </script>
