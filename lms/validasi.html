@@ -2,124 +2,428 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Validator Sekolah - LMS Nakula</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
-  :root { --primary: #6610f2; --bg: #F3E5F5; --card: #FFFFFF; }
-  body { background-color: var(--bg); font-family: 'Poppins', sans-serif; padding-bottom: 80px; }
+  /* --- THEME VARIABLES (Indigo Authority) --- */
+  :root { 
+    --primary: #4f46e5; /* Indigo */
+    --primary-light: #e0e7ff; 
+    --accent: #f59e0b; /* Amber */
+    --bg-body: #f8fafc; 
+    --surface: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --radius: 16px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  body { 
+    background-color: var(--bg-body); 
+    font-family: 'Poppins', sans-serif; 
+    color: var(--text-main);
+    padding-bottom: 80px; 
+  }
+
   .hidden { display: none !important; }
-  .card-pro { border: none; border-radius: 20px; background: var(--card); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-  .header-card { background: var(--card); padding: 1rem; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-  .nav-pills .nav-link.active { background-color: var(--primary); }
+  .fw-medium { font-weight: 500; }
+  
+  /* --- COMPONENTS --- */
+  .btn-gradient { 
+    background: linear-gradient(135deg, var(--primary) 0%, #4338ca 100%); 
+    color: white; border: none; border-radius: 50px; 
+    padding: 12px 24px; font-weight: 600; width: 100%; 
+    transition: all 0.3s ease; box-shadow: var(--shadow-md);
+  }
+  .btn-gradient:active { transform: scale(0.98); }
+  
+  .card-pro { 
+    border: none; border-radius: var(--radius); 
+    background: var(--surface); 
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+    overflow: hidden; 
+  }
+
+  /* --- LOGIN --- */
+  .login-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #eef2ff 0%, #f1f5f9 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .card-login {
+    width: 100%; max-width: 400px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem; border-radius: 24px; box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+
+  /* --- DASHBOARD --- */
+  .header-card { 
+    background: var(--surface); padding: 1rem 1.5rem; 
+    border-radius: var(--radius); display: flex; justify-content: space-between; align-items: center; 
+    margin-bottom: 2rem; box-shadow: var(--shadow-sm); border-bottom: 3px solid var(--primary-light);
+  }
+
+  .card-category {
+    cursor: pointer; padding: 1.5rem; height: 100%; position: relative;
+    display: flex; flex-direction: column; align-items: flex-start;
+    border: 1px solid rgba(0,0,0,0.05); transition: all 0.3s;
+    background: var(--surface); overflow: hidden;
+  }
+  .card-category:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: var(--shadow-md); }
+  .cat-icon { 
+      width: 50px; height: 50px; border-radius: 12px; 
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 1rem;
+  }
+
+  /* List Item */
+  .list-item { border-left: 4px solid transparent; transition: background 0.2s; cursor: pointer;}
+  .list-item:hover { background-color: #f1f5f9; }
+  .list-item.status-wait { border-left-color: var(--accent); }
+  .list-item.status-done { border-left-color: #10b981; }
+  .list-item.status-rev { border-left-color: #ef4444; }
+
+  .badge-soft-warning { background-color: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
+  .badge-soft-success { background-color: #ecfdf5; color: #047857; border: 1px solid #6ee7b7; }
+  .badge-soft-danger { background-color: #fef2f2; color: #b91c1c; border: 1px solid #fca5a5; }
+
+  #loading { z-index: 9999; backdrop-filter: blur(2px); }
 </style>
 </head>
 <body>
 
-<div id="loading" class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-none justify-content-center align-items-center" style="z-index:9999;"><div class="spinner-border text-primary"></div></div>
+<div id="loading" class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-none justify-content-center align-items-center">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+</div>
 
-<div id="view-login" class="container d-flex flex-column justify-content-center" style="min-height: 100vh;">
-  <div class="text-center mb-4"><i class="bi bi-patch-check-fill text-primary display-1"></i><h4 class="fw-bold mt-3 text-primary">VALIDATOR</h4></div>
-  <div class="card-pro p-4 mx-auto" style="max-width: 400px; width: 100%;">
-    <input type="number" id="inputPIN" class="form-control text-center mb-3" placeholder="PIN ANDA">
-    <button onclick="doLogin()" class="btn btn-primary w-100 rounded-pill py-2 fw-bold" style="background-color: var(--primary)">MASUK</button>
+<div id="view-login" class="login-wrapper">
+  <div class="card-login">
+    <div class="bg-primary bg-opacity-10 text-primary rounded-4 d-inline-flex p-3 mb-3">
+        <i class="bi bi-ui-checks fs-1"></i>
+    </div>
+    <h3 class="fw-bold mb-1" style="color:var(--primary)">Validator Sekolah</h3>
+    <p class="text-muted small mb-4">Verifikasi Laporan & Kegiatan</p>
+    
+    <div class="form-floating mb-4">
+      <input type="number" id="inputPIN" class="form-control fw-bold text-center" placeholder="PIN" style="letter-spacing: 4px; height: 60px; font-size: 1.5rem;">
+      <label for="inputPIN" class="w-100 text-center">PIN AKSES</label>
+    </div>
+    
+    <button onclick="doLogin()" class="btn-gradient">MASUK DASHBOARD</button>
   </div>
 </div>
 
-<div id="view-main" class="hidden container mt-3">
+<div id="view-main" class="hidden container mt-4">
+    
     <div class="header-card">
-      <div class="d-flex align-items-center"><i class="bi bi-shield-check text-primary fs-3 me-3"></i><div><div class="fw-bold">Validator Data</div><div class="text-muted small" id="txtNama">...</div></div></div>
-      <button onclick="doLogout()" class="btn btn-sm btn-outline-danger rounded-pill px-3">Keluar</button>
+      <div class="d-flex align-items-center gap-3">
+        <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:45px;height:45px;">
+            <i class="bi bi-building-check fs-5"></i>
+        </div>
+        <div style="min-width: 0;">
+            <div class="text-muted small lh-1">Validator Aktif,</div>
+            <div class="fw-bold text-dark text-truncate" id="txtNama">...</div>
+        </div>
+      </div>
+      <button onclick="doLogout()" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-medium">
+        <i class="bi bi-box-arrow-right"></i> Keluar
+      </button>
     </div>
 
-    <ul class="nav nav-pills mb-3 justify-content-center">
-      <li class="nav-item"><button class="nav-link active rounded-pill px-3 me-1" data-bs-toggle="pill" data-bs-target="#tab-pres">PRESTASI</button></li>
-      <li class="nav-item"><button class="nav-link rounded-pill px-3 me-1" data-bs-toggle="pill" data-bs-target="#tab-evt">EVENT</button></li>
-      <li class="nav-item"><button class="nav-link rounded-pill px-3" data-bs-toggle="pill" data-bs-target="#tab-bias">BIAS</button></li>
-    </ul>
+    <div id="view-home">
+       <div class="d-flex justify-content-between mb-4 align-items-center">
+           <h5 class="fw-bold m-0 text-dark">Data Masuk</h5>
+           <small class="text-muted" id="last-update">Syncing...</small>
+       </div>
 
-    <div class="tab-content">
-      <div class="tab-pane fade show active" id="tab-pres"><div id="list-pres"></div></div>
-      <div class="tab-pane fade" id="tab-evt"><div id="list-evt"></div></div>
-      <div class="tab-pane fade" id="tab-bias"><div id="list-bias"></div></div>
+       <div class="row g-3">
+           <div class="col-md-4">
+               <div class="card-pro card-category" onclick="openCategory('Laporan Prestasi')">
+                   <div class="cat-icon bg-warning bg-opacity-10 text-warning"><i class="bi bi-trophy-fill"></i></div>
+                   <h5 class="fw-bold mb-1">Prestasi</h5>
+                   <p class="text-muted small mb-0">Kejuaraan Siswa/Guru</p>
+                   <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-danger hidden" id="badge-pres">0</span>
+               </div>
+           </div>
+           <div class="col-md-4">
+               <div class="card-pro card-category" onclick="openCategory('Laporan Pembiasaan')">
+                   <div class="cat-icon bg-success bg-opacity-10 text-success"><i class="bi bi-calendar-check-fill"></i></div>
+                   <h5 class="fw-bold mb-1">Pembiasaan</h5>
+                   <p class="text-muted small mb-0">Kegiatan Rutin Sekolah</p>
+                   <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-danger hidden" id="badge-bias">0</span>
+               </div>
+           </div>
+           <div class="col-md-4">
+               <div class="card-pro card-category" onclick="openCategory('Laporan Event')">
+                   <div class="cat-icon bg-info bg-opacity-10 text-info"><i class="bi bi-balloon-fill"></i></div>
+                   <h5 class="fw-bold mb-1">Event</h5>
+                   <p class="text-muted small mb-0">Acara Besar / Perayaan</p>
+                   <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-danger hidden" id="badge-evt">0</span>
+               </div>
+           </div>
+       </div>
+    </div>
+
+    <div id="view-list" class="hidden">
+       <div class="card-pro p-3 mb-4 d-flex align-items-center shadow-sm" style="border-left: 5px solid var(--primary);">
+          <button onclick="backToHome()" class="btn btn-light rounded-circle me-3 shadow-sm border flex-shrink-0" style="width:40px;height:40px;">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <div style="min-width: 0;">
+              <div class="text-muted small lh-1">Kategori</div>
+              <div class="fw-bold text-dark text-truncate" id="lbl-active-cat">...</div>
+          </div>
+       </div>
+       
+       <div id="list-container"></div>
     </div>
 </div>
 
-<div class="modal fade" id="mdlNilai"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-4">
-  <input type="hidden" id="n_id"><input type="hidden" id="n_type">
-  <h5 class="fw-bold text-center mb-4 text-primary">Validasi Bukti</h5>
-  <label class="small fw-bold text-muted">KEPUTUSAN VALIDASI</label>
-  <select id="n_valid" class="form-select mb-3 text-center fw-bold fs-5">
-    <option value="VALID" class="text-success">✅ DITERIMA / VALID</option>
-    <option value="INVALID" class="text-danger">❌ REVISI / INVALID</option>
-  </select>
-  <label class="small fw-bold text-muted">CATATAN</label>
-  <textarea id="n_feed" class="form-control mb-4" rows="3" placeholder="Alasan jika invalid..."></textarea>
-  <button onclick="saveNilai()" class="btn btn-primary w-100 rounded-pill fw-bold" style="background-color: var(--primary)">KIRIM VALIDASI</button>
-</div></div></div>
+<div class="modal fade" id="mdlValidasi" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered"> 
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+            
+            <div class="modal-header text-white border-0" style="background: var(--primary);">
+                <h5 class="modal-title fw-bold"><i class="bi bi-check2-circle me-2"></i>Verifikasi Data</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-0">
+                <div class="bg-light p-4 border-bottom">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="badge bg-white text-primary border shadow-sm px-2 py-1">PELAPOR</span>
+                        <small class="text-dark fw-bold" id="v_nama">Nama Guru</small>
+                    </div>
+                    
+                    <h6 class="fw-bold text-dark mb-3 lh-base" id="v_judul">Judul Laporan...</h6>
+                    
+                    <div class="p-3 bg-white rounded border border-light shadow-sm mb-3">
+                        <small class="text-muted d-block mb-1 fw-bold" style="font-size: 0.7rem;">DETAIL LAPORAN:</small>
+                        <div id="v_desc" class="text-secondary small text-break" style="white-space: pre-wrap;">...</div>
+                    </div>
+
+                    <div id="v_link_container" class="hidden">
+                         <a href="#" target="_blank" id="v_link" class="btn btn-outline-primary btn-sm w-100 border-2 fw-medium">
+                            <i class="bi bi-image me-2"></i>Lihat Bukti Lampiran
+                         </a>
+                    </div>
+                </div>
+
+                <div class="p-4">
+                    <input type="hidden" id="v_id">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">CATATAN VALIDATOR (Opsional)</label>
+                        <textarea id="v_feed" class="form-control bg-light" rows="2" placeholder="Contoh: Bukti kurang jelas, mohon upload ulang..."></textarea>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <button onclick="saveValidasi('REVISI')" class="btn btn-outline-danger w-100 py-2 fw-bold">
+                                <i class="bi bi-x-circle me-1"></i> TOLAK
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button onclick="saveValidasi('VALID')" class="btn btn-primary w-100 py-2 fw-bold" style="background:var(--primary); border:none;">
+                                <i class="bi bi-check-circle me-1"></i> VALID
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+// --- KONFIGURASI ---
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec"; 
-let USER={}, modalNi, DATA_PRES=[], DATA_EVT=[], DATA_BIAS=[];
+
+let USER={}, modalVal, ALL_TASKS=[];
+
+window.onpopstate = function(event) {
+    if (!document.getElementById('view-list').classList.contains('hidden')) backToHome();
+};
 
 window.onload = () => {
-  modalNi = new bootstrap.Modal(document.getElementById('mdlNilai'));
-  let s = localStorage.getItem('LMS_VALID_PIN'); if(s) { document.getElementById('inputPIN').value = s; doLogin(true); }
+  modalVal = new bootstrap.Modal(document.getElementById('mdlValidasi'));
+  let s = localStorage.getItem('LMS_VALIDATOR_PIN'); 
+  if(s) { document.getElementById('inputPIN').value = s; doLogin(true); }
 }
 
-async function apiCall(a, p = {}) { try { let r = await fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: a, ...p }) }); return await r.json(); } catch(e) { return null; } }
-function showLoad(x){ document.getElementById('loading').className = x ? 'position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-flex justify-content-center align-items-center' : 'd-none'; }
+async function apiCall(a, p = {}) { 
+    try { 
+        let r = await fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: a, ...p }) }); 
+        return await r.json(); 
+    } catch(e) { console.error(e); return null; } 
+}
 
+function showLoad(x){ 
+    const el = document.getElementById('loading');
+    x ? (el.classList.remove('d-none'), el.classList.add('d-flex')) : (el.classList.add('d-none'), el.classList.remove('d-flex'));
+}
+
+/* --- AUTH --- */
 async function doLogin(auto){
   let p = document.getElementById('inputPIN').value;
-  showLoad(true); let r = await apiCall("login", { pin: p }); showLoad(false);
-  if(r && r.sukses && r.role === 'PENILAI') {
-    localStorage.setItem('LMS_VALID_PIN', p); USER = { nama: r.nama };
-    document.getElementById('view-login').classList.add('hidden'); document.getElementById('view-main').classList.remove('hidden');
-    document.getElementById('txtNama').innerText = r.nama; loadPenilai();
-  } else if(!auto) { Swal.fire('Error','Akses Ditolak','error'); }
-}
-function doLogout(){ localStorage.removeItem('LMS_VALID_PIN'); location.reload(); }
+  if(!p) return Swal.fire('Perhatian', 'Masukkan PIN', 'warning');
 
-async function loadPenilai() {
-  showLoad(true); let data = await apiCall("getDashboardPenilai"); showLoad(false);
-  if(data) {
-    DATA_PRES = data.prestasi; 
-    DATA_EVT = data.sekolah.filter(i => i.jenis === 'Laporan Event');
-    DATA_BIAS = data.sekolah.filter(i => i.jenis === 'Laporan Pembiasaan');
-    renderList(DATA_PRES, 'list-pres', 'PRES'); renderList(DATA_EVT, 'list-evt', 'EVT'); renderList(DATA_BIAS, 'list-bias', 'BIAS');
+  showLoad(true); 
+  let r = await apiCall("login", { pin: p }); 
+  showLoad(false);
+
+  // Validator bisa ADMIN atau PENILAI (atau role khusus jika ada)
+  if(r && r.sukses) {
+    localStorage.setItem('LMS_VALIDATOR_PIN', p); 
+    USER = { nama: r.nama, pin: p };
+    
+    document.getElementById('view-login').classList.add('hidden');
+    document.getElementById('view-main').classList.remove('hidden');
+    document.getElementById('txtNama').innerText = r.nama; 
+    loadData(); 
+  } else if(!auto) { 
+    Swal.fire('Gagal','PIN Tidak Ditemukan','error'); 
   }
 }
 
-function renderList(data, id, type) {
-  let el = document.getElementById(id); let html = "";
-  data.sort((a,b) => (a.status==='Menunggu' ? -1 : 1));
-  data.forEach(item => {
-    let st = item.status, bg = st==='Menunggu'?'bg-warning':(st==='Diterima'?'bg-success':'bg-danger');
-    let link = (item.link && item.link.length>5) ? `<a href="${item.link}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill py-0 px-2 mt-1" style="font-size:0.7rem">Cek Bukti</a>` : "";
-    html += `<div class="card-pro p-3 mb-2 border-start border-4 border-info"><div class="d-flex justify-content-between align-items-start">
-      <div class="pe-2"><span class="badge ${bg} mb-1" style="font-size:0.65rem">${st}</span><div class="fw-bold small">${item.judul}</div><div class="small text-muted mb-1">${item.catatan || 'No Note'}</div>${link}</div>
-      <button onclick="popNilai('${item.id}', '${type}')" class="btn btn-sm btn-info text-white rounded-pill px-3 shadow-sm" style="font-size:0.8rem">Validasi</button>
-    </div></div>`;
-  });
-  el.innerHTML = html || "<div class='text-center py-4 small text-muted'>Tidak ada data</div>";
+function doLogout(){ 
+    if(confirm('Keluar dari panel validator?')) { localStorage.removeItem('LMS_VALIDATOR_PIN'); location.reload(); }
 }
 
-function popNilai(id, type){ document.getElementById('n_id').value = id; document.getElementById('n_type').value = type; document.getElementById('n_feed').value = ""; modalNi.show(); }
+/* --- DATA LOGIC --- */
+async function loadData() {
+  showLoad(true); 
+  let data = await apiCall("getDashboardPenilai"); 
+  showLoad(false);
 
-async function saveNilai(){
-  let id = document.getElementById('n_id').value, type = document.getElementById('n_type').value, val = document.getElementById('n_valid').value, note = document.getElementById('n_feed').value;
-  let st = val === 'VALID' ? 'Diterima' : 'Revisi', feed = (val==='VALID'?'[ACC] ':'[REVISI] ') + note;
-  modalNi.hide(); Swal.fire({title:'Tersimpan', icon:'success', timer:1000, toast:true, position:'top-end'});
+  if(data && data.tugas) {
+    ALL_TASKS = data.tugas;
+    updateBadges();
+    document.getElementById('last-update').innerText = "Updated: " + new Date().toLocaleTimeString();
+  } else { Swal.fire('Error', 'Gagal memuat data', 'error'); }
+}
+
+function updateBadges() {
+    const countPending = (type) => ALL_TASKS.filter(t => t.jenis === type && t.status === 'Menunggu').length;
+    
+    let pres = countPending('Laporan Prestasi');
+    let bias = countPending('Laporan Pembiasaan');
+    let evt = countPending('Laporan Event');
+
+    const setBadge = (id, count) => {
+        let el = document.getElementById(id);
+        if(count > 0) { el.innerText = count + " Baru"; el.classList.remove('hidden'); } 
+        else { el.classList.add('hidden'); }
+    };
+
+    setBadge('badge-pres', pres);
+    setBadge('badge-bias', bias);
+    setBadge('badge-evt', evt);
+}
+
+function openCategory(cat) {
+    history.pushState({page: 'list'}, '', '#list');
+    document.getElementById('view-home').classList.add('hidden'); 
+    document.getElementById('view-list').classList.remove('hidden');
+    document.getElementById('lbl-active-cat').innerText = cat;
+    
+    // Filter Data
+    let filtered = ALL_TASKS.filter(t => t.jenis === cat);
+    renderList(filtered, 'list-container'); 
+    window.scrollTo(0,0);
+}
+
+function backToHome() { 
+    history.back(); 
+    document.getElementById('view-list').classList.add('hidden'); 
+    document.getElementById('view-home').classList.remove('hidden'); 
+    updateBadges();
+}
+
+function renderList(data, id) {
+  let el = document.getElementById(id); let html = "";
+  // Sort: Menunggu paling atas
+  data.sort((a,b) => (a.status==='Menunggu' ? -1 : 1));
   
-  let targetArr = type==='PRES'? DATA_PRES : (type==='EVT'? DATA_EVT : DATA_BIAS);
-  let idx = targetArr.findIndex(i => i.id === id); if(idx !== -1) { targetArr[idx].status = st; }
-  renderList(targetArr, type==='PRES'?'list-pres':(type==='EVT'?'list-evt':'list-bias'), type);
+  data.forEach(item => {
+    let st = item.status;
+    let badgeClass = st==='Menunggu' ? 'badge-soft-warning' : (st==='Diterima' ? 'badge-soft-success' : 'badge-soft-danger');
+    let borderClass = st==='Menunggu' ? 'status-wait' : (st==='Diterima' ? 'status-done' : 'status-rev');
+    let iconStatus = st==='Menunggu' ? '<i class="bi bi-hourglass-split me-1"></i>' : (st==='Diterima' ? '<i class="bi bi-check-circle me-1"></i>' : '<i class="bi bi-x-circle me-1"></i>');
 
+    html += `
+    <div class="card-pro p-3 mb-3 list-item ${borderClass}" onclick="popValidasi('${item.id}')">
+      <div class="d-flex justify-content-between align-items-start">
+        <div class="pe-2 w-100" style="min-width:0;">
+           <div class="d-flex align-items-center mb-2">
+               <span class="badge ${badgeClass} rounded-pill py-1 px-2 d-flex align-items-center" style="font-size:0.65rem">${iconStatus} ${st.toUpperCase()}</span>
+               <span class="text-muted ms-2 small fw-bold" style="font-size:0.7rem">${item.nama}</span>
+           </div>
+           <div class="fw-bold text-dark mb-1 text-break" style="font-size: 0.95rem;">${item.judul}</div>
+           <div class="text-muted small text-truncate">${item.catatan ? item.catatan : '<i>Tidak ada deskripsi</i>'}</div>
+        </div>
+        <button class="btn btn-light text-primary rounded-circle shadow-sm ms-2 flex-shrink-0" style="width:40px; height:40px;">
+            <i class="bi bi-search"></i>
+        </button>
+      </div>
+    </div>`;
+  });
+  el.innerHTML = html || `<div class="text-center py-5"><h6 class="text-muted">Belum ada data laporan.</h6></div>`;
+}
+
+function popValidasi(id){ 
+    let item = ALL_TASKS.find(t => t.id === id);
+    if(!item) return;
+
+    document.getElementById('v_nama').innerText = item.nama;
+    document.getElementById('v_judul').innerText = item.judul;
+    document.getElementById('v_desc').innerText = item.catatan || "Tidak ada rincian data.";
+
+    let linkContainer = document.getElementById('v_link_container');
+    let linkBtn = document.getElementById('v_link');
+    if(item.link && item.link.length > 5) {
+        linkContainer.classList.remove('hidden');
+        linkBtn.href = item.link;
+    } else { linkContainer.classList.add('hidden'); }
+
+    document.getElementById('v_id').value = id; 
+    document.getElementById('v_feed').value = ""; 
+    modalVal.show(); 
+}
+
+async function saveValidasi(decision){
+  let id = document.getElementById('v_id').value;
+  let note = document.getElementById('v_feed').value;
+  
+  if(decision === 'REVISI' && !note) { Swal.fire('Wajib','Berikan alasan penolakan!','warning'); return; }
+
+  let st = decision === 'VALID' ? 'Diterima' : 'Revisi';
+  let feed = (decision==='VALID' ? '[ACC] ' : '[REVISI] ') + note;
+
+  modalVal.hide(); 
+  
+  // Optimistic UI Update
+  let idx = ALL_TASKS.findIndex(i => i.id === id); 
+  if(idx !== -1) { ALL_TASKS[idx].status = st; }
+  
+  // Refresh List
+  let currentCat = document.getElementById('lbl-active-cat').innerText;
+  renderList(ALL_TASKS.filter(t => t.jenis === currentCat), 'list-container');
+  updateBadges(); // Update angka notifikasi
+  
+  Swal.fire({title:'Berhasil', text:'Data telah divalidasi', icon:'success', timer:1000, showConfirmButton: false, toast:true, position:'top-end'});
+  
   await apiCall("simpanNilai", { id: id, status: st, feedback: feed, adminName: USER.nama });
 }
 </script>
