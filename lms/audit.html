@@ -6,94 +6,138 @@
     <title>Audit Plagiasi - Nakulaku Ekosistem</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
     <style>
+        /* Transisi halus untuk Progress Bar */
         .loading-bar { transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* Animasi Fade In */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
         
-        /* Custom Scrollbar untuk Modal */
-        .custom-scroll::-webkit-scrollbar { width: 8px; }
-        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
-        .custom-scroll::-webkit-scrollbar-thumb { background-color: #fca5a5; border-radius: 4px; }
+        /* Custom Scrollbar untuk Modal & Tabel */
+        .custom-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #fff0f1; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background-color: #fda4af; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background-color: #fb7185; }
     </style>
 </head>
-<body class="bg-rose-50 text-gray-800 font-sans min-h-screen flex flex-col relative">
+<body class="bg-rose-50 text-gray-800 font-sans min-h-screen flex flex-col relative selection:bg-rose-200 selection:text-rose-900">
 
-    <nav class="bg-gradient-to-r from-rose-600 to-red-500 text-white shadow-md sticky top-0 z-40">
-        <div class="container mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
-            <div class="font-bold text-lg md:text-xl flex items-center tracking-tight">
-                <i class="fas fa-shield-alt mr-2 md:mr-3 text-rose-100"></i>
-                <span>Nakulaku <span class="font-normal opacity-90">Audit</span></span>
+    <nav class="bg-gradient-to-r from-rose-600 to-red-500 text-white shadow-lg sticky top-0 z-40 backdrop-blur-md bg-opacity-95">
+        <div class="container mx-auto px-4 md:px-6 py-3 flex justify-between items-center">
+            <div class="font-bold text-lg md:text-xl flex items-center tracking-tight cursor-pointer group" onclick="resetView()">
+                <div class="bg-white/20 p-2 rounded-lg mr-3 group-hover:bg-white/30 transition">
+                    <i class="fas fa-shield-alt text-rose-50"></i>
+                </div>
+                <div class="flex flex-col leading-tight">
+                    <span>Nakulaku <span class="font-normal opacity-90">Audit</span></span>
+                    <span class="text-[10px] uppercase font-medium text-rose-100 tracking-wider">Ekosistem Integritas</span>
+                </div>
             </div>
-            <div class="text-[10px] md:text-xs font-medium bg-rose-800 bg-opacity-30 px-3 py-1 rounded-full border border-rose-400 border-opacity-25 backdrop-blur-sm">
-                v2.1 Fix
-            </div>
+            
+            <button onclick="startAudit()" class="group flex items-center bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-full transition-all text-xs md:text-sm font-medium backdrop-blur-sm shadow-sm hover:shadow-md active:scale-95">
+                <i class="fas fa-sync-alt group-hover:animate-spin mr-2"></i>
+                <span class="hidden md:inline">Pindai Ulang</span>
+                <span class="md:hidden">Refresh</span>
+            </button>
         </div>
     </nav>
 
     <div class="container mx-auto px-4 md:px-6 py-6 md:py-10 max-w-6xl flex-grow">
         
-        <div id="heroSection" class="bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-rose-100 text-center mb-10 animate-fade-in">
-            <div class="mb-6 inline-flex items-center justify-center w-16 h-16 bg-rose-50 text-rose-500 rounded-2xl rotate-3 hover:rotate-6 transition duration-300">
-                <i class="fas fa-fingerprint text-3xl"></i>
-            </div>
-            <h1 class="text-2xl md:text-4xl font-extrabold text-gray-800 mb-4 tracking-tight">
-                Deteksi Integritas Jawaban
-            </h1>
-            <p class="text-gray-500 mb-8 max-w-2xl mx-auto leading-relaxed text-sm md:text-base">
-                Algoritma pintar untuk membandingkan ribuan jawaban guru dalam hitungan detik. Mengamankan orisinalitas karya di ekosistem Gugus Nakula.
-            </p>
+        <div id="heroSection" class="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-rose-100 text-center mb-10 animate-fade-in relative overflow-hidden">
+            <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-rose-50 rounded-full opacity-50 blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-red-50 rounded-full opacity-50 blur-3xl"></div>
 
-            <button onclick="startAudit()" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-rose-600 font-lg rounded-2xl hover:bg-rose-700 focus:outline-none shadow-lg hover:shadow-rose-300/50 hover:-translate-y-1 active:scale-95">
-                <i class="fas fa-radar mr-3 animate-pulse"></i> Mulai Pemindaian
-            </button>
+            <div class="relative z-10">
+                <div class="mb-6 inline-flex items-center justify-center w-20 h-20 bg-rose-50 text-rose-500 rounded-3xl rotate-3 hover:rotate-6 transition duration-300 shadow-inner">
+                    <i class="fas fa-fingerprint text-4xl"></i>
+                </div>
+                <h1 class="text-3xl md:text-5xl font-extrabold text-gray-800 mb-4 tracking-tight">
+                    Audit Jawaban <span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-red-600">Otomatis</span>
+                </h1>
+                <p class="text-gray-500 mb-8 max-w-2xl mx-auto leading-relaxed text-sm md:text-base">
+                    Sistem cerdas untuk mendeteksi kemiripan teks pada tugas guru di Gugus Nakula. Menjamin orisinalitas dan integritas ekosistem pendidikan kita.
+                </p>
+
+                <button onclick="startAudit()" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-rose-600 font-lg rounded-2xl hover:bg-rose-700 focus:outline-none shadow-xl hover:shadow-rose-300/50 hover:-translate-y-1 active:scale-95">
+                    <span class="absolute inset-0 w-full h-full mt-1 ml-1 transition-all duration-200 ease-in-out bg-rose-800 rounded-2xl group-hover:mt-0 group-hover:ml-0"></span>
+                    <span class="absolute inset-0 w-full h-full bg-white rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity"></span>
+                    <span class="relative flex items-center text-lg">
+                        <i class="fas fa-radar mr-3 animate-pulse"></i> Mulai Pemindaian
+                    </span>
+                </button>
+                <div class="mt-6 flex justify-center gap-4 text-xs text-gray-400">
+                    <span class="flex items-center"><i class="fas fa-lock mr-1.5 text-rose-300"></i> Client-Side Processing</span>
+                    <span class="flex items-center"><i class="fas fa-bolt mr-1.5 text-rose-300"></i> Real-time Database</span>
+                </div>
+            </div>
         </div>
 
         <div id="statusArea" class="hidden mb-10 animate-fade-in max-w-3xl mx-auto">
             <div class="flex justify-between text-sm font-bold mb-3 text-rose-800">
                 <span id="statusText" class="flex items-center"><i class="fas fa-circle-notch fa-spin mr-2"></i>Mengunduh data...</span>
-                <span id="progressText" class="bg-rose-100 px-3 py-1 rounded-full text-xs">0%</span>
+                <span id="progressText" class="bg-rose-100 px-3 py-1 rounded-full text-xs border border-rose-200">0%</span>
             </div>
-            <div class="w-full bg-white rounded-full h-3 shadow-inner overflow-hidden border border-rose-100">
-                <div id="progressBar" class="bg-gradient-to-r from-rose-400 to-red-600 h-full rounded-full loading-bar relative" style="width: 0%"></div>
-            </div>
-        </div>
-
-        <div id="statsResult" class="hidden grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-8 animate-fade-in">
-            <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-red-100 col-span-2 md:col-span-1">
-                <div class="text-red-400 text-xs font-bold uppercase mb-1">Terindikasi</div>
-                <div class="text-3xl md:text-4xl font-extrabold text-gray-800" id="statCount">0</div>
-            </div>
-            <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-rose-100 col-span-1">
-                <div class="text-rose-400 text-xs font-bold uppercase mb-1">Total Data</div>
-                <div class="text-xl md:text-2xl font-bold text-gray-800" id="statTotal">0</div>
-            </div>
-             <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-rose-100 col-span-1">
-                <div class="text-rose-400 text-xs font-bold uppercase mb-1">Waktu</div>
-                <div class="text-xl md:text-2xl font-bold text-gray-800" id="statTime">0s</div>
-            </div>
-            <div class="bg-rose-600 p-4 md:p-6 rounded-2xl shadow-sm border border-rose-600 col-span-2 md:col-span-1 flex items-center justify-center cursor-pointer hover:bg-rose-700 transition" onclick="exportToExcel()">
-                <div class="text-white text-center">
-                    <i class="fas fa-file-excel text-2xl mb-1"></i>
-                    <div class="text-xs font-bold uppercase">Unduh Laporan</div>
+            <div class="w-full bg-white rounded-full h-4 shadow-inner overflow-hidden border border-rose-100 p-0.5">
+                <div id="progressBar" class="bg-gradient-to-r from-rose-400 to-red-600 h-full rounded-full loading-bar relative overflow-hidden" style="width: 0%">
+                    <div class="absolute inset-0 bg-white/30 w-full h-full animate-[pulse_2s_infinite]"></div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-lg border border-rose-100 hidden animate-fade-in overflow-hidden" id="resultTableCard">
-            <div class="p-5 bg-rose-50/50 border-b border-rose-100 flex justify-between items-center">
-                <h3 class="font-bold text-lg text-rose-900"><i class="fas fa-list-ul mr-2"></i>Hasil Analisis</h3>
-                <span class="text-[10px] uppercase font-bold tracking-wide text-rose-400 bg-white px-2 py-1 rounded border border-rose-100">Threshold > 75%</span>
+        <div id="statsResult" class="hidden grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-8 animate-fade-in">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-red-100 col-span-2 md:col-span-1 hover:shadow-md transition">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-red-400 text-xs font-bold uppercase tracking-wider">Terindikasi</div>
+                    <i class="fas fa-exclamation-triangle text-red-100 text-xl"></i>
+                </div>
+                <div class="text-3xl md:text-4xl font-extrabold text-gray-800" id="statCount">0</div>
+                <div class="text-xs text-gray-400 mt-1">Jawaban mirip > 75%</div>
+            </div>
+            
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100 col-span-1 hover:shadow-md transition">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-rose-400 text-xs font-bold uppercase tracking-wider">Total Data</div>
+                    <i class="fas fa-database text-rose-100 text-xl"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800" id="statTotal">0</div>
+            </div>
+            
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100 col-span-1 hover:shadow-md transition">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-rose-400 text-xs font-bold uppercase tracking-wider">Waktu</div>
+                    <i class="fas fa-stopwatch text-rose-100 text-xl"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800" id="statTime">0s</div>
+            </div>
+            
+            <div class="bg-rose-600 p-5 rounded-2xl shadow-lg shadow-rose-200 border border-rose-600 col-span-2 md:col-span-1 flex flex-col items-center justify-center cursor-pointer hover:bg-rose-700 transition active:scale-95 group" onclick="exportToExcel()">
+                <i class="fas fa-file-csv text-white text-3xl mb-2 group-hover:-translate-y-1 transition"></i>
+                <div class="text-white text-xs font-bold uppercase tracking-wide">Unduh Laporan</div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-lg border border-rose-100 hidden animate-fade-in overflow-hidden" id="resultTableCard">
+            <div class="p-5 md:p-6 bg-rose-50/50 border-b border-rose-100 flex justify-between items-center backdrop-blur-sm sticky top-0">
+                <h3 class="font-bold text-lg text-rose-900 flex items-center">
+                    <i class="fas fa-list-ul mr-2.5 bg-rose-200 p-1.5 rounded-md text-rose-700 text-sm"></i>
+                    Hasil Analisis
+                </h3>
+                <span class="text-[10px] uppercase font-bold tracking-wide text-rose-500 bg-white px-3 py-1 rounded-full border border-rose-200 shadow-sm">
+                    Threshold > 75%
+                </span>
             </div>
 
-            <div class="hidden md:block overflow-x-auto">
+            <div class="hidden md:block overflow-x-auto custom-scroll">
                 <table class="w-full text-left text-sm table-fixed">
-                    <thead class="bg-rose-50 text-rose-800 uppercase text-xs font-bold tracking-wider">
+                    <thead class="bg-rose-50 text-rose-800 uppercase text-xs font-bold tracking-wider border-b border-rose-100">
                         <tr>
-                            <th class="px-6 py-4 w-1/12">Skor</th>
-                            <th class="px-6 py-4 w-3/12">Peserta (Terduga)</th>
-                            <th class="px-6 py-4 w-3/12 whitespace-normal break-words">Sumber Kemiripan</th>
-                            <th class="px-6 py-4 w-4/12">Cuplikan & Aksi</th>
+                            <th class="px-6 py-4 w-[10%]">Skor</th>
+                            <th class="px-6 py-4 w-[25%]">Peserta (Terduga)</th>
+                            <th class="px-6 py-4 w-[25%]">Sumber Kemiripan</th>
+                            <th class="px-6 py-4 w-[40%]">Cuplikan & Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="tableBodyDesktop" class="divide-y divide-rose-50">
@@ -101,56 +145,66 @@
                 </table>
             </div>
 
-            <div id="tableBodyMobile" class="md:hidden grid grid-cols-1 divide-y divide-rose-100">
+            <div id="tableBodyMobile" class="md:hidden grid grid-cols-1 divide-y divide-rose-100 bg-rose-50/30">
                 </div>
         </div>
     </div>
 
+    <button onclick="startAudit()" title="Pindai Ulang" class="fixed bottom-6 right-6 z-50 bg-rose-600 hover:bg-rose-700 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition transform hover:scale-110 hover:rotate-180 focus:outline-none focus:ring-4 focus:ring-rose-300 md:hidden active:scale-95">
+        <i class="fas fa-sync-alt text-xl"></i>
+    </button>
+
+    <footer class="bg-white py-6 text-center text-rose-300 text-xs mt-auto border-t border-rose-50">
+        <p class="mb-1">&copy; 2026 Gugus Nakula. All rights reserved.</p>
+        <p>System by <span class="font-semibold text-rose-400">Tim IT Nakulaku</span></p>
+    </footer>
+
     <div id="detailModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="fixed inset-0 bg-gray-900/60 transition-opacity backdrop-blur-sm" onclick="closeModal()"></div>
 
         <div class="fixed inset-0 z-10 overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-                <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-4xl border-t-4 border-rose-500">
+                <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-5xl border-t-[6px] border-rose-500 animate-fade-in">
                     
                     <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 border-b border-gray-100 flex justify-between items-start">
                         <div>
                             <h3 class="text-xl font-bold leading-6 text-gray-900" id="modalTitle">Perbandingan Jawaban</h3>
-                            <p class="text-sm text-gray-500 mt-1">Analisis kemiripan teks secara langsung.</p>
+                            <p class="text-sm text-gray-500 mt-1">Lihat kesamaan teks secara langsung (Side-by-Side).</p>
                         </div>
-                        <button onclick="closeModal()" class="text-gray-400 hover:text-rose-500 transition">
-                            <i class="fas fa-times text-2xl"></i>
+                        <button onclick="closeModal()" class="text-gray-400 hover:text-rose-500 bg-gray-50 hover:bg-rose-50 p-2 rounded-full transition">
+                            <i class="fas fa-times text-xl"></i>
                         </button>
                     </div>
 
-                    <div class="px-4 py-6 sm:p-6 bg-gray-50">
+                    <div class="px-4 py-6 sm:p-6 bg-gray-50/50">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="bg-white p-4 rounded-xl shadow-sm border border-red-200">
-                                <div class="flex items-center justify-between mb-3">
-                                    <span class="text-xs font-bold uppercase text-red-500 bg-red-50 px-2 py-1 rounded">Terduga</span>
-                                    <span id="modalNameA" class="text-sm font-bold text-gray-800 text-right truncate ml-2">Nama Guru A</span>
+                            <div class="bg-white p-0 rounded-xl shadow-sm border border-red-200 overflow-hidden flex flex-col h-[400px]">
+                                <div class="bg-red-50 px-4 py-3 border-b border-red-100 flex justify-between items-center">
+                                    <span class="text-xs font-bold uppercase text-red-600 bg-white px-2 py-1 rounded border border-red-200">Terduga</span>
+                                    <span id="modalNameA" class="text-sm font-bold text-gray-800 text-right truncate ml-2 w-32">Nama A</span>
                                 </div>
-                                <div id="modalTextA" class="text-sm text-gray-600 h-64 overflow-y-auto custom-scroll whitespace-pre-wrap p-2 bg-gray-50 rounded border border-gray-100"></div>
+                                <div id="modalTextA" class="text-sm text-gray-600 p-4 overflow-y-auto custom-scroll whitespace-pre-wrap leading-relaxed flex-grow"></div>
                             </div>
 
-                            <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-200">
-                                <div class="flex items-center justify-between mb-3">
-                                    <span class="text-xs font-bold uppercase text-blue-500 bg-blue-50 px-2 py-1 rounded">Sumber / Mirip</span>
-                                    <span id="modalNameB" class="text-sm font-bold text-gray-800 text-right truncate ml-2">Nama Guru B</span>
+                            <div class="bg-white p-0 rounded-xl shadow-sm border border-blue-200 overflow-hidden flex flex-col h-[400px]">
+                                <div class="bg-blue-50 px-4 py-3 border-b border-blue-100 flex justify-between items-center">
+                                    <span class="text-xs font-bold uppercase text-blue-600 bg-white px-2 py-1 rounded border border-blue-200">Sumber</span>
+                                    <span id="modalNameB" class="text-sm font-bold text-gray-800 text-right truncate ml-2 w-32">Nama B</span>
                                 </div>
-                                <div id="modalTextB" class="text-sm text-gray-600 h-64 overflow-y-auto custom-scroll whitespace-pre-wrap p-2 bg-gray-50 rounded border border-gray-100"></div>
+                                <div id="modalTextB" class="text-sm text-gray-600 p-4 overflow-y-auto custom-scroll whitespace-pre-wrap leading-relaxed flex-grow"></div>
                             </div>
                         </div>
                         
-                        <div class="mt-4 text-center">
-                            <span id="modalScore" class="inline-block bg-rose-600 text-white text-lg font-bold px-6 py-2 rounded-full shadow-lg">
-                                90% Mirip
-                            </span>
+                        <div class="mt-6 flex justify-center">
+                            <div class="bg-white px-6 py-2 rounded-full shadow-lg border border-rose-100 flex items-center gap-3">
+                                <span class="text-xs text-gray-400 font-bold uppercase">Tingkat Kemiripan</span>
+                                <span id="modalScore" class="text-xl font-extrabold text-rose-600">0%</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="bg-white px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-gray-100">
-                        <button type="button" class="mt-3 inline-flex w-full justify-center rounded-lg bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto" onclick="closeModal()">Tutup</button>
+                        <button type="button" class="mt-3 inline-flex w-full justify-center rounded-lg bg-gray-100 px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-200 sm:mt-0 sm:w-auto transition" onclick="closeModal()">Tutup</button>
                     </div>
                 </div>
             </div>
@@ -162,7 +216,19 @@
         const HARDCODED_API_URL = "https://script.google.com/macros/s/AKfycbwudVcV2I9FC9wABC6WycHax3LKIHFa6vaZjaTcSzcmXW2AKvKPlG1ZUH8bsRhr_V0L/exec";
         let globalSuspiciousData = []; 
 
+        // --- FUNGSI RESET TAMPILAN ---
+        function resetView() {
+            document.getElementById('heroSection').classList.remove('hidden');
+            document.getElementById('statusArea').classList.add('hidden');
+            document.getElementById('resultTableCard').classList.add('hidden');
+            document.getElementById('statsResult').classList.add('hidden');
+            updateProgress(0, "");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- LOGIKA AUDIT UTAMA ---
         async function startAudit() {
+            // UI Update
             document.getElementById('heroSection').classList.add('hidden');
             document.getElementById('statusArea').classList.remove('hidden');
             document.getElementById('resultTableCard').classList.add('hidden');
@@ -172,19 +238,21 @@
             const startTime = performance.now();
 
             try {
+                // Fetch Data
                 const response = await fetch(HARDCODED_API_URL);
                 const json = await response.json();
                 
-                if(json.status !== "success") throw new Error(json.message);
+                if(json.status !== "success") throw new Error(json.message || "Gagal mengambil data.");
                 
                 const data = json.data;
                 const total = data.length;
                 let suspicious = [];
 
-                if (total === 0) throw new Error("Data kosong.");
+                if (total === 0) throw new Error("Data kosong. Belum ada tugas masuk.");
 
                 updateProgress(20, `Menganalisis ${total} jawaban...`);
 
+                // Proses Analisis (Jaccard)
                 setTimeout(() => {
                     for(let i=0; i<total; i++) {
                         let rowA = data[i];
@@ -193,7 +261,7 @@
                         let sourceText = ""; 
 
                         let textA = normalize(rowA.catatan);
-                        if(textA.length < 25) continue; 
+                        if(textA.length < 25) continue; // Abaikan teks terlalu pendek
 
                         for(let j=0; j<total; j++) {
                             if(i === j) continue; 
@@ -209,6 +277,7 @@
                             }
                         }
 
+                        // Threshold 75%
                         if(maxScore >= 0.75) {
                             suspicious.push({
                                 ...rowA,
@@ -218,24 +287,25 @@
                             });
                         }
                         
+                        // Update Progress Bar setiap 20 data
                         if(i % 20 === 0 || i === total - 1) {
                             let percent = 20 + Math.round((i/total)*80);
-                            updateProgress(percent, `Memproses ${i+1}/${total}...`);
+                            updateProgress(percent, `Memproses data ${i+1} dari ${total}...`);
                         }
                     }
 
                     globalSuspiciousData = suspicious; 
                     renderResult(suspicious, total, startTime);
 
-                }, 200);
+                }, 200); // Delay kecil agar UI tidak freeze
 
             } catch (err) {
-                alert("Error: " + err.message);
-                document.getElementById('heroSection').classList.remove('hidden');
-                document.getElementById('statusArea').classList.add('hidden');
+                alert("Info: " + err.message);
+                resetView();
             }
         }
 
+        // --- RENDER HASIL (Desktop & Mobile) ---
         function renderResult(list, totalData, startTime) {
             updateProgress(100, "Selesai!");
             setTimeout(() => { document.getElementById('statusArea').classList.add('hidden'); }, 800);
@@ -249,36 +319,45 @@
             tbodyMobile.innerHTML = "";
 
             if (list.length === 0) {
-                const emptyMsg = `<div class="p-8 text-center text-rose-500">Tidak ada indikasi plagiasi.</div>`;
+                const emptyMsg = `
+                    <div class="p-10 text-center flex flex-col items-center justify-center text-rose-400">
+                        <i class="fas fa-check-circle text-5xl mb-4 text-emerald-400"></i>
+                        <h4 class="font-bold text-lg text-gray-700">Bersih! Tidak ada indikasi plagiasi.</h4>
+                        <p class="text-sm">Semua ${totalData} jawaban terlihat orisinal.</p>
+                    </div>`;
                 tbodyDesktop.innerHTML = `<tr><td colspan="4">${emptyMsg}</td></tr>`;
                 tbodyMobile.innerHTML = emptyMsg;
             } else {
                 list.forEach((item, index) => {
                     let scorePercent = Math.round(item.score * 100);
-                    let badgeClass = scorePercent === 100 ? "bg-red-100 text-red-700" : "bg-orange-100 text-orange-700";
-                    let snippet = item.catatan.substring(0, 80) + "...";
+                    let badgeClass = scorePercent === 100 ? "bg-red-100 text-red-700 border-red-200" : "bg-orange-100 text-orange-700 border-orange-200";
+                    let snippet = item.catatan.substring(0, 80) + (item.catatan.length > 80 ? "..." : "");
 
                     // 1. DESKTOP ROW
                     let rowDesktop = `
-                        <tr class="hover:bg-rose-50 transition border-b border-rose-50 last:border-0">
+                        <tr class="hover:bg-rose-50 transition border-b border-rose-50 last:border-0 group">
                             <td class="px-6 py-4 align-top">
-                                <span class="px-3 py-1 text-xs font-bold rounded-full ${badgeClass}">
+                                <span class="px-3 py-1 text-xs font-bold rounded-full border ${badgeClass} inline-block shadow-sm">
                                     ${scorePercent}%
                                 </span>
                             </td>
                             <td class="px-6 py-4 align-top">
-                                <div class="font-bold text-gray-800">${item.nama}</div>
-                                <div class="text-xs text-gray-500">${item.sekolah}</div>
+                                <div class="font-bold text-gray-800 text-sm group-hover:text-rose-700 transition">${item.nama}</div>
+                                <div class="text-xs text-gray-400 mt-0.5"><i class="fas fa-school mr-1"></i>${item.sekolah}</div>
                             </td>
                             <td class="px-6 py-4 align-top">
-                                <div class="text-sm text-gray-600 bg-white p-2 rounded border border-gray-100 leading-snug">
-                                    <i class="fas fa-link text-xs mr-1 text-rose-300"></i> ${item.source}
+                                <div class="text-sm text-gray-600 bg-white p-3 rounded-lg border border-gray-100 leading-snug whitespace-normal break-words shadow-sm">
+                                    <div class="text-[10px] uppercase font-bold text-rose-300 mb-1">Mirip dengan:</div>
+                                    <i class="fas fa-link text-xs mr-1 text-rose-400"></i> ${item.source}
                                 </div>
                             </td>
                             <td class="px-6 py-4 align-top">
-                                <div class="text-xs text-gray-500 italic mb-2">"${snippet}"</div>
-                                <button onclick="openModal(${index})" class="text-xs bg-rose-600 text-white px-3 py-1.5 rounded hover:bg-rose-700 transition shadow-sm flex items-center w-fit">
-                                    <i class="fas fa-eye mr-1"></i> Bandingkan
+                                <div class="text-xs text-gray-500 italic mb-3 bg-gray-50 p-2 rounded border border-gray-100 relative">
+                                    <i class="fas fa-quote-left text-gray-200 absolute top-1 left-2 -z-0"></i>
+                                    <span class="relative z-10">"${snippet}"</span>
+                                </div>
+                                <button onclick="openModal(${index})" class="text-xs bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-lg transition shadow-md hover:shadow-lg flex items-center w-fit active:scale-95">
+                                    <i class="fas fa-columns mr-2"></i> Bandingkan
                                 </button>
                             </td>
                         </tr>
@@ -287,35 +366,48 @@
 
                     // 2. MOBILE CARD
                     let rowMobile = `
-                        <div class="p-5 bg-white">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="px-3 py-1 text-xs font-bold rounded-full ${badgeClass}">${scorePercent}% Mirip</span>
-                                <button onclick="openModal(${index})" class="text-rose-600 text-sm font-semibold hover:underline">
-                                    Lihat Detail <i class="fas fa-arrow-right ml-1"></i>
+                        <div class="p-5 bg-white border-b border-rose-100 last:border-0">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="px-3 py-1 text-xs font-bold rounded-full border ${badgeClass}">
+                                    ${scorePercent}% Mirip
+                                </span>
+                                <button onclick="openModal(${index})" class="text-rose-600 text-sm font-semibold hover:text-rose-800 transition flex items-center">
+                                    Detail <i class="fas fa-chevron-right ml-1 text-xs"></i>
                                 </button>
                             </div>
-                            <div class="mb-3">
-                                <div class="text-xs text-gray-400 uppercase font-bold">Peserta</div>
-                                <div class="font-bold text-gray-800">${item.nama}</div>
-                                <div class="text-xs text-gray-500">${item.sekolah}</div>
-                            </div>
-                            <div class="mb-3 bg-rose-50 p-3 rounded-lg border border-rose-100">
-                                <div class="text-xs text-rose-400 uppercase font-bold mb-1">Sumber Mirip</div>
-                                <div class="text-sm text-gray-700 break-words leading-tight">
-                                    <i class="fas fa-share mr-1"></i> ${item.source}
+                            
+                            <div class="flex items-start gap-3 mb-4">
+                                <div class="bg-rose-100 text-rose-500 w-10 h-10 rounded-full flex items-center justify-center shrink-0">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-400 uppercase font-bold">Terduga</div>
+                                    <div class="font-bold text-gray-800 leading-tight">${item.nama}</div>
+                                    <div class="text-xs text-gray-500 mt-0.5">${item.sekolah}</div>
                                 </div>
                             </div>
-                             <div class="text-xs text-gray-400 italic">"${snippet}"</div>
+
+                            <div class="bg-rose-50 p-3 rounded-xl border border-rose-100 mb-3">
+                                <div class="text-[10px] text-rose-400 uppercase font-bold mb-1 flex items-center">
+                                    <i class="fas fa-link mr-1"></i> Sumber Kemiripan
+                                </div>
+                                <div class="text-sm text-gray-700 break-words leading-snug font-medium">
+                                    ${item.source}
+                                </div>
+                            </div>
+                             <div class="text-xs text-gray-400 italic px-1">"${snippet}"</div>
                         </div>
                     `;
                     tbodyMobile.innerHTML += rowMobile;
                 });
             }
 
+            // Update Stats
             document.getElementById('statCount').innerText = list.length;
             document.getElementById('statTotal').innerText = totalData;
             document.getElementById('statTime').innerText = ((performance.now() - startTime)/1000).toFixed(2) + "s";
 
+            // Show UI
             document.getElementById('resultTableCard').classList.remove('hidden');
             document.getElementById('statsResult').classList.remove('hidden');
             document.getElementById('statsResult').scrollIntoView({ behavior: 'smooth' });
@@ -324,14 +416,27 @@
         // --- MODAL LOGIC ---
         function openModal(index) {
             const data = globalSuspiciousData[index];
-            document.getElementById('modalTitle').innerText = `Detail Analisis: ${Math.round(data.score * 100)}% Kemiripan`;
-            document.getElementById('modalScore').innerText = `${Math.round(data.score * 100)}% MIRIP`;
+            // Judul & Skor
+            const percent = Math.round(data.score * 100);
+            document.getElementById('modalScore').innerText = `${percent}%`;
             
+            // Isi Data Kiri (Terduga)
             document.getElementById('modalNameA').innerText = data.nama;
             document.getElementById('modalTextA').innerText = data.catatan;
             
-            document.getElementById('modalNameB').innerText = data.source.split('(')[0]; 
-            document.getElementById('modalTextB').innerText = data.sourceText || "Teks sumber tidak tersedia.";
+            // Isi Data Kanan (Sumber)
+            // Bersihkan nama sumber dari format "Nama (Sekolah)" agar lebih pendek di header
+            let cleanSourceName = data.source.split('(')[0].trim();
+            document.getElementById('modalNameB').innerText = cleanSourceName;
+            
+            // Tampilkan teks sumber (atau pesan error jika kosong)
+            if(data.sourceText && data.sourceText.length > 5) {
+                document.getElementById('modalTextB').innerText = data.sourceText;
+                document.getElementById('modalTextB').classList.remove("italic", "text-gray-400");
+            } else {
+                document.getElementById('modalTextB').innerText = "Teks sumber tidak tersedia untuk ditampilkan (Mungkin terlalu pendek atau data lama).";
+                document.getElementById('modalTextB').classList.add("italic", "text-gray-400");
+            }
 
             document.getElementById('detailModal').classList.remove('hidden');
         }
@@ -340,44 +445,34 @@
             document.getElementById('detailModal').classList.add('hidden');
         }
 
-        // --- EXPORT FUNCTION ---
+        // --- EXPORT TO CSV ---
         function exportToExcel() {
-            if(globalSuspiciousData.length === 0) return alert("Tidak ada data untuk diekspor!");
+            if(globalSuspiciousData.length === 0) return alert("Tidak ada data pelanggaran untuk diekspor!");
             
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Skor,Nama Peserta,Sekolah Peserta,Jawaban Peserta,Sumber Mirip,Jawaban Sumber\n";
+            // Header CSV
+            csvContent += "Tingkat Kemiripan,Nama Peserta,Sekolah Peserta,Jawaban Peserta,Sumber Mirip,Jawaban Sumber\n";
 
             globalSuspiciousData.forEach(row => {
-                let cleanTextA = row.catatan.replace(/"/g, '""'); 
-                let cleanTextB = (row.sourceText || "").replace(/"/g, '""');
-                csvContent += `${Math.round(row.score*100)}%,"${row.nama}","${row.sekolah}","${cleanTextA}","${row.source}","${cleanTextB}"\n`;
+                // Escape tanda kutip dua (") dengan dua kali kutip ("") agar CSV valid
+                let cleanTextA = row.catatan ? row.catatan.replace(/"/g, '""') : "";
+                let cleanTextB = row.sourceText ? row.sourceText.replace(/"/g, '""') : "";
+                let cleanSource = row.source ? row.source.replace(/"/g, '""') : "";
+                
+                csvContent += `"${Math.round(row.score*100)}%","${row.nama}","${row.sekolah}","${cleanTextA}","${cleanSource}","${cleanTextB}"\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
+            const dateStr = new Date().toISOString().slice(0,10);
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Laporan_Audit_Nakula_${new Date().toISOString().slice(0,10)}.csv`);
+            link.setAttribute("download", `Laporan_Audit_Nakula_${dateStr}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
 
-        // --- HELPER FUNCTIONS ---
-        function normalize(str) {
-            if(!str) return "";
-            return str.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, ' ').trim();
-        }
-
-        function getJaccardScore(s1, s2) {
-            let set1 = new Set(s1.split(' '));
-            let set2 = new Set(s2.split(' '));
-            let intersection = new Set([...set1].filter(x => set2.has(x)));
-            let union = new Set([...set1, ...set2]);
-            if (union.size === 0) return 0;
-            return intersection.size / union.size;
-        }
-
-        // --- FUNGSI YANG SEBELUMNYA HILANG ---
+        // --- PROGRESS BAR HELPER ---
         function updateProgress(percent, text) {
             const bar = document.getElementById('progressBar');
             const txt = document.getElementById('progressText');
@@ -391,10 +486,35 @@
             if(status) {
                 if(percent < 100) {
                     status.innerHTML = `<i class="fas fa-circle-notch fa-spin mr-2"></i>${text}`;
+                    txt.classList.remove("bg-green-100", "text-green-700", "border-green-200");
+                    txt.classList.add("bg-rose-100", "text-rose-800", "border-rose-200");
                 } else {
-                    status.innerHTML = `<i class="fas fa-check-circle mr-2 text-green-600"></i>${text}`;
+                    status.innerHTML = `<i class="fas fa-check-circle mr-2 text-emerald-500"></i>${text}`;
+                    txt.classList.remove("bg-rose-100", "text-rose-800", "border-rose-200");
+                    txt.classList.add("bg-green-100", "text-green-700", "border-green-200");
                 }
             }
+        }
+
+        // --- STRING HELPERS ---
+        function normalize(str) {
+            if(!str) return "";
+            return str.toLowerCase()
+                .replace(/[^\w\s]/gi, '') // Hapus simbol
+                .replace(/\s+/g, ' ')     // Hapus spasi ganda
+                .trim();
+        }
+
+        function getJaccardScore(s1, s2) {
+            let set1 = new Set(s1.split(' '));
+            let set2 = new Set(s2.split(' '));
+            
+            // Rumus Jaccard: Irisan dibagi Gabungan
+            let intersection = new Set([...set1].filter(x => set2.has(x)));
+            let union = new Set([...set1, ...set2]);
+            
+            if (union.size === 0) return 0;
+            return intersection.size / union.size;
         }
     </script>
 </body>
