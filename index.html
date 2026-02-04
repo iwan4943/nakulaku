@@ -116,10 +116,7 @@
                     <p class="text-[11px] font-bold text-stone-400 dark:text-stone-500 mt-1 uppercase tracking-[0.15em]">Solid Bersinergi Menginspirasi</p>
                 </div>
                 <div class="flex gap-2 items-center">
-                    <button onclick="app.refreshData(true)" class="w-10 h-10 rounded-xl bg-white/80 dark:bg-darkcard/80 flex items-center justify-center text-stone-500 dark:text-stone-300 shadow-sm border border-white dark:border-darkborder backdrop-blur-sm active:scale-95 transition cursor-pointer">
-                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                    </button>
-                    <img src="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png" class="w-10 h-10 rounded-xl shadow-soft bg-white dark:bg-darkcard p-1 object-contain border border-white dark:border-darkborder">
+                    <img src="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png" class="w-10 h-10 rounded-xl shadow-soft bg-white dark:bg-darkcard p-1 object-contain border border-stone-100 dark:border-darkborder">
                 </div>
             </header>
 
@@ -202,7 +199,10 @@
                         <div id="menu-section" class="hidden">
                             <div class="flex items-center justify-between px-2 mb-4">
                                 <h3 class="font-bold text-stone-800 dark:text-stone-200 text-sm flex items-center gap-2"><i data-lucide="grid" class="w-4 h-4 text-nakula-600"></i> Layanan Digital</h3>
-                                <button onclick="app.toggleTheme()" class="w-9 h-9 rounded-full bg-white dark:bg-darkcard flex items-center justify-center text-stone-400 border border-stone-100 dark:border-darkborder cursor-pointer relative z-20"><i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i><i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i></button>
+                                <div class="flex gap-2">
+                                    <button onclick="app.refreshData(true)" class="w-8 h-8 rounded-full bg-white dark:bg-darkcard flex items-center justify-center text-stone-400 border border-stone-100 dark:border-darkborder shadow-sm active:scale-95 transition cursor-pointer"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button>
+                                    <button onclick="app.toggleTheme()" class="w-8 h-8 rounded-full bg-white dark:bg-darkcard flex items-center justify-center text-stone-400 border border-stone-100 dark:border-darkborder shadow-sm active:scale-95 transition cursor-pointer"><i data-lucide="moon" class="w-3.5 h-3.5 block dark:hidden"></i><i data-lucide="sun" class="w-3.5 h-3.5 hidden dark:block"></i></button>
+                                </div>
                             </div>
                             <div id="mobile-menu-container" class="grid grid-cols-2 gap-4 pb-10"></div>
                         </div>
@@ -210,7 +210,10 @@
                         <div id="agenda-section" class="pb-10 hidden">
                             <div class="flex items-center justify-between px-2 mb-4">
                                 <h3 class="font-bold text-stone-800 dark:text-stone-200 text-sm flex items-center gap-2"><i data-lucide="calendar-days" class="w-4 h-4 text-nakula-600"></i> Jadwal Kegiatan</h3>
-                                <button onclick="app.toggleTheme()" class="w-9 h-9 rounded-full bg-white dark:bg-darkcard flex items-center justify-center text-stone-400 border border-stone-100 dark:border-darkborder cursor-pointer relative z-20"><i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i><i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i></button>
+                                <div class="flex gap-2">
+                                    <button onclick="app.refreshData(true)" class="w-8 h-8 rounded-full bg-white dark:bg-darkcard flex items-center justify-center text-stone-400 border border-stone-100 dark:border-darkborder shadow-sm active:scale-95 transition cursor-pointer"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button>
+                                    <button onclick="app.toggleTheme()" class="w-8 h-8 rounded-full bg-white dark:bg-darkcard flex items-center justify-center text-stone-400 border border-stone-100 dark:border-darkborder shadow-sm active:scale-95 transition cursor-pointer"><i data-lucide="moon" class="w-3.5 h-3.5 block dark:hidden"></i><i data-lucide="sun" class="w-3.5 h-3.5 hidden dark:block"></i></button>
+                                </div>
                             </div>
                             <div id="mobile-agenda-list" class="space-y-4"></div>
                         </div>
@@ -227,7 +230,7 @@
                 </div>
 
                 <footer class="mt-8 mb-4 text-center shrink-0">
-                    <p class="text-[10px] font-bold text-stone-400 dark:text-stone-600 uppercase tracking-widest">&copy; 2026 Nakulaku Ekosistem | versi PWA Beta 1.0</p>
+                    <p class="text-[10px] font-bold text-stone-400 dark:text-stone-600 uppercase tracking-widest">&copy; 2026 Nakulaku Ekosistem | versi PWE 1.0</p>
                 </footer>
             </div>
         </div>
@@ -267,7 +270,6 @@
             // --- SMART BACK BUTTON LOGIC ---
             setupBackButton: function() {
                 window.onpopstate = (event) => {
-                    // Cek Browser Modal dulu
                     const browserModal = document.getElementById('browser-modal');
                     if(browserModal && !browserModal.classList.contains('hidden')) {
                         this.closeModal('browser-modal', true);
@@ -292,7 +294,7 @@
                 window.history.pushState(null, null, window.location.href);
             },
 
-            // --- BROWSER / IFRAME LOGIC (NEW) ---
+            // --- BROWSER / IFRAME LOGIC ---
             openBrowser: function(url, title) {
                 if(!url) return;
                 const modal = document.getElementById('browser-modal');
@@ -305,15 +307,13 @@
                 titleEl.innerText = title || 'Layanan';
                 urlEl.innerText = url;
                 frame.src = url;
-                loader.classList.remove('hidden'); // Show loader
+                loader.classList.remove('hidden'); 
                 
-                // Set external button action
                 btnExt.onclick = () => window.open(url, '_blank');
 
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
                 
-                // Push history for back button support
                 window.history.pushState({modal: 'browser-modal'}, null, "");
             },
 
@@ -566,7 +566,6 @@
                         if(hasChild) {
                             action = `onclick="app.openSubmenu('${item.judul}')"`;
                         } else if(item.url) {
-                            // Cek apakah URL harus di open di luar (opsional) atau default iframe
                             action = `onclick="app.openBrowser('${item.url}', '${item.judul}')"`;
                         }
                         
