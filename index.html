@@ -321,6 +321,18 @@
     <div id="exit-toast">Tekan sekali lagi untuk keluar</div>
 
     <script>
+        // --- 1. REGISTRASI SERVICE WORKER (WAJIB UNTUK INSTALL PWA) ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js').then(function(registration) {
+                    console.log('ServiceWorker sukses: ', registration.scope);
+                }, function(err) {
+                    console.log('ServiceWorker gagal: ', err);
+                });
+            });
+        }
+
+        // --- 2. KODE APLIKASI UTAMA ---
         const app = {
             // !!!!!!! PENTING: GANTI URL DI BAWAH INI DENGAN URL DEPLOY TERBARU !!!!!!!
             apiURL: "https://script.google.com/macros/s/AKfycbzgyeCMcnsLzBMkVreP8mdw-ImRev9Q-hHn0eVpEBw6YYgD_JlOz8oXBFQ-6vtMPFAe/exec", 
