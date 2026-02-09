@@ -1,24 +1,23 @@
 {
-  "name": "Nakulaku Ekosistem",
-  "short_name": "Nakulaku",
-  "description": "Solid Bersinergi Menginspirasi",
+  "name": "NAKULAKU EKOSISTEM",
+  "short_name": "NAKULAKU",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#F6F5F4",
   "theme_color": "#F6F5F4",
-  "orientation": "portrait-primary",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png",
       "sizes": "192x192",
-      "type": "image/png"
-      "purpose": "any maskable"  <-- TAMBAHKAN BARIS INI
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png",
       "sizes": "512x512",
-      "type": "image/png"
-      "purpose": "any maskable"  <-- TAMBAHKAN BARIS INI
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
