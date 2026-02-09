@@ -17,25 +17,14 @@
                 extend: { 
                     colors: { 
                         nakula: { 50: '#fff1f2', 100: '#ffe4e6', 200: '#fecdd3', 500: '#f43f5e', 600: '#B3261E', 700: '#9f1239', 800: '#881337', 900: '#4c0519' },
-                        gnomebg: '#F2F2F2', 
-                        gnomecard: '#FFFFFF', 
+                        gnomebg: '#F2F2F2', gnomecard: '#FFFFFF', 
                         darkbg: '#121212', darkcard: '#1E1E1E', darkborder: '#333333'
                     }, 
                     fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
-                    boxShadow: { 
-                        'soft': '0 10px 40px -10px rgba(0,0,0,0.08)',
-                        'glow': '0 0 20px rgba(179, 38, 30, 0.3)' 
-                    },
-                    animation: { 
-                        'fade-in': 'fadeIn 0.5s ease-out forwards',
-                        'float': 'float 6s ease-in-out infinite',
-                        'breathe': 'breathe 3s ease-in-out infinite',
-                        'pop-in': 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'
-                    },
+                    boxShadow: { 'soft': '0 10px 40px -10px rgba(0,0,0,0.08)', 'glow': '0 0 20px rgba(179, 38, 30, 0.3)' },
+                    animation: { 'fade-in': 'fadeIn 0.5s ease-out forwards', 'pop-in': 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' },
                     keyframes: { 
                         fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-5px)' } },
-                        breathe: { '0%, 100%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.02)' } },
                         popIn: { '0%': { opacity: '0', transform: 'scale(0.8)' }, '100%': { opacity: '1', transform: 'scale(1)' } }
                     }
                 } 
@@ -50,46 +39,33 @@
         ::-webkit-scrollbar { width: 0px; background: transparent; }
         @media (min-width: 1024px) { ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; } .dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); } }
         
-        .pro-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .pro-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); transition: all 0.3s; }
         .dark .pro-card { background: rgba(30, 30, 30, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .pro-card:active { transform: scale(0.96); }
-        
-        /* New Menu Card Style */
         .menu-card-new { background: white; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border: 1px solid rgba(0,0,0,0.05); }
         .dark .menu-card-new { background: #1E1E1E; border: 1px solid rgba(255,255,255,0.08); }
         .menu-card-new:active { transform: scale(0.92); }
-
-        .modal-content { transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1); }
-        
-        /* CLASSIC SLIDESHOW STYLES */
-        .school-slide { position: absolute; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; padding: 1.5rem; gap: 1rem; opacity: 0; transform: translateY(10px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events: none; }
+        .school-slide { position: absolute; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; padding: 1.5rem; gap: 1rem; opacity: 0; transform: translateY(10px); transition: all 0.8s; pointer-events: none; }
         .school-slide.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
         .school-slide.exit { opacity: 0; transform: translateY(-10px); }
-        
         .loader-ring { display: inline-block; position: relative; width: 80px; height: 80px; }
-        .loader-ring div { box-sizing: border-box; display: block; position: absolute; width: 64px; height: 64px; margin: 8px; border: 4px solid #B3261E; border-radius: 50%; animation: loader-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite; border-color: #B3261E transparent transparent transparent; }
+        .loader-ring div { box-sizing: border-box; display: block; position: absolute; width: 64px; height: 64px; margin: 8px; border: 4px solid #B3261E; border-radius: 50%; animation: loader-ring 1.2s infinite; border-color: #B3261E transparent transparent transparent; }
         .dark .loader-ring div { border-color: #fff transparent transparent transparent; }
         .loader-ring div:nth-child(1) { animation-delay: -0.45s; } .loader-ring div:nth-child(2) { animation-delay: -0.3s; } .loader-ring div:nth-child(3) { animation-delay: -0.15s; }
         @keyframes loader-ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        #exit-toast { visibility: hidden; min-width: 220px; background-color: #303030; color: #fff; text-align: center; border-radius: 50px; padding: 10px 24px; position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.2s; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 1px solid #454545; }
-        #exit-toast.show { visibility: visible; opacity: 1; bottom: 50px; }
-        
         .timeline-item { position: relative; padding-left: 1.5rem; border-left: 2px solid #e5e7eb; padding-bottom: 2rem; }
         .dark .timeline-item { border-left-color: #333; }
         .timeline-item:last-child { border-left: transparent; padding-bottom: 0; }
         .timeline-dot { position: absolute; -left: 5px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #e5e7eb; border: 2px solid #fff; }
         .dark .timeline-dot { background: #333; border-color: #1e1e1e; }
-
-        #browser-frame { width: 100%; height: 100%; border: none; background: white; }
-        .iframe-loader { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; background: rgba(255,255,255,0.8); z-index: 10; }
-        .dark .iframe-loader { background: rgba(30,30,30,0.8); }
-
         .perspective-1000 { perspective: 1000px; }
         .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s; transform-style: preserve-3d; }
         .card-inner.is-flipped { transform: rotateY(180deg); }
         .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 1.5rem; }
         .card-back { transform: rotateY(180deg); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        #exit-toast { visibility: hidden; min-width: 220px; background-color: #303030; color: #fff; text-align: center; border-radius: 50px; padding: 10px 24px; position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.2s; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 1px solid #454545; }
+        #exit-toast.show { visibility: visible; opacity: 1; bottom: 50px; }
     </style>
 </head>
 <body class="bg-gnomebg text-stone-800 dark:bg-darkbg dark:text-stone-200 h-screen flex flex-col relative transition-colors duration-300">
@@ -121,6 +97,10 @@
             <nav class="flex-1 space-y-2 overflow-y-auto pr-1 custom-scroll flex flex-col items-center xl:items-stretch">
                 <div class="hidden xl:block mb-2"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest px-2 mb-2">Menu Utama</p></div>
                 <div id="desktop-sidebar-menu" class="space-y-2 w-full"></div>
+                <div id="desktop-admin-menu" class="hidden space-y-2 w-full mt-4">
+                    <div class="hidden xl:block"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest px-2 mb-2">Panel Kontrol</p></div>
+                </div>
+
                 <div class="pt-4 mt-4 border-t border-stone-200 dark:border-stone-700 w-full">
                     <div class="hidden xl:block"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest px-2 mb-2">Pengaturan</p></div>
                     <button onclick="app.refreshData(true)" class="w-full p-3 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-300 transition flex items-center justify-center xl:justify-start gap-3 font-medium text-sm cursor-pointer"><i data-lucide="refresh-cw" class="w-5 h-5 xl:w-4 xl:h-4"></i><span class="hidden xl:inline">Sinkronisasi</span></button>
@@ -169,9 +149,9 @@
                     </div>
 
                     <div class="col-span-12 md:col-span-5 xl:col-span-4 flex flex-col h-full">
+                        
                         <div id="widget-akun-mobile" class="md:hidden pro-card rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden shadow-soft min-h-[90px]">
                             <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-white/40 to-transparent pointer-events-none"></div>
-                            
                             <div id="mob-view-guest" class="relative z-10 w-full flex flex-row justify-between items-center h-full">
                                 <div><p class="text-[9px] font-bold text-stone-400 uppercase tracking-wide mb-0.5">Selamat Datang</p><h3 class="font-extrabold text-stone-800 dark:text-white text-lg">Tamu</h3></div>
                                 <div class="flex gap-2">
@@ -179,7 +159,6 @@
                                     <button class="bg-stone-900 text-white dark:bg-white dark:text-darkbg px-5 py-2.5 rounded-xl text-xs font-bold shadow-lg hover:scale-105 active:scale-95 transition cursor-pointer animate-breathe" onclick="app.openModal('profile-modal')">Masuk</button>
                                 </div>
                             </div>
-
                             <div id="mob-view-user" class="relative z-10 w-full flex flex-row items-center gap-5 hidden h-full cursor-pointer relative z-20" onclick="app.openModal('profile-modal')">
                                 <div class="relative shrink-0"><img id="mob-user-photo" src="" class="w-14 h-14 rounded-full border-2 border-white/60 object-cover shadow-sm bg-white/50"></div>
                                 <div class="flex-1 min-w-0">
@@ -188,11 +167,13 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="hidden md:flex bg-sky-50 dark:bg-sky-900/20 border border-sky-100 dark:border-sky-800 rounded-[2rem] p-6 h-full flex-col justify-center items-center shadow-sm relative overflow-hidden min-h-[100px] text-center">
-                            <i data-lucide="quote" class="w-6 h-6 text-sky-300 mb-2 opacity-50"></i>
-                            <p id="quote-text" class="text-sm font-bold text-sky-800 dark:text-sky-100 leading-relaxed italic">"..."</p>
-                            <p id="quote-author" class="text-xs text-sky-500 mt-1 font-medium">-</p>
+                            <i data-lucide="quote" class="w-8 h-8 text-sky-300 mb-2 opacity-50"></i>
+                            <p id="quote-text" class="text-sm font-bold text-sky-800 dark:text-sky-100 leading-relaxed italic">"Pendidikan adalah senjata..."</p>
+                            <p id="quote-author" class="text-xs text-sky-500 mt-2 font-medium">-</p>
                         </div>
+
                     </div>
                 </div>
 
@@ -217,6 +198,16 @@
 
                 <div class="flex-1 shrink-0">
                     <div class="md:hidden">
+                        
+                        <div id="mobile-admin-section" class="hidden mb-6 animate-fade-in">
+                            <div class="flex items-center justify-between px-2 mb-3">
+                                <h3 class="font-bold text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400">Ruang Kontrol</h3>
+                                <span class="bg-stone-800 dark:bg-white dark:text-black text-white text-[10px] px-2 py-0.5 rounded-md font-bold shadow-sm">KHUSUS</span>
+                            </div>
+                            <div id="mobile-admin-container" class="flex gap-3 overflow-x-auto pb-4 -mx-6 px-6 scrollbar-hide">
+                                </div>
+                        </div>
+
                         <div id="menu-section" class="hidden">
                             <div class="flex items-center justify-between px-2 mb-4">
                                 <h3 class="font-bold text-stone-800 dark:text-stone-200 text-sm flex items-center gap-2"><i data-lucide="grid" class="w-4 h-4 text-nakula-600"></i> Layanan Digital</h3>
@@ -251,7 +242,7 @@
                 </div>
 
                 <footer class="mt-8 mb-4 text-center shrink-0">
-                    <p class="text-[10px] font-bold text-stone-400 dark:text-stone-600 uppercase tracking-widest">&copy; 2026 Nakulaku Ekosistem | Versi 56.2</p>
+                    <p class="text-[10px] font-bold text-stone-400 dark:text-stone-600 uppercase tracking-widest">&copy; 2026 Nakulaku Ekosistem | Versi 58.3</p>
                 </footer>
             </div>
         </div>
@@ -319,10 +310,7 @@
             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             menuMap: {}, backPressedTime: 0, schoolInterval: null, schools: [{ name: "NAKULAKU EKOSISTEM", jargon: '"Solid Bersinergi Menginspirasi"' }],
-            currentUser: null, currentGreeting: 'Selamat Pagi', deferredPrompt: null,
-            
-            // --- NEW: Pending Action Storage (v56.2) ---
-            pendingAction: null,
+            currentUser: null, currentGreeting: 'Selamat Pagi', deferredPrompt: null, pendingAction: null,
 
             init: function() {
                 this.initTheme(); this.initSchoolRotator(); this.initClock();
@@ -330,315 +318,44 @@
                 const cached = localStorage.getItem('nakula_cache');
                 if (cached) { try { this.render(JSON.parse(cached)); } catch(e){} }
                 this.refreshData(false); 
-                this.setupBackButton(); 
-                this.setupInstallPrompt(); 
-                lucide.createIcons();
+                this.setupBackButton(); this.setupInstallPrompt(); lucide.createIcons();
             },
 
-            flipCard: function() { const card = document.getElementById('card-inner'); card.classList.toggle('is-flipped'); },
-
-            setupBackButton: function() {
-                window.onpopstate = (event) => {
-                    const browserModal = document.getElementById('browser-modal');
-                    if(browserModal && !browserModal.classList.contains('hidden')) { this.closeModal('browser-modal', true); return; }
-                    const activeModal = document.querySelector('.fixed.z-50:not(.hidden)');
-                    if (activeModal) { this.closeModal(activeModal.id, true); } else {
-                        const now = new Date().getTime();
-                        if (now - this.backPressedTime < 2000) { history.back(); } else {
-                            this.backPressedTime = now; document.getElementById('exit-toast').classList.add('show');
-                            setTimeout(() => document.getElementById('exit-toast').classList.remove('show'), 2000);
-                            window.history.pushState(null, null, window.location.href);
-                        }
-                    }
-                };
-                window.history.pushState(null, null, window.location.href);
-            },
-
-            openBrowser: function(url, title) {
-                if(!url) return;
-                const modal = document.getElementById('browser-modal');
-                const frame = document.getElementById('browser-frame');
-                document.getElementById('browser-title').innerText = title || 'Layanan';
-                document.getElementById('browser-url').innerText = url;
-                frame.src = url;
-                document.getElementById('browser-loader').classList.remove('hidden'); 
-                document.getElementById('btn-browser-ext').onclick = () => window.open(url, '_blank');
-                modal.classList.remove('hidden'); modal.classList.add('flex');
-                window.history.pushState({modal: 'browser-modal'}, null, "");
-            },
-
-            openModal: function(id) { 
-                const el = document.getElementById(id); 
-                if(!el) return;
-                el.classList.remove('hidden'); 
-                if(id === 'browser-modal') el.classList.add('flex');
-                
-                setTimeout(() => { 
-                    el.querySelector('.modal-overlay')?.classList.remove('opacity-0'); 
-                    const content = el.querySelector('.modal-content');
-                    if(content) {
-                        content.classList.remove('opacity-0', 'scale-95', 'scale-90', 'translate-y-full'); 
-                        content.classList.add('scale-100', 'translate-y-0'); 
-                    }
-                }, 10);
-                window.history.pushState({modal: id}, null, "");
-            },
-            
-            closeModal: function(id, fromBackEvent = false) { 
-                const el = document.getElementById(id); 
-                if(!el) return;
-                el.querySelector('.modal-overlay')?.classList.add('opacity-0'); 
-                const c = el.querySelector('.modal-content'); 
-                if(c) {
-                    c.classList.remove('scale-100', 'opacity-100', 'animate-bounce-in', 'animate-pop-in'); 
-                    c.classList.add('opacity-0', 'scale-95'); 
-                    if(id.includes('submenu') || id.includes('profile')) c.classList.add('translate-y-full'); 
-                }
-                setTimeout(() => {
-                    el.classList.add('hidden');
-                    if(id === 'browser-modal') {
-                        el.classList.remove('flex');
-                        document.getElementById('browser-frame').src = '';
-                    }
-                    if(id === 'profile-modal') {
-                        setTimeout(() => { 
-                            const card = document.getElementById('card-inner');
-                            if(card) card.classList.remove('is-flipped');
-                        }, 200);
-                    }
-                }, 300); 
-                
-                if (!fromBackEvent) {
-                    history.back();
-                }
-            },
-
-            setupInstallPrompt: function() { window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); this.deferredPrompt = e; const mobBtn = document.getElementById('mob-btn-install'); const deskBtn = document.getElementById('desk-btn-install'); if(mobBtn) mobBtn.classList.remove('hidden'); if(deskBtn) deskBtn.classList.remove('hidden'); }); },
-            installApp: function() { if (this.deferredPrompt) { this.deferredPrompt.prompt(); this.deferredPrompt.userChoice.then((choiceResult) => { if (choiceResult.outcome === 'accepted') { document.getElementById('mob-btn-install').classList.add('hidden'); document.getElementById('desk-btn-install').classList.add('hidden'); } this.deferredPrompt = null; }); } },
-            toggleTheme: function() { const isDark=document.documentElement.classList.toggle('dark'); localStorage.setItem('theme',isDark?'dark':'light'); this.updateStatusBar(isDark); },
-            initTheme: function() { const saved=localStorage.getItem('theme'); const isDark=saved==='dark'||(!saved&&window.matchMedia('(prefers-color-scheme: dark)').matches); if(isDark)document.documentElement.classList.add('dark'); this.updateStatusBar(isDark); },
+            // --- SMART THEME ---
+            initTheme: function() { const saved = localStorage.getItem('theme'); const systemDark = window.matchMedia('(prefers-color-scheme: dark)'); if(saved === 'dark' || (!saved && systemDark.matches)) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark'); systemDark.addEventListener('change', (e) => { if (!localStorage.getItem('theme')) { if (e.matches) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark'); } this.updateStatusBar(document.documentElement.classList.contains('dark')); }); this.updateStatusBar(document.documentElement.classList.contains('dark')); },
+            toggleTheme: function() { const isDark = document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', isDark ? 'dark' : 'light'); this.updateStatusBar(isDark); },
             updateStatusBar: function(isDark) { document.getElementById('theme-color-meta').setAttribute('content',isDark?'#1E1E1E':'#F6F5F4'); },
-            initClock: function() { const updateTime = () => { const now = new Date(); const hrs = now.getHours(); const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu']; const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des']; const tStr = now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); const dStr = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`; const elClock = document.getElementById('desktop-clock'); const elDate = document.getElementById('desktop-date'); if(elClock) elClock.innerText = tStr; if(elDate) elDate.innerText = dStr; let greet = 'Selamat Malam'; if (hrs >= 4 && hrs < 11) greet = 'Selamat Pagi'; else if (hrs >= 11 && hrs < 15) greet = 'Selamat Siang'; else if (hrs >= 15 && hrs < 18) greet = 'Selamat Sore'; this.currentGreeting = greet; if (this.currentUser && this.currentUser.realName) { const mobName = document.getElementById('mob-user-name'); const shortName = this.currentUser.realName.split(' ')[0]; if (mobName) mobName.innerText = `${greet}, ${shortName}`; } }; setInterval(updateTime, 1000); updateTime(); },
-            handlePhotoUpload: function(input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = function(e) { document.getElementById('modal-photo').src = e.target.result; const p = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); p.photo = e.target.result; localStorage.setItem('nakula_profile', JSON.stringify(p)); app.updateUIForUser(p); }; reader.readAsDataURL(input.files[0]); } },
-            checkAutoLogin: function() { const p = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); if(p.nama) { this.updateUIForUser(p); this.refreshUserPerformance(p.nama); } else { this.updateUIForGuest(); } },
+
+            // --- LOGIC ---
+            logActivity: function(activity, detail) { const p = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); fetch(this.apiURL, { method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'log', user: p.realName || 'Tamu', activity: activity, detail: detail || navigator.userAgent }) }).catch(()=>{}); },
             
+            // --- DATA SYNC ---
             refreshData: function(manual) {
                 const overlay = document.getElementById('loading-overlay'); if(manual) { overlay.classList.remove('hidden'); overlay.classList.add('flex'); }
-                const container = document.getElementById('mobile-menu-container');
-                if(!localStorage.getItem('nakula_cache') || manual) { if(!container.children.length) container.innerHTML = `<div class="col-span-2 h-32 bg-stone-200 dark:bg-darkcard rounded-[2rem] animate-pulse"></div>`; }
                 const p = JSON.parse(localStorage.getItem('nakula_profile') || '{}');
-                const promises = [fetch(`${this.apiURL}?action=content&t=${Date.now()}`).then(r => r.json())];
-                if(p.nama) promises.push(fetch(`${this.apiURL}?action=refresh&email=${p.nama}`).then(r => r.json()));
-                Promise.all(promises).then(results => {
-                    const content = results[0]; localStorage.setItem('nakula_cache', JSON.stringify(content)); this.render(content);
-                    if(results[1] && results[1].status === 'success' && results[1].performa) { this.updatePerformanceWidget(results[1].performa); p.performa = results[1].performa; localStorage.setItem('nakula_profile', JSON.stringify(p)); }
+                // Fetch Content & User Data Parallel
+                Promise.all([
+                    fetch(`${this.apiURL}?action=content&t=${Date.now()}`).then(r => r.json()),
+                    p.nama ? fetch(`${this.apiURL}?action=refresh&email=${p.nama}`).then(r => r.json()) : Promise.resolve(null)
+                ]).then(([content, userData]) => {
+                    if(content && content.status === 'success') {
+                        localStorage.setItem('nakula_cache', JSON.stringify(content));
+                        this.render(content);
+                    } else if (manual) { this.showAlert('error', 'Gagal', 'Gagal memuat konten aplikasi'); }
+
+                    if(userData && userData.status === 'success' && userData.performa) {
+                        this.updatePerformanceWidget(userData.performa);
+                        p.performa = userData.performa;
+                        localStorage.setItem('nakula_profile', JSON.stringify(p));
+                    }
                     if(manual) { setTimeout(() => { overlay.classList.add('hidden'); overlay.classList.remove('flex'); this.showAlert('success', 'Selesai', 'Data berhasil diperbarui'); }, 800); }
-                }).catch(e => { if(manual) { overlay.classList.add('hidden'); overlay.classList.remove('flex'); this.showAlert('error', 'Gagal', 'Periksa koneksi internet Anda'); } });
-            },
-            
-            refreshUserPerformance: function(email) { fetch(`${this.apiURL}?action=refresh&email=${email}`).then(r=>r.json()).then(d=>{ if(d.status === 'success' && d.performa) { this.updatePerformanceWidget(d.performa); let p = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); p.performa = d.performa; localStorage.setItem('nakula_profile', JSON.stringify(p)); } }).catch(e=>console.log("Sync bg failed", e)); },
-            getScoreColor: function(score) { if(score >= 80) return { text: 'text-green-600', bar: 'bg-green-500' }; if(score >= 50) return { text: 'text-yellow-600', bar: 'bg-yellow-500' }; return { text: 'text-red-600', bar: 'bg-red-500' }; },
-            updatePerformanceWidget: function(p) { const pColor = this.getScoreColor(p.presensi); const tColor = this.getScoreColor(p.tugas); const elsP = [document.getElementById('score-presensi')]; const elsT = [document.getElementById('score-tugas')]; elsP.forEach(el => { if(el) el.innerText = p.presensi + '%'; }); elsT.forEach(el => { if(el) el.innerText = p.tugas + '%'; }); const barP = document.getElementById('bar-presensi'); if(barP) { barP.className = `h-full rounded-full transition-all duration-1000 ${pColor.bar}`; barP.style.width = p.presensi + '%'; } const barT = document.getElementById('bar-tugas'); if(barT) { barT.className = `h-full rounded-full transition-all duration-1000 ${tColor.bar}`; barT.style.width = p.tugas + '%'; } const descP = document.getElementById('desc-presensi'); if(descP) descP.innerText = p.det_presensi; const descT = document.getElementById('desc-tugas'); if(descT) descT.innerText = p.det_tugas; const iconP = document.getElementById('icon-presensi-bg'); if(iconP) iconP.className = `w-8 h-8 rounded-full bg-white dark:bg-darkbg flex items-center justify-center shadow-sm ${pColor.text}`; const iconT = document.getElementById('icon-tugas-bg'); if(iconT) iconT.className = `w-8 h-8 rounded-full bg-white dark:bg-darkbg flex items-center justify-center shadow-sm ${tColor.text}`; },
-            getRoleBg: function(role) { const r = (role || '').toLowerCase(); if(r.includes('kepala')) return 'bg-gradient-to-br from-indigo-100 to-purple-200 dark:from-indigo-900/30 dark:to-purple-900/30'; if(r.includes('pjok')) return 'bg-gradient-to-br from-orange-100 to-red-200 dark:from-orange-900/30 dark:to-red-900/30'; if(r.includes('agama')) return 'bg-gradient-to-br from-emerald-100 to-teal-200 dark:from-emerald-900/30 dark:to-teal-900/30'; if(r.includes('kelas')) return 'bg-gradient-to-br from-blue-100 to-cyan-200 dark:from-blue-900/30 dark:to-cyan-900/30'; return 'bg-gradient-to-br from-slate-200 to-zinc-300 dark:from-slate-800 dark:to-zinc-800'; },
-            
-            syncData: function() { 
-                const pin = document.getElementById('sync-pin').value;
-                const btn = document.getElementById('btn-sync'); 
-                if(!pin) return this.showAlert('error','Gagal','Isi PIN Akses'); 
-                const oldTxt = btn.innerHTML; btn.innerHTML = 'Memproses...'; 
-                fetch(`${this.apiURL}?action=sync&pin=${pin}`).then(r => r.json()).then(d => { 
-                    if(d.status === 'success') { 
-                        const oldP = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); 
-                        const profile = { nama: d.nama, realName: d.realName, role: d.jabatan, instansi: d.instansi, photo: oldP.photo || d.foto || "https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png", performa: d.performa }; 
-                        localStorage.setItem('nakula_profile', JSON.stringify(profile)); 
-                        localStorage.setItem('nakula_role', d.jabatan); 
-                        this.updateUIForUser(profile); 
-                        this.closeModal('profile-modal'); 
-                        this.showAlert('success', 'Berhasil', `Selamat datang, ${d.realName}`); 
-                    } else { this.showAlert('error', 'Gagal', d.message); } 
-                }).catch(() => this.showAlert('error','Error','Koneksi bermasalah')).finally(() => btn.innerHTML = oldTxt); 
-            },
-
-            updateUIForUser: function(p) {
-                this.currentUser = p; 
-                document.getElementById('mob-view-guest').classList.add('hidden'); document.getElementById('mob-view-user').classList.remove('hidden'); document.getElementById('mob-view-user').classList.add('flex');
-                document.getElementById('menu-section').classList.remove('hidden'); document.getElementById('agenda-section').classList.add('hidden'); 
-                const shortName = p.realName ? p.realName.split(' ')[0] : 'User'; document.getElementById('mob-user-name').innerText = `${this.currentGreeting}, ${shortName}`; document.getElementById('mob-user-role').innerText = `${p.role || '-'} • ${p.instansi || '-'}`;
-                if(p.photo) document.getElementById('mob-user-photo').src = p.photo;
-                const widgetMobile = document.getElementById('widget-akun-mobile'); if(widgetMobile) widgetMobile.className = `md:hidden pro-card rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden shadow-soft min-h-[90px] ${this.getRoleBg(p.role)}`;
-                document.getElementById('login-form-container').classList.add('hidden'); document.getElementById('loggedin-actions').classList.remove('hidden');
-                document.getElementById('modal-status').innerText = 'Terverifikasi'; document.getElementById('modal-status').className = 'text-xs font-bold text-green-500 mt-1 uppercase tracking-wider';
-                document.getElementById('id-card-name').innerText = p.realName; document.getElementById('id-card-role').innerText = p.role;
-                document.getElementById('id-card-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(p.nama)}`;
-                document.getElementById('desk-view-guest').classList.add('hidden'); document.getElementById('desk-view-user').classList.remove('hidden');
-                const deskProfileContainer = document.getElementById('desktop-profile-container'); deskProfileContainer.className = `bg-gradient-to-br from-slate-100 to-zinc-200 dark:from-slate-800 dark:to-zinc-800 rounded-[2rem] p-4 xl:p-6 text-center shadow-soft dark:shadow-none border border-white/50 dark:border-white/5 relative overflow-hidden group ${this.getRoleBg(p.role)}`;
-                document.getElementById('desk-user-name').innerText = p.realName; document.getElementById('desk-user-role').innerText = `${p.role || '-'} • ${p.instansi || '-'}`; if(p.photo) document.getElementById('desk-user-photo').src = p.photo;
-                const widget = document.getElementById('widget-performa'); widget.classList.remove('hidden'); if(p.performa) this.updatePerformanceWidget(p.performa);
-            },
-            
-            updateUIForGuest: function() {
-                this.currentUser = null;
-                document.getElementById('mob-view-guest').classList.remove('hidden'); document.getElementById('mob-view-user').classList.add('hidden'); document.getElementById('mob-view-user').classList.remove('flex');
-                document.getElementById('menu-section').classList.add('hidden'); document.getElementById('agenda-section').classList.remove('hidden'); 
-                const widgetMobile = document.getElementById('widget-akun-mobile'); widgetMobile.className = "md:hidden pro-card rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden shadow-soft min-h-[90px] bg-gnomecard dark:bg-darkcard border border-white dark:border-darkborder";
-                document.getElementById('login-form-container').classList.remove('hidden'); document.getElementById('loggedin-actions').classList.add('hidden');
-                document.getElementById('modal-status').innerText = 'Belum Terhubung'; document.getElementById('modal-status').className = 'text-xs font-bold text-stone-400 mt-1 uppercase tracking-wider';
-                document.getElementById('desk-view-guest').classList.remove('hidden'); document.getElementById('desk-view-user').classList.add('hidden');
-                const deskProfileContainer = document.getElementById('desktop-profile-container'); deskProfileContainer.className = "bg-gradient-to-br from-slate-100 to-zinc-200 dark:from-slate-800 dark:to-zinc-800 rounded-[2rem] p-4 xl:p-6 text-center shadow-soft dark:shadow-none border border-white/50 dark:border-white/5 relative overflow-hidden group";
-                document.getElementById('widget-performa').classList.add('hidden');
-            },
-
-            renderAgenda: function(agendaList) { 
-                const deskContainer = document.getElementById('desktop-agenda-list'); 
-                const mobContainer = document.getElementById('mobile-agenda-list'); 
-                let html = ''; 
-                if(!agendaList || agendaList.length === 0) { 
-                    html = `<div class="p-6 text-center text-stone-400"><i data-lucide="calendar-off" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>Belum ada agenda</div>`; 
-                } else { 
-                    agendaList.forEach(item => { 
-                        html += `<div class="timeline-item group"><div class="timeline-dot transition-transform group-hover:scale-125"></div><div class="flex items-start justify-between group-hover:bg-stone-50 dark:group-hover:bg-stone-800/50 p-3 rounded-2xl transition-colors -mt-2"><div class="flex-1"><span class="text-[10px] font-bold text-nakula-600 uppercase tracking-widest block mb-1">${item.tanggal}</span><h4 class="text-sm font-bold text-stone-800 dark:text-white leading-snug">${item.kegiatan}</h4>${item.ket ? `<div class="text-[11px] text-stone-500 mt-1">${item.ket}</div>` : ''}</div></div></div>`; 
-                    }); 
-                } 
-                if(deskContainer) deskContainer.innerHTML = html; 
-                if(mobContainer) mobContainer.innerHTML = html; 
-                lucide.createIcons(); 
-            },
-
-            // --- GUARANTEED FIX: PROCESS ACTION ---
-            processConfirm: function() {
-                if (this.pendingAction) {
-                    this.pendingAction();
-                    this.pendingAction = null;
-                }
-                this.closeModal('dialog-modal');
-            },
-
-            showConfirm: function(title, msg, callback) {
-                const modal = document.getElementById('dialog-modal');
-                const iconContainer = document.getElementById('dialog-icon');
-                const iconGlow = document.getElementById('dialog-icon-glow');
-                const titleEl = document.getElementById('dialog-title');
-                const msgEl = document.getElementById('dialog-msg');
-                const actionsEl = document.getElementById('dialog-actions');
-
-                // 1. Store callback for global access
-                this.pendingAction = callback;
-
-                const color = 'text-rose-600';
-                const glowColor = 'bg-rose-600';
-                
-                iconContainer.className = `relative z-10 w-full h-full flex items-center justify-center rounded-full bg-white dark:bg-darkbg text-3xl border-4 border-white dark:border-darkcard shadow-sm ${color}`;
-                iconContainer.innerHTML = `<i data-lucide="log-out" class="w-8 h-8 ${color}"></i>`;
-                iconGlow.className = `absolute inset-0 rounded-full opacity-20 blur-xl animate-pulse ${glowColor}`;
-                
-                titleEl.innerText = title;
-                msgEl.innerText = msg;
-                
-                // 2. Direct Function Call in HTML (No ID binding needed)
-                actionsEl.innerHTML = `
-                    <div class="flex gap-3">
-                        <button onclick="app.closeModal('dialog-modal')" 
-                            class="flex-1 py-3.5 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 rounded-2xl font-bold text-sm shadow-sm hover:bg-stone-200 transition-colors cursor-pointer">
-                            Batal
-                        </button>
-                        <button onclick="app.processConfirm()" 
-                            class="flex-1 py-3.5 bg-red-600 text-white rounded-2xl font-bold text-sm shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer">
-                            Ya, Keluar
-                        </button>
-                    </div>
-                `;
-                
-                lucide.createIcons();
-                this.openModal('dialog-modal');
-                
-                const content = modal.querySelector('.modal-content');
-                if(content) content.classList.add('animate-pop-in');
-            },
-
-            confirmLogout: function() { 
-                this.showConfirm('Keluar Akun?', 'Anda harus login kembali untuk mengakses fitur khusus guru.', () => {
-                    localStorage.removeItem('nakula_profile'); 
-                    localStorage.removeItem('nakula_role'); 
-                    localStorage.removeItem('nakula_cache'); 
-                    location.reload(); 
+                }).catch(e => {
+                    console.error(e);
+                    if(manual) { overlay.classList.add('hidden'); overlay.classList.remove('flex'); this.showAlert('error', 'Koneksi Gagal', 'Periksa internet atau URL Script Anda'); }
                 });
             },
-            // --- END FIX ---
-
-            submitFeedback: function(e) { 
-                e.preventDefault(); 
-                const btn=document.getElementById('btn-feedback-submit'); 
-                const oldTxt=btn.innerHTML; 
-                btn.innerHTML='<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Mengirim...'; 
-                btn.disabled=true; 
-                lucide.createIcons(); 
-                const fd=new FormData(e.target); 
-                const obj=Object.fromEntries(fd.entries()); 
-                obj.isAnonim=document.getElementById('anonim-check').checked; 
-                const sendRequest=fetch(this.apiURL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}); 
-                const fakeDelay=new Promise(r=>setTimeout(r,1500)); 
-                Promise.race([sendRequest,fakeDelay]).then(()=>{ 
-                    this.closeModal('feedback-modal'); 
-                    this.showAlert('success','Terkirim','Terima kasih atas masukan Anda!'); 
-                    e.target.reset(); 
-                    this.setRating(5); 
-                }).catch(err=>{ 
-                    console.error(err); 
-                    this.showAlert('error','Gagal','Terjadi kesalahan jaringan'); 
-                }).finally(()=>{ 
-                    btn.innerHTML=oldTxt; 
-                    btn.disabled=false; 
-                }); 
-            },
-
-            toggleAnonim: function() { 
-                const isAnon=document.getElementById('anonim-check').checked; 
-                const identity=document.getElementById('feedback-identity'); 
-                if(identity) {
-                    if(isAnon){ identity.classList.add('opacity-50','pointer-events-none'); }
-                    else{ identity.classList.remove('opacity-50','pointer-events-none'); } 
-                }
-            },
-
-            setRating: function(v) { 
-                const inp = document.getElementById('rating-input');
-                if(inp) inp.value=v; 
-                const group = document.getElementById('star-rating-group');
-                if(group) {
-                    const buttons=group.querySelectorAll('button'); 
-                    buttons.forEach((btn,index)=>{ 
-                        const icon=btn.querySelector('svg')||btn.querySelector('i'); 
-                        if(icon){ 
-                            if(index<v){ icon.classList.add('text-yellow-400','fill-yellow-400'); icon.classList.remove('text-stone-300'); }
-                            else{ icon.classList.remove('text-yellow-400','fill-yellow-400'); icon.classList.add('text-stone-300'); } 
-                        } 
-                    }); 
-                }
-            },
-
-            handleLink: function(url) { 
-                if (!url) return; 
-                if (url.startsWith('#')) { 
-                    if (url === '#top') this.scrollToTop(); 
-                    else if (url === '#menu') this.openModal('submenu-modal'); 
-                    else if (url === '#profile') this.openModal('profile-modal'); 
-                    else if (url === '#theme') this.toggleTheme(); 
-                    else if (url === '#refresh') this.refreshData(true); 
-                    else if (url === '#install') this.showInstallPrompt(); 
-                } else { window.open(url, '_blank'); } 
-            },
-
-            scrollToTop: function() { document.getElementById('main-scroll').scrollTo(0,0); },
-
-            openSubmenu: function(parentTitle) { 
-                const list = this.menuMap[parentTitle.toLowerCase()] || []; 
-                const container = document.getElementById('submenu-list'); 
-                document.getElementById('submenu-title').innerText = parentTitle; 
-                container.innerHTML = list.map(m => `<div onclick="window.open('${m.url}','_blank')" class="flex items-center gap-5 p-5 rounded-[2rem] bg-stone-50 dark:bg-darkbg active:bg-stone-200 transition cursor-pointer border border-stone-100 dark:border-darkborder relative z-10"><div class="w-10 h-10 rounded-2xl bg-white dark:bg-darkcard flex items-center justify-center text-nakula-600 shadow-sm"><i data-lucide="${m.icon||'link'}" class="w-5 h-5"></i></div><div class="flex-1"><h5 class="font-bold text-sm text-stone-700 dark:text-white">${m.judul}</h5><p class="text-[10px] text-stone-400 font-medium">${m.deskripsi||''}</p></div><i data-lucide="chevron-right" class="w-4 h-4 text-stone-300"></i></div>`).join(''); 
-                lucide.createIcons(); 
-                this.openModal('submenu-modal'); 
-            },
-
+            
+            // --- SCHOOL ROTATOR ---
             initSchoolRotator: function() { 
                 if (this.schoolInterval) clearInterval(this.schoolInterval); 
                 let currentIdx = 0; 
@@ -677,143 +394,174 @@
                     currentIdx = nextIdx; 
                 }, 6000); 
             },
-            
+
+            // --- RENDER (FIXED) ---
             render: function(data) {
                 const menuList = data.menu || []; const info = data.info || {};
+                
+                // HERO
                 const heroArea = document.getElementById('hero-display-area');
-
                 if (info.status === 'ON') {
                     if (this.schoolInterval) clearInterval(this.schoolInterval);
-                    heroArea.className = "col-span-12 md:col-span-7 xl:col-span-8 relative overflow-hidden min-h-[100px] lg:min-h-[160px] rounded-[2.5rem] bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-lg flex items-center px-6 transition-all duration-500";
-                    heroArea.innerHTML = `
-                        <div class="absolute right-0 top-0 bottom-0 w-1/2 bg-white/5 skew-x-12 -mr-10"></div>
-                        <div class="flex items-center gap-5 relative z-10 w-full">
-                            <div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0 border border-white/20 shadow-md animate-pulse">
-                                <i data-lucide="megaphone" class="w-6 h-6 text-white"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-black text-lg mb-0.5 tracking-tight">Informasi Penting</h3>
-                                <p class="text-xs font-medium text-white/90 leading-snug">${info.pesan}</p>
-                            </div>
-                        </div>
-                    `;
-                    lucide.createIcons();
+                    heroArea.className = "col-span-12 md:col-span-7 xl:col-span-8 relative overflow-hidden min-h-[140px] lg:min-h-[180px] rounded-[2.5rem] bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-lg flex items-center px-6 transition-all duration-500";
+                    heroArea.innerHTML = `<div class="absolute right-0 top-0 bottom-0 w-1/2 bg-white/5 skew-x-12 -mr-10"></div><div class="flex items-center gap-5 relative z-10 w-full"><div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0 border border-white/20 shadow-md animate-pulse"><i data-lucide="megaphone" class="w-6 h-6 text-white"></i></div><div class="flex-1"><h3 class="font-black text-lg mb-0.5 tracking-tight">Informasi Penting</h3><p class="text-xs font-medium text-white/90 leading-snug">${info.pesan}</p></div></div>`;
                 } else {
-                    heroArea.className = "col-span-12 md:col-span-7 xl:col-span-8 bg-gradient-to-br from-nakula-600 to-nakula-800 text-white dark:from-nakula-700 dark:to-nakula-900 rounded-[2rem] relative overflow-hidden shadow-soft flex items-center min-h-[100px] lg:min-h-[160px] group transition-all duration-500";
-                    heroArea.innerHTML = `
-                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-pulse-slow"></div>
-                        <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-black/10 rounded-full blur-2xl"></div>
-                    `;
-                    if (data.schools && data.schools.length > 0) { 
-                        this.schools = data.schools; 
-                        this.initSchoolRotator(); 
-                    }
+                    heroArea.className = "col-span-12 md:col-span-7 xl:col-span-8 bg-gradient-to-br from-nakula-600 to-nakula-800 text-white dark:from-nakula-700 dark:to-nakula-900 rounded-[2rem] relative overflow-hidden shadow-soft flex items-center min-h-[140px] lg:min-h-[160px] group transition-all duration-500";
+                    heroArea.innerHTML = `<div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-pulse-slow"></div><div class="absolute -left-10 -bottom-10 w-32 h-32 bg-black/10 rounded-full blur-2xl"></div>`;
+                    if (data.schools && data.schools.length > 0) { this.schools = data.schools; this.initSchoolRotator(); }
                 }
 
-                if (data.agenda) { this.renderAgenda(data.agenda); }
-                const quoteText = document.getElementById('quote-text'); const quoteAuth = document.getElementById('quote-author'); if(quoteText && info.quote) quoteText.innerText = info.quote; if(quoteAuth && info.author) quoteAuth.innerText = info.author;
+                // AGENDA
+                this.renderAgenda(data.agenda);
 
+                // MENU
                 this.menuMap = {}; 
                 const mobContainer = document.getElementById('mobile-menu-container');
                 const deskContainer = document.getElementById('desktop-sidebar-menu');
-                let mobHtml = ''; let deskHtml = '';
+                const adminMobContainer = document.getElementById('mobile-admin-container');
+                const adminMobSection = document.getElementById('mobile-admin-section');
+                const adminDeskContainer = document.getElementById('desktop-admin-menu');
+                
+                let mobHtml = ''; let deskHtml = ''; let adminHtml = '';
                 const getRole = (localStorage.getItem('nakula_role') || '').toLowerCase();
                 
                 menuList.forEach(m => { const p = (m.parent||'').toLowerCase().trim(); if(p) { if(!this.menuMap[p]) this.menuMap[p] = []; this.menuMap[p].push(m); } });
 
-                menuList.forEach((item, index) => {
+                menuList.forEach((item) => {
                     const isParent = !item.parent;
                     const isDock = (item.posisi || 'home').toLowerCase() === 'dock';
-                    const device = (item.posisi || 'all').toLowerCase();
-                    const showMobile = device === 'all' || device === 'mobile';
-                    const showDesktop = device === 'all' || device === 'desktop';
                     
                     if(isParent && !isDock) {
-                        if(item.role && item.role.toLowerCase() !== 'all' && !getRole.includes(item.role.toLowerCase())) return;
-                        const hasChild = this.menuMap[item.judul.toLowerCase()];
-                        let action = `onclick="app.showAlert('info','Info','Fitur ini segera hadir')"`;
-                        if(hasChild) { action = `onclick="app.openSubmenu('${item.judul}')"`; } else if(item.url) { action = `onclick="app.openBrowser('${item.url}', '${item.judul}')"`; }
+                        // ROLE CHECK (Hanya cek jika role bukan 'all')
+                        if(item.role && item.role !== 'all' && !getRole.includes(item.role)) return;
                         
-                        if(showMobile) {
-                            const isLarge = (item.ukuran || '').toString().toLowerCase().trim() === 'wide';
-                            const colClass = isLarge ? 'col-span-2' : 'col-span-1';
-                            let iconColor = 'text-stone-600'; let glowColor = 'bg-stone-200';
-                            const colorMap = {
-                                'red': { icon: 'text-rose-600', glow: 'bg-rose-500/20' },
-                                'blue': { icon: 'text-blue-600', glow: 'bg-blue-500/20' },
-                                'green': { icon: 'text-emerald-600', glow: 'bg-emerald-500/20' },
-                                'yellow': { icon: 'text-amber-600', glow: 'bg-amber-500/20' },
-                                'orange': { icon: 'text-orange-600', glow: 'bg-orange-500/20' },
-                                'purple': { icon: 'text-violet-600', glow: 'bg-violet-500/20' }
-                            };
-                            if (item.warna && colorMap[item.warna]) { iconColor = colorMap[item.warna].icon; glowColor = colorMap[item.warna].glow; }
-
-                            mobHtml += `
-                            <div ${action} class="${colClass} h-32 menu-card-new rounded-[2.5rem] p-6 relative overflow-hidden cursor-pointer group flex flex-col justify-between">
-                                <div class="flex justify-between items-start">
-                                    <div class="relative">
-                                        <div class="absolute inset-0 rounded-full blur-xl ${glowColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                        <i data-lucide="${item.icon||'box'}" class="w-8 h-8 relative z-10 ${iconColor} transition-transform duration-300 group-hover:-translate-y-1"></i>
-                                    </div>
-                                    ${hasChild ? `<i data-lucide="chevron-right" class="w-5 h-5 text-stone-300"></i>` : ''}
-                                </div>
-                                <div><h4 class="font-bold text-sm leading-tight text-stone-800 dark:text-stone-100">${item.judul}</h4><p class="text-[10px] text-stone-400 font-medium truncate mt-0.5">${item.deskripsi||'Akses layanan'}</p></div>
-                            </div>`;
-                        }
-                        if(showDesktop) {
-                            const bgClassDesk = item.warna ? `bg-${item.warna}-100 dark:bg-${item.warna}-900/30` : 'bg-stone-100 dark:bg-stone-800';
-                            const textClassDesk = item.warna ? `text-${item.warna}-700 dark:text-${item.warna}-300` : 'text-stone-700 dark:text-stone-300';
-                            deskHtml += `<button ${action} class="w-full p-3 rounded-2xl bg-transparent hover:bg-stone-100 dark:hover:bg-stone-800 transition flex items-center justify-center xl:justify-start gap-3 text-left group cursor-pointer relative z-10"><div class="w-8 h-8 xl:w-10 xl:h-10 rounded-xl ${bgClassDesk} flex items-center justify-center ${textClassDesk} shrink-0"><i data-lucide="${item.icon||'box'}" class="w-4 h-4 xl:w-5 xl:h-5"></i></div><div class="hidden xl:block flex-1 min-w-0"><h5 class="font-bold text-sm text-stone-800 dark:text-white truncate">${item.judul}</h5><p class="text-[10px] text-stone-400 truncate">${item.deskripsi||'Akses layanan'}</p></div><i data-lucide="chevron-right" class="w-4 h-4 text-stone-300 group-hover:translate-x-1 transition-transform hidden xl:block"></i></button>`;
+                        const hasChild = this.menuMap[item.judul.toLowerCase()];
+                        let action = `onclick="app.logActivity('Buka Menu', '${item.judul}'); app.showAlert('info','Info','Fitur ini segera hadir')"`;
+                        if(hasChild) { action = `onclick="app.logActivity('Buka Menu', '${item.judul}'); app.openSubmenu('${item.judul}')"`; } 
+                        else if(item.url) { action = `onclick="app.logActivity('Buka Menu', '${item.judul}'); app.openBrowser('${item.url}', '${item.judul}')"`; }
+                        
+                        if (item.role === 'admin' || item.role === 'narasumber') {
+                            adminHtml += `<div ${action} class="shrink-0 w-32 h-20 bg-stone-800 text-white rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden shadow-md cursor-pointer hover:scale-105 transition-transform"><div class="absolute right-0 top-0 p-2 opacity-10"><i data-lucide="${item.icon||'shield'}" class="w-12 h-12"></i></div><i data-lucide="${item.icon||'shield'}" class="w-5 h-5 text-white/80 relative z-10"></i><span class="text-[10px] font-bold leading-tight relative z-10 line-clamp-2">${item.judul}</span></div>`;
+                        } else {
+                            if((item.posisi||'all').toLowerCase() !== 'desktop') {
+                                const isLarge = (item.ukuran || '').toString().toLowerCase().trim() === 'wide';
+                                const colClass = isLarge ? 'col-span-2' : 'col-span-1';
+                                let iconColor = 'text-stone-600', glowColor = 'bg-stone-200';
+                                const cm = { 'red': 'rose', 'blue': 'blue', 'green': 'emerald', 'yellow': 'amber', 'orange': 'orange', 'purple': 'violet' };
+                                if (item.warna && cm[item.warna]) { iconColor = `text-${cm[item.warna]}-600`; glowColor = `bg-${cm[item.warna]}-500/20`; }
+                                mobHtml += `<div ${action} class="${colClass} h-32 menu-card-new rounded-[2.5rem] p-6 relative overflow-hidden cursor-pointer group flex flex-col justify-between"><div class="flex justify-between items-start"><div class="relative"><div class="absolute inset-0 rounded-full blur-xl ${glowColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div><i data-lucide="${item.icon||'box'}" class="w-8 h-8 relative z-10 ${iconColor} transition-transform duration-300 group-hover:-translate-y-1"></i></div>${hasChild ? `<i data-lucide="chevron-right" class="w-5 h-5 text-stone-300"></i>` : ''}</div><div><h4 class="font-bold text-sm leading-tight text-stone-800 dark:text-stone-100">${item.judul}</h4><p class="text-[10px] text-stone-400 font-medium truncate mt-0.5">${item.deskripsi||'Akses layanan'}</p></div></div>`;
+                            }
+                            if((item.posisi||'all').toLowerCase() !== 'mobile') {
+                                deskHtml += `<button ${action} class="w-full p-3 rounded-2xl bg-transparent hover:bg-stone-100 dark:hover:bg-stone-800 transition flex items-center justify-center xl:justify-start gap-3 text-left group cursor-pointer relative z-10"><div class="w-8 h-8 xl:w-10 xl:h-10 rounded-xl bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-600 dark:text-stone-300 shrink-0"><i data-lucide="${item.icon||'box'}" class="w-4 h-4 xl:w-5 xl:h-5"></i></div><div class="hidden xl:block flex-1 min-w-0"><h5 class="font-bold text-sm text-stone-800 dark:text-white truncate">${item.judul}</h5><p class="text-[10px] text-stone-400 truncate">${item.deskripsi||'Akses layanan'}</p></div><i data-lucide="chevron-right" class="w-4 h-4 text-stone-300 group-hover:translate-x-1 transition-transform hidden xl:block"></i></button>`;
+                            }
                         }
                     }
                 });
                 
                 if(mobContainer) mobContainer.innerHTML = mobHtml || '<div class="col-span-2 text-center py-10 text-stone-400 text-xs">Menu tidak tersedia</div>';
                 if(deskContainer) deskContainer.innerHTML = deskHtml;
+                
+                if (adminHtml) {
+                    if(adminMobContainer) adminMobContainer.innerHTML = adminHtml;
+                    if(adminMobSection) adminMobSection.classList.remove('hidden');
+                    if(adminDeskContainer) { adminDeskContainer.innerHTML = adminHtml.replace(/w-32 h-20/g, 'w-full h-16 flex-row items-center gap-3').replace(/flex-col/g, ''); adminDeskContainer.classList.remove('hidden'); }
+                } else {
+                    if(adminMobSection) adminMobSection.classList.add('hidden');
+                    if(adminDeskContainer) adminDeskContainer.classList.add('hidden');
+                }
+
+                // FOOTER & QUOTES UPDATE (FIXED)
+                const footerEl = document.querySelector('footer p');
+                if (footerEl && data.info.footer) { footerEl.innerHTML = data.info.footer; }
+                
+                const qText = document.getElementById('quote-text');
+                const qAuth = document.getElementById('quote-author');
+                if(qText) qText.innerText = info.quote || '"Pendidikan adalah senjata..."';
+                if(qAuth) qAuth.innerText = info.author || '- Nelson Mandela';
+
                 lucide.createIcons();
             },
 
-            showAlert: function(type, title, msg) {
-                const modal = document.getElementById('dialog-modal');
-                const iconContainer = document.getElementById('dialog-icon');
-                const iconGlow = document.getElementById('dialog-icon-glow');
-                const titleEl = document.getElementById('dialog-title');
-                const msgEl = document.getElementById('dialog-msg');
-                const actionsEl = document.getElementById('dialog-actions');
+            renderAgenda: function(agendaList) { 
+                const deskContainer = document.getElementById('desktop-agenda-list'); 
+                const mobContainer = document.getElementById('mobile-agenda-list'); 
+                let html = ''; 
+                if(!agendaList || agendaList.length === 0) { 
+                    html = `<div class="p-6 text-center text-stone-400"><i data-lucide="calendar-off" class="w-8 h-8 mx-auto mb-2 opacity-50"></i><br>Belum ada agenda</div>`; 
+                } else { 
+                    agendaList.forEach(item => { 
+                        html += `<div class="timeline-item group"><div class="timeline-dot transition-transform group-hover:scale-125"></div><div class="flex items-start justify-between group-hover:bg-stone-50 dark:group-hover:bg-stone-800/50 p-3 rounded-2xl transition-colors -mt-2"><div class="flex-1"><span class="text-[10px] font-bold text-nakula-600 uppercase tracking-widest block mb-1">${item.tanggal}</span><h4 class="text-sm font-bold text-stone-800 dark:text-white leading-snug">${item.kegiatan}</h4>${item.ket ? `<div class="text-[11px] text-stone-500 mt-1">${item.ket}</div>` : ''}</div></div></div>`; 
+                    }); 
+                } 
+                if(deskContainer) deskContainer.innerHTML = html; 
+                if(mobContainer) mobContainer.innerHTML = html; 
+            },
 
-                let color = 'text-blue-500';
-                let glowColor = 'bg-blue-500';
-                let iconName = 'info';
+            updateUIForUser: function(p) {
+                this.currentUser = p; 
+                document.getElementById('mob-view-guest').classList.add('hidden'); document.getElementById('mob-view-user').classList.remove('hidden'); document.getElementById('mob-view-user').classList.add('flex');
+                document.getElementById('menu-section').classList.remove('hidden'); 
                 
-                if (type === 'error') {
-                    color = 'text-rose-500';
-                    glowColor = 'bg-rose-500';
-                    iconName = 'alert-triangle';
-                } else if (type === 'success') {
-                    color = 'text-emerald-500';
-                    glowColor = 'bg-emerald-500';
-                    iconName = 'check-circle-2';
-                }
+                // REVISI: SEMBUNYIKAN AGENDA SAAT LOGIN DI HP (KARENA SUDAH ADA MENU)
+                document.getElementById('agenda-section').classList.add('hidden'); 
+                
+                const shortName = p.realName ? p.realName.split(' ')[0] : 'User'; document.getElementById('mob-user-name').innerText = `${this.currentGreeting}, ${shortName}`; document.getElementById('mob-user-role').innerText = `${p.role || '-'} • ${p.instansi || '-'}`;
+                if(p.photo) document.getElementById('mob-user-photo').src = p.photo;
+                const widgetMobile = document.getElementById('widget-akun-mobile'); if(widgetMobile) widgetMobile.className = `md:hidden pro-card rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden shadow-soft min-h-[90px] ${this.getRoleBg(p.role)}`;
+                document.getElementById('login-form-container').classList.add('hidden'); document.getElementById('loggedin-actions').classList.remove('hidden');
+                document.getElementById('modal-status').innerText = 'Terverifikasi'; document.getElementById('modal-status').className = 'text-xs font-bold text-green-500 mt-1 uppercase tracking-wider';
+                document.getElementById('id-card-name').innerText = p.realName; document.getElementById('id-card-role').innerText = p.role;
+                document.getElementById('id-card-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(p.nama)}`;
+                document.getElementById('desk-view-guest').classList.add('hidden'); document.getElementById('desk-view-user').classList.remove('hidden');
+                document.getElementById('desk-user-name').innerText = p.realName; document.getElementById('desk-user-role').innerText = `${p.role || '-'} • ${p.instansi || '-'}`; if(p.photo) document.getElementById('desk-user-photo').src = p.photo;
+                const deskProfileContainer = document.getElementById('desktop-profile-container'); deskProfileContainer.className = `bg-gradient-to-br from-slate-100 to-zinc-200 dark:from-slate-800 dark:to-zinc-800 rounded-[2rem] p-4 xl:p-6 text-center shadow-soft dark:shadow-none border border-white/50 dark:border-white/5 relative overflow-hidden group ${this.getRoleBg(p.role)}`;
+                document.getElementById('widget-performa').classList.remove('hidden'); if(p.performa) this.updatePerformanceWidget(p.performa);
+            },
+            
+            updateUIForGuest: function() {
+                this.currentUser = null;
+                document.getElementById('mob-view-guest').classList.remove('hidden'); document.getElementById('mob-view-user').classList.add('hidden'); document.getElementById('mob-view-user').classList.remove('flex');
+                document.getElementById('menu-section').classList.add('hidden'); 
+                
+                // TAMU TETAP LIHAT AGENDA
+                document.getElementById('agenda-section').classList.remove('hidden'); 
+                
+                const widgetMobile = document.getElementById('widget-akun-mobile'); widgetMobile.className = "md:hidden pro-card rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden shadow-soft min-h-[90px] bg-gnomecard dark:bg-darkcard border border-white dark:border-darkborder";
+                document.getElementById('login-form-container').classList.remove('hidden'); document.getElementById('loggedin-actions').classList.add('hidden');
+                document.getElementById('modal-status').innerText = 'Belum Terhubung'; document.getElementById('modal-status').className = 'text-xs font-bold text-stone-400 mt-1 uppercase tracking-wider';
+                document.getElementById('desk-view-guest').classList.remove('hidden'); document.getElementById('desk-view-user').classList.add('hidden');
+                document.getElementById('widget-performa').classList.add('hidden');
+            },
 
-                iconContainer.className = `relative z-10 w-full h-full flex items-center justify-center rounded-full bg-white dark:bg-darkbg text-3xl border-4 border-white dark:border-darkcard shadow-sm ${color}`;
-                iconContainer.innerHTML = `<i data-lucide="${iconName}" class="w-8 h-8 ${color}"></i>`;
-                iconGlow.className = `absolute inset-0 rounded-full opacity-20 blur-xl animate-pulse ${glowColor}`;
-                
-                titleEl.innerText = title;
-                msgEl.innerText = msg;
-                
-                actionsEl.innerHTML = `
-                    <button onclick="app.closeModal('dialog-modal')" 
-                        class="w-full py-3.5 bg-stone-900 text-white rounded-2xl font-bold text-sm shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer">
-                        Mengerti
-                    </button>`;
-                
-                lucide.createIcons();
-                this.openModal('dialog-modal');
-                
-                const content = modal.querySelector('.modal-content');
-                if(content) content.classList.add('animate-pop-in');
-            }
+            // --- HELPER ---
+            getScoreColor: function(score) { if(score >= 80) return { text: 'text-green-600', bar: 'bg-green-500' }; if(score >= 50) return { text: 'text-yellow-600', bar: 'bg-yellow-500' }; return { text: 'text-red-600', bar: 'bg-red-500' }; },
+            updatePerformanceWidget: function(p) { const pColor = this.getScoreColor(p.presensi); const tColor = this.getScoreColor(p.tugas); const elsP = [document.getElementById('score-presensi')]; const elsT = [document.getElementById('score-tugas')]; elsP.forEach(el => { if(el) el.innerText = p.presensi + '%'; }); elsT.forEach(el => { if(el) el.innerText = p.tugas + '%'; }); const barP = document.getElementById('bar-presensi'); if(barP) { barP.className = `h-full rounded-full transition-all duration-1000 ${pColor.bar}`; barP.style.width = p.presensi + '%'; } const barT = document.getElementById('bar-tugas'); if(barT) { barT.className = `h-full rounded-full transition-all duration-1000 ${tColor.bar}`; barT.style.width = p.tugas + '%'; } const descP = document.getElementById('desc-presensi'); if(descP) descP.innerText = p.det_presensi; const descT = document.getElementById('desc-tugas'); if(descT) descT.innerText = p.det_tugas; const iconP = document.getElementById('icon-presensi-bg'); if(iconP) iconP.className = `w-8 h-8 rounded-full bg-white dark:bg-darkbg flex items-center justify-center shadow-sm ${pColor.text}`; const iconT = document.getElementById('icon-tugas-bg'); if(iconT) iconT.className = `w-8 h-8 rounded-full bg-white dark:bg-darkbg flex items-center justify-center shadow-sm ${tColor.text}`; },
+            getRoleBg: function(role) { const r = (role || '').toLowerCase(); if(r.includes('kepala')) return 'bg-gradient-to-br from-indigo-100 to-purple-200 dark:from-indigo-900/30 dark:to-purple-900/30'; if(r.includes('pjok')) return 'bg-gradient-to-br from-orange-100 to-red-200 dark:from-orange-900/30 dark:to-red-900/30'; if(r.includes('agama')) return 'bg-gradient-to-br from-emerald-100 to-teal-200 dark:from-emerald-900/30 dark:to-teal-900/30'; if(r.includes('kelas')) return 'bg-gradient-to-br from-blue-100 to-cyan-200 dark:from-blue-900/30 dark:to-cyan-900/30'; return 'bg-gradient-to-br from-slate-200 to-zinc-300 dark:from-slate-800 dark:to-zinc-800'; },
+            
+            // --- OTHERS ---
+            openBrowser: function(url, title) { if(!url) return; const modal = document.getElementById('browser-modal'); const frame = document.getElementById('browser-frame'); document.getElementById('browser-title').innerText = title || 'Layanan'; document.getElementById('browser-url').innerText = url; frame.src = url; document.getElementById('browser-loader').classList.remove('hidden'); document.getElementById('btn-browser-ext').onclick = () => window.open(url, '_blank'); modal.classList.remove('hidden'); modal.classList.add('flex'); window.history.pushState({modal: 'browser-modal'}, null, ""); },
+            openModal: function(id) { const el = document.getElementById(id); if(!el) return; el.classList.remove('hidden'); if(id === 'browser-modal') el.classList.add('flex'); setTimeout(() => { el.querySelector('.modal-overlay')?.classList.remove('opacity-0'); const content = el.querySelector('.modal-content'); if(content) { content.classList.remove('opacity-0', 'scale-95', 'scale-90', 'translate-y-full'); content.classList.add('scale-100', 'translate-y-0'); } }, 10); window.history.pushState({modal: id}, null, ""); },
+            closeModal: function(id, fromBackEvent = false) { const el = document.getElementById(id); if(!el) return; el.querySelector('.modal-overlay')?.classList.add('opacity-0'); const c = el.querySelector('.modal-content'); if(c) { c.classList.remove('scale-100', 'opacity-100', 'animate-bounce-in', 'animate-pop-in'); c.classList.add('opacity-0', 'scale-95'); if(id.includes('submenu') || id.includes('profile')) c.classList.add('translate-y-full'); } setTimeout(() => { el.classList.add('hidden'); if(id === 'browser-modal') { el.classList.remove('flex'); document.getElementById('browser-frame').src = ''; } if(id === 'profile-modal') { setTimeout(() => { const card = document.getElementById('card-inner'); if(card) card.classList.remove('is-flipped'); }, 200); } }, 300); if (!fromBackEvent) { history.back(); } },
+            openSubmenu: function(parentTitle) { const list = this.menuMap[parentTitle.toLowerCase()] || []; const container = document.getElementById('submenu-list'); document.getElementById('submenu-title').innerText = parentTitle; container.innerHTML = list.map(m => `<div onclick="window.open('${m.url}','_blank')" class="flex items-center gap-5 p-5 rounded-[2rem] bg-stone-50 dark:bg-darkbg active:bg-stone-200 transition cursor-pointer border border-stone-100 dark:border-darkborder relative z-10"><div class="w-10 h-10 rounded-2xl bg-white dark:bg-darkcard flex items-center justify-center text-nakula-600 shadow-sm"><i data-lucide="${m.icon||'link'}" class="w-5 h-5"></i></div><div class="flex-1"><h5 class="font-bold text-sm text-stone-700 dark:text-white">${m.judul}</h5><p class="text-[10px] text-stone-400 font-medium">${m.deskripsi||''}</p></div><i data-lucide="chevron-right" class="w-4 h-4 text-stone-300"></i></div>`).join(''); lucide.createIcons(); this.openModal('submenu-modal'); },
+            flipCard: function() { const card = document.getElementById('card-inner'); card.classList.toggle('is-flipped'); },
+            setupBackButton: function() { window.onpopstate = (event) => { const browserModal = document.getElementById('browser-modal'); if(browserModal && !browserModal.classList.contains('hidden')) { this.closeModal('browser-modal', true); return; } const activeModal = document.querySelector('.fixed.z-50:not(.hidden)'); if (activeModal) { this.closeModal(activeModal.id, true); } else { const now = new Date().getTime(); if (now - this.backPressedTime < 2000) { history.back(); } else { this.backPressedTime = now; document.getElementById('exit-toast').classList.add('show'); setTimeout(() => document.getElementById('exit-toast').classList.remove('show'), 2000); window.history.pushState(null, null, window.location.href); } } }; window.history.pushState(null, null, window.location.href); },
+            setupInstallPrompt: function() { window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); this.deferredPrompt = e; const mobBtn = document.getElementById('mob-btn-install'); const deskBtn = document.getElementById('desk-btn-install'); if(mobBtn) mobBtn.classList.remove('hidden'); if(deskBtn) deskBtn.classList.remove('hidden'); }); },
+            installApp: function() { if (this.deferredPrompt) { this.deferredPrompt.prompt(); this.deferredPrompt.userChoice.then((choiceResult) => { if (choiceResult.outcome === 'accepted') { document.getElementById('mob-btn-install').classList.add('hidden'); document.getElementById('desk-btn-install').classList.add('hidden'); } this.deferredPrompt = null; }); } },
+            initClock: function() { const updateTime = () => { const now = new Date(); const hrs = now.getHours(); const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu']; const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des']; const tStr = now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); const dStr = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`; const elClock = document.getElementById('desktop-clock'); const elDate = document.getElementById('desktop-date'); if(elClock) elClock.innerText = tStr; if(elDate) elDate.innerText = dStr; let greet = 'Selamat Malam'; if (hrs >= 4 && hrs < 11) greet = 'Selamat Pagi'; else if (hrs >= 11 && hrs < 15) greet = 'Selamat Siang'; else if (hrs >= 15 && hrs < 18) greet = 'Selamat Sore'; this.currentGreeting = greet; if (this.currentUser && this.currentUser.realName) { const mobName = document.getElementById('mob-user-name'); const shortName = this.currentUser.realName.split(' ')[0]; if (mobName) mobName.innerText = `${greet}, ${shortName}`; } }; setInterval(updateTime, 1000); updateTime(); },
+            handlePhotoUpload: function(input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = function(e) { document.getElementById('modal-photo').src = e.target.result; const p = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); p.photo = e.target.result; localStorage.setItem('nakula_profile', JSON.stringify(p)); app.updateUIForUser(p); }; reader.readAsDataURL(input.files[0]); } },
+            checkAutoLogin: function() { const p = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); if(p.nama) { this.updateUIForUser(p); this.refreshUserPerformance(p.nama); } else { this.updateUIForGuest(); } },
+            refreshUserPerformance: function(email) { fetch(`${this.apiURL}?action=refresh&email=${email}`).then(r=>r.json()).then(d=>{ if(d.status === 'success' && d.performa) { this.updatePerformanceWidget(d.performa); let p = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); p.performa = d.performa; localStorage.setItem('nakula_profile', JSON.stringify(p)); } }).catch(e=>console.log("Sync bg failed", e)); },
+            syncData: function() { const pin = document.getElementById('sync-pin').value; const btn = document.getElementById('btn-sync'); if(!pin) return this.showAlert('error','Gagal','Isi PIN Akses'); const oldTxt = btn.innerHTML; btn.innerHTML = 'Memproses...'; fetch(`${this.apiURL}?action=sync&pin=${pin}`).then(r => r.json()).then(d => { if(d.status === 'success') { const oldP = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); const profile = { nama: d.nama, realName: d.realName, role: d.jabatan, instansi: d.instansi, photo: oldP.photo || d.foto || "https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png", performa: d.performa }; localStorage.setItem('nakula_profile', JSON.stringify(profile)); localStorage.setItem('nakula_role', d.roleAccess); this.updateUIForUser(profile); this.logActivity('Login', `Role: ${d.roleAccess}`); this.closeModal('profile-modal'); this.showAlert('success', 'Berhasil', `Selamat datang, ${d.realName}`); } else { this.showAlert('error', 'Gagal', d.message); } }).catch(() => this.showAlert('error','Error','Koneksi bermasalah')).finally(() => btn.innerHTML = oldTxt); },
+            processConfirm: function() { if (this.pendingAction) { this.pendingAction(); this.pendingAction = null; } this.closeModal('dialog-modal'); },
+            showConfirm: function(title, msg, callback) { const modal = document.getElementById('dialog-modal'); const iconContainer = document.getElementById('dialog-icon'); const iconGlow = document.getElementById('dialog-icon-glow'); const titleEl = document.getElementById('dialog-title'); const msgEl = document.getElementById('dialog-msg'); const actionsEl = document.getElementById('dialog-actions'); this.pendingAction = callback; const color = 'text-rose-600'; const glowColor = 'bg-rose-600'; iconContainer.className = `relative z-10 w-full h-full flex items-center justify-center rounded-full bg-white dark:bg-darkbg text-3xl border-4 border-white dark:border-darkcard shadow-sm ${color}`; iconContainer.innerHTML = `<i data-lucide="log-out" class="w-8 h-8 ${color}"></i>`; iconGlow.className = `absolute inset-0 rounded-full opacity-20 blur-xl animate-pulse ${glowColor}`; titleEl.innerText = title; msgEl.innerText = msg; actionsEl.innerHTML = `<div class="flex gap-3"><button onclick="app.closeModal('dialog-modal')" class="flex-1 py-3.5 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 rounded-2xl font-bold text-sm shadow-sm hover:bg-stone-200 transition-colors cursor-pointer">Batal</button><button onclick="app.processConfirm()" class="flex-1 py-3.5 bg-red-600 text-white rounded-2xl font-bold text-sm shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer">Ya, Keluar</button></div>`; lucide.createIcons(); this.openModal('dialog-modal'); const content = modal.querySelector('.modal-content'); if(content) content.classList.add('animate-pop-in'); },
+            confirmLogout: function() { this.showConfirm('Keluar Akun?', 'Anda harus login kembali untuk mengakses fitur khusus guru.', () => { localStorage.removeItem('nakula_profile'); localStorage.removeItem('nakula_role'); localStorage.removeItem('nakula_cache'); location.reload(); }); },
+            submitFeedback: function(e) { e.preventDefault(); const btn=document.getElementById('btn-feedback-submit'); const oldTxt=btn.innerHTML; btn.innerHTML='<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Mengirim...'; btn.disabled=true; lucide.createIcons(); const fd=new FormData(e.target); const obj=Object.fromEntries(fd.entries()); obj.isAnonim=document.getElementById('anonim-check').checked; const sendRequest=fetch(this.apiURL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}); const fakeDelay=new Promise(r=>setTimeout(r,1500)); Promise.race([sendRequest,fakeDelay]).then(()=>{ this.closeModal('feedback-modal'); this.showAlert('success','Terkirim','Terima kasih atas masukan Anda!'); e.target.reset(); this.setRating(5); }).catch(err=>{ console.error(err); this.showAlert('error','Gagal','Terjadi kesalahan jaringan'); }).finally(()=>{ btn.innerHTML=oldTxt; btn.disabled=false; }); },
+            toggleAnonim: function() { const isAnon=document.getElementById('anonim-check').checked; const identity=document.getElementById('feedback-identity'); if(identity) { if(isAnon){ identity.classList.add('opacity-50','pointer-events-none'); } else{ identity.classList.remove('opacity-50','pointer-events-none'); } } },
+            setRating: function(v) { const inp = document.getElementById('rating-input'); if(inp) inp.value=v; const group = document.getElementById('star-rating-group'); if(group) { const buttons=group.querySelectorAll('button'); buttons.forEach((btn,index)=>{ const icon=btn.querySelector('svg')||btn.querySelector('i'); if(icon){ if(index<v){ icon.classList.add('text-yellow-400','fill-yellow-400'); icon.classList.remove('text-stone-300'); } else{ icon.classList.remove('text-yellow-400','fill-yellow-400'); icon.classList.add('text-stone-300'); } } }); } },
+            handleLink: function(url) { if (!url) return; if (url.startsWith('#')) { if (url === '#top') this.scrollToTop(); else if (url === '#menu') this.openModal('submenu-modal'); else if (url === '#profile') this.openModal('profile-modal'); else if (url === '#theme') this.toggleTheme(); else if (url === '#refresh') this.refreshData(true); else if (url === '#install') this.showInstallPrompt(); } else { window.open(url, '_blank'); } },
+            scrollToTop: function() { document.getElementById('main-scroll').scrollTo(0,0); },
+            openSubmenu: function(parentTitle) { const list = this.menuMap[parentTitle.toLowerCase()] || []; const container = document.getElementById('submenu-list'); document.getElementById('submenu-title').innerText = parentTitle; container.innerHTML = list.map(m => `<div onclick="window.open('${m.url}','_blank')" class="flex items-center gap-5 p-5 rounded-[2rem] bg-stone-50 dark:bg-darkbg active:bg-stone-200 transition cursor-pointer border border-stone-100 dark:border-darkborder relative z-10"><div class="w-10 h-10 rounded-2xl bg-white dark:bg-darkcard flex items-center justify-center text-nakula-600 shadow-sm"><i data-lucide="${m.icon||'link'}" class="w-5 h-5"></i></div><div class="flex-1"><h5 class="font-bold text-sm text-stone-700 dark:text-white">${m.judul}</h5><p class="text-[10px] text-stone-400 font-medium">${m.deskripsi||''}</p></div><i data-lucide="chevron-right" class="w-4 h-4 text-stone-300"></i></div>`).join(''); lucide.createIcons(); this.openModal('submenu-modal'); },
+            showAlert: function(type, title, msg) { const modal = document.getElementById('dialog-modal'); const iconContainer = document.getElementById('dialog-icon'); const iconGlow = document.getElementById('dialog-icon-glow'); const titleEl = document.getElementById('dialog-title'); const msgEl = document.getElementById('dialog-msg'); const actionsEl = document.getElementById('dialog-actions'); let color = 'text-blue-500'; let glowColor = 'bg-blue-500'; let iconName = 'info'; if (type === 'error') { color = 'text-rose-500'; glowColor = 'bg-rose-500'; iconName = 'alert-triangle'; } else if (type === 'success') { color = 'text-emerald-500'; glowColor = 'bg-emerald-500'; iconName = 'check-circle-2'; } iconContainer.className = `relative z-10 w-full h-full flex items-center justify-center rounded-full bg-white dark:bg-darkbg text-3xl border-4 border-white dark:border-darkcard shadow-sm ${color}`; iconContainer.innerHTML = `<i data-lucide="${iconName}" class="w-8 h-8 ${color}"></i>`; iconGlow.className = `absolute inset-0 rounded-full opacity-20 blur-xl animate-pulse ${glowColor}`; titleEl.innerText = title; msgEl.innerText = msg; actionsEl.innerHTML = `<button onclick="app.closeModal('dialog-modal')" class="w-full py-3.5 bg-stone-900 text-white rounded-2xl font-bold text-sm shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer">Mengerti</button>`; lucide.createIcons(); this.openModal('dialog-modal'); const content = modal.querySelector('.modal-content'); if(content) content.classList.add('animate-pop-in'); }
         };
 
         document.addEventListener('DOMContentLoaded', () => app.init());
