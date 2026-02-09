@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#F6F5F4" id="theme-color-meta">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>NAKULAKU EKOSISTEM</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -242,7 +239,7 @@
                 </div>
 
                 <footer class="mt-8 mb-4 text-center shrink-0">
-                    <p class="text-[10px] font-bold text-stone-400 dark:text-stone-600 uppercase tracking-widest">&copy; 2026 Nakulaku Ekosistem | Versi 58.3</p>
+                    <p class="text-[10px] font-bold text-stone-400 dark:text-stone-600 uppercase tracking-widest">&copy; 2026 Nakulaku Ekosistem | Versi 58.4</p>
                 </footer>
             </div>
         </div>
@@ -264,7 +261,25 @@
         </div>
     </div>
     
-    <div id="browser-modal" class="fixed inset-0 z-[80] hidden bg-white dark:bg-black flex-col"><div class="flex items-center justify-between p-4 border-b border-stone-200 dark:border-stone-800 bg-white dark:bg-darkcard relative z-20"><div class="flex items-center gap-3"><button onclick="app.closeModal('browser-modal')" class="p-2 rounded-full bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 transition"><i data-lucide="arrow-left" class="w-5 h-5"></i></button><div class="flex-1 overflow-hidden"><h4 id="browser-title" class="font-bold text-sm truncate dark:text-white">Memuat...</h4><p id="browser-url" class="text-[10px] text-stone-400 truncate">...</p></div></div><div class="flex gap-2"><button onclick="document.getElementById('browser-frame').contentWindow.location.reload()" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button><button id="btn-browser-ext" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800"><i data-lucide="external-link" class="w-4 h-4"></i></button></div></div><div class="flex-1 relative bg-stone-50 dark:bg-darkbg w-full h-full"><div id="browser-loader" class="iframe-loader"><div class="loader-ring"><div></div><div></div><div></div><div></div></div></div><iframe id="browser-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" onload="document.getElementById('browser-loader').classList.add('hidden')"></iframe></div></div>
+    <div id="browser-modal" class="fixed inset-0 z-[80] hidden bg-white dark:bg-black flex-col">
+        <div class="flex items-center justify-between p-4 border-b border-stone-200 dark:border-stone-800 bg-white dark:bg-darkcard relative z-20 shrink-0 shadow-sm">
+            <div class="flex items-center gap-3">
+                <button onclick="app.closeModal('browser-modal')" class="p-2 rounded-full bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 transition"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                <div class="flex-1 overflow-hidden">
+                    <h4 id="browser-title" class="font-bold text-sm truncate dark:text-white">Memuat...</h4>
+                    <p id="browser-url" class="text-[10px] text-stone-400 truncate">...</p>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="document.getElementById('browser-frame').contentWindow.location.reload()" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
+                <button id="btn-browser-ext" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800"><i data-lucide="external-link" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+        <div class="flex-1 relative bg-stone-50 dark:bg-darkbg w-full h-full overflow-hidden">
+            <div id="browser-loader" class="iframe-loader"><div class="loader-ring"><div></div><div></div><div></div><div></div></div></div>
+            <iframe id="browser-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" onload="document.getElementById('browser-loader').classList.add('hidden')" style="width:100%; height:100%; border:none;"></iframe>
+        </div>
+    </div>
 
     <div id="profile-modal" class="fixed inset-0 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="absolute inset-0 bg-stone-900/20 dark:bg-black/50 transition-opacity opacity-0 modal-overlay" onclick="app.closeModal('profile-modal')"></div>
@@ -432,13 +447,22 @@
                     const isDock = (item.posisi || 'home').toLowerCase() === 'dock';
                     
                     if(isParent && !isDock) {
-                        // ROLE CHECK (Hanya cek jika role bukan 'all')
                         if(item.role && item.role !== 'all' && !getRole.includes(item.role)) return;
                         
                         const hasChild = this.menuMap[item.judul.toLowerCase()];
+                        const isExternal = (item.ukuran || '').toString().toLowerCase().trim() === 'tab'; // CEK KOLOM UKURAN
+                        
                         let action = `onclick="app.logActivity('Buka Menu', '${item.judul}'); app.showAlert('info','Info','Fitur ini segera hadir')"`;
-                        if(hasChild) { action = `onclick="app.logActivity('Buka Menu', '${item.judul}'); app.openSubmenu('${item.judul}')"`; } 
-                        else if(item.url) { action = `onclick="app.logActivity('Buka Menu', '${item.judul}'); app.openBrowser('${item.url}', '${item.judul}')"`; }
+                        
+                        if(hasChild) { 
+                            action = `onclick="app.logActivity('Buka Menu', '${item.judul}'); app.openSubmenu('${item.judul}')"`; 
+                        } else if(item.url) { 
+                            if(isExternal) {
+                                action = `onclick="app.logActivity('Buka Link', '${item.judul}'); window.open('${item.url}', '_blank')"`;
+                            } else {
+                                action = `onclick="app.logActivity('Buka Menu', '${item.judul}'); app.openBrowser('${item.url}', '${item.judul}')"`; 
+                            }
+                        }
                         
                         if (item.role === 'admin' || item.role === 'narasumber') {
                             adminHtml += `<div ${action} class="shrink-0 w-32 h-20 bg-stone-800 text-white rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden shadow-md cursor-pointer hover:scale-105 transition-transform"><div class="absolute right-0 top-0 p-2 opacity-10"><i data-lucide="${item.icon||'shield'}" class="w-12 h-12"></i></div><i data-lucide="${item.icon||'shield'}" class="w-5 h-5 text-white/80 relative z-10"></i><span class="text-[10px] font-bold leading-tight relative z-10 line-clamp-2">${item.judul}</span></div>`;
