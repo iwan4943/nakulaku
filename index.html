@@ -26,8 +26,16 @@
                         'soft': '0 10px 40px -10px rgba(0,0,0,0.08)',
                         'glow': '0 0 20px rgba(179, 38, 30, 0.3)' 
                     },
-                    animation: { 'fade-in': 'fadeIn 0.5s ease-out forwards' },
-                    keyframes: { fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } }
+                    animation: { 
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                        'breathe': 'breathe 3s ease-in-out infinite'
+                    },
+                    keyframes: { 
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-5px)' } },
+                        breathe: { '0%, 100%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.02)' } }
+                    }
                 } 
             }
         }
@@ -68,6 +76,13 @@
         #browser-frame { width: 100%; height: 100%; border: none; background: white; }
         .iframe-loader { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; background: rgba(255,255,255,0.8); z-index: 10; }
         .dark .iframe-loader { background: rgba(30,30,30,0.8); }
+
+        /* FLIP CARD STYLES (NEW) */
+        .perspective-1000 { perspective: 1000px; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s; transform-style: preserve-3d; }
+        .card-inner.is-flipped { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 1.5rem; }
+        .card-back { transform: rotateY(180deg); }
     </style>
 </head>
 <body class="bg-gnomebg text-stone-800 dark:bg-darkbg dark:text-stone-200 h-screen flex flex-col relative transition-colors duration-300">
@@ -82,7 +97,7 @@
                     <div class="hidden xl:block">
                         <h3 class="font-bold text-lg text-stone-800 dark:text-white">Tamu</h3>
                         <div class="flex gap-2 justify-center mt-3">
-                            <button onclick="app.openModal('profile-modal')" class="relative z-10 px-4 py-2 bg-stone-900 text-white rounded-xl text-xs font-bold shadow-md hover:scale-105 transition cursor-pointer">Masuk</button>
+                            <button onclick="app.openModal('profile-modal')" class="relative z-10 px-4 py-2 bg-stone-900 text-white rounded-xl text-xs font-bold shadow-md hover:scale-105 transition cursor-pointer animate-breathe">Masuk</button>
                             <button id="desk-btn-install" onclick="app.installApp()" class="hidden relative z-10 px-3 py-2 bg-nakula-600 text-white rounded-xl text-xs font-bold shadow-md hover:scale-105 transition cursor-pointer"><i data-lucide="download" class="w-4 h-4"></i></button>
                         </div>
                     </div>
@@ -92,7 +107,7 @@
                     <div class="hidden xl:block">
                         <h3 id="desk-user-name" class="font-bold text-base text-stone-800 dark:text-white leading-tight mb-1">Nama</h3>
                         <p id="desk-user-role" class="text-xs font-bold uppercase tracking-wider text-white/80 bg-black/20 dark:bg-white/20 inline-block px-3 py-1 rounded-full">Jabatan</p>
-                        <button onclick="app.openModal('profile-modal')" class="relative z-10 mt-4 w-full py-2 bg-white/90 dark:bg-black/20 text-stone-800 dark:text-white rounded-xl text-xs font-bold border border-transparent hover:bg-white transition shadow-sm cursor-pointer">Edit</button>
+                        <button onclick="app.openModal('profile-modal')" class="relative z-10 mt-4 w-full py-2 bg-white/90 dark:bg-black/20 text-stone-800 dark:text-white rounded-xl text-xs font-bold border border-transparent hover:bg-white transition shadow-sm cursor-pointer">Lihat ID Card</button>
                     </div>
                 </div>
             </div>
@@ -116,13 +131,13 @@
                     <p class="text-[11px] font-bold text-stone-400 dark:text-stone-500 mt-1 uppercase tracking-[0.15em]">Solid Bersinergi Menginspirasi</p>
                 </div>
                 <div class="flex gap-2 items-center">
-                    <img src="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png" class="w-10 h-10 rounded-xl shadow-soft bg-white dark:bg-darkcard p-1 object-contain border border-stone-100 dark:border-darkborder">
+                    <img src="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png" class="w-10 h-10 rounded-xl shadow-soft bg-white dark:bg-darkcard p-1 object-contain border border-stone-100 dark:border-darkborder animate-float">
                 </div>
             </header>
 
             <header class="hidden md:flex px-8 pt-8 pb-4 justify-between items-center bg-transparent z-20">
                 <div class="flex items-center gap-4">
-                    <img src="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png" class="w-12 h-12 rounded-xl shadow-soft bg-white dark:bg-darkcard p-1 border border-white dark:border-stone-700">
+                    <img src="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png" class="w-12 h-12 rounded-xl shadow-soft bg-white dark:bg-darkcard p-1 border border-white dark:border-stone-700 animate-float">
                     <div>
                         <h1 class="text-2xl font-black text-stone-800 dark:text-white tracking-tight">NAKULAKU EKOSISTEM</h1>
                         <p class="text-xs font-bold text-stone-400 uppercase tracking-widest">Solid Bersinergi Menginspirasi</p>
@@ -154,8 +169,8 @@
                             <div id="mob-view-guest" class="relative z-10 w-full flex flex-row justify-between items-center h-full">
                                 <div><p class="text-[9px] font-bold text-stone-400 uppercase tracking-wide mb-0.5">Selamat Datang</p><h3 class="font-extrabold text-stone-800 dark:text-white text-lg">Tamu</h3></div>
                                 <div class="flex gap-2">
-                                    <button id="mob-btn-install" onclick="app.installApp()" class="hidden bg-nakula-50 text-nakula-700 border border-nakula-200 px-3 py-2.5 rounded-xl text-xs font-bold shadow-sm active:scale-95 transition cursor-pointer flex items-center gap-1"><i data-lucide="download" class="w-4 h-4"></i><span>App</span></button>
-                                    <button class="bg-stone-900 text-white dark:bg-white dark:text-darkbg px-5 py-2.5 rounded-xl text-xs font-bold shadow-lg hover:scale-105 active:scale-95 transition cursor-pointer" onclick="app.openModal('profile-modal')">Masuk</button>
+                                    <button id="mob-btn-install" onclick="app.installApp()" class="hidden bg-nakula-50 text-nakula-700 border border-nakula-200 px-3 py-2.5 rounded-xl text-xs font-bold shadow-sm active:scale-95 transition cursor-pointer flex items-center gap-1 animate-pulse-slow"><i data-lucide="download" class="w-4 h-4"></i><span>App</span></button>
+                                    <button class="bg-stone-900 text-white dark:bg-white dark:text-darkbg px-5 py-2.5 rounded-xl text-xs font-bold shadow-lg hover:scale-105 active:scale-95 transition cursor-pointer animate-breathe" onclick="app.openModal('profile-modal')">Masuk</button>
                                 </div>
                             </div>
 
@@ -230,7 +245,7 @@
                 </div>
 
                 <footer class="mt-8 mb-4 text-center shrink-0">
-                    <p class="text-[10px] font-bold text-stone-400 dark:text-stone-600 uppercase tracking-widest">&copy; 2026 Nakulaku Ekosistem | versi PWE 1.0</p>
+                    <p class="text-[10px] font-bold text-stone-400 dark:text-stone-600 uppercase tracking-widest">&copy; 2026 Nakulaku Ekosistem | Versi 52.0</p>
                 </footer>
             </div>
         </div>
@@ -241,7 +256,78 @@
     
     <div id="browser-modal" class="fixed inset-0 z-[80] hidden bg-white dark:bg-black flex-col"><div class="flex items-center justify-between p-4 border-b border-stone-200 dark:border-stone-800 bg-white dark:bg-darkcard relative z-20"><div class="flex items-center gap-3"><button onclick="app.closeModal('browser-modal')" class="p-2 rounded-full bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 transition"><i data-lucide="arrow-left" class="w-5 h-5"></i></button><div class="flex-1 overflow-hidden"><h4 id="browser-title" class="font-bold text-sm truncate dark:text-white">Memuat...</h4><p id="browser-url" class="text-[10px] text-stone-400 truncate">...</p></div></div><div class="flex gap-2"><button onclick="document.getElementById('browser-frame').contentWindow.location.reload()" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button><button id="btn-browser-ext" class="p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800"><i data-lucide="external-link" class="w-4 h-4"></i></button></div></div><div class="flex-1 relative bg-stone-50 dark:bg-darkbg w-full h-full"><div id="browser-loader" class="iframe-loader"><div class="loader-ring"><div></div><div></div><div></div><div></div></div></div><iframe id="browser-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" onload="document.getElementById('browser-loader').classList.add('hidden')"></iframe></div></div>
 
-    <div id="profile-modal" class="fixed inset-0 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4"><div class="absolute inset-0 bg-stone-900/20 dark:bg-black/50 transition-opacity opacity-0 modal-overlay" onclick="app.closeModal('profile-modal')"></div><div class="bg-white dark:bg-darkcard w-full md:max-w-sm rounded-t-[2.5rem] md:rounded-[2.5rem] p-8 shadow-2xl transform translate-y-full md:translate-y-0 scale-95 opacity-0 modal-content transition-all z-10 border-t dark:border-darkborder md:border-none"><div class="w-12 h-1.5 bg-stone-200 dark:bg-darkbg rounded-full mx-auto mb-8 md:hidden"></div><div class="flex items-center gap-5 mb-8"><div class="relative group"><img id="modal-photo" src="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png" class="w-20 h-20 rounded-full object-cover bg-stone-50 dark:bg-darkbg border-4 border-white dark:border-darkborder shadow-lg"><label class="absolute bottom-0 right-0 bg-stone-900 text-white p-1.5 rounded-full cursor-pointer hover:bg-nakula-600 transition shadow-md"><i data-lucide="camera" class="w-3.5 h-3.5"></i><input type="file" id="upload-photo" hidden accept="image/*" onchange="app.handlePhotoUpload(this)"></label></div><div><h3 class="text-xl font-bold text-stone-800 dark:text-white leading-tight">Profil<br>Pengguna</h3><p id="modal-status" class="text-xs font-bold text-stone-400 mt-1 uppercase tracking-wider">Belum Terhubung</p></div></div><div class="space-y-4 mb-8"><div class="bg-stone-50 dark:bg-darkbg px-5 py-3.5 rounded-2xl border border-stone-100 dark:border-darkborder focus-within:border-nakula-500 transition-colors"><label class="text-[10px] font-bold text-stone-400 uppercase block mb-1">PIN Akses</label><input type="text" id="sync-pin" class="w-full bg-transparent text-lg font-bold text-stone-800 dark:text-white outline-none placeholder:text-stone-300 text-center tracking-widest" placeholder="• • • • •"></div></div><button onclick="app.syncData()" id="btn-sync" class="w-full bg-nakula-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition cursor-pointer">Masuk Aplikasi</button><button type="button" onclick="app.confirmLogout()" class="w-full py-4 text-xs font-bold text-red-500 mt-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition cursor-pointer">Keluar / Reset Akun</button></div></div>
+    <div id="profile-modal" class="fixed inset-0 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="absolute inset-0 bg-stone-900/20 dark:bg-black/50 transition-opacity opacity-0 modal-overlay" onclick="app.closeModal('profile-modal')"></div>
+        <div class="perspective-1000 w-full md:max-w-sm h-[500px] md:h-[550px] relative z-10 transition-transform duration-300 transform translate-y-full md:translate-y-0 scale-95 opacity-0 modal-content">
+            
+            <div id="card-inner" class="card-inner relative w-full h-full">
+                
+                <div class="card-front bg-white dark:bg-darkcard rounded-t-[2.5rem] md:rounded-[2.5rem] p-8 shadow-2xl flex flex-col border-t dark:border-darkborder md:border-none overflow-y-auto">
+                    <div class="w-12 h-1.5 bg-stone-200 dark:bg-darkbg rounded-full mx-auto mb-6 md:hidden shrink-0"></div>
+                    
+                    <div id="profile-content-login">
+                        <div class="flex items-center gap-5 mb-8">
+                            <div class="relative group">
+                                <img id="modal-photo" src="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png" class="w-20 h-20 rounded-full object-cover bg-stone-50 dark:bg-darkbg border-4 border-white dark:border-darkborder shadow-lg">
+                                <label class="absolute bottom-0 right-0 bg-stone-900 text-white p-1.5 rounded-full cursor-pointer hover:bg-nakula-600 transition shadow-md">
+                                    <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                                    <input type="file" id="upload-photo" hidden accept="image/*" onchange="app.handlePhotoUpload(this)">
+                                </label>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-stone-800 dark:text-white leading-tight">Profil<br>Pengguna</h3>
+                                <p id="modal-status" class="text-xs font-bold text-stone-400 mt-1 uppercase tracking-wider">Belum Terhubung</p>
+                            </div>
+                        </div>
+
+                        <div id="login-form-container" class="space-y-4 mb-8">
+                            <div class="bg-stone-50 dark:bg-darkbg px-5 py-3.5 rounded-2xl border border-stone-100 dark:border-darkborder focus-within:border-nakula-500 transition-colors">
+                                <label class="text-[10px] font-bold text-stone-400 uppercase block mb-1">PIN Akses</label>
+                                <input type="text" id="sync-pin" class="w-full bg-transparent text-lg font-bold text-stone-800 dark:text-white outline-none placeholder:text-stone-300 text-center tracking-widest" placeholder="• • • • •">
+                            </div>
+                            <button onclick="app.syncData()" id="btn-sync" class="w-full bg-nakula-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition cursor-pointer">Masuk Aplikasi</button>
+                        </div>
+
+                        <div id="loggedin-actions" class="hidden space-y-3">
+                            <button onclick="app.flipCard()" class="w-full py-4 bg-stone-900 text-white font-bold rounded-2xl shadow-lg active:scale-95 transition cursor-pointer flex items-center justify-center gap-2">
+                                <i data-lucide="qr-code" class="w-5 h-5"></i> Tampilkan ID Card
+                            </button>
+                            <button type="button" onclick="app.confirmLogout()" class="w-full py-4 text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition cursor-pointer border border-transparent hover:border-red-100">
+                                Keluar / Reset Akun
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-back bg-gradient-to-br from-stone-800 to-black text-white rounded-t-[2.5rem] md:rounded-[2.5rem] p-8 shadow-2xl flex flex-col items-center justify-between border-t border-white/10 md:border-none relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                    <div class="absolute bottom-0 left-0 w-48 h-48 bg-nakula-600/20 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none"></div>
+
+                    <div class="w-full flex justify-between items-start relative z-10">
+                        <img src="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png" class="w-12 h-12 rounded-xl bg-white p-1">
+                        <div class="text-right">
+                            <h3 class="font-bold text-lg leading-none">KARTU TANDA</h3>
+                            <p class="text-[10px] opacity-60 tracking-widest uppercase">Anggota Digital</p>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 flex flex-col items-center justify-center w-full relative z-10 py-6">
+                        <div class="bg-white p-2 rounded-2xl shadow-lg mb-4">
+                            <img id="id-card-qr" src="" class="w-40 h-40 object-contain">
+                        </div>
+                        <h2 id="id-card-name" class="text-xl font-bold text-center">Nama Pengguna</h2>
+                        <p id="id-card-role" class="text-xs text-white/60 uppercase tracking-wider mt-1 text-center">Jabatan</p>
+                    </div>
+
+                    <button onclick="app.flipCard()" class="w-full py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl text-sm font-bold transition cursor-pointer relative z-10 border border-white/10">
+                        Kembali ke Profil
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <div id="submenu-modal" class="fixed inset-0 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4"><div class="absolute inset-0 bg-stone-900/20 dark:bg-black/50 backdrop-blur-sm modal-overlay opacity-0" onclick="app.closeModal('submenu-modal')"></div><div class="bg-white dark:bg-darkcard w-full md:max-w-md rounded-t-[2.5rem] md:rounded-[2.5rem] p-0 shadow-2xl transform translate-y-full md:translate-y-0 scale-95 opacity-0 modal-content transition-all z-10 max-h-[85vh] flex flex-col border-t dark:border-darkborder md:border-none"><div class="p-8 border-b border-stone-100 dark:border-darkborder"><h3 id="submenu-title" class="text-2xl font-bold text-stone-800 dark:text-white">Detail Menu</h3></div><div id="submenu-list" class="p-6 overflow-y-auto space-y-3"></div><div class="p-6 border-t border-stone-100 dark:border-darkborder"><button onclick="app.closeModal('submenu-modal')" class="w-full py-4 bg-stone-100 dark:bg-darkbg rounded-2xl text-sm font-bold text-stone-600 dark:text-stone-300 hover:bg-stone-200 transition cursor-pointer">Tutup</button></div></div></div>
     <div id="feedback-modal" class="fixed inset-0 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4"><div class="absolute inset-0 bg-stone-900/20 dark:bg-black/50 backdrop-blur-sm modal-overlay opacity-0" onclick="app.closeModal('feedback-modal')"></div><div class="bg-white dark:bg-darkcard w-full md:w-auto md:max-w-md rounded-t-[2.5rem] rounded-b-none md:rounded-[2rem] shadow-2xl relative z-10 overflow-hidden transform translate-y-full md:translate-y-0 scale-95 opacity-0 modal-content transition-all duration-300 border-t dark:border-darkborder md:border-none"><div class="p-6 border-b border-stone-100 dark:border-darkborder flex justify-between items-center"><div><h3 class="text-lg font-bold text-stone-800 dark:text-white">Bantuan</h3></div><button onclick="app.closeModal('feedback-modal')" class="p-2 bg-stone-100 dark:bg-darkbg rounded-full"><i data-lucide="x" class="w-5 h-5 dark:text-stone-300"></i></button></div><div class="p-6"><form onsubmit="app.submitFeedback(event)" class="space-y-4"><textarea name="pesan" required rows="3" class="w-full bg-stone-50 dark:bg-darkbg border border-stone-200 dark:border-darkborder rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-nakula-500 outline-none resize-none dark:text-white" placeholder="Pesan Anda..."></textarea><div class="flex items-center justify-between pt-2"><label class="flex items-center gap-2 cursor-pointer select-none"><input type="checkbox" id="anonim-check" name="isAnonim" class="w-4 h-4 rounded border-stone-300" onchange="app.toggleAnonim()"><span class="text-sm text-stone-500 font-medium">Anonim</span></label><button type="submit" id="btn-feedback-submit" class="bg-stone-900 dark:bg-nakula-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg active:scale-95 transition flex items-center gap-2 text-sm cursor-pointer"><span>Kirim</span><i data-lucide="send" class="w-4 h-4"></i></button></div></form></div></div></div>
 
@@ -265,6 +351,12 @@
                 this.setupBackButton(); 
                 this.setupInstallPrompt(); 
                 lucide.createIcons();
+            },
+
+            // --- FLIP CARD LOGIC (NEW) ---
+            flipCard: function() {
+                const card = document.getElementById('card-inner');
+                card.classList.toggle('is-flipped');
             },
 
             // --- SMART BACK BUTTON LOGIC ---
@@ -412,6 +504,17 @@
                 if(p.photo) document.getElementById('mob-user-photo').src = p.photo;
                 const widgetMobile = document.getElementById('widget-akun-mobile'); if(widgetMobile) widgetMobile.className = `md:hidden pro-card rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden shadow-sm min-h-[90px] ${this.getRoleBg(p.role)}`;
                 
+                // Update Modal Content (Logged In)
+                document.getElementById('login-form-container').classList.add('hidden');
+                document.getElementById('loggedin-actions').classList.remove('hidden');
+                document.getElementById('modal-status').innerText = 'Terverifikasi';
+                document.getElementById('modal-status').className = 'text-xs font-bold text-green-500 mt-1 uppercase tracking-wider';
+                
+                // Update ID Card Data
+                document.getElementById('id-card-name').innerText = p.realName;
+                document.getElementById('id-card-role').innerText = p.role;
+                document.getElementById('id-card-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(p.nama)}`;
+
                 document.getElementById('desk-view-guest').classList.add('hidden'); document.getElementById('desk-view-user').classList.remove('hidden');
                 const deskProfileContainer = document.getElementById('desktop-profile-container'); deskProfileContainer.className = `bg-gradient-to-br from-slate-100 to-zinc-200 dark:from-slate-800 dark:to-zinc-800 rounded-[2rem] p-4 xl:p-6 text-center shadow-soft dark:shadow-none border border-white/50 dark:border-white/5 relative overflow-hidden group ${this.getRoleBg(p.role)}`;
                 document.getElementById('desk-user-name').innerText = p.realName; document.getElementById('desk-user-role').innerText = `${p.role || '-'} • ${p.instansi || '-'}`;
@@ -428,6 +531,12 @@
 
                 const widgetMobile = document.getElementById('widget-akun-mobile'); widgetMobile.className = "md:hidden pro-card rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden shadow-soft min-h-[90px] bg-gnomecard dark:bg-darkcard border border-white dark:border-darkborder";
                 
+                // Update Modal Content (Guest)
+                document.getElementById('login-form-container').classList.remove('hidden');
+                document.getElementById('loggedin-actions').classList.add('hidden');
+                document.getElementById('modal-status').innerText = 'Belum Terhubung';
+                document.getElementById('modal-status').className = 'text-xs font-bold text-stone-400 mt-1 uppercase tracking-wider';
+
                 document.getElementById('desk-view-guest').classList.remove('hidden'); document.getElementById('desk-view-user').classList.add('hidden');
                 const deskProfileContainer = document.getElementById('desktop-profile-container'); deskProfileContainer.className = "bg-gradient-to-br from-slate-100 to-zinc-200 dark:from-slate-800 dark:to-zinc-800 rounded-[2rem] p-4 xl:p-6 text-center shadow-soft dark:shadow-none border border-white/50 dark:border-white/5 relative overflow-hidden group";
                 document.getElementById('widget-performa').classList.add('hidden');
@@ -515,6 +624,10 @@
                         el.classList.remove('flex');
                         document.getElementById('browser-frame').src = ''; // Clear iframe memory
                     }
+                    if(id === 'profile-modal') {
+                        // Reset flip state when closing profile modal
+                        setTimeout(() => document.getElementById('card-inner').classList.remove('is-flipped'), 200);
+                    }
                 }, 300); 
                 
                 if (!fromBackEvent) {
@@ -561,7 +674,6 @@
                         if(item.role && item.role.toLowerCase() !== 'all' && !getRole.includes(item.role.toLowerCase())) return;
                         const hasChild = this.menuMap[item.judul.toLowerCase()];
                         
-                        // LOGIKA IFRAME DI SINI
                         let action = `onclick="app.showAlert('info','Info','Fitur ini segera hadir')"`;
                         if(hasChild) {
                             action = `onclick="app.openSubmenu('${item.judul}')"`;
