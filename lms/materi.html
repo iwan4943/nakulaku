@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Materi KKG - Nakulaku LMS</title>
+
+<link rel="icon" href="data:,">
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+  /* --- THEME VARIABLES --- */
+  :root { 
+    --primary: #B3261E; 
+    --primary-dark: #901B15;
+    --bg-body: #FFF8F6;
+    --card-bg: #FFFFFF;
+    --text-main: #201A19;
+    --text-muted: #757575;
+    --radius: 16px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    
+    /* Warna Status Tombol */
+    --btn-materi-bg: #e3f2fd; --btn-materi-text: #1565c0; --btn-materi-border: #90caf9;
+    --btn-tugas-bg: #fff3e0; --btn-tugas-text: #ef6c00; --btn-tugas-border: #ffcc80;
+    --btn-lms-bg: #2e7d32; --btn-lms-hover: #1b5e20;
+    --btn-disabled-bg: #f5f5f5; --btn-disabled-text: #bdbdbd; --btn-disabled-border: #e0e0e0;
+  }
+
+  body { 
+    background-color: var(--bg-body); 
+    font-family: 'Outfit', sans-serif; 
+    color: var(--text-main);
+    padding-bottom: 80px;
+    margin: 0;
+  }
+
+  /* --- STICKY HEADER --- */
+  .sticky-wrapper {
+    position: sticky; top: 0; z-index: 1000;
+    background-color: var(--bg-body); padding-bottom: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+
+  .header-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 1.5rem 1.5rem 2.5rem 1.5rem;
+    border-radius: 0 0 24px 24px;
+  }
+
+  .search-container { margin-top: -25px; padding: 0 1.5rem; }
+  .search-box {
+    background: white; border-radius: 50px; padding: 0.8rem 1.5rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #eee;
+    display: flex; align-items: center;
+  }
+  .search-input {
+    border: none; width: 100%; outline: none; font-size: 1rem; margin-left: 10px; color: #333;
+  }
+
+  /* --- CARD STYLING --- */
+  .card-materi {
+    background: var(--card-bg); border-radius: var(--radius); border: none;
+    box-shadow: var(--shadow); margin-bottom: 1rem; overflow: hidden;
+    transition: transform 0.2s; border-left: 5px solid transparent; padding: 16px;
+  }
+  .border-luring { border-left-color: #2563eb; }
+  .border-daring { border-left-color: #10b981; }
+  .border-done   { border-left-color: #94a3b8; filter: grayscale(0.9); opacity: 0.8; }
+
+  /* Date Badge */
+  .date-badge {
+    background: #F5F5F5; padding: 0.5rem; border-radius: 12px;
+    text-align: center; min-width: 75px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .weekday { font-size: 0.6rem; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 2px; }
+  .day { font-size: 1.4rem; font-weight: 700; line-height: 1; color: var(--text-main); }
+  .month { font-size: 0.65rem; text-transform: uppercase; color: var(--primary); font-weight: 700; margin-top: 2px; }
+  .year { font-size: 0.6rem; color: #888; }
+
+  /* --- TOMBOL AKSI (DESAIN BARU) --- */
+  .btn-action {
+    border-radius: 50px; font-size: 0.75rem; font-weight: 700; padding: 8px 16px;
+    display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+    transition: all 0.2s ease; 
+  }
+  
+  /* 1. Tombol Materi (Biru Tegas) */
+  .btn-download { 
+    background-color: var(--btn-materi-bg); 
+    color: var(--btn-materi-text); 
+    border: 1px solid var(--btn-materi-border);
+  }
+  .btn-download:hover { 
+    background-color: var(--btn-materi-text); color: white; border-color: var(--btn-materi-text);
+  }
+  
+  /* 2. Tombol Tugas (Oranye Tegas) */
+  .btn-tugas { 
+    background-color: var(--btn-tugas-bg); 
+    color: var(--btn-tugas-text); 
+    border: 1px solid var(--btn-tugas-border);
+  }
+  .btn-tugas:hover { 
+    background-color: var(--btn-tugas-text); color: white; border-color: var(--btn-tugas-text);
+  }
+
+  /* 3. Tombol LMS Aktif (Hijau Solid) */
+  .btn-lms-active { 
+    background-color: var(--btn-lms-bg); color: white; 
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3); 
+    border: 1px solid var(--btn-lms-bg);
+  }
+  .btn-lms-active:hover { 
+    background-color: var(--btn-lms-hover); transform: translateY(-2px); 
+  }
+
+  /* 4. Tombol Disabled / Belum Waktunya (Abu-abu Pucat) */
+  .btn-disabled { 
+    background-color: var(--btn-disabled-bg); 
+    color: var(--btn-disabled-text); 
+    border: 1px solid var(--btn-disabled-border);
+    cursor: not-allowed; pointer-events: none; 
+  }
+
+  #loader { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:9999; display:flex; justify-content:center; align-items:center; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div id="loader"><div class="spinner-border text-danger" style="width: 3rem; height: 3rem;"></div></div>
+
+<div class="sticky-wrapper">
+    <div class="header-hero">
+        <h2 class="fw-bold m-0" style="letter-spacing: -0.5px;">Materi KKG</h2>
+        <p class="m-0 opacity-75 small">Nakulaku LMS</p>
+    </div>
+    <div class="search-container">
+        <div class="search-box">
+            <i class="bi bi-search text-muted"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="Cari materi..." onkeyup="filterMateri()">
+        </div>
+    </div>
+</div>
+
+<div class="container px-3 mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+        <h6 class="fw-bold text-muted m-0 small" style="letter-spacing: 1px;">JADWAL KEGIATAN</h6>
+        <select class="form-select form-select-sm w-auto border-0 bg-transparent fw-bold text-primary shadow-none" onchange="filterStatus(this.value)" style="cursor: pointer;">
+            <option value="all">Semua</option>
+            <option value="upcoming">Akan Datang</option>
+            <option value="past">Selesai</option>
+        </select>
+    </div>
+    <div id="list-materi"></div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxzb0rsdjSE0fPpaBNKNUyxHUimJ-O7-jiNjfsSzmy8fd6tc1284LjR6VjXvqxxvOsV9A/exec"; 
+let ALL_DATA = [];
+
+window.onload = loadData;
+
+async function loadData() {
+    try {
+        const res = await fetch(API_URL + "?action=getMateriData");
+        if (!res.ok) throw new Error("Server Error");
+        const json = await res.json();
+        
+        if (json.materi) {
+            ALL_DATA = json.materi;
+            renderList(ALL_DATA);
+        } else {
+            document.getElementById('list-materi').innerHTML = `<div class="text-center text-muted mt-5">Data kosong.</div>`;
+        }
+    } catch (e) {
+        console.error(e);
+        document.getElementById('list-materi').innerHTML = `<div class="text-center text-muted mt-5">Gagal memuat data.</div>`;
+    } finally {
+        document.getElementById('loader').classList.add('hidden');
+    }
+}
+
+// --- FUNGSI PARSE TANGGAL ROBUST ---
+function parseDate(dateStr) {
+    if (!dateStr || dateStr.trim() === "-") return null;
+    let str = dateStr.toString().toLowerCase().trim();
+
+    // 1. Coba Format ISO
+    let d = new Date(str);
+    if (!isNaN(d.getTime())) return d;
+
+    // 2. Format Indonesia
+    str = str.replace(/senin,|selasa,|rabu,|kamis,|jumat,|sabtu,|minggu,|senin|selasa|rabu|kamis|jumat|sabtu|minggu/g, "").trim();
+    
+    const months = {
+        "januari": "01", "februari": "02", "maret": "03", "april": "04", "mei": "05", "juni": "06",
+        "juli": "07", "agustus": "08", "september": "09", "oktober": "10", "november": "11", "desember": "12",
+        "jan": "01", "feb": "02", "mar": "03", "apr": "04", "jun": "06", "jul": "07", "agu": "08", "sep": "09", "okt": "10", "nov": "11", "des": "12"
+    };
+
+    const parts = str.split(/[\s-]+/); 
+    let day, monthIdx, year;
+
+    for (let i = 0; i < parts.length; i++) {
+        let p = parts[i];
+        if (months[p]) {
+            monthIdx = months[p];
+            if (i > 0) day = parts[i-1];
+            if (i < parts.length - 1) year = parts[i+1];
+            break;
+        }
+    }
+
+    if (!monthIdx) {
+        if (str.includes('/')) {
+            const p = str.split('/');
+            if (p.length === 3) return new Date(`${p[2]}-${p[1]}-${p[0]}`);
+        }
+        return null; 
+    }
+
+    if (day && day.length === 1) day = "0" + day;
+    const isoDate = `${year}-${monthIdx}-${day}`;
+    const result = new Date(isoDate);
+    return isNaN(result.getTime()) ? null : result;
+}
+
+function renderList(data) {
+    const container = document.getElementById('list-materi');
+    container.innerHTML = "";
+
+    if (!data || data.length === 0) {
+        container.innerHTML = `<div class="text-center py-5 text-muted">Tidak ada jadwal.</div>`;
+        return;
+    }
+
+    data.sort((a,b) => {
+        const dA = parseDate(a.tanggal);
+        const dB = parseDate(b.tanggal);
+        if (!dA) return 1; if (!dB) return -1;
+        return dA - dB;
+    });
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    data.forEach(item => {
+        let dateObj = parseDate(item.tanggal);
+        let dayStr = "?", monthStr = "TBA", yearStr = "", weekdayStr = "";
+        let isPast = false;
+        let isFuture = false;
+
+        if (dateObj) {
+            isPast = dateObj < today;
+            isFuture = dateObj > today; // Tanggal di masa depan
+            
+            dayStr = dateObj.getDate();
+            monthStr = dateObj.toLocaleString('id-ID', { month: 'short' });
+            yearStr = dateObj.getFullYear();
+            weekdayStr = dateObj.toLocaleString('id-ID', { weekday: 'short' });
+        }
+
+        const borderClass = isPast ? 'border-done' : (item.status === 'Daring' ? 'border-daring' : 'border-luring');
+        
+        // --- VALIDASI LINK ---
+        const checkLink = (l) => (l && l.length > 10 && l !== "-") ? l : null;
+        const linkM = checkLink(item.link_materi);
+        const linkT = checkLink(item.link_tugas);
+        const linkK = checkLink(item.link_kirim);
+
+        // --- LOGIKA TOMBOL LMS (HIJAU vs ABU) ---
+        // Default: Disabled (Abu-abu)
+        let lmsClass = 'btn-disabled';
+        let lmsLink = 'javascript:void(0)';
+        let lmsIcon = 'bi-lock-fill'; // Ikon gembok jika belum buka
+        
+        // Jika Link Ada
+        if (linkK) {
+            if (isFuture) {
+                // Ada Link TAPI Belum Waktunya -> Tetap Disabled (Abu)
+                lmsClass = 'btn-disabled'; 
+                lmsIcon = 'bi-clock'; // Ikon jam (menunggu)
+            } else {
+                // Hari ini atau Lampau -> AKTIF (Hijau)
+                lmsClass = 'btn-lms-active';
+                lmsLink = linkK;
+                lmsIcon = 'bi-send-fill'; // Ikon kirim
+            }
+        }
+
+        const html = `
+        <div class="card card-materi ${borderClass}">
+            <div class="d-flex gap-3">
+                
+                <div class="date-badge">
+                    <span class="weekday">${weekdayStr}</span>
+                    <span class="day">${dayStr}</span>
+                    <span class="month">${monthStr}</span>
+                    <span class="year">${yearStr}</span>
+                </div>
+
+                <div class="w-100">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <span class="badge ${isPast?'bg-secondary':'bg-primary'} bg-opacity-10 text-${isPast?'secondary':'primary'} border" style="font-size:0.6rem;">
+                            ${isPast ? 'SELESAI' : (item.status || 'UMUM')}
+                        </span>
+                        <small class="text-muted fw-bold" style="font-size:0.7rem">
+                            <i class="bi bi-clock me-1"></i>${item.waktu || '-'}
+                        </small>
+                    </div>
+                    
+                    <h6 class="fw-bold mb-1 text-dark" style="font-size:0.95rem; line-height:1.4;">${item.kegiatan}</h6>
+                    <div class="d-flex align-items-center text-muted small mb-3">
+                        <i class="bi bi-person-video3 me-2 text-primary"></i> 
+                        <span class="text-truncate" style="max-width: 200px;">${item.narsum || '-'}</span>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="${linkM || 'javascript:void(0)'}" target="${linkM?'_blank':''}" class="btn-action ${linkM?'btn-download':'btn-disabled'}">
+                           <i class="bi bi-file-earmark-arrow-down"></i> Materi
+                        </a>
+                        
+                        <a href="${linkT || 'javascript:void(0)'}" target="${linkT?'_blank':''}" class="btn-action ${linkT?'btn-tugas':'btn-disabled'}">
+                           <i class="bi bi-journal-text"></i> Tugas
+                        </a>
+                        
+                        <a href="${lmsLink}" class="btn-action ${lmsClass} ms-auto">
+                           <i class="bi ${lmsIcon}"></i> LMS
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+        container.innerHTML += html;
+    });
+}
+
+function filterMateri() {
+    const term = document.getElementById('searchInput').value.toLowerCase();
+    renderList(ALL_DATA.filter(i => (i.kegiatan && i.kegiatan.toLowerCase().includes(term)) || (i.narsum && i.narsum.toLowerCase().includes(term))));
+}
+
+function filterStatus(mode) {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    if (mode === 'all') renderList(ALL_DATA);
+    else if (mode === 'upcoming') renderList(ALL_DATA.filter(i => { const d = parseDate(i.tanggal); return d ? d >= today : true; }));
+    else renderList(ALL_DATA.filter(i => { const d = parseDate(i.tanggal); return d ? d < today : false; }));
+}
+</script>
+</body>
+</html>
