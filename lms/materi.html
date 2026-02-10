@@ -20,14 +20,8 @@
     --card-bg: #FFFFFF;
     --text-main: #201A19;
     --text-muted: #757575;
-    --radius: 16px;
-    --shadow: 0 2px 8px rgba(0,0,0,0.06);
-    
-    /* Warna Status Tombol */
-    --btn-materi-bg: #e3f2fd; --btn-materi-text: #1565c0; --btn-materi-border: #90caf9;
-    --btn-tugas-bg: #fff3e0; --btn-tugas-text: #ef6c00; --btn-tugas-border: #ffcc80;
-    --btn-lms-bg: #2e7d32; --btn-lms-hover: #1b5e20;
-    --btn-disabled-bg: #f5f5f5; --btn-disabled-text: #bdbdbd; --btn-disabled-border: #e0e0e0;
+    --radius: 12px; /* Radius sedikit dikurangi agar lebih rapi di HP kecil */
+    --shadow: 0 1px 3px rgba(0,0,0,0.08);
   }
 
   body { 
@@ -36,96 +30,98 @@
     color: var(--text-main);
     padding-bottom: 80px;
     margin: 0;
+    font-size: 14px; /* Base font diperkecil sedikit */
   }
 
   /* --- STICKY HEADER --- */
   .sticky-wrapper {
     position: sticky; top: 0; z-index: 1000;
-    background-color: var(--bg-body); padding-bottom: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    background-color: var(--bg-body); padding-bottom: 5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
   }
 
   .header-hero {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: white;
-    padding: 1.5rem 1.5rem 2.5rem 1.5rem;
-    border-radius: 0 0 24px 24px;
+    padding: 1.2rem 1.5rem 2.2rem 1.5rem; /* Padding diperkecil */
+    border-radius: 0 0 20px 20px;
   }
 
-  .search-container { margin-top: -25px; padding: 0 1.5rem; }
+  .search-container { margin-top: -20px; padding: 0 1rem; }
   .search-box {
-    background: white; border-radius: 50px; padding: 0.8rem 1.5rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #eee;
+    background: white; border-radius: 50px; padding: 0.6rem 1.2rem;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1); border: 1px solid #eee;
     display: flex; align-items: center;
   }
   .search-input {
-    border: none; width: 100%; outline: none; font-size: 1rem; margin-left: 10px; color: #333;
+    border: none; width: 100%; outline: none; font-size: 0.9rem; margin-left: 10px; color: #333;
   }
 
-  /* --- CARD STYLING --- */
+  /* --- CARD STYLING (COMPACT) --- */
   .card-materi {
     background: var(--card-bg); border-radius: var(--radius); border: none;
-    box-shadow: var(--shadow); margin-bottom: 1rem; overflow: hidden;
-    transition: transform 0.2s; border-left: 5px solid transparent; padding: 16px;
+    box-shadow: var(--shadow); margin-bottom: 0.8rem; overflow: hidden;
+    transition: transform 0.2s; border-left: 4px solid transparent; padding: 12px; /* Padding dikurangi */
   }
-  .border-luring { border-left-color: #2563eb; }
-  .border-daring { border-left-color: #10b981; }
-  .border-done   { border-left-color: #94a3b8; filter: grayscale(0.9); opacity: 0.8; }
+  /* Status Colors */
+  .border-luring { border-left-color: #0288d1; }
+  .border-daring { border-left-color: #2e7d32; }
+  .border-done   { border-left-color: #9e9e9e; filter: grayscale(1); opacity: 0.8; }
 
-  /* Date Badge */
+  /* Date Badge (Compact) */
   .date-badge {
-    background: #F5F5F5; padding: 0.5rem; border-radius: 12px;
-    text-align: center; min-width: 75px;
-    display: flex; flex-direction: column; justify-content: center;
+    background: #F5F5F5; padding: 0.4rem; border-radius: 8px;
+    text-align: center; min-width: 60px; /* Lebar dikurangi */
+    display: flex; flex-direction: column; justify-content: center; height: fit-content;
   }
-  .weekday { font-size: 0.6rem; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 2px; }
-  .day { font-size: 1.4rem; font-weight: 700; line-height: 1; color: var(--text-main); }
-  .month { font-size: 0.65rem; text-transform: uppercase; color: var(--primary); font-weight: 700; margin-top: 2px; }
-  .year { font-size: 0.6rem; color: #888; }
+  .weekday { font-size: 0.55rem; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 0; line-height: 1.2; }
+  .day { font-size: 1.2rem; font-weight: 800; line-height: 1; color: var(--text-main); margin: 2px 0; }
+  .month { font-size: 0.6rem; text-transform: uppercase; color: var(--primary); font-weight: 700; margin-top: 0; line-height: 1; }
+  .year { font-size: 0.55rem; color: #888; display: none; /* Tahun disembunyikan di tampilan list agar hemat tempat */ }
 
-  /* --- TOMBOL AKSI (DESAIN BARU) --- */
+  /* Content Text */
+  .card-title { font-size: 0.9rem; line-height: 1.3; margin-bottom: 4px; }
+  .card-narsum { font-size: 0.75rem; color: #666; margin-bottom: 8px; display: flex; align-items: center; }
+
+  /* --- TOMBOL AKSI (SOLID & COMPACT) --- */
   .btn-action {
-    border-radius: 50px; font-size: 0.75rem; font-weight: 700; padding: 8px 16px;
-    display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
-    transition: all 0.2s ease; 
+    border-radius: 50px; 
+    font-size: 11px; /* Font kecil tapi terbaca */
+    font-weight: 700; 
+    padding: 6px 12px; /* Padding rapat */
+    display: inline-flex; align-items: center; gap: 4px; 
+    text-decoration: none; border: none;
+    transition: all 0.2s ease;
+    white-space: nowrap; /* Mencegah teks turun baris */
+    flex-grow: 1; /* Agar tombol mengisi ruang kosong secara rata */
+    justify-content: center;
   }
   
-  /* 1. Tombol Materi (Biru Tegas) */
-  .btn-download { 
-    background-color: var(--btn-materi-bg); 
-    color: var(--btn-materi-text); 
-    border: 1px solid var(--btn-materi-border);
-  }
-  .btn-download:hover { 
-    background-color: var(--btn-materi-text); color: white; border-color: var(--btn-materi-text);
-  }
+  /* 1. Tombol Materi (Biru Solid) */
+  .btn-download { background-color: #0288d1; color: white; }
+  .btn-download:hover { background-color: #01579b; }
   
-  /* 2. Tombol Tugas (Oranye Tegas) */
-  .btn-tugas { 
-    background-color: var(--btn-tugas-bg); 
-    color: var(--btn-tugas-text); 
-    border: 1px solid var(--btn-tugas-border);
-  }
-  .btn-tugas:hover { 
-    background-color: var(--btn-tugas-text); color: white; border-color: var(--btn-tugas-text);
-  }
+  /* 2. Tombol Tugas (Oranye Solid) */
+  .btn-tugas { background-color: #f57c00; color: white; }
+  .btn-tugas:hover { background-color: #e65100; }
 
   /* 3. Tombol LMS Aktif (Hijau Solid) */
   .btn-lms-active { 
-    background-color: var(--btn-lms-bg); color: white; 
-    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3); 
-    border: 1px solid var(--btn-lms-bg);
+    background-color: #2e7d32; color: white; 
+    box-shadow: 0 2px 5px rgba(46, 125, 50, 0.4); 
   }
-  .btn-lms-active:hover { 
-    background-color: var(--btn-lms-hover); transform: translateY(-2px); 
+  .btn-lms-active:hover { background-color: #1b5e20; }
+
+  /* 4. Tombol Disabled (Abu-abu Flat) */
+  .btn-disabled { 
+    background-color: #e0e0e0; color: #9e9e9e; 
+    cursor: not-allowed; pointer-events: none; 
   }
 
-  /* 4. Tombol Disabled / Belum Waktunya (Abu-abu Pucat) */
-  .btn-disabled { 
-    background-color: var(--btn-disabled-bg); 
-    color: var(--btn-disabled-text); 
-    border: 1px solid var(--btn-disabled-border);
-    cursor: not-allowed; pointer-events: none; 
+  /* Grid Tombol */
+  .btn-container {
+    display: flex; gap: 6px; /* Jarak antar tombol rapat */
+    flex-wrap: wrap; /* Bungkus jika layar sangat kecil */
   }
 
   #loader { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:9999; display:flex; justify-content:center; align-items:center; }
@@ -138,7 +134,7 @@
 
 <div class="sticky-wrapper">
     <div class="header-hero">
-        <h2 class="fw-bold m-0" style="letter-spacing: -0.5px;">Materi KKG</h2>
+        <h2 class="fw-bold m-0" style="font-size: 1.5rem; letter-spacing: -0.5px;">Materi KKG</h2>
         <p class="m-0 opacity-75 small">Nakulaku LMS</p>
     </div>
     <div class="search-container">
@@ -150,9 +146,9 @@
 </div>
 
 <div class="container px-3 mt-3">
-    <div class="d-flex justify-content-between align-items-center mb-3 px-1">
-        <h6 class="fw-bold text-muted m-0 small" style="letter-spacing: 1px;">JADWAL KEGIATAN</h6>
-        <select class="form-select form-select-sm w-auto border-0 bg-transparent fw-bold text-primary shadow-none" onchange="filterStatus(this.value)" style="cursor: pointer;">
+    <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+        <h6 class="fw-bold text-muted m-0" style="font-size: 0.7rem; letter-spacing: 1px;">JADWAL KEGIATAN</h6>
+        <select class="form-select form-select-sm w-auto border-0 bg-transparent fw-bold text-primary shadow-none" onchange="filterStatus(this.value)" style="cursor: pointer; font-size: 0.8rem;">
             <option value="all">Semua</option>
             <option value="upcoming">Akan Datang</option>
             <option value="past">Selesai</option>
@@ -177,11 +173,11 @@ async function loadData() {
             ALL_DATA = json.materi;
             renderList(ALL_DATA);
         } else {
-            document.getElementById('list-materi').innerHTML = `<div class="text-center text-muted mt-5">Data kosong.</div>`;
+            document.getElementById('list-materi').innerHTML = `<div class="text-center text-muted mt-5 small">Data kosong.</div>`;
         }
     } catch (e) {
         console.error(e);
-        document.getElementById('list-materi').innerHTML = `<div class="text-center text-muted mt-5">Gagal memuat data.</div>`;
+        document.getElementById('list-materi').innerHTML = `<div class="text-center text-muted mt-5 small">Gagal memuat data.</div>`;
     } finally {
         document.getElementById('loader').classList.add('hidden');
     }
@@ -237,7 +233,7 @@ function renderList(data) {
     container.innerHTML = "";
 
     if (!data || data.length === 0) {
-        container.innerHTML = `<div class="text-center py-5 text-muted">Tidak ada jadwal.</div>`;
+        container.innerHTML = `<div class="text-center py-5 text-muted small">Tidak ada jadwal.</div>`;
         return;
     }
 
@@ -259,7 +255,7 @@ function renderList(data) {
 
         if (dateObj) {
             isPast = dateObj < today;
-            isFuture = dateObj > today; // Tanggal di masa depan
+            isFuture = dateObj > today; 
             
             dayStr = dateObj.getDate();
             monthStr = dateObj.toLocaleString('id-ID', { month: 'short' });
@@ -275,63 +271,59 @@ function renderList(data) {
         const linkT = checkLink(item.link_tugas);
         const linkK = checkLink(item.link_kirim);
 
-        // --- LOGIKA TOMBOL LMS (HIJAU vs ABU) ---
-        // Default: Disabled (Abu-abu)
+        // --- LOGIKA TOMBOL LMS ---
         let lmsClass = 'btn-disabled';
         let lmsLink = 'javascript:void(0)';
-        let lmsIcon = 'bi-lock-fill'; // Ikon gembok jika belum buka
-        
-        // Jika Link Ada
+        let lmsIcon = 'bi-lock-fill'; 
+
         if (linkK) {
             if (isFuture) {
-                // Ada Link TAPI Belum Waktunya -> Tetap Disabled (Abu)
-                lmsClass = 'btn-disabled'; 
-                lmsIcon = 'bi-clock'; // Ikon jam (menunggu)
+                lmsClass = 'btn-disabled'; // Masa Depan = Abu
+                lmsIcon = 'bi-clock';
             } else {
-                // Hari ini atau Lampau -> AKTIF (Hijau)
-                lmsClass = 'btn-lms-active';
+                lmsClass = 'btn-lms-active'; // Hari ini/Lewat = Hijau
                 lmsLink = linkK;
-                lmsIcon = 'bi-send-fill'; // Ikon kirim
+                lmsIcon = 'bi-send-fill';
             }
         }
 
         const html = `
         <div class="card card-materi ${borderClass}">
-            <div class="d-flex gap-3">
+            <div class="d-flex gap-2 align-items-start">
                 
-                <div class="date-badge">
+                <div class="date-badge flex-shrink-0">
                     <span class="weekday">${weekdayStr}</span>
                     <span class="day">${dayStr}</span>
                     <span class="month">${monthStr}</span>
-                    <span class="year">${yearStr}</span>
                 </div>
 
-                <div class="w-100">
+                <div class="w-100" style="min-width: 0;">
                     <div class="d-flex justify-content-between align-items-start mb-1">
-                        <span class="badge ${isPast?'bg-secondary':'bg-primary'} bg-opacity-10 text-${isPast?'secondary':'primary'} border" style="font-size:0.6rem;">
+                        <span class="badge ${isPast?'bg-secondary':'bg-primary'} bg-opacity-10 text-${isPast?'secondary':'primary'} border" style="font-size:0.55rem; padding: 3px 6px;">
                             ${isPast ? 'SELESAI' : (item.status || 'UMUM')}
                         </span>
-                        <small class="text-muted fw-bold" style="font-size:0.7rem">
+                        <small class="text-muted fw-bold" style="font-size:0.65rem">
                             <i class="bi bi-clock me-1"></i>${item.waktu || '-'}
                         </small>
                     </div>
                     
-                    <h6 class="fw-bold mb-1 text-dark" style="font-size:0.95rem; line-height:1.4;">${item.kegiatan}</h6>
-                    <div class="d-flex align-items-center text-muted small mb-3">
-                        <i class="bi bi-person-video3 me-2 text-primary"></i> 
-                        <span class="text-truncate" style="max-width: 200px;">${item.narsum || '-'}</span>
+                    <h6 class="card-title fw-bold text-dark text-truncate">${item.kegiatan}</h6>
+                    <div class="card-narsum text-truncate">
+                        <i class="bi bi-person-video3 me-1 text-primary"></i> ${item.narsum || '-'}
                     </div>
 
-                    <div class="d-flex flex-wrap gap-2">
-                        <a href="${linkM || 'javascript:void(0)'}" target="${linkM?'_blank':''}" class="btn-action ${linkM?'btn-download':'btn-disabled'}">
+                    <div class="btn-container mt-2">
+                        <a href="${linkM || 'javascript:void(0)'}" target="${linkM?'_blank':''}" 
+                           class="btn-action ${linkM?'btn-download':'btn-disabled'}">
                            <i class="bi bi-file-earmark-arrow-down"></i> Materi
                         </a>
                         
-                        <a href="${linkT || 'javascript:void(0)'}" target="${linkT?'_blank':''}" class="btn-action ${linkT?'btn-tugas':'btn-disabled'}">
+                        <a href="${linkT || 'javascript:void(0)'}" target="${linkT?'_blank':''}" 
+                           class="btn-action ${linkT?'btn-tugas':'btn-disabled'}">
                            <i class="bi bi-journal-text"></i> Tugas
                         </a>
                         
-                        <a href="${lmsLink}" class="btn-action ${lmsClass} ms-auto">
+                        <a href="${lmsLink}" class="btn-action ${lmsClass}">
                            <i class="bi ${lmsIcon}"></i> LMS
                         </a>
                     </div>
