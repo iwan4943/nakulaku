@@ -172,15 +172,36 @@
 
 <div id="mdl-upload" class="modal-overlay">
     <div class="modal-box">
-        <h4 class="mb-4">Lapor Tugas</h4>
-        <form onsubmit="submitTugas(event)">
+        <h4 class="mb-3">Lapor Tugas</h4>
+        
+        <form onsubmit="prosesKirimTugas(event)">
             <input type="hidden" id="tugas-idx">
-            <input id="t-judul" readonly style="font-weight:bold; background:#eee;">
-            <input id="t-link" type="url" placeholder="Link Bukti (Opsional)">
-            <textarea id="t-cat" rows="4" placeholder="Rangkuman Materi / Catatan (Wajib)..." required></textarea>
-            <div class="flex" style="gap:10px;">
+            <input id="t-judul" readonly style="font-weight:bold; background:#eee; color:#555;">
+            
+            <div class="flex mb-3" style="gap:10px; background:#f5f5f5; padding:5px; border-radius:12px;">
+                <div onclick="setMetode('link')" id="btn-m-link" class="w-100 center fw-bold" style="padding:8px; border-radius:8px; cursor:pointer; font-size:0.8rem; background:white; color:var(--primary); box-shadow:0 1px 3px rgba(0,0,0,0.1);">🔗 Link Drive</div>
+                <div onclick="setMetode('upload')" id="btn-m-upload" class="w-100 center fw-bold" style="padding:8px; border-radius:8px; cursor:pointer; font-size:0.8rem; color:#888;">📂 Upload File</div>
+            </div>
+
+            <div id="area-link">
+                <input id="t-link" type="url" placeholder="Tempel Link Google Drive/Youtube...">
+            </div>
+
+            <div id="area-upload" class="hidden">
+                <div style="border:2px dashed #ccc; padding:20px; text-align:center; border-radius:12px; margin-bottom:1rem; position:relative;">
+                    <input type="file" id="file-upload" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer;" onchange="previewFile()">
+                    <div id="file-label" style="color:#888; font-size:0.85rem;">
+                        <span style="font-size:1.5rem;">☁️</span><br>Klik untuk pilih file<br>(Max 5MB)
+                    </div>
+                </div>
+            </div>
+            
+            <label class="small fw-bold text-muted">Catatan / Rangkuman (Wajib)</label>
+            <textarea id="t-cat" rows="4" placeholder="Tulis rangkuman materi..." required></textarea>
+            
+            <div class="flex" style="gap:10px; margin-top:15px;">
                 <button type="button" onclick="closeModal('mdl-upload')" class="btn" style="background:#eee; flex:1;">Batal</button>
-                <button class="btn btn-primary" style="flex:1;">Kirim</button>
+                <button id="btn-kirim-tugas" class="btn btn-primary" style="flex:1;">Kirim</button>
             </div>
         </form>
     </div>
@@ -272,6 +293,8 @@ const loading = s => $('loader').style.display = s ? 'flex' : 'none';
 
 let USER = ls.get('LMS_USER') || {};
 let GLOBAL_TASKS_MAP = {};
+let METODE_UPLOAD = 'link';
+let FILE_OBJ = null;
 
 window.onload = () => {
     loading(false);
@@ -332,7 +355,6 @@ function renderGuru(d) {
     GLOBAL_TASKS_MAP = {};
     d.tugas.forEach(t => { GLOBAL_TASKS_MAP[t.judul.trim()] = t; }); 
 
-    // Render Tugas Rutin (Agenda)
     let done = 0, acc = 0;
     const html = d.agenda.map((a, i) => {
         const judul = a.kegiatan.trim(), task = GLOBAL_TASKS_MAP[judul];
@@ -369,7 +391,7 @@ function renderGuru(d) {
     $('g-persen').innerText = pct + "%"; $('g-bar').style.width = pct + "%"; $('g-target').innerText = `${acc}/${target}`;
 }
 
-/* LOGIC KS (Menampilkan Guru Belum Setor) */
+/* LOGIC KS */
 async function loadKS(force=false) {
     loading(true);
     const [ds, dp] = await Promise.all([ req("getDataKS", { sekolah: USER.sekolah }), req("getDashboardGuru", { pin: USER.pin }) ]);
@@ -414,20 +436,106 @@ function renderHistoryKS(dp) {
 /* ACTIONS */
 function openModal(id) { $(id).style.display = 'flex'; }
 function closeModal(id) { $(id).style.display = 'none'; }
+
+// --- LOGIKA UPLOAD ---
 function openUpload(judul) { 
     $('mdl-upload').querySelector('form').reset();
     $('t-judul').value=judul; 
+    setMetode('link'); // Reset ke link default
+    $('btn-kirim-tugas').disabled = false;
+    $('btn-kirim-tugas').innerText = "Kirim";
+    $('file-label').innerHTML = `<span style="font-size:1.5rem;">☁️</span><br>Klik untuk pilih file<br>(Max 5MB)`;
+    FILE_OBJ = null;
+
     let t = GLOBAL_TASKS_MAP[judul];
-    if(t) { $('t-link').value=t.link&&t.link!=='-'?t.link:''; $('t-cat').value=t.catatan&&t.catatan!=='-'?t.catatan:''; toast("Mode Edit: Data lama dimuat"); }
+    if(t) { 
+        // Jika sudah ada link sebelumnya, tampilkan
+        if(t.link && t.link !== '-') $('t-link').value = t.link;
+        $('t-cat').value = t.catatan && t.catatan !== '-' ? t.catatan : ''; 
+        toast("Mode Edit: Data lama dimuat"); 
+    }
     openModal('mdl-upload'); 
 }
 
-async function submitTugas(e) {
-    e.preventDefault(); closeModal('mdl-upload'); toast("Mengirim...");
-    await req("simpanTugas", { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, jenis_laporan: "Kegiatan Gugus", judul_dokumen: $('t-judul').value, link_video: $('t-link').value, catatan: $('t-cat').value });
+function setMetode(m) {
+    METODE_UPLOAD = m;
+    if(m === 'link') {
+        $('area-link').classList.remove('hidden');
+        $('area-upload').classList.add('hidden');
+        $('btn-m-link').style.background = 'white'; $('btn-m-link').style.color = 'var(--primary)';
+        $('btn-m-upload').style.background = 'transparent'; $('btn-m-upload').style.color = '#888';
+    } else {
+        $('area-link').classList.add('hidden');
+        $('area-upload').classList.remove('hidden');
+        $('btn-m-upload').style.background = 'white'; $('btn-m-upload').style.color = 'var(--primary)';
+        $('btn-m-link').style.background = 'transparent'; $('btn-m-link').style.color = '#888';
+    }
+}
+
+function previewFile() {
+    const file = $('file-upload').files[0];
+    if (file) {
+        if (file.size > 5 * 1024 * 1024) { alert("Ukuran file terlalu besar! Max 5MB."); $('file-upload').value = ""; return; }
+        FILE_OBJ = file;
+        $('file-label').innerHTML = `✅ <b>${file.name}</b><br><small>${(file.size/1024).toFixed(1)} KB</small>`;
+    }
+}
+
+async function prosesKirimTugas(e) {
+    e.preventDefault();
+    const catatan = $('t-cat').value;
+    
+    if (METODE_UPLOAD === 'link') {
+        // Mode Link Manual
+        let finalLink = $('t-link').value;
+        doFinalSubmit(finalLink, catatan);
+    } else {
+        // Mode Upload File
+        if (!FILE_OBJ) {
+            if (confirm("Belum pilih file. Kirim tanpa lampiran?")) doFinalSubmit("", catatan);
+            return;
+        }
+        
+        $('btn-kirim-tugas').disabled = true;
+        $('btn-kirim-tugas').innerText = "Mengunggah...";
+        
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            const raw = e.target.result.split(',')[1];
+            try {
+                const res = await req("uploadFile", {
+                    fileName: USER.nama + "_" + $('t-judul').value + "_" + FILE_OBJ.name,
+                    mimeType: FILE_OBJ.type,
+                    fileData: raw
+                });
+                
+                if (res && res.sukses) {
+                    doFinalSubmit(res.fileUrl, catatan);
+                } else {
+                    alert("Gagal Upload: " + res.msg);
+                    $('btn-kirim-tugas').disabled = false;
+                    $('btn-kirim-tugas').innerText = "Kirim Ulang";
+                }
+            } catch (err) {
+                alert("Error Upload.");
+                $('btn-kirim-tugas').disabled = false;
+            }
+        };
+        reader.readAsDataURL(FILE_OBJ);
+    }
+}
+
+async function doFinalSubmit(linkBukti, catatanUser) {
+    closeModal('mdl-upload'); toast("Menyimpan...");
+    await req("simpanTugas", { 
+        pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, 
+        jenis_laporan: "Kegiatan Gugus", judul_dokumen: $('t-judul').value, 
+        link_video: linkBukti || "-", catatan: catatanUser 
+    });
     toast("Tugas terkirim!"); loadGuru();
 }
 
+// --- SUBMIT LAINNYA ---
 async function submitDev(e, jenis) {
     e.preventDefault(); 
     let isImp=jenis.includes('Implementasi'), nama=$(isImp?'imp-nama':'ino-nama').value, extra=isImp?`[PROG: ${$('sel-prog-kkg').value}] [KELAS: ${$('imp-kelas').value}] `:'';
