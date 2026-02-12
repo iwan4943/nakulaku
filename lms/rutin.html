@@ -7,7 +7,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -16,23 +15,18 @@
   :root { 
     --primary: #0f766e; /* Deep Teal */
     --primary-light: #ccfbf1; 
-    --accent: #d97706; /* Amber Darker */
-    --bg-body: #f8fafc; /* Slate 50 */
+    --accent: #d97706; /* Amber */
+    --bg-body: #f8fafc; 
     --surface: #ffffff;
     --text-main: #0f172a;
-    --text-muted: #64748b;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --radius: 16px;
   }
 
-  /* --- GLOBAL STYLES --- */
   body { 
     background-color: var(--bg-body); 
     font-family: 'Poppins', sans-serif; 
     color: var(--text-main);
     padding-bottom: 80px; 
-    -webkit-font-smoothing: antialiased;
   }
 
   .hidden { display: none !important; }
@@ -43,45 +37,39 @@
     background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%); 
     color: white; border: none; border-radius: 50px; 
     padding: 12px 24px; font-weight: 600; width: 100%; 
-    transition: all 0.3s ease; box-shadow: var(--shadow-md);
+    transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
   .btn-gradient:active { transform: scale(0.98); }
   
   .card-pro { 
     border: none; border-radius: var(--radius); 
     background: var(--surface); 
-    box-shadow: var(--shadow-sm);
-    transition: transform 0.2s;
-    overflow: hidden; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: transform 0.2s; overflow: hidden; 
   }
 
-  /* --- LOGIN STYLES --- */
+  /* --- LOGIN --- */
   .login-wrapper {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%);
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
+    min-height: 100vh; background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%);
+    display: flex; align-items: center; justify-content: center; padding: 20px;
   }
   .card-login {
-    width: 100%; max-width: 400px;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 2.5rem; border-radius: 24px; box-shadow: var(--shadow-md);
-    text-align: center;
+    width: 100%; max-width: 400px; background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem; border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); text-align: center;
   }
 
-  /* --- DASHBOARD STYLES --- */
+  /* --- DASHBOARD --- */
   .header-card { 
     background: var(--surface); padding: 1rem 1.5rem; 
     border-radius: var(--radius); display: flex; justify-content: space-between; align-items: center; 
-    margin-bottom: 2rem; box-shadow: var(--shadow-sm); border-bottom: 3px solid var(--primary-light);
+    margin-bottom: 2rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border-bottom: 3px solid var(--primary-light);
   }
 
-  /* Folder Grid */
   .card-materi {
     cursor: pointer; padding: 1.5rem; height: 100%;
     display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.05);
   }
-  .card-materi:hover { transform: translateY(-4px); border-color: var(--primary-light); box-shadow: var(--shadow-md); }
+  .card-materi:hover { transform: translateY(-4px); border-color: var(--primary-light); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
   
   .folder-icon {
     width: 48px; height: 48px; border-radius: 12px;
@@ -112,17 +100,13 @@
 
 <div id="view-login" class="login-wrapper">
   <div class="card-login">
-    <div class="bg-success bg-opacity-10 text-success rounded-4 d-inline-flex p-3 mb-3">
-        <i class="bi bi-person-workspace fs-1"></i>
-    </div>
+    <div class="bg-success bg-opacity-10 text-success rounded-4 d-inline-flex p-3 mb-3"><i class="bi bi-person-workspace fs-1"></i></div>
     <h3 class="fw-bold mb-1" style="color:var(--primary)">Akses Narasumber</h3>
     <p class="text-muted small mb-4">Panel Validasi LMS Guru</p>
-    
     <div class="form-floating mb-4">
       <input type="number" id="inputPIN" class="form-control fw-bold text-center" placeholder="PIN" style="letter-spacing: 4px; height: 60px; font-size: 1.5rem;">
       <label for="inputPIN" class="w-100 text-center">PIN AKSES</label>
     </div>
-    
     <button onclick="doLogin()" class="btn-gradient">MASUK DASHBOARD</button>
   </div>
 </div>
@@ -139,9 +123,7 @@
             <div class="fw-bold text-dark text-truncate" id="txtNama">...</div>
         </div>
       </div>
-      <button onclick="doLogout()" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-medium">
-        <i class="bi bi-box-arrow-right"></i> Keluar
-      </button>
+      <button onclick="doLogout()" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-medium"><i class="bi bi-box-arrow-right"></i> Keluar</button>
     </div>
 
     <div id="view-inbox-grid">
@@ -165,7 +147,6 @@
               <div class="fw-bold text-dark text-truncate" id="lbl-inbox-active">...</div>
           </div>
        </div>
-       
        <div id="list-inbox-container"></div>
     </div>
 </div>
@@ -192,16 +173,14 @@
                     
                     <h6 class="fw-bold text-dark mb-3 lh-base text-break" id="n_display_judul">Judul Laporan...</h6>
                     
-                    <div class="p-3 bg-white rounded border border-light shadow-sm">
-                        <small class="text-muted d-block mb-1 fw-bold" style="font-size: 0.7rem;">CATATAN / URAIAN PESERTA:</small>
-                        <div id="n_display_desc" class="text-secondary small text-break" style="line-height: 1.6; max-height: 200px; overflow-y:auto; white-space: pre-wrap;">
-                            Memuat data...
-                        </div>
+                    <div class="p-3 bg-white rounded border border-light shadow-sm mb-3">
+                        <small class="text-muted d-block mb-1 fw-bold" style="font-size: 0.7rem;">CATATAN PESERTA:</small>
+                        <div id="n_display_desc" class="text-secondary small text-break" style="line-height: 1.6; max-height: 150px; overflow-y:auto; white-space: pre-wrap;">...</div>
                     </div>
 
-                    <div id="n_display_link_container" class="mt-3 hidden">
-                         <a href="#" target="_blank" id="n_display_link" class="btn btn-outline-primary btn-sm w-100 border-2 fw-medium text-truncate">
-                            <i class="bi bi-file-earmark-pdf me-2"></i>Buka Dokumen/Video Bukti
+                    <div id="n_display_link_container" class="hidden">
+                         <a href="#" target="_blank" id="n_display_link" class="btn btn-outline-primary btn-sm w-100 border-2 fw-bold text-truncate py-2">
+                            <i class="bi bi-file-earmark-pdf me-2"></i>Lihat Bukti
                          </a>
                     </div>
                 </div>
@@ -210,24 +189,24 @@
                     <input type="hidden" id="n_id">
                     
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted ls-1">PREDIKAT KELULUSAN</label>
-                        <select id="n_huruf" class="form-select form-select-lg fw-bold border-2" style="color:var(--primary); background-color: var(--surface);">
+                        <label class="form-label small fw-bold text-muted ls-1">STATUS KELULUSAN</label>
+                        <select id="n_huruf" class="form-select form-select-lg fw-bold border-2" style="color:var(--primary);">
                             <option value="A">A - Sangat Baik</option>
                             <option value="B">B - Baik</option>
                             <option value="C">C - Cukup</option>
                             <option value="D" class="text-danger">D - Perlu Revisi</option>
                             <option value="E" class="text-danger">E - Belum Lengkap</option>
                         </select>
-                        <div class="form-text small">*D & E status akan menjadi <b>Revisi</b>.</div>
+                        <div class="form-text small">*Pilih D atau E untuk meminta <b>Revisi</b>.</div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label small fw-bold text-muted ls-1">UMPAN BALIK NARASUMBER</label>
-                        <textarea id="n_feed" class="form-control bg-light" rows="2" placeholder="Tuliskan apresiasi atau poin perbaikan..."></textarea>
+                        <label class="form-label small fw-bold text-muted ls-1">UMPAN BALIK (FEEDBACK)</label>
+                        <textarea id="n_feed" class="form-control bg-light" rows="3" placeholder="Tuliskan saran perbaikan atau apresiasi..."></textarea>
                     </div>
 
-                    <button onclick="saveNilai()" class="btn btn-gradient py-3 shadow-md">
-                        <i class="bi bi-check-circle-fill me-2"></i>KIRIM VALIDASI
+                    <button onclick="saveNilai()" class="btn btn-gradient py-3 shadow-md w-100">
+                        <i class="bi bi-send-check-fill me-2"></i>KIRIM VALIDASI
                     </button>
                 </div>
 
@@ -239,26 +218,21 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 // --- KONFIGURASI ---
-// Pastikan URL ini sama dengan URL Deployment Terbaru Anda
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec"; 
 
 let USER={}, modalNi, GLOBAL_DATA_TUGAS=[], GLOBAL_DATA_AGENDA=[];
 
-// --- HISTORY NAVIGATION ---
+// --- NAVIGASI ---
 window.onpopstate = function(event) {
-    if (!document.getElementById('view-inbox-list').classList.contains('hidden')) {
-        forceBackToGrid();
-    }
+    if (!document.getElementById('view-inbox-list').classList.contains('hidden')) forceBackToGrid();
 };
 
-// --- INITIALIZATION ---
 window.onload = () => {
   modalNi = new bootstrap.Modal(document.getElementById('mdlNilai'));
   let s = localStorage.getItem('LMS_NARASUMBER_PIN'); 
   if(s) { document.getElementById('inputPIN').value = s; doLogin(true); }
 }
 
-// --- API ---
 async function apiCall(a, p = {}) { 
     try { 
         let r = await fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: a, ...p }) }); 
@@ -271,7 +245,7 @@ function showLoad(x){
     x ? (el.classList.remove('d-none'), el.classList.add('d-flex')) : (el.classList.add('d-none'), el.classList.remove('d-flex'));
 }
 
-// --- AUTHENTICATION ---
+// --- AUTH ---
 async function doLogin(auto){
   let p = document.getElementById('inputPIN').value;
   if(!p) return Swal.fire('Perhatian', 'Masukkan PIN Narasumber', 'warning');
@@ -283,7 +257,6 @@ async function doLogin(auto){
   if(r && r.sukses && (r.role === 'PENILAI' || r.role === 'ADMIN')) {
     localStorage.setItem('LMS_NARASUMBER_PIN', p); 
     USER = { nama: r.nama, pin: p };
-    
     document.getElementById('view-login').classList.add('hidden');
     document.getElementById('view-main').classList.remove('hidden');
     document.getElementById('txtNama').innerText = r.nama; 
@@ -295,12 +268,12 @@ async function doLogin(auto){
 
 function doLogout(){ 
     Swal.fire({
-        title: 'Akhiri Sesi?', text: "Keluar dari panel narasumber.", icon: 'question', 
+        title: 'Akhiri Sesi?', text: "Keluar dari panel.", icon: 'question', 
         showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Ya'
     }).then((r) => { if (r.isConfirmed) { localStorage.removeItem('LMS_NARASUMBER_PIN'); location.reload(); } })
 }
 
-// --- DASHBOARD LOGIC ---
+// --- DATA LOGIC ---
 async function loadPenilai() {
   showLoad(true); 
   let data = await apiCall("getDashboardPenilai"); 
@@ -369,7 +342,6 @@ function forceBackToGrid() {
 
 function renderList(data, id) {
   let el = document.getElementById(id); let html = "";
-  // Sort: Menunggu paling atas
   data.sort((a,b) => (a.status==='Menunggu' ? -1 : 1));
   
   data.forEach(item => {
@@ -377,9 +349,13 @@ function renderList(data, id) {
     let badgeClass = st==='Menunggu' ? 'badge-soft-warning' : (st==='Diterima' ? 'badge-soft-success' : 'badge-soft-danger');
     let borderClass = st==='Menunggu' ? 'status-wait' : (st==='Diterima' ? 'status-done' : 'status-rev');
     let iconStatus = st==='Menunggu' ? '<i class="bi bi-hourglass-split me-1"></i>' : '<i class="bi bi-check-circle me-1"></i>';
-
-    // UPDATE: Menampilkan ID Peserta (Masking Name)
     let displayID = "Peserta #" + item.id.substring(0, 8);
+
+    // Deteksi Tipe Link untuk Ikon List
+    let isDrive = item.link && item.link.includes('drive.google.com');
+    let attachIcon = (item.link && item.link.length>5) ? 
+                     (isDrive ? '<i class="bi bi-paperclip text-primary ms-1" title="Ada File"></i>' : '<i class="bi bi-link-45deg text-info ms-1" title="Ada Link"></i>') 
+                     : '';
 
     html += `
     <div class="card-pro p-3 mb-3 list-item ${borderClass}" onclick="popNilai('${item.id}')">
@@ -389,7 +365,9 @@ function renderList(data, id) {
                <span class="badge ${badgeClass} rounded-pill py-1 px-2 d-flex align-items-center" style="font-size:0.65rem">${iconStatus} ${st.toUpperCase()}</span>
                <span class="text-muted ms-2 small" style="font-size:0.7rem">${displayID}</span>
            </div>
-           <div class="fw-bold text-dark mb-1 text-break" style="font-size: 0.95rem;">${item.judul}</div>
+           <div class="fw-bold text-dark mb-1 text-break" style="font-size: 0.95rem;">
+               ${item.judul} ${attachIcon}
+           </div>
            <div class="text-muted small text-truncate">${item.catatan ? item.catatan : '<i>Tidak ada deskripsi singkat</i>'}</div>
         </div>
         <button class="btn btn-light text-primary rounded-circle shadow-sm ms-2 flex-shrink-0" style="width:40px; height:40px;">
@@ -398,27 +376,36 @@ function renderList(data, id) {
       </div>
     </div>`;
   });
-  el.innerHTML = html || `<div class="text-center py-5"><h6 class="text-muted">Tidak ada laporan masuk di topik ini.</h6></div>`;
+  el.innerHTML = html || `<div class="text-center py-5"><h6 class="text-muted">Tidak ada laporan masuk.</h6></div>`;
 }
 
 function popNilai(id){ 
     let item = GLOBAL_DATA_TUGAS.find(t => t.id === id);
     if(!item) { Swal.fire('Error', 'Data laporan tidak ditemukan', 'error'); return; }
 
-    // UPDATE: Tampilkan ID di Header Modal
     document.getElementById('n_display_nama').innerText = "Peserta #" + item.id.substring(0, 8);
-    
     document.getElementById('n_display_judul').innerText = item.judul;
-    
-    // FIX: Menggunakan 'catatan' dari backend
-    document.getElementById('n_display_desc').innerText = item.catatan || "Tidak ada catatan dari guru.";
+    document.getElementById('n_display_desc').innerText = item.catatan || "Tidak ada catatan.";
 
+    // --- LOGIKA TOMBOL BUKTI CERDAS ---
     let linkContainer = document.getElementById('n_display_link_container');
     let linkBtn = document.getElementById('n_display_link');
-    if(item.link && item.link.length > 5) {
+    
+    if(item.link && item.link.length > 5 && item.link !== '-') {
         linkContainer.classList.remove('hidden');
         linkBtn.href = item.link;
-    } else { linkContainer.classList.add('hidden'); }
+        
+        // Deteksi File vs Link
+        if(item.link.includes('drive.google.com')) {
+            linkBtn.className = "btn btn-primary btn-sm w-100 border-0 fw-bold py-2 shadow-sm";
+            linkBtn.innerHTML = '<i class="bi bi-file-earmark-arrow-down-fill me-2"></i>Lihat Berkas Lampiran';
+        } else {
+            linkBtn.className = "btn btn-outline-primary btn-sm w-100 border-2 fw-bold py-2";
+            linkBtn.innerHTML = '<i class="bi bi-link-45deg me-2"></i>Buka Tautan Luar';
+        }
+    } else { 
+        linkContainer.classList.add('hidden'); 
+    }
 
     document.getElementById('n_id').value = id; 
     document.getElementById('n_feed').value = ""; 
@@ -434,16 +421,16 @@ async function saveNilai(){
   let feed = `[Nilai: ${h}] ` + note;
 
   modalNi.hide(); 
-  // Update UI lokal biar cepat
+  
+  // Update Lokal
   let idx = GLOBAL_DATA_TUGAS.findIndex(i => i.id === id); 
   if(idx !== -1) { GLOBAL_DATA_TUGAS[idx].status = st; }
   
-  // Refresh List
+  // Refresh Tampilan
   renderList(GLOBAL_DATA_TUGAS.filter(t => t.judul.includes(document.getElementById('lbl-inbox-active').innerText)), 'list-inbox-container');
   
   Swal.fire({title:'Tervalidasi', icon:'success', timer:1000, showConfirmButton: false, toast:true, position:'top-end'});
   
-  // Kirim ke Backend
   await apiCall("simpanNilai", { id: id, status: st, feedback: feed, adminName: USER.nama });
 }
 </script>
