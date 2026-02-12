@@ -7,7 +7,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -215,7 +214,7 @@
 
                     <div id="v_link_container" class="hidden">
                          <a href="#" target="_blank" id="v_link" class="btn btn-outline-primary btn-sm w-100 border-2 fw-medium">
-                            <i class="bi bi-image me-2"></i>Lihat Bukti Lampiran
+                            <i class="bi bi-file-earmark me-2"></i>Lihat Dokumen Bukti
                          </a>
                     </div>
                 </div>
@@ -283,11 +282,9 @@ async function doLogin(auto){
   let r = await apiCall("login", { pin: p }); 
   showLoad(false);
 
-  // Validator bisa ADMIN atau PENILAI (atau role khusus jika ada)
   if(r && r.sukses) {
     localStorage.setItem('LMS_VALIDATOR_PIN', p); 
     USER = { nama: r.nama, pin: p };
-    
     document.getElementById('view-login').classList.add('hidden');
     document.getElementById('view-main').classList.remove('hidden');
     document.getElementById('txtNama').innerText = r.nama; 
@@ -338,7 +335,6 @@ function openCategory(cat) {
     document.getElementById('view-list').classList.remove('hidden');
     document.getElementById('lbl-active-cat').innerText = cat;
     
-    // Filter Data
     let filtered = ALL_TASKS.filter(t => t.jenis === cat);
     renderList(filtered, 'list-container'); 
     window.scrollTo(0,0);
@@ -353,7 +349,6 @@ function backToHome() {
 
 function renderList(data, id) {
   let el = document.getElementById(id); let html = "";
-  // Sort: Menunggu paling atas
   data.sort((a,b) => (a.status==='Menunggu' ? -1 : 1));
   
   data.forEach(item => {
@@ -361,6 +356,12 @@ function renderList(data, id) {
     let badgeClass = st==='Menunggu' ? 'badge-soft-warning' : (st==='Diterima' ? 'badge-soft-success' : 'badge-soft-danger');
     let borderClass = st==='Menunggu' ? 'status-wait' : (st==='Diterima' ? 'status-done' : 'status-rev');
     let iconStatus = st==='Menunggu' ? '<i class="bi bi-hourglass-split me-1"></i>' : (st==='Diterima' ? '<i class="bi bi-check-circle me-1"></i>' : '<i class="bi bi-x-circle me-1"></i>');
+
+    // Deteksi Tipe File
+    let isDrive = item.link && item.link.includes('drive.google.com');
+    let attachIcon = (item.link && item.link.length>5) ? 
+                     (isDrive ? '<i class="bi bi-paperclip text-primary ms-1" title="Lampiran File"></i>' : '<i class="bi bi-link-45deg text-info ms-1" title="Tautan Luar"></i>') 
+                     : '';
 
     html += `
     <div class="card-pro p-3 mb-3 list-item ${borderClass}" onclick="popValidasi('${item.id}')">
@@ -370,7 +371,7 @@ function renderList(data, id) {
                <span class="badge ${badgeClass} rounded-pill py-1 px-2 d-flex align-items-center" style="font-size:0.65rem">${iconStatus} ${st.toUpperCase()}</span>
                <span class="text-muted ms-2 small fw-bold" style="font-size:0.7rem">${item.nama}</span>
            </div>
-           <div class="fw-bold text-dark mb-1 text-break" style="font-size: 0.95rem;">${item.judul}</div>
+           <div class="fw-bold text-dark mb-1 text-break" style="font-size: 0.95rem;">${item.judul} ${attachIcon}</div>
            <div class="text-muted small text-truncate">${item.catatan ? item.catatan : '<i>Tidak ada deskripsi</i>'}</div>
         </div>
         <button class="btn btn-light text-primary rounded-circle shadow-sm ms-2 flex-shrink-0" style="width:40px; height:40px;">
@@ -392,9 +393,17 @@ function popValidasi(id){
 
     let linkContainer = document.getElementById('v_link_container');
     let linkBtn = document.getElementById('v_link');
+    
     if(item.link && item.link.length > 5) {
         linkContainer.classList.remove('hidden');
         linkBtn.href = item.link;
+        
+        // Deteksi File vs Link
+        if(item.link.includes('drive.google.com')) {
+            linkBtn.innerHTML = '<i class="bi bi-file-earmark-arrow-down me-2"></i>Lihat Dokumen Bukti';
+        } else {
+            linkBtn.innerHTML = '<i class="bi bi-box-arrow-up-right me-2"></i>Buka Tautan Luar';
+        }
     } else { linkContainer.classList.add('hidden'); }
 
     document.getElementById('v_id').value = id; 
@@ -413,14 +422,12 @@ async function saveValidasi(decision){
 
   modalVal.hide(); 
   
-  // Optimistic UI Update
   let idx = ALL_TASKS.findIndex(i => i.id === id); 
   if(idx !== -1) { ALL_TASKS[idx].status = st; }
   
-  // Refresh List
   let currentCat = document.getElementById('lbl-active-cat').innerText;
   renderList(ALL_TASKS.filter(t => t.jenis === currentCat), 'list-container');
-  updateBadges(); // Update angka notifikasi
+  updateBadges(); 
   
   Swal.fire({title:'Berhasil', text:'Data telah divalidasi', icon:'success', timer:1000, showConfirmButton: false, toast:true, position:'top-end'});
   
