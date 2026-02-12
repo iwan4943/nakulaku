@@ -7,7 +7,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -201,7 +200,7 @@
                     </div>
 
                     <div id="n_display_link_container" class="mt-3 hidden">
-                         <a href="#" target="_blank" id="n_display_link" class="btn btn-outline-primary btn-sm w-100 border-2 fw-medium text-truncate">
+                         <a href="#" target="_blank" id="n_display_link" class="btn btn-outline-primary btn-sm w-100 border-2 fw-medium text-truncate py-2">
                             <i class="bi bi-box-arrow-up-right me-2"></i>Lihat Bukti Karya
                          </a>
                     </div>
@@ -225,7 +224,7 @@
                         <textarea id="n_feed" class="form-control bg-light" rows="3" placeholder="Berikan masukan konstruktif untuk pengembangan..."></textarea>
                     </div>
 
-                    <button onclick="saveNilai()" class="btn btn-gradient py-3 shadow-md">
+                    <button onclick="saveNilai()" class="btn btn-gradient py-3 shadow-md w-100">
                         <i class="bi bi-send-check-fill me-2"></i>KIRIM HASIL
                     </button>
                 </div>
@@ -275,7 +274,6 @@ async function doLogin(auto){
   if(r && r.sukses && (r.role === 'PENILAI' || r.role === 'ADMIN')) {
     localStorage.setItem('LMS_MUTU_PIN', p); 
     USER = { nama: r.nama, pin: p };
-    
     document.getElementById('view-login').classList.add('hidden');
     document.getElementById('view-main').classList.remove('hidden');
     document.getElementById('txtNama').innerText = r.nama; 
@@ -305,11 +303,12 @@ function updateBadges() {
     let imp = ALL_TASKS.filter(t => t.jenis === 'Implementasi KKG' && t.status === 'Menunggu').length;
     let inov = ALL_TASKS.filter(t => t.jenis === 'Karya Inovasi' && t.status === 'Menunggu').length;
     
-    document.getElementById('badge-imp').innerText = imp > 0 ? `${imp} Menunggu` : 'Semua Dinilai';
-    document.getElementById('badge-imp').className = imp > 0 ? "badge rounded-pill bg-danger border px-3 py-2" : "badge rounded-pill bg-light text-dark border px-3 py-2";
-    
-    document.getElementById('badge-inov').innerText = inov > 0 ? `${inov} Menunggu` : 'Semua Dinilai';
-    document.getElementById('badge-inov').className = inov > 0 ? "badge rounded-pill bg-danger border px-3 py-2" : "badge rounded-pill bg-light text-dark border px-3 py-2";
+    let setB = (id, n) => {
+        let el = document.getElementById(id);
+        if(n>0) { el.innerText = `${n} Menunggu`; el.className = "badge rounded-pill bg-danger border px-3 py-2"; }
+        else { el.innerText = "Semua Dinilai"; el.className = "badge rounded-pill bg-light text-dark border px-3 py-2"; }
+    };
+    setB('badge-imp', imp); setB('badge-inov', inov);
 }
 
 function openCategory(cat) {
@@ -317,10 +316,7 @@ function openCategory(cat) {
     document.getElementById('view-home').classList.add('hidden'); 
     document.getElementById('view-list').classList.remove('hidden');
     document.getElementById('lbl-active-cat').innerText = cat;
-    
-    // Filter hanya jenis yang sesuai
-    let filtered = ALL_TASKS.filter(t => t.jenis === cat);
-    renderList(filtered, 'list-container'); 
+    renderList(ALL_TASKS.filter(t => t.jenis === cat), 'list-container'); 
     window.scrollTo(0,0);
 }
 
@@ -333,7 +329,6 @@ function backToHome() {
 
 function renderList(data, id) {
   let el = document.getElementById(id); let html = "";
-  // Sort: Menunggu paling atas
   data.sort((a,b) => (a.status==='Menunggu' ? -1 : 1));
   
   data.forEach(item => {
@@ -341,9 +336,13 @@ function renderList(data, id) {
     let badgeClass = st==='Menunggu' ? 'badge-soft-warning' : (st==='Diterima' ? 'badge-soft-success' : 'badge-soft-danger');
     let borderClass = st==='Menunggu' ? 'status-wait' : (st==='Diterima' ? 'status-done' : 'status-rev');
     let iconStatus = st==='Menunggu' ? '<i class="bi bi-hourglass-split me-1"></i>' : '<i class="bi bi-check-circle me-1"></i>';
-
-    // BLIND REVIEW: Masking Nama
     let displayID = "Peserta #" + item.id.substring(0, 8);
+
+    // Deteksi File/Link untuk Ikon di List
+    let isDrive = item.link && item.link.includes('drive.google.com');
+    let attachIcon = (item.link && item.link.length>5) ? 
+                     (isDrive ? '<i class="bi bi-paperclip text-primary ms-1"></i>' : '<i class="bi bi-link-45deg text-info ms-1"></i>') 
+                     : '';
 
     html += `
     <div class="card-pro p-3 mb-3 list-item ${borderClass}" onclick="popNilai('${item.id}')">
@@ -353,7 +352,7 @@ function renderList(data, id) {
                <span class="badge ${badgeClass} rounded-pill py-1 px-2 d-flex align-items-center" style="font-size:0.65rem">${iconStatus} ${st.toUpperCase()}</span>
                <span class="text-muted ms-2 small fw-bold" style="font-size:0.7rem">${displayID}</span>
            </div>
-           <div class="fw-bold text-dark mb-1 text-break" style="font-size: 0.95rem;">${item.judul}</div>
+           <div class="fw-bold text-dark mb-1 text-break" style="font-size: 0.95rem;">${item.judul} ${attachIcon}</div>
            <div class="text-muted small text-truncate">${item.catatan ? item.catatan : '<i>Tidak ada deskripsi</i>'}</div>
         </div>
         <button class="btn btn-light text-primary rounded-circle shadow-sm ms-2 flex-shrink-0" style="width:40px; height:40px;">
@@ -373,12 +372,25 @@ function popNilai(id){
     document.getElementById('n_display_judul').innerText = item.judul;
     document.getElementById('n_display_desc').innerText = item.catatan || "Tidak ada deskripsi.";
 
+    // --- SMART BUTTON LOGIC ---
     let linkContainer = document.getElementById('n_display_link_container');
     let linkBtn = document.getElementById('n_display_link');
-    if(item.link && item.link.length > 5) {
+    
+    if(item.link && item.link.length > 5 && item.link !== '-') {
         linkContainer.classList.remove('hidden');
         linkBtn.href = item.link;
-    } else { linkContainer.classList.add('hidden'); }
+        
+        // Cek apakah Google Drive (File) atau Link Biasa
+        if(item.link.includes('drive.google.com')) {
+            linkBtn.innerHTML = '<i class="bi bi-file-earmark-arrow-down-fill me-2"></i>Lihat Berkas Lampiran';
+            linkBtn.className = "btn btn-primary btn-sm w-100 border-0 fw-bold py-2 shadow-sm";
+        } else {
+            linkBtn.innerHTML = '<i class="bi bi-box-arrow-up-right me-2"></i>Buka Tautan Luar';
+            linkBtn.className = "btn btn-outline-primary btn-sm w-100 border-2 fw-medium text-truncate py-2";
+        }
+    } else { 
+        linkContainer.classList.add('hidden'); 
+    }
 
     document.getElementById('n_id').value = id; 
     document.getElementById('n_feed').value = ""; 
@@ -397,7 +409,7 @@ async function saveNilai(){
   let feed = `[Kualitas: ${h}] ` + note;
 
   modalNi.hide(); 
-  // Update UI lokal
+  // Update Lokal
   let idx = ALL_TASKS.findIndex(i => i.id === id); 
   if(idx !== -1) { ALL_TASKS[idx].status = st; }
   
