@@ -27,7 +27,7 @@
     </script>
 
     <style>
-        /* SCROLL NORMAL (NATIVE) - PALING STABIL */
+        /* SCROLL NORMAL (NATIVE) */
         body { -webkit-tap-highlight-color: transparent; touch-action: manipulation; user-select: none; margin: 0; padding: 0; overflow-x: hidden; }
         ::-webkit-scrollbar { width: 0px; background: transparent; }
         
@@ -52,8 +52,9 @@
         #top-capsule.visible { top: 16px; }
         .dark #top-capsule { background: rgba(30, 30, 30, 0.95); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* 3. FOG LAYER (KABUT TEBAL) */
-        .mobile-spacer { height: 350px; width: 100%; } /* Jarak lihat wallpaper */
+        /* 3. FOG LAYER & SPACER (UPDATED HEIGHT) */
+        /* Tinggi dikurangi ke 260px agar Header 'Halo' naik ke eye-level */
+        .mobile-spacer { height: 260px; width: 100%; }
         
         .fog-layer {
             position: absolute; top: -150px; left: 0; width: 100%; height: 151px;
@@ -69,8 +70,7 @@
         }
         .dark .solid-sheet { background-color: #121212; }
 
-        /* 5. STICKY BANNER (NOTOK DI BAWAH KAPSUL) */
-        /* Kapsul (16+64=80) + Gap 4px = 84px */
+        /* 5. STICKY BANNER */
         .sticky-custom { 
             position: sticky; top: 84px; z-index: 90; margin-bottom: 24px;
         }
@@ -109,6 +109,10 @@
         .loader-ring { display: inline-block; position: relative; width: 60px; height: 60px; }
         .loader-ring div { box-sizing: border-box; display: block; position: absolute; width: 48px; height: 48px; margin: 6px; border: 4px solid #3b82f6; border-radius: 50%; animation: loader-ring 1.2s infinite; border-color: #3b82f6 transparent transparent transparent; }
         @keyframes loader-ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Custom Scrollbar untuk Modal */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(156, 163, 175, 0.5); border-radius: 20px; }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-[#0f172a] text-slate-800 dark:text-slate-100">
@@ -158,7 +162,7 @@
 
         <main class="flex-1 w-full relative">
             
-            <div class="mobile-spacer flex flex-col justify-end px-6 pb-4 md:hidden">
+            <div class="mobile-spacer flex flex-col justify-end px-6 pb-10 md:hidden">
                 <div id="header-text-mobile" class="text-white drop-shadow-md transition-opacity duration-300">
                     <p class="text-xs font-bold uppercase tracking-wide mb-1 opacity-90" id="header-date-mob">...</p>
                     <h1 class="text-5xl font-black tracking-tighter leading-none mb-4" id="header-greeting-mob">Halo!</h1>
@@ -169,7 +173,7 @@
             <div class="solid-sheet">
                 <div class="fog-layer md:hidden"></div>
 
-                <div id="header-text-desktop" class="hidden md:block mb-10 pt-10">
+                <div id="header-text-desktop" class="hidden md:block mb-8 pt-0">
                     <p class="text-xs font-bold uppercase tracking-wide mb-1 text-slate-400" id="header-date-desk">...</p>
                     <h1 class="text-5xl font-black tracking-tight leading-none mb-3 text-slate-900 dark:text-white" id="header-greeting-desk">Selamat Datang</h1>
                     <div id="school-slideshow-container-desk" class="min-h-[3rem] relative w-full flex items-center text-slate-500"></div>
@@ -240,21 +244,101 @@
     <div id="custom-confirm" class="fixed inset-0 z-[10001] hidden flex items-center justify-center p-6 custom-modal-overlay"><div class="bg-white dark:bg-[#1E1E1E] w-full max-w-xs rounded-3xl p-6 text-center shadow-2xl animate-pop-in"><div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-red-100 text-red-600"><i data-lucide="log-out" class="w-8 h-8"></i></div><h3 id="confirm-title" class="font-bold text-xl mb-2 dark:text-white">Konfirmasi</h3><p id="confirm-msg" class="text-sm text-slate-500 dark:text-slate-400 mb-6">...</p><div class="flex gap-3"><button onclick="app.closeConfirm()" class="flex-1 py-3.5 bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-white rounded-2xl font-bold text-sm active:scale-95 transition">Batal</button><button id="confirm-yes-btn" class="flex-1 py-3.5 bg-red-600 text-white rounded-2xl font-bold text-sm shadow-lg active:scale-95 transition">Ya</button></div></div></div>
     <div id="loading-overlay" class="fixed inset-0 z-[9999] bg-white/90 dark:bg-black/90 backdrop-blur-sm hidden flex-col items-center justify-center text-center"><div class="loader-ring"><div></div><div></div><div></div><div></div></div></div>
     
-    <div id="profile-modal" class="fixed inset-0 z-[9999] hidden flex items-end md:items-center justify-center sm:p-4"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity opacity-0 modal-overlay" onclick="app.closeModal('profile-modal')"></div><div class="bg-white dark:bg-[#1E1E1E] w-full md:max-w-sm rounded-t-[2rem] md:rounded-[2rem] p-8 shadow-2xl transform translate-y-full md:translate-y-0 scale-95 opacity-0 modal-content transition-all duration-300">
-        <div class="w-12 h-1 bg-slate-200 dark:bg-zinc-700 rounded-full mx-auto mb-8 md:hidden"></div>
-        <div id="profile-content-login">
-            <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Login Guru Area</h3>
-            <div class="space-y-4"><input type="text" id="sync-pin" class="w-full bg-slate-100 dark:bg-black p-4 rounded-2xl text-center text-xl font-bold tracking-widest outline-none focus:ring-2 focus:ring-blue-500 dark:text-white" placeholder="PIN AKSES"><button onclick="app.syncData()" id="btn-sync" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition">Masuk</button></div>
+    <div id="profile-modal" class="fixed inset-0 z-[9999] hidden flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity duration-500" onclick="app.closeModal('profile-modal')"></div>
+        
+        <div class="bg-white dark:bg-[#1E1E1E] w-full md:max-w-sm 
+            rounded-t-[2.5rem] rounded-b-none md:rounded-[2.5rem] 
+            p-8 pb-10 md:pb-8 
+            shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.3)] 
+            transform translate-y-full md:translate-y-0 md:scale-95 opacity-0 
+            modal-content transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] 
+            relative z-10 border-t border-white/20">
+            
+            <div class="w-14 h-1.5 bg-slate-200/80 dark:bg-zinc-700 rounded-full mx-auto mb-8 mt-[-10px] md:hidden"></div>
+            
+            <div id="profile-content-login">
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center md:text-left">Login Guru Area</h3>
+                <div class="space-y-4">
+                    <input type="text" id="sync-pin" class="w-full bg-slate-100 dark:bg-black p-4 rounded-2xl text-center text-xl font-bold tracking-widest outline-none focus:ring-2 focus:ring-blue-500 dark:text-white transition-all" placeholder="PIN AKSES">
+                    <button onclick="app.syncData()" id="btn-sync" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-transform duration-200">Masuk</button>
+                </div>
+            </div>
+            
+            <div id="loggedin-actions" class="hidden text-center">
+                <div class="relative w-24 h-24 mx-auto mb-4 group">
+                    <img id="modal-photo" src="" class="w-24 h-24 rounded-full object-cover border-4 border-slate-100 dark:border-zinc-800 shadow-md">
+                    <label for="upload-photo" class="absolute bottom-0 right-0 bg-slate-900 text-white p-2.5 rounded-full cursor-pointer shadow-lg active:scale-90 transition hover:bg-blue-600">
+                        <i data-lucide="camera" class="w-4 h-4"></i>
+                    </label>
+                    <input type="file" id="upload-photo" hidden accept="image/*" onchange="app.handlePhotoUpload(this)">
+                </div>
+                <h3 id="modal-user-name" class="text-xl font-bold text-slate-900 dark:text-white">Nama</h3>
+                <p id="modal-user-role" class="text-sm text-slate-500 mb-8 font-medium bg-slate-100 dark:bg-white/5 inline-block px-3 py-1 rounded-full mt-2">Jabatan</p>
+                <div class="space-y-3">
+                    <button onclick="app.confirmLogout()" class="w-full py-4 text-red-500 font-bold text-sm bg-red-50 hover:bg-red-100 dark:bg-red-900/10 dark:hover:bg-red-900/20 rounded-2xl transition-colors">Keluar Akun</button>
+                </div>
+            </div>
         </div>
-        <div id="loggedin-actions" class="hidden text-center">
-            <div class="relative w-24 h-24 mx-auto mb-4 group"><img id="modal-photo" src="" class="w-24 h-24 rounded-full object-cover border-4 border-slate-100 dark:border-zinc-800"><label for="upload-photo" class="absolute bottom-0 right-0 bg-slate-900 text-white p-2 rounded-full cursor-pointer shadow-lg active:scale-90 transition"><i data-lucide="camera" class="w-4 h-4"></i></label><input type="file" id="upload-photo" hidden accept="image/*" onchange="app.handlePhotoUpload(this)"></div>
-            <h3 id="modal-user-name" class="text-xl font-bold text-slate-900 dark:text-white">Nama</h3><p id="modal-user-role" class="text-sm text-slate-500 mb-8">Jabatan</p>
-            <div class="space-y-3"><button onclick="app.confirmLogout()" class="w-full py-4 text-red-500 font-bold text-sm bg-red-50 dark:bg-red-900/10 rounded-2xl">Keluar Akun</button></div>
-        </div>
-    </div></div>
+    </div>
     
-    <div id="submenu-modal" class="fixed inset-0 z-[9999] hidden flex items-end md:items-center justify-center p-0 md:p-4"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="app.closeModal('submenu-modal')"></div><div class="bg-white dark:bg-[#1E1E1E] w-full md:max-w-md rounded-t-[2rem] md:rounded-[2rem] p-6 shadow-2xl transform translate-y-full md:translate-y-0 scale-95 opacity-0 modal-content transition-all max-h-[80vh] flex flex-col relative z-10"><div class="w-12 h-1 bg-slate-200 dark:bg-zinc-700 rounded-full mx-auto mb-6 md:hidden shrink-0"></div><h3 id="submenu-title" class="text-xl font-bold mb-6 px-2 dark:text-white">Menu Layanan</h3><div id="submenu-list" class="overflow-y-auto space-y-2 pb-6"></div></div></div>
-    <div id="feedback-modal" class="fixed inset-0 z-[9999] hidden flex items-end md:items-center justify-center p-0 md:p-4"><div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="app.closeModal('feedback-modal')"></div><div class="bg-white dark:bg-[#1E1E1E] w-full md:max-w-md rounded-t-[2rem] md:rounded-[2rem] p-6 shadow-2xl transform translate-y-full md:translate-y-0 scale-95 opacity-0 modal-content transition-all relative z-10"><h3 class="text-xl font-bold mb-4 dark:text-white">Bantuan & Masukan</h3><form onsubmit="app.submitFeedback(event)" class="space-y-4"><textarea name="pesan" rows="4" class="w-full bg-slate-50 dark:bg-black rounded-xl p-4 text-sm outline-none focus:ring-2 focus:ring-blue-500 dark:text-white" placeholder="Tulis pesan Anda..."></textarea><div class="flex justify-between items-center"><label class="flex items-center gap-2 text-sm text-slate-500"><input type="checkbox" id="anonim-check" name="isAnonim" class="rounded"> Anonim</label><button id="btn-feedback-submit" type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold text-sm">Kirim</button></div></form></div></div>
+    <div id="submenu-modal" class="fixed inset-0 z-[9999] hidden flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity duration-500" onclick="app.closeModal('submenu-modal')"></div>
+        
+        <div class="bg-white dark:bg-[#1C1C1E] w-full md:max-w-md 
+            rounded-t-[2.5rem] rounded-b-none md:rounded-[2.5rem] 
+            p-6 pb-10 md:pb-6 
+            shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.3)] 
+            transform translate-y-full md:translate-y-0 md:scale-95 opacity-0 
+            modal-content transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] 
+            max-h-[85vh] flex flex-col relative z-10 border-t border-white/20">
+            
+            <div class="w-14 h-1.5 bg-slate-200/80 dark:bg-zinc-700 rounded-full mx-auto mb-6 mt-1 md:hidden shrink-0"></div>
+            
+            <div class="flex items-center justify-between mb-4 px-1">
+                <h3 id="submenu-title" class="text-2xl font-black tracking-tight text-slate-900 dark:text-white">Menu Layanan</h3>
+                <button onclick="app.closeModal('submenu-modal')" class="hidden md:flex w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 items-center justify-center transition">
+                    <i data-lucide="x" class="w-4 h-4 text-slate-500"></i>
+                </button>
+            </div>
+
+            <div id="submenu-list" class="overflow-y-auto space-y-3 pr-1 pb-4 custom-scrollbar"></div>
+        </div>
+    </div>
+
+    <div id="feedback-modal" class="fixed inset-0 z-[9999] hidden flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity duration-500" onclick="app.closeModal('feedback-modal')"></div>
+        
+        <div class="bg-white dark:bg-[#1E1E1E] w-full md:max-w-md 
+            rounded-t-[2.5rem] rounded-b-none md:rounded-[2.5rem] 
+            p-8 pb-10 md:pb-8 
+            shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.3)] 
+            transform translate-y-full md:translate-y-0 md:scale-95 opacity-0 
+            modal-content transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] 
+            relative z-10 border-t border-white/20">
+            
+            <div class="w-14 h-1.5 bg-slate-200/80 dark:bg-zinc-700 rounded-full mx-auto mb-6 mt-[-10px] md:hidden"></div>
+            
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold dark:text-white">Bantuan & Masukan</h3>
+                <button onclick="app.closeModal('feedback-modal')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 items-center justify-center transition flex">
+                    <i data-lucide="x" class="w-4 h-4 text-slate-500"></i>
+                </button>
+            </div>
+
+            <form onsubmit="app.submitFeedback(event)" class="space-y-4">
+                <textarea name="pesan" rows="4" class="w-full bg-slate-50 dark:bg-black rounded-2xl p-4 text-sm outline-none focus:ring-2 focus:ring-blue-500 dark:text-white resize-none border border-transparent focus:border-blue-500/50 transition-all" placeholder="Tulis pesan Anda..."></textarea>
+                
+                <div class="flex justify-between items-center pt-2">
+                    <label class="flex items-center gap-2 text-sm text-slate-500 cursor-pointer select-none">
+                        <input type="checkbox" id="anonim-check" name="isAnonim" class="rounded w-4 h-4 text-blue-600 focus:ring-blue-500 bg-slate-100 border-slate-300"> 
+                        <span>Kirim Anonim</span>
+                    </label>
+                    <button id="btn-feedback-submit" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/30 active:scale-95 transition-all">Kirim</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
         if ('serviceWorker' in navigator) { window.addEventListener('load', () => { if (window.location.protocol.includes('http')) navigator.serviceWorker.register('sw.js').catch(e=>console.log(e)); }); }
@@ -390,7 +474,6 @@
                     } else stickyInfo.classList.add('hidden');
                 }
 
-                // NEWS HERO
                 const newsCard = document.getElementById('news-hero-card');
                 const newsStatus = info.Ig_Hero_Status || info.Berita_Status;
                 
@@ -471,7 +554,7 @@
                             realName: d.realName, 
                             role: d.jabatan, 
                             instansi: d.instansi, 
-                            photo: d.foto || "", // Simpan URL foto dari API
+                            photo: d.foto || "", 
                             performa: d.performa 
                         }; 
                         localStorage.setItem('nakula_profile', JSON.stringify(p)); 
@@ -552,14 +635,36 @@
             scrollToTop: function() { window.scrollTo({top: 0, behavior: 'smooth'}); },
             openModal: function(id) { const el = document.getElementById(id); el.classList.remove('hidden'); setTimeout(()=>el.querySelector('.modal-content').classList.remove('opacity-0','translate-y-full'),10); },
             closeModal: function(id) { const el = document.getElementById(id); el.querySelector('.modal-content').classList.add('opacity-0','translate-y-full'); setTimeout(()=>el.classList.add('hidden'),300); },
-            openSubmenu: function(title) { const list = this.menuMap[title.toLowerCase()]; safeText('submenu-title', title); const ctr = document.getElementById('submenu-list'); if(ctr) ctr.innerHTML = list.map(m => `<div onclick="window.open('${m.url}','_blank')" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-slate-50 transition border border-slate-100 dark:border-zinc-700"><div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-700 flex items-center justify-center text-blue-600"><i data-lucide="${m.icon||'link'}" class="w-5 h-5"></i></div><div class="flex-1"><h4 class="font-bold text-sm text-slate-800 dark:text-white">${m.judul}</h4></div></div>`).join(''); lucide.createIcons(); this.openModal('submenu-modal'); },
+            
+            // OPEN SUBMENU (UPDATED RENDER LOGIC FOR PREMIUM LIST)
+            openSubmenu: function(title) { 
+                const list = this.menuMap[title.toLowerCase()]; 
+                safeText('submenu-title', title); 
+                const ctr = document.getElementById('submenu-list'); 
+                if(ctr) {
+                    ctr.innerHTML = list.map(m => `
+                    <button onclick="window.open('${m.url}','_blank')" class="w-full text-left group flex items-center gap-4 p-4 rounded-3xl bg-slate-50 hover:bg-blue-50 dark:bg-zinc-800/50 dark:hover:bg-blue-900/20 transition-all duration-200 border border-transparent hover:border-blue-200 dark:hover:border-blue-800 active:scale-[0.98]">
+                        <div class="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-700 shadow-sm group-hover:shadow-md group-hover:scale-110 transition-all duration-300 flex items-center justify-center text-blue-600 dark:text-blue-400 border border-slate-100 dark:border-zinc-600">
+                            <i data-lucide="${m.icon||'link'}" class="w-6 h-6"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-base text-slate-800 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">${m.judul}</h4>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 group-hover:text-blue-600/70 dark:group-hover:text-blue-300/70 transition-colors">Ketuk untuk akses</p>
+                        </div>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all"></i>
+                    </button>
+                    `).join('');
+                }
+                lucide.createIcons(); 
+                this.openModal('submenu-modal'); 
+            },
+
             confirmLogout: function() { app.showConfirm('Keluar Akun', 'Apakah Anda yakin?', () => { localStorage.removeItem('nakula_profile'); localStorage.removeItem('nakula_role'); location.reload(); }); },
             setupBackButton: function() { window.onpopstate = () => { const activeModal = document.querySelector('.fixed.z-[9999]:not(.hidden)'); if (activeModal) this.closeModal(activeModal.id); else { const now = new Date().getTime(); if (now - this.backPressedTime < 2000) history.back(); else { this.backPressedTime = now; document.getElementById('exit-toast').classList.add('show'); setTimeout(() => document.getElementById('exit-toast').classList.remove('show'), 2000); window.history.pushState(null, null, window.location.href); } } }; window.history.pushState(null, null, window.location.href); },
             setupInstallPrompt: function() { window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); this.deferredPrompt = e; }); },
             submitFeedback: function(e) { e.preventDefault(); const btn = document.getElementById('btn-feedback-submit'); const old = btn.innerText; btn.innerText = '...'; const fd = new FormData(e.target); const obj = Object.fromEntries(fd.entries()); obj.isAnonim = document.getElementById('anonim-check').checked; fetch(this.apiURL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(obj)}).then(()=>{ app.showAlert("Terkirim!", "Terima kasih masukannya", "success"); this.closeModal('feedback-modal'); e.target.reset(); }).catch(()=>app.showAlert("Gagal", "Coba lagi nanti", "error")).finally(()=>btn.innerText=old); }
         };
-        function safeText(id, t){const e=document.getElementById(id);if(e)e.innerText=t;}
-        function safeClass(id, a, c){const e=document.getElementById(id);if(e){a==='add'?e.classList.add(c):e.classList.remove(c);}}
+        
         document.addEventListener('DOMContentLoaded', () => app.init());
     </script>
 </body>
