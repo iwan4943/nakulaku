@@ -52,8 +52,7 @@
         #top-capsule.visible { top: 16px; }
         .dark #top-capsule { background: rgba(30, 30, 30, 0.95); border: 1px solid rgba(255,255,255,0.1); }
 
-        /* 3. FOG LAYER & SPACER (UPDATED HEIGHT) */
-        /* Tinggi dikurangi ke 260px agar Header 'Halo' naik ke eye-level */
+        /* 3. FOG LAYER & SPACER */
         .mobile-spacer { height: 260px; width: 100%; }
         
         .fog-layer {
@@ -109,7 +108,6 @@
         .loader-ring { display: inline-block; position: relative; width: 60px; height: 60px; }
         .loader-ring div { box-sizing: border-box; display: block; position: absolute; width: 48px; height: 48px; margin: 6px; border: 4px solid #3b82f6; border-radius: 50%; animation: loader-ring 1.2s infinite; border-color: #3b82f6 transparent transparent transparent; }
         @keyframes loader-ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        /* Custom Scrollbar untuk Modal */
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(156, 163, 175, 0.5); border-radius: 20px; }
@@ -189,11 +187,13 @@
                             <i data-lucide="check-circle-2" class="absolute right-4 top-4 w-10 h-10 text-emerald-500 opacity-50"></i>
                             <p class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Presensi</p>
                             <h3 id="score-presensi" class="text-4xl font-black text-emerald-800 dark:text-emerald-100 mt-auto">0%</h3>
+                            <p id="detail-presensi" class="text-[9px] text-slate-400 mt-1 line-clamp-1 hidden">-</p>
                         </div>
                         <div class="pop-card p-5 flex flex-col justify-between h-32 relative overflow-hidden bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800">
                             <i data-lucide="clipboard-list" class="absolute right-4 top-4 w-10 h-10 text-blue-500 opacity-50"></i>
                             <p class="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">Tugas</p>
                             <h3 id="score-tugas" class="text-4xl font-black text-blue-800 dark:text-blue-100 mt-auto">0%</h3>
+                            <p id="detail-tugas" class="text-[9px] text-slate-400 mt-1 line-clamp-1 hidden">-</p>
                         </div>
                          <div class="hidden md:block col-span-2"></div>
                     </div>
@@ -212,6 +212,7 @@
                 <div id="widget-quote" class="hidden md:col-span-4 pop-card p-10 flex flex-col justify-center items-center text-center mb-10 bg-violet-50 dark:bg-violet-900/20 border-violet-100 dark:border-violet-800">
                     <i data-lucide="quote" class="w-8 h-8 text-violet-400 mb-5 opacity-70"></i>
                     <p id="quote-text" class="text-xl font-medium text-violet-800 dark:text-violet-200 italic leading-relaxed">"Pendidikan adalah senjata paling ampuh..."</p>
+                    <p id="quote-author" class="text-sm font-bold text-violet-500 mt-3 uppercase tracking-widest opacity-80"></p>
                 </div>
                 
                 <div id="agenda-section" class="mb-12">
@@ -246,17 +247,8 @@
     
     <div id="profile-modal" class="fixed inset-0 z-[9999] hidden flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity duration-500" onclick="app.closeModal('profile-modal')"></div>
-        
-        <div class="bg-white dark:bg-[#1E1E1E] w-full md:max-w-sm 
-            rounded-t-[2.5rem] rounded-b-none md:rounded-[2.5rem] 
-            p-8 pb-10 md:pb-8 
-            shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.3)] 
-            transform translate-y-full md:translate-y-0 md:scale-95 opacity-0 
-            modal-content transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] 
-            relative z-10 border-t border-white/20">
-            
+        <div class="bg-white dark:bg-[#1E1E1E] w-full md:max-w-sm rounded-t-[2.5rem] rounded-b-none md:rounded-[2.5rem] p-8 pb-10 md:pb-8 shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.3)] transform translate-y-full md:translate-y-0 md:scale-95 opacity-0 modal-content transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] relative z-10 border-t border-white/20">
             <div class="w-14 h-1.5 bg-slate-200/80 dark:bg-zinc-700 rounded-full mx-auto mb-8 mt-[-10px] md:hidden"></div>
-            
             <div id="profile-content-login">
                 <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center md:text-left">Login Guru Area</h3>
                 <div class="space-y-4">
@@ -264,13 +256,10 @@
                     <button onclick="app.syncData()" id="btn-sync" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-transform duration-200">Masuk</button>
                 </div>
             </div>
-            
             <div id="loggedin-actions" class="hidden text-center">
                 <div class="relative w-24 h-24 mx-auto mb-4 group">
                     <img id="modal-photo" src="" class="w-24 h-24 rounded-full object-cover border-4 border-slate-100 dark:border-zinc-800 shadow-md">
-                    <label for="upload-photo" class="absolute bottom-0 right-0 bg-slate-900 text-white p-2.5 rounded-full cursor-pointer shadow-lg active:scale-90 transition hover:bg-blue-600">
-                        <i data-lucide="camera" class="w-4 h-4"></i>
-                    </label>
+                    <label for="upload-photo" class="absolute bottom-0 right-0 bg-slate-900 text-white p-2.5 rounded-full cursor-pointer shadow-lg active:scale-90 transition hover:bg-blue-600"><i data-lucide="camera" class="w-4 h-4"></i></label>
                     <input type="file" id="upload-photo" hidden accept="image/*" onchange="app.handlePhotoUpload(this)">
                 </div>
                 <h3 id="modal-user-name" class="text-xl font-bold text-slate-900 dark:text-white">Nama</h3>
@@ -284,55 +273,29 @@
     
     <div id="submenu-modal" class="fixed inset-0 z-[9999] hidden flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity duration-500" onclick="app.closeModal('submenu-modal')"></div>
-        
-        <div class="bg-white dark:bg-[#1C1C1E] w-full md:max-w-md 
-            rounded-t-[2.5rem] rounded-b-none md:rounded-[2.5rem] 
-            p-6 pb-10 md:pb-6 
-            shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.3)] 
-            transform translate-y-full md:translate-y-0 md:scale-95 opacity-0 
-            modal-content transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] 
-            max-h-[85vh] flex flex-col relative z-10 border-t border-white/20">
-            
+        <div class="bg-white dark:bg-[#1C1C1E] w-full md:max-w-md rounded-t-[2.5rem] rounded-b-none md:rounded-[2.5rem] p-6 pb-10 md:pb-6 shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.3)] transform translate-y-full md:translate-y-0 md:scale-95 opacity-0 modal-content transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] max-h-[85vh] flex flex-col relative z-10 border-t border-white/20">
             <div class="w-14 h-1.5 bg-slate-200/80 dark:bg-zinc-700 rounded-full mx-auto mb-6 mt-1 md:hidden shrink-0"></div>
-            
             <div class="flex items-center justify-between mb-4 px-1">
                 <h3 id="submenu-title" class="text-2xl font-black tracking-tight text-slate-900 dark:text-white">Menu Layanan</h3>
-                <button onclick="app.closeModal('submenu-modal')" class="hidden md:flex w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 items-center justify-center transition">
-                    <i data-lucide="x" class="w-4 h-4 text-slate-500"></i>
-                </button>
+                <button onclick="app.closeModal('submenu-modal')" class="hidden md:flex w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 items-center justify-center transition"><i data-lucide="x" class="w-4 h-4 text-slate-500"></i></button>
             </div>
-
             <div id="submenu-list" class="overflow-y-auto space-y-3 pr-1 pb-4 custom-scrollbar"></div>
         </div>
     </div>
 
     <div id="feedback-modal" class="fixed inset-0 z-[9999] hidden flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity duration-500" onclick="app.closeModal('feedback-modal')"></div>
-        
-        <div class="bg-white dark:bg-[#1E1E1E] w-full md:max-w-md 
-            rounded-t-[2.5rem] rounded-b-none md:rounded-[2.5rem] 
-            p-8 pb-10 md:pb-8 
-            shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.3)] 
-            transform translate-y-full md:translate-y-0 md:scale-95 opacity-0 
-            modal-content transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] 
-            relative z-10 border-t border-white/20">
-            
+        <div class="bg-white dark:bg-[#1E1E1E] w-full md:max-w-md rounded-t-[2.5rem] rounded-b-none md:rounded-[2.5rem] p-8 pb-10 md:pb-8 shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.3)] transform translate-y-full md:translate-y-0 md:scale-95 opacity-0 modal-content transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] relative z-10 border-t border-white/20">
             <div class="w-14 h-1.5 bg-slate-200/80 dark:bg-zinc-700 rounded-full mx-auto mb-6 mt-[-10px] md:hidden"></div>
-            
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xl font-bold dark:text-white">Bantuan & Masukan</h3>
-                <button onclick="app.closeModal('feedback-modal')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 items-center justify-center transition flex">
-                    <i data-lucide="x" class="w-4 h-4 text-slate-500"></i>
-                </button>
+                <button onclick="app.closeModal('feedback-modal')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 items-center justify-center transition flex"><i data-lucide="x" class="w-4 h-4 text-slate-500"></i></button>
             </div>
-
             <form onsubmit="app.submitFeedback(event)" class="space-y-4">
                 <textarea name="pesan" rows="4" class="w-full bg-slate-50 dark:bg-black rounded-2xl p-4 text-sm outline-none focus:ring-2 focus:ring-blue-500 dark:text-white resize-none border border-transparent focus:border-blue-500/50 transition-all" placeholder="Tulis pesan Anda..."></textarea>
-                
                 <div class="flex justify-between items-center pt-2">
                     <label class="flex items-center gap-2 text-sm text-slate-500 cursor-pointer select-none">
-                        <input type="checkbox" id="anonim-check" name="isAnonim" class="rounded w-4 h-4 text-blue-600 focus:ring-blue-500 bg-slate-100 border-slate-300"> 
-                        <span>Kirim Anonim</span>
+                        <input type="checkbox" id="anonim-check" name="isAnonim" class="rounded w-4 h-4 text-blue-600 focus:ring-blue-500 bg-slate-100 border-slate-300"> <span>Kirim Anonim</span>
                     </label>
                     <button id="btn-feedback-submit" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/30 active:scale-95 transition-all">Kirim</button>
                 </div>
@@ -366,14 +329,31 @@
                 const headerMob = document.getElementById('header-text-mobile');
                 window.addEventListener('scroll', () => {
                     const y = window.scrollY;
-                    if (y > 50) { 
-                        capsule.classList.add('visible'); 
-                        if(headerMob) headerMob.style.opacity = '0';
-                    } else { 
-                        capsule.classList.remove('visible'); 
-                        if(headerMob) headerMob.style.opacity = '1';
-                    }
+                    if (y > 50) { capsule.classList.add('visible'); if(headerMob) headerMob.style.opacity = '0'; } 
+                    else { capsule.classList.remove('visible'); if(headerMob) headerMob.style.opacity = '1'; }
                 });
+            },
+
+            // --- FUNGSI BARU: SEND LOG (MENGHUBUNGKAN KE BACKEND v58.8) ---
+            sendLog: function(activity, detail = '-') {
+                if (!this.currentUser || !this.currentUser.nama) return;
+                fetch(this.apiURL, {
+                    method: 'POST', mode: 'no-cors',
+                    headers: {'Content-Type': 'text/plain'}, // Apps Script prefer text/plain for POST
+                    body: JSON.stringify({ 
+                        action: 'log', 
+                        user: this.currentUser.nama, 
+                        realName: this.currentUser.realName,
+                        activity: activity, 
+                        detail: detail 
+                    })
+                }).catch(e => console.log('Log silent fail', e));
+            },
+
+            // --- FUNGSI BARU: OPEN LINK WITH LOG ---
+            openLink: function(url, title) {
+                this.sendLog('Buka Menu', title);
+                window.open(url, '_blank');
             },
 
             showAlert: function(title, msg, type = 'info') {
@@ -445,6 +425,13 @@
                 if(info.Bg_Malam) this.customBg.malam = info.Bg_Malam;
                 this.updateTimeAwareBg();
 
+                // UPDATE: RENDER QUOTE DINAMIS
+                if (info.quote) {
+                   safeText('quote-text', info.quote);
+                   safeText('quote-author', info.author || '');
+                   safeClass('widget-quote', 'remove', 'hidden');
+                }
+
                 let showSlideshow = (info.Slide_Sekolah_Status || 'ON') === 'ON';
                 const schools = this.schools.length ? this.schools : [{name:"NAKULAKU EKOSISTEM", jargon:""}];
                 const schoolContainerMob = document.getElementById('school-slideshow-container-mob');
@@ -511,7 +498,8 @@
                 list.forEach(m => {
                     if (m.parent || (m.posisi && m.posisi === 'dock')) return; if (m.role && m.role !== 'all' && !role.includes(m.role)) return;
                     const title = m.judul.trim(); const hasChild = this.menuMap[title.toLowerCase()];
-                    let action = hasChild ? `onclick="app.openSubmenu('${title}')"` : `onclick="window.open('${m.url}','_blank')"`;
+                    // UPDATE: LOG ACTIVITY SAAT KLIK MENU
+                    let action = hasChild ? `onclick="app.openSubmenu('${title}')"` : `onclick="app.openLink('${m.url}','${title}')"`;
                     const isWide = m.ukuran === 'wide'; const gridClass = isWide ? 'col-span-2' : 'col-span-1';
                     
                     let colorClass = "bg-white dark:bg-[#2C2C2E] text-slate-800 dark:text-white";
@@ -561,6 +549,8 @@
                         localStorage.setItem('nakula_role', d.roleAccess); 
                         this.updateUI(p); 
                         this.closeModal('profile-modal'); 
+                        // UPDATE: LOG ACTIVITY SAAT LOGIN
+                        this.sendLog('Login');
                         app.showAlert('Berhasil', `Selamat datang, ${d.realName.split(' ')[0]}`, 'success'); 
                     } else {
                         app.showAlert('Gagal', d.message, 'error'); 
@@ -598,7 +588,17 @@
                 
                 if(p.performa) { 
                     safeText('score-presensi', p.performa.presensi + '%'); 
-                    safeText('score-tugas', p.performa.tugas + '%'); 
+                    safeText('score-tugas', p.performa.tugas + '%');
+                    
+                    // UPDATE: MENAMPILKAN DETAIL KINERJA (JIKA ADA DARI BACKEND)
+                    if (p.performa.det_presensi) {
+                         safeText('detail-presensi', p.performa.det_presensi);
+                         safeClass('detail-presensi', 'remove', 'hidden');
+                    }
+                    if (p.performa.det_tugas) {
+                         safeText('detail-tugas', p.performa.det_tugas);
+                         safeClass('detail-tugas', 'remove', 'hidden');
+                    }
                 }
             },
             
@@ -631,7 +631,10 @@
                 } 
             },
             
-            updateStats: function(p) { safeText('score-presensi', p.presensi + '%'); safeText('score-tugas', p.tugas + '%'); },
+            updateStats: function(p) { 
+                safeText('score-presensi', p.presensi + '%'); 
+                safeText('score-tugas', p.tugas + '%'); 
+            },
             scrollToTop: function() { window.scrollTo({top: 0, behavior: 'smooth'}); },
             openModal: function(id) { const el = document.getElementById(id); el.classList.remove('hidden'); setTimeout(()=>el.querySelector('.modal-content').classList.remove('opacity-0','translate-y-full'),10); },
             closeModal: function(id) { const el = document.getElementById(id); el.querySelector('.modal-content').classList.add('opacity-0','translate-y-full'); setTimeout(()=>el.classList.add('hidden'),300); },
@@ -643,7 +646,7 @@
                 const ctr = document.getElementById('submenu-list'); 
                 if(ctr) {
                     ctr.innerHTML = list.map(m => `
-                    <button onclick="window.open('${m.url}','_blank')" class="w-full text-left group flex items-center gap-4 p-4 rounded-3xl bg-slate-50 hover:bg-blue-50 dark:bg-zinc-800/50 dark:hover:bg-blue-900/20 transition-all duration-200 border border-transparent hover:border-blue-200 dark:hover:border-blue-800 active:scale-[0.98]">
+                    <button onclick="app.openLink('${m.url}','${m.judul}')" class="w-full text-left group flex items-center gap-4 p-4 rounded-3xl bg-slate-50 hover:bg-blue-50 dark:bg-zinc-800/50 dark:hover:bg-blue-900/20 transition-all duration-200 border border-transparent hover:border-blue-200 dark:hover:border-blue-800 active:scale-[0.98]">
                         <div class="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-700 shadow-sm group-hover:shadow-md group-hover:scale-110 transition-all duration-300 flex items-center justify-center text-blue-600 dark:text-blue-400 border border-slate-100 dark:border-zinc-600">
                             <i data-lucide="${m.icon||'link'}" class="w-6 h-6"></i>
                         </div>
@@ -662,7 +665,23 @@
             confirmLogout: function() { app.showConfirm('Keluar Akun', 'Apakah Anda yakin?', () => { localStorage.removeItem('nakula_profile'); localStorage.removeItem('nakula_role'); location.reload(); }); },
             setupBackButton: function() { window.onpopstate = () => { const activeModal = document.querySelector('.fixed.z-[9999]:not(.hidden)'); if (activeModal) this.closeModal(activeModal.id); else { const now = new Date().getTime(); if (now - this.backPressedTime < 2000) history.back(); else { this.backPressedTime = now; document.getElementById('exit-toast').classList.add('show'); setTimeout(() => document.getElementById('exit-toast').classList.remove('show'), 2000); window.history.pushState(null, null, window.location.href); } } }; window.history.pushState(null, null, window.location.href); },
             setupInstallPrompt: function() { window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); this.deferredPrompt = e; }); },
-            submitFeedback: function(e) { e.preventDefault(); const btn = document.getElementById('btn-feedback-submit'); const old = btn.innerText; btn.innerText = '...'; const fd = new FormData(e.target); const obj = Object.fromEntries(fd.entries()); obj.isAnonim = document.getElementById('anonim-check').checked; fetch(this.apiURL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(obj)}).then(()=>{ app.showAlert("Terkirim!", "Terima kasih masukannya", "success"); this.closeModal('feedback-modal'); e.target.reset(); }).catch(()=>app.showAlert("Gagal", "Coba lagi nanti", "error")).finally(()=>btn.innerText=old); }
+            
+            submitFeedback: function(e) { 
+                e.preventDefault(); 
+                const btn = document.getElementById('btn-feedback-submit'); 
+                const old = btn.innerText; btn.innerText = '...'; 
+                const fd = new FormData(e.target); 
+                const obj = Object.fromEntries(fd.entries()); 
+                obj.isAnonim = document.getElementById('anonim-check').checked; 
+                
+                // UPDATE: SERTAKAN NAMA USER JIKA TIDAK ANONIM
+                if (!obj.isAnonim && this.currentUser) {
+                    obj.pengirim = this.currentUser.realName;
+                    obj.kontak = this.currentUser.nama;
+                }
+                
+                fetch(this.apiURL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(obj)}).then(()=>{ app.showAlert("Terkirim!", "Terima kasih masukannya", "success"); this.closeModal('feedback-modal'); e.target.reset(); }).catch(()=>app.showAlert("Gagal", "Coba lagi nanti", "error")).finally(()=>btn.innerText=old); 
+            }
         };
         
         document.addEventListener('DOMContentLoaded', () => app.init());
