@@ -112,6 +112,20 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(156, 163, 175, 0.5); border-radius: 20px; }
+
+        /* --- MAGIC SCALING UNTUK HP LAYAR KECIL --- */
+        @media screen and (max-width: 380px) {
+            html { font-size: 14px; } 
+            .mobile-spacer { height: 230px; } 
+            #header-greeting-mob { font-size: 2.5rem; } 
+            .pop-card { height: 6.5rem; padding: 0.75rem; } 
+            .pop-card i { width: 1.25rem; height: 1.25rem; } 
+        }
+        @media screen and (max-width: 340px) {
+            html { font-size: 13px; } 
+            .mobile-spacer { height: 210px; } 
+            #header-greeting-mob { font-size: 2.25rem; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-[#0f172a] text-slate-800 dark:text-slate-100">
@@ -335,7 +349,7 @@
                 });
             },
 
-            // --- FUNGSI UTAMA: SEND LOG (FIXED: KIRIM NAMA ASLI) ---
+            // --- SEND LOG (MENGGUNAKAN NAMA ASLI) ---
             sendLog: function(activity, detail = '-') {
                 if (!this.currentUser || !this.currentUser.nama) return;
                 fetch(this.apiURL, {
@@ -343,7 +357,6 @@
                     headers: {'Content-Type': 'text/plain'}, 
                     body: JSON.stringify({ 
                         action: 'log', 
-                        // FIX: Kirim Real Name, jika kosong baru pakai Email
                         user: this.currentUser.realName || this.currentUser.nama, 
                         realName: this.currentUser.realName,
                         activity: activity, 
