@@ -13,9 +13,9 @@
 <style>
   /* --- THEME VARIABLES (Professional Teal) --- */
   :root { 
-    --primary: #0f766e; /* Deep Teal */
+    --primary: #0f766e; 
     --primary-light: #ccfbf1; 
-    --accent: #d97706; /* Amber */
+    --accent: #d97706; 
     --bg-body: #f8fafc; 
     --surface: #ffffff;
     --text-main: #0f172a;
@@ -222,7 +222,6 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8t
 
 let USER={}, modalNi, GLOBAL_DATA_TUGAS=[], GLOBAL_DATA_AGENDA=[];
 
-// --- NAVIGASI ---
 window.onpopstate = function(event) {
     if (!document.getElementById('view-inbox-list').classList.contains('hidden')) forceBackToGrid();
 };
@@ -245,7 +244,6 @@ function showLoad(x){
     x ? (el.classList.remove('d-none'), el.classList.add('d-flex')) : (el.classList.add('d-none'), el.classList.remove('d-flex'));
 }
 
-// --- AUTH ---
 async function doLogin(auto){
   let p = document.getElementById('inputPIN').value;
   if(!p) return Swal.fire('Perhatian', 'Masukkan PIN Narasumber', 'warning');
@@ -257,6 +255,7 @@ async function doLogin(auto){
   if(r && r.sukses && (r.role === 'PENILAI' || r.role === 'ADMIN')) {
     localStorage.setItem('LMS_NARASUMBER_PIN', p); 
     USER = { nama: r.nama, pin: p };
+    
     document.getElementById('view-login').classList.add('hidden');
     document.getElementById('view-main').classList.remove('hidden');
     document.getElementById('txtNama').innerText = r.nama; 
@@ -273,7 +272,6 @@ function doLogout(){
     }).then((r) => { if (r.isConfirmed) { localStorage.removeItem('LMS_NARASUMBER_PIN'); location.reload(); } })
 }
 
-// --- DATA LOGIC ---
 async function loadPenilai() {
   showLoad(true); 
   let data = await apiCall("getDashboardPenilai"); 
@@ -291,7 +289,8 @@ function renderFolders(agenda, allTasks) {
     let total = 0;
     
     agenda.forEach(a => {
-        let tasks = allTasks.filter(t => t.judul === a.materi || t.judul.includes(a.materi));
+        // FIX: Menggunakan Exact Match (.trim() ===) bukan .includes()
+        let tasks = allTasks.filter(t => t.judul.trim() === a.materi.trim());
         let pending = tasks.filter(t => t.status === 'Menunggu').length; 
         total += pending;
         let narsum = a.narsum || "Tim Narasumber";
@@ -329,7 +328,9 @@ function openInboxFolder(m) {
     document.getElementById('view-inbox-grid').classList.add('hidden'); 
     document.getElementById('view-inbox-list').classList.remove('hidden');
     document.getElementById('lbl-inbox-active').innerText = m;
-    renderList(GLOBAL_DATA_TUGAS.filter(t => t.judul.includes(m)), 'list-inbox-container'); 
+    
+    // FIX: Menggunakan Exact Match (.trim() ===)
+    renderList(GLOBAL_DATA_TUGAS.filter(t => t.judul.trim() === m.trim()), 'list-inbox-container'); 
     window.scrollTo(0,0);
 }
 
@@ -351,7 +352,6 @@ function renderList(data, id) {
     let iconStatus = st==='Menunggu' ? '<i class="bi bi-hourglass-split me-1"></i>' : '<i class="bi bi-check-circle me-1"></i>';
     let displayID = "Peserta #" + item.id.substring(0, 8);
 
-    // Deteksi Tipe Link untuk Ikon List
     let isDrive = item.link && item.link.includes('drive.google.com');
     let attachIcon = (item.link && item.link.length>5) ? 
                      (isDrive ? '<i class="bi bi-paperclip text-primary ms-1" title="Ada File"></i>' : '<i class="bi bi-link-45deg text-info ms-1" title="Ada Link"></i>') 
@@ -387,7 +387,6 @@ function popNilai(id){
     document.getElementById('n_display_judul').innerText = item.judul;
     document.getElementById('n_display_desc').innerText = item.catatan || "Tidak ada catatan.";
 
-    // --- LOGIKA TOMBOL BUKTI CERDAS ---
     let linkContainer = document.getElementById('n_display_link_container');
     let linkBtn = document.getElementById('n_display_link');
     
@@ -395,7 +394,6 @@ function popNilai(id){
         linkContainer.classList.remove('hidden');
         linkBtn.href = item.link;
         
-        // Deteksi File vs Link
         if(item.link.includes('drive.google.com')) {
             linkBtn.className = "btn btn-primary btn-sm w-100 border-0 fw-bold py-2 shadow-sm";
             linkBtn.innerHTML = '<i class="bi bi-file-earmark-arrow-down-fill me-2"></i>Lihat Berkas Lampiran';
@@ -422,12 +420,12 @@ async function saveNilai(){
 
   modalNi.hide(); 
   
-  // Update Lokal
   let idx = GLOBAL_DATA_TUGAS.findIndex(i => i.id === id); 
   if(idx !== -1) { GLOBAL_DATA_TUGAS[idx].status = st; }
   
-  // Refresh Tampilan
-  renderList(GLOBAL_DATA_TUGAS.filter(t => t.judul.includes(document.getElementById('lbl-inbox-active').innerText)), 'list-inbox-container');
+  // FIX: Menggunakan Exact Match pada saat refresh list lokal
+  let currentTopic = document.getElementById('lbl-inbox-active').innerText.trim();
+  renderList(GLOBAL_DATA_TUGAS.filter(t => t.judul.trim() === currentTopic), 'list-inbox-container');
   
   Swal.fire({title:'Tervalidasi', icon:'success', timer:1000, showConfirmButton: false, toast:true, position:'top-end'});
   
