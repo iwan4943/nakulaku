@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 <title>LMS Nakula - Pro</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <style>
   :root {
     --primary: #B3261E; --primary-dark: #901B15;
@@ -37,7 +38,7 @@
 
   .progress-wrap { background: rgba(255,255,255,0.2); height: 8px; border-radius: 10px; margin: 10px 0; overflow: hidden; }
   .progress-bar { height: 100%; background: #fff; transition: width 0.5s ease; }
-  .badge { padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+  .badge { padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; display: inline-flex; align-items: center; }
   .bg-ok { background: #C3EED0; color: #0F5223; }
   .bg-wait { background: #FEE4C1; color: #744C00; }
   .bg-rev { background: #F9DEDC; color: #8C1D18; }
@@ -46,7 +47,7 @@
   .modal-box { background: #fff; width: 90%; max-width: 400px; padding: 24px; border-radius: 24px; animation: popUp 0.2s ease-out; max-height: 90vh; overflow-y: auto; }
   @keyframes popUp { from{transform: scale(0.9); opacity: 0;} to{transform: scale(1); opacity: 1;} }
 
-  /* TOGGLE SWITCH STYLE (NEW) */
+  /* TOGGLE SWITCH STYLE */
   .switch-box { background: #f0f0f0; padding: 4px; border-radius: 12px; display: flex; gap: 5px; margin-bottom: 10px; }
   .switch-opt { flex: 1; text-align: center; padding: 8px; font-size: 0.8rem; font-weight: bold; cursor: pointer; border-radius: 10px; color: #666; transition: 0.2s; }
   .switch-opt.active { background: #fff; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -207,6 +208,8 @@
         <h4 class="mb-3">Lapor Tugas</h4>
         <form onsubmit="prosesKirimTugas(event)">
             <input type="hidden" id="tugas-idx">
+            <input type="hidden" id="tugas-jenis">
+            
             <input id="t-judul" readonly style="font-weight:bold; background:#eee; color:#555;">
             
             <div class="switch-box" id="sw-rutin">
@@ -221,10 +224,10 @@
                  </div>
             </div>
             
-            <textarea id="t-cat" rows="4" placeholder="Rangkuman Materi (Wajib)..." required></textarea>
+            <textarea id="t-cat" rows="4" placeholder="Rangkuman Materi / Deskripsi (Wajib)..." required></textarea>
             <div class="flex" style="gap:10px; margin-top:15px;">
                 <button type="button" onclick="closeModal('mdl-upload')" class="btn" style="background:#eee; flex:1;">Batal</button>
-                <button id="btn-rutin" class="btn btn-primary" style="flex:1;">Kirim</button>
+                <button id="btn-rutin" class="btn btn-primary" style="flex:1;"><i class="bi bi-send-fill me-1"></i> Kirim</button>
             </div>
         </form>
     </div>
@@ -252,7 +255,7 @@
                  <div class="switch-opt" onclick="setMode('sw-pres', 'upload')">Upload</div>
             </div>
             <div class="inp-link"><input id="link-pres" name="link_video" type="url" placeholder="Link..."></div>
-            <div class="inp-upload hidden"><div class="file-area"><input type="file" id="file-pres" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;" onchange="prevFile('file-pres')"><div class="flab" id="lab-file-pres">Pilih File</div></div></div>
+            <div class="inp-upload hidden"><div class="file-area"><input type="file" id="file-pres" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;" onchange="prevFile('file-pres')"><div class="flab" id="lab-file-pres">Klik pilih file</div></div></div>
 
             <button class="btn btn-primary w-100 mt-2" id="btn-pres" style="background:var(--warning)">SIMPAN DATA</button>
             <button type="button" onclick="closeModal('mdl-pres')" class="btn w-100 mt-2" style="color:#888;">Batal</button>
@@ -277,7 +280,7 @@
                  <div class="switch-opt" onclick="setMode('sw-bias', 'upload')">Upload</div>
             </div>
             <div class="inp-link"><input id="link-bias" name="link_video" placeholder="Link..."></div>
-            <div class="inp-upload hidden"><div class="file-area"><input type="file" id="file-bias" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;" onchange="prevFile('file-bias')"><div class="flab" id="lab-file-bias">Pilih File</div></div></div>
+            <div class="inp-upload hidden"><div class="file-area"><input type="file" id="file-bias" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;" onchange="prevFile('file-bias')"><div class="flab" id="lab-file-bias">Klik pilih file</div></div></div>
 
             <textarea name="desc" placeholder="Keterangan (Wajib)" required></textarea>
             <button class="btn btn-primary w-100" id="btn-bias" style="background:var(--success)">SIMPAN</button>
@@ -303,7 +306,7 @@
                  <div class="switch-opt" onclick="setMode('sw-event', 'upload')">Upload</div>
             </div>
             <div class="inp-link"><input id="link-event" name="link_video" placeholder="Link..."></div>
-            <div class="inp-upload hidden"><div class="file-area"><input type="file" id="file-event" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;" onchange="prevFile('file-event')"><div class="flab" id="lab-file-event">Pilih File</div></div></div>
+            <div class="inp-upload hidden"><div class="file-area"><input type="file" id="file-event" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;" onchange="prevFile('file-event')"><div class="flab" id="lab-file-event">Klik pilih file</div></div></div>
 
             <textarea name="desc" placeholder="Dampak Kegiatan (Wajib)" required></textarea>
             <button class="btn btn-primary w-100" id="btn-event">SIMPAN</button>
@@ -322,10 +325,29 @@ const loading = s => $('loader').style.display = s ? 'flex' : 'none';
 
 let USER = ls.get('LMS_USER') || {};
 let GLOBAL_TASKS_MAP = {};
+let GLOBAL_ALL_TASKS = []; 
 
+// --- 1. INSTANT LOGIN (OPTIMISTIC UI) ---
 window.onload = () => {
     loading(false);
-    if(USER.pin) { $('inputPIN').value = USER.pin; handleLogin(true); }
+    if(USER && USER.pin && USER.role) {
+        show('view-login', false); 
+        show('view-main', true);
+        
+        $('txtNama').innerText = USER.nama; 
+        $('txtSekolah').innerText = USER.sekolah;
+        $('txtRole').innerText = USER.role === 'KS' ? 'Kepala Sekolah' : 'Guru Kelas';
+        $('txtRole').className = `badge ${USER.role === 'KS' ? 'bg-wait' : 'bg-ok'} mb-2`;
+        
+        if(USER.sekolah) {
+            document.querySelectorAll('.sel-sekolah').forEach(s => {
+                s.innerHTML = USER.sekolah.split(',').map(x=>`<option value="${x.trim()}">${x.trim()}</option>`).join('');
+            });
+        }
+        
+        if(USER.role === 'KS') { show('panel-ks'); loadKS(); } 
+        else { show('panel-guru'); loadGuru(); }
+    }
 };
 
 async function req(action, data={}) {
@@ -335,21 +357,18 @@ async function req(action, data={}) {
     } catch(e) { toast("Gagal koneksi server"); return null; }
 }
 
-/* --- UNIVERSAL UPLOAD LOGIC --- */
+/* --- 2. UPLOAD LOGIC --- */
 function setMode(wrapperId, mode) {
     const w = $(wrapperId).parentNode;
     const box = $(wrapperId);
-    // Visual Toggle
     box.querySelectorAll('.switch-opt').forEach(el => el.classList.remove('active'));
     box.children[mode === 'link' ? 0 : 1].classList.add('active');
     
-    // Show/Hide Inputs in this Wrapper
     const linkDiv = w.querySelector('.inp-link');
     const upDiv = w.querySelector('.inp-upload');
     if(mode === 'link') { linkDiv.classList.remove('hidden'); upDiv.classList.add('hidden'); }
     else { linkDiv.classList.add('hidden'); upDiv.classList.remove('hidden'); }
     
-    // Set Dataset for Logic
     w.dataset.mode = mode;
 }
 
@@ -361,34 +380,28 @@ function prevFile(id) {
     }
 }
 
-// Fungsi Cerdas: Handle Upload atau Link
 async function processLinkOrUpload(fileId, linkId, contextName, wrapperId, btnId) {
     const wrapper = $(wrapperId).parentNode;
-    const mode = wrapper.dataset.mode || 'link'; // Default link
+    const mode = wrapper.dataset.mode || 'link'; 
     const btn = $(btnId);
-    const origText = btn.innerText;
 
     if (mode === 'link') {
         return $(linkId).value || "-";
     } else {
         const file = $(fileId).files[0];
         if (!file) {
-            if(!confirm("Anda memilih mode Upload tapi tidak memilih file. Lanjutkan tanpa lampiran?")) return false;
+            if(!confirm("Anda tidak memilih file. Lanjutkan tanpa lampiran?")) return false;
             return "-";
         }
         
-        btn.disabled = true; btn.innerText = "Mengunggah 0%...";
+        btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mengunggah...';
         
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             const reader = new FileReader();
             reader.onload = async function(e) {
                 try {
                     const raw = e.target.result.split(',')[1];
-                    const res = await req("uploadFile", {
-                        fileName: `${USER.nama}_${contextName}_${file.name}`,
-                        mimeType: file.type,
-                        fileData: raw
-                    });
+                    const res = await req("uploadFile", { fileName: `${USER.nama}_${contextName}_${file.name}`, mimeType: file.type, fileData: raw });
                     if(res && res.sukses) { resolve(res.fileUrl); }
                     else { alert("Gagal Upload: " + res.msg); resolve(false); }
                 } catch(err) { alert("Error Network"); resolve(false); }
@@ -398,7 +411,7 @@ async function processLinkOrUpload(fileId, linkId, contextName, wrapperId, btnId
     }
 }
 
-/* --- LOGIN SYSTEM --- */
+/* --- 3. LOGIN & NAVIGATION --- */
 async function handleLogin(auto=false) {
     const pin = $('inputPIN').value;
     if(!pin) return toast("Isi PIN dulu!");
@@ -408,7 +421,7 @@ async function handleLogin(auto=false) {
     loading(false);
 
     if(r && r.sukses) {
-        if(r.role === 'ADMIN' || r.role === 'PENILAI') return toast("Akses Admin/Penilai di web khusus!");
+        if(r.role === 'ADMIN' || r.role === 'PENILAI') return toast("Gunakan Web Khusus Admin!");
         USER = { ...r, pin }; ls.set('LMS_USER', USER);
         show('view-login', false); show('view-main', true);
         $('txtNama').innerText = r.nama; $('txtSekolah').innerText = r.sekolah;
@@ -431,32 +444,82 @@ function switchTab(prefix, idx, el) {
     el.parentNode.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active')); el.classList.add('active');
 }
 
-/* --- GURU --- */
-async function loadGuru() { loading(true); const d = await req("getDashboardGuru", { pin: USER.pin }); loading(false); if(d) renderGuru(d); }
+/* --- LOGIKA STATUS CERDAS (NILAI A/B/C) --- */
+function getSmartBadge(status, feedback) {
+    if (status === 'Menunggu') return `<span class="badge bg-wait"><i class="bi bi-hourglass-split me-1"></i>MENUNGGU</span>`;
+    if (status === 'Revisi') return `<span class="badge bg-rev"><i class="bi bi-exclamation-triangle-fill me-1"></i>REVISI</span>`;
+    
+    let grade = "";
+    if (feedback && feedback !== '-') {
+        let match = feedback.match(/\[(?:Nilai|Kualitas):\s*([A-E])\]/i);
+        if (match) grade = match[1].toUpperCase();
+    }
+
+    if (grade === 'A') return `<span class="badge" style="background:#ffecb3; color:#f57f17; border:1px solid #ffe082;"><i class="bi bi-trophy-fill me-1"></i>DITERIMA (A)</span>`;
+    if (grade === 'B') return `<span class="badge" style="background:#e3f2fd; color:#1565c0; border:1px solid #bbdefb;"><i class="bi bi-star-fill me-1"></i>DITERIMA (B)</span>`;
+    if (grade === 'C') return `<span class="badge bg-ok"><i class="bi bi-check-circle-fill me-1"></i>DITERIMA (C)</span>`;
+    
+    return `<span class="badge bg-ok"><i class="bi bi-check-circle-fill me-1"></i>DITERIMA</span>`;
+}
+
+function getCleanFeedback(feedback) {
+    if (!feedback || feedback === '-') return '';
+    return feedback.replace(/\[(?:Nilai|Kualitas):\s*[A-E]\]\s*/i, '').trim();
+}
+
+/* --- 4. GURU DASHBOARD --- */
+async function loadGuru() { 
+    loading(true); const d = await req("getDashboardGuru", { pin: USER.pin }); loading(false); 
+    if(d) { GLOBAL_ALL_TASKS = d.tugas; renderGuru(d); }
+}
+
 function renderGuru(d) {
     GLOBAL_TASKS_MAP = {}; d.tugas.forEach(t => { GLOBAL_TASKS_MAP[t.judul.trim()] = t; });
     let done = 0, acc = 0;
+    
+    // AGENDA
     const html = d.agenda.map((a, i) => {
         const judul = a.kegiatan.trim(), task = GLOBAL_TASKS_MAP[judul], status = task ? task.status : null;
         if(status === 'Diterima' || status === 'Menunggu' || status === 'Revisi') done++;
         if(status === 'Diterima') acc++;
-        let act = `<button onclick="openUpload('${judul}')" class="btn btn-primary btn-sm">KERJAKAN</button>`;
-        let feed = "";
+        
+        let act = `<button onclick="openUpload('${judul}')" class="btn btn-primary btn-sm"><i class="bi bi-cloud-arrow-up me-1"></i> KERJAKAN</button>`;
+        let feedBox = "";
+        
         if(status) {
-            let cls = status === 'Diterima' ? 'bg-ok' : (status === 'Revisi' ? 'bg-rev' : 'bg-wait');
-            act = `<span class="badge ${cls}">${status}</span>`;
-            if(status === 'Revisi') { act += `<br><small onclick="openUpload('${judul}')" style="color:red;cursor:pointer;font-weight:bold">✍️ PERBAIKI</small>`;
-            if(task.feedback && task.feedback!=='-') feed = `<div class="mt-2 p-2 bg-rev small" style="border:1px dashed red;border-radius:8px">⚠️ ${task.feedback}</div>`; }
+            act = getSmartBadge(status, task.feedback);
+            if(status === 'Revisi') { 
+                act += `<br><small onclick="openRevisi('${task.id}')" style="color:red;cursor:pointer;font-weight:bold;display:inline-block;margin-top:5px;"><i class="bi bi-pencil-square"></i> PERBAIKI</small>`;
+            }
+            
+            let cleanFeed = getCleanFeedback(task.feedback);
+            if(cleanFeed && cleanFeed !== '') {
+                let fStyle = status === 'Revisi' ? 'border:1px dashed red;' : 'border:1px dashed #4CAF50; background:#E8F5E9; color:#2E7D32;';
+                let fIcon = status === 'Revisi' ? 'bi-exclamation-triangle-fill' : 'bi-info-circle-fill';
+                feedBox = `<div class="mt-2 p-2 small bg-rev rounded" style="${fStyle}"><i class="bi ${fIcon} me-1"></i> <b>Catatan:</b> ${cleanFeed}</div>`;
+            }
         }
-        return `<div class="card mb-2" style="padding:15px; border-left: 4px solid var(--primary);"><div class="flex between"><div><div class="fw-bold" style="font-size:0.9rem">${judul}</div><div class="text-muted" style="font-size:0.75rem">Tenggat: ${a.tanggal}</div></div><div style="text-align:right">${act}</div></div>${feed}</div>`;
+        return `<div class="card mb-2" style="padding:15px; border-left: 4px solid var(--primary);"><div class="flex between"><div><div class="fw-bold" style="font-size:0.9rem">${judul}</div><div class="text-muted" style="font-size:0.75rem"><i class="bi bi-calendar-event me-1"></i>Tenggat: ${a.tanggal}</div></div><div style="text-align:right">${act}</div></div>${feedBox}</div>`;
     }).join('');
     $('list-tugas').innerHTML = html;
     
+    // EXTRA
     const agendaTitles = d.agenda.map(a => a.kegiatan.trim());
     const extraTasks = d.tugas.filter(t => !agendaTitles.includes(t.judul.trim()));
+    
     $('list-tugas-extra').innerHTML = extraTasks.length > 0 ? extraTasks.map(t => {
-        let cls = t.status==='Diterima'?'bg-ok':(t.status==='Revisi'?'bg-rev':'bg-wait');
-        return `<div class="card mb-2 p-3" style="border-left:4px solid #555;"><div class="flex between"><div><div class="fw-bold small">${t.judul}</div><div class="text-muted small">Status</div></div><div><span class="badge ${cls}">${t.status}</span></div></div>${t.feedback&&t.feedback!=='-'?`<div class="mt-2 small text-success border-top pt-1">💬 ${t.feedback}</div>`:''}</div>`;
+        let badgeStr = getSmartBadge(t.status, t.feedback);
+        let btnRev = t.status==='Revisi' ? `<button onclick="openRevisi('${t.id}')" class="btn btn-sm btn-warning py-0 px-2 mt-1 text-white" style="font-size:0.65rem;"><i class="bi bi-pencil-square"></i> PERBAIKI</button>` : '';
+        let cleanFeed = getCleanFeedback(t.feedback);
+        let feedBox = (cleanFeed && cleanFeed !== '') ? `<div class="mt-2 small ${t.status==='Revisi'?'text-danger':'text-success'} border-top pt-1 fw-bold"><i class="bi ${t.status==='Revisi'?'bi-exclamation-triangle-fill':'bi-info-circle-fill'} me-1"></i> ${cleanFeed}</div>` : '';
+
+        return `<div class="card mb-2 p-3" style="border-left:4px solid #555;">
+            <div class="flex between">
+                <div><div class="fw-bold small">${t.judul}</div><div class="text-muted small">${t.jenis||'Umum'}</div></div>
+                <div class="text-end">${badgeStr}<br>${btnRev}</div>
+            </div>
+            ${feedBox}
+        </div>`;
     }).join('') : "<div class='text-center small text-muted p-3'>Belum ada riwayat lain</div>";
     
     $('sel-prog-kkg').innerHTML = d.agenda.map(a => `<option>${a.kegiatan}</option>`).join('');
@@ -464,53 +527,110 @@ function renderGuru(d) {
     $('g-persen').innerText = pct + "%"; $('g-bar').style.width = pct + "%"; $('g-target').innerText = `${acc}/${target}`;
 }
 
-/* --- KS --- */
-async function loadKS(force=false) { loading(true); const [ds, dp] = await Promise.all([ req("getDataKS", { sekolah: USER.sekolah }), req("getDashboardGuru", { pin: USER.pin }) ]); loading(false); if(ds) renderKS(ds); if(dp) renderHistoryKS(dp); }
+/* --- 5. KS DASHBOARD --- */
+async function loadKS(force=false) { 
+    loading(true); 
+    const [ds, dp] = await Promise.all([ req("getDataKS", { sekolah: USER.sekolah }), req("getDashboardGuru", { pin: USER.pin }) ]); 
+    loading(false); 
+    if(ds) renderKS(ds); 
+    if(dp) { GLOBAL_ALL_TASKS = dp.tugas; renderHistoryKS(dp); }
+}
+
 function renderKS(d) {
     let guruMap = {};
     if (d.master_guru) d.master_guru.forEach(n => guruMap[n] = { nama: n, poin: 0, tugas: 0 });
     if (d.data_tugas) d.data_tugas.forEach(x => { if(guruMap[x.nama]) { if(x.status==='Diterima') { guruMap[x.nama].poin+=x.skor; guruMap[x.nama].tugas++; } } else { guruMap[x.nama] = { nama:x.nama, poin:(x.status==='Diterima'?x.skor:0), tugas:(x.status==='Diterima'?1:0) }; } });
     let list = Object.values(guruMap).sort((a,b) => b.poin - a.poin);
-    $('ks-total').innerText = d.data_tugas.length;
+    $('ks-total').innerText = d.data_tugas ? d.data_tugas.length : 0;
     $('list-guru-ks').innerHTML = list.length===0 ? "<div class='p-3 text-center text-muted'>Belum ada data guru.</div>" : list.map(g => {
         let pct = Math.min(100, g.tugas * 10), color = g.tugas===0 ? '#B71C1C' : (pct>=80 ? '#2e7d32' : '#ed6c02'), txt = g.tugas===0 ? 'BELUM SETOR' : `${g.tugas} Tugas`;
-        return `<div style="padding:12px 15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div style="font-size:0.85rem; font-weight:600;">${g.nama}</div><span style="font-size:0.7rem; color:${color}">${txt}</span></div><div style="display:flex; align-items:center; gap:8px;"><div style="width:60px; height:6px; background:#eee; border-radius:4px;"><div style="width:${pct}%; height:100%; background:${color}; border-radius:4px;"></div></div><span style="font-size:0.8rem; color:${color}; font-weight:bold;">${g.poin}</span></div></div>`;
+        return `<div style="padding:12px 15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div style="font-size:0.85rem; font-weight:600;"><i class="bi bi-person me-1"></i>${g.nama}</div><span style="font-size:0.7rem; color:${color}">${txt}</span></div><div style="display:flex; align-items:center; gap:8px;"><div style="width:60px; height:6px; background:#eee; border-radius:4px;"><div style="width:${pct}%; height:100%; background:${color}; border-radius:4px;"></div></div><span style="font-size:0.8rem; color:${color}; font-weight:bold;">${g.poin} <i class="bi bi-star-fill text-warning"></i></span></div></div>`;
     }).join('');
 }
-function renderHistoryKS(dp) { $('list-riwayat-ks').innerHTML = dp&&dp.tugas.length>0 ? dp.tugas.map(r => `<div class="card mb-2" style="padding:12px;"><div class="flex between"><div><div class="fw-bold small">${r.judul}</div></div><span class="badge ${r.status==='Diterima'?'bg-ok':(r.status==='Revisi'?'bg-rev':'bg-wait')}">${r.status}</span></div>${r.feedback&&r.feedback!=='-'?`<div class="mt-2 small text-success border-top pt-1">💬 ${r.feedback}</div>`:''}</div>`).join('') : "<div class='p-3 text-center text-muted'>Belum ada riwayat.</div>"; }
 
-/* --- ACTIONS & SUBMITS --- */
+function renderHistoryKS(dp) { 
+    $('list-riwayat-ks').innerHTML = dp&&dp.tugas.length>0 ? dp.tugas.map(r => {
+        let badgeStr = getSmartBadge(r.status, r.feedback);
+        let btnRev = r.status==='Revisi' ? `<button onclick="openRevisi('${r.id}')" class="btn btn-sm btn-warning py-0 px-2 mt-1 text-white" style="font-size:0.65rem;"><i class="bi bi-pencil-square"></i> PERBAIKI</button>` : '';
+        let cleanFeed = getCleanFeedback(r.feedback);
+        let feedBox = (cleanFeed && cleanFeed !== '') ? `<div class="mt-2 small ${r.status==='Revisi'?'text-danger':'text-success'} fw-bold border-top pt-1"><i class="bi ${r.status==='Revisi'?'bi-exclamation-triangle-fill':'bi-info-circle-fill'} me-1"></i> ${cleanFeed}</div>` : '';
+
+        return `<div class="card mb-2" style="padding:12px;">
+            <div class="flex between">
+                <div><div class="fw-bold small">${r.judul}</div></div>
+                <div class="text-end">${badgeStr}<br>${btnRev}</div>
+            </div>
+            ${feedBox}
+        </div>`
+    }).join('') : "<div class='p-3 text-center text-muted'>Belum ada riwayat.</div>"; 
+}
+
+/* --- 6. ACTION & SUBMIT --- */
 function openModal(id) { $(id).style.display = 'flex'; }
 function closeModal(id) { $(id).style.display = 'none'; }
+
 function openUpload(judul) { 
-    $('mdl-upload').querySelector('form').reset(); $('t-judul').value=judul; 
-    setMode('sw-rutin', 'link'); // Reset UI
-    let t = GLOBAL_TASKS_MAP[judul]; 
-    if(t) { if(t.link && t.link!=='-') $('t-link').value=t.link; $('t-cat').value=t.catatan!=='-'?t.catatan:''; toast("Mode Edit"); } 
+    $('mdl-upload').querySelector('form').reset(); 
+    $('t-judul').value = judul; 
+    if(!$('tugas-jenis')) $('mdl-upload').querySelector('form').insertAdjacentHTML('afterbegin', '<input type="hidden" id="tugas-jenis">');
+    $('tugas-idx').value = ""; 
+    $('tugas-jenis').value = "Kegiatan Gugus"; 
+    setMode('sw-rutin', 'link'); 
+    $('btn-rutin').disabled = false; $('btn-rutin').innerHTML = '<i class="bi bi-send-fill me-1"></i> Kirim Tugas'; 
+    $('lab-file-rutin').innerHTML = "Klik pilih file (Max 5MB)"; 
+    openModal('mdl-upload'); 
+}
+
+function openRevisi(id) {
+    let t = GLOBAL_ALL_TASKS.find(x => x.id === id);
+    if(!t) { alert("Data tidak ditemukan!"); return; }
+
+    $('mdl-upload').querySelector('form').reset(); 
+    $('t-judul').value = t.judul; 
+    if(!$('tugas-jenis')) $('mdl-upload').querySelector('form').insertAdjacentHTML('afterbegin', '<input type="hidden" id="tugas-jenis">');
+    $('tugas-idx').value = t.id; 
+    $('tugas-jenis').value = t.jenis; 
+    
+    setMode('sw-rutin', 'link'); 
+    $('btn-rutin').disabled = false; $('btn-rutin').innerHTML = '<i class="bi bi-send-check-fill me-1"></i> Kirim Perbaikan'; 
+    $('lab-file-rutin').innerHTML = "Klik pilih file (Max 5MB)"; 
+
+    if(t.link && t.link !== '-') {
+        $('t-link').value = t.link;
+        toast(t.link.includes('drive') ? "Mode Edit: Memuat file sebelumnya" : "Mode Edit: Memuat link sebelumnya");
+    }
+    
+    $('t-cat').value = t.catatan !== '-' ? t.catatan : ''; 
     openModal('mdl-upload'); 
 }
 
 async function prosesKirimTugas(e) {
     e.preventDefault();
     const link = await processLinkOrUpload('file-rutin', 't-link', $('t-judul').value, 'sw-rutin', 'btn-rutin');
-    if(link === false) { $('btn-rutin').disabled=false; $('btn-rutin').innerText="Kirim"; return; }
+    if(link === false) { $('btn-rutin').disabled=false; $('btn-rutin').innerHTML='<i class="bi bi-send-fill me-1"></i> Kirim'; return; }
     
-    await req("simpanTugas", { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, jenis_laporan: "Kegiatan Gugus", judul_dokumen: $('t-judul').value, link_video: link, catatan: $('t-cat').value });
-    closeModal('mdl-upload'); toast("Terkirim!"); $('btn-rutin').disabled=false; $('btn-rutin').innerText="Kirim"; loadGuru();
+    let isRevisi = $('tugas-idx').value !== "";
+    let jenisLaporan = $('tugas-jenis').value || "Kegiatan Gugus";
+
+    await req("simpanTugas", { 
+        id_tugas: $('tugas-idx').value, pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, 
+        jenis_laporan: jenisLaporan, judul_dokumen: $('t-judul').value, link_video: link, catatan: $('t-cat').value 
+    });
+    
+    closeModal('mdl-upload'); toast(isRevisi ? "Revisi berhasil dikirim!" : "Tugas terkirim!"); 
+    $('btn-rutin').disabled=false; $('btn-rutin').innerHTML='<i class="bi bi-send-fill me-1"></i> Kirim'; 
+    if(USER.role === 'KS') loadKS(true); else loadGuru();
 }
 
 async function submitDev(e, jenis, formId) {
     e.preventDefault();
-    const isImp=jenis.includes('Implementasi'), nama=$(isImp?'imp-nama':'ino-nama').value;
-    const btnId = isImp ? 'btn-imp' : 'btn-ino';
-    
-    // Universal Process
+    const isImp=jenis.includes('Implementasi'), nama=$(isImp?'imp-nama':'ino-nama').value, btnId = isImp ? 'btn-imp' : 'btn-ino';
     const link = await processLinkOrUpload(isImp?'file-imp':'file-ino', isImp?'imp-link':'ino-link', nama, isImp?'sw-imp':'sw-ino', btnId);
-    if(link === false) { $(btnId).disabled=false; $(btnId).innerText=isImp?"KIRIM LAPORAN":"KIRIM KARYA"; return; }
+    if(link === false) { $(btnId).disabled=false; $(btnId).innerHTML=isImp?"KIRIM LAPORAN":"KIRIM KARYA"; return; }
 
     const extra=isImp?`[PROG: ${$('sel-prog-kkg').value}] [KELAS: ${$('imp-kelas').value}] `:'';
     await req("simpanTugas", { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, jenis_laporan: jenis, judul_dokumen: (isImp?"IMPL: ":"INOV: ")+nama, link_video: link, catatan: extra + $(isImp?'imp-desc':'ino-desc').value });
-    toast("Berhasil disimpan!"); $(isImp?'imp-nama':'ino-nama').value=""; $(btnId).disabled=false; $(btnId).innerText=isImp?"KIRIM LAPORAN":"KIRIM KARYA"; loadGuru();
+    toast("Berhasil disimpan!"); $(isImp?'imp-nama':'ino-nama').value=""; $(btnId).disabled=false; $(btnId).innerHTML=isImp?"KIRIM LAPORAN":"KIRIM KARYA"; loadGuru();
 }
 
 async function submitGeneric(e, jenis, modalId, wrapperId, prefix) {
@@ -523,10 +643,10 @@ async function submitGeneric(e, jenis, modalId, wrapperId, prefix) {
     else { judul = "EVENT: " + obj.a; catatan = `[SKALA: ${obj.scale}] [TGL: ${obj.b}] ${obj.desc}`; }
     
     const link = await processLinkOrUpload('file-'+prefix, 'link-'+prefix, judul, wrapperId, btnId);
-    if(link === false) { $(btnId).disabled=false; $(btnId).innerText="SIMPAN"; return; }
+    if(link === false) { $(btnId).disabled=false; $(btnId).innerHTML="SIMPAN DATA"; return; }
 
     await req("simpanTugas", { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: obj.sekolah, jenis_laporan: jenis, judul_dokumen: judul, link_video: link, catatan: catatan });
-    closeModal(modalId); toast("Data tersimpan!"); $(btnId).disabled=false; $(btnId).innerText="SIMPAN"; loadKS(true);
+    closeModal(modalId); toast("Data tersimpan!"); $(btnId).disabled=false; $(btnId).innerHTML="SIMPAN DATA"; loadKS(true);
 }
 </script>
 </body>
