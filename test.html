@@ -249,17 +249,18 @@
     </div>
 
     <nav class="md:hidden fixed bottom-6 left-6 right-6 h-16 capsule-dock flex items-center justify-between px-6 z-40">
-        <button onclick="app.refreshData(true)" class="flex flex-col items-center justify-center text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition"><i data-lucide="rotate-cw" class="w-5 h-5 mb-0.5"></i><span class="text-[9px] font-bold uppercase">Sync</span></button>
-        <button onclick="app.toggleTheme()" class="flex flex-col items-center justify-center text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition"><i data-lucide="moon" class="w-5 h-5 mb-0.5 block dark:hidden"></i><i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i><span class="text-[9px] font-bold uppercase">Tema</span></button>
+        <button onclick="app.refreshData(true)" class="flex flex-col items-center justify-center text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition">
+            <i data-lucide="rotate-cw" class="w-5 h-5 mb-0.5"></i>
+            <span class="text-[9px] font-bold uppercase">Sync</span>
+        </button>
+        <button onclick="app.toggleTheme()" class="flex flex-col items-center justify-center text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition">
+            <i data-lucide="moon" class="w-5 h-5 mb-0.5 block dark:hidden"></i>
+            <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+            <span class="text-[9px] font-bold uppercase">Tema</span>
+        </button>
         
-        <button onclick="app.openModal('feedback-modal')" class="relative flex flex-col items-center justify-center text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition">
-            <div class="relative">
-                <i data-lucide="message-square" class="w-5 h-5 mb-0.5"></i>
-                <span class="absolute -top-0.5 -right-1 flex h-2.5 w-2.5">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border border-white dark:border-[#1E1E1E]"></span>
-                </span>
-            </div>
+        <button onclick="app.openModal('feedback-modal')" class="flex flex-col items-center justify-center text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 active:scale-95 transition">
+            <i data-lucide="message-square" class="w-5 h-5 mb-0.5"></i>
             <span class="text-[9px] font-bold uppercase">Saran</span>
         </button>
 
@@ -355,7 +356,6 @@
                 this.setupOfflineListener();
             },
 
-            // --- OFFLINE MODE LISTENER (FITUR BARU) ---
             setupOfflineListener: function() {
                 window.addEventListener('offline', () => { 
                     const b = document.getElementById('offline-banner');
@@ -367,7 +367,7 @@
                     b.classList.remove('translate-y-0');
                     b.classList.add('-translate-y-full');
                     setTimeout(() => b.classList.add('hidden'), 300);
-                    this.refreshData(false); // Sync otomatis saat online kembali
+                    this.refreshData(false); 
                 });
             },
 
@@ -397,7 +397,6 @@
             },
 
             openLink: function(url, title) {
-                // Interaksi Getaran Fisik Halus (opsional jika support)
                 if (navigator.vibrate) navigator.vibrate(50);
                 this.sendLog('Buka Menu', title);
                 window.open(url, '_blank');
@@ -565,7 +564,6 @@
                 if (hAdm) { if(admMob) admMob.innerHTML = hAdm; safeClass('mobile-admin-section', 'remove', 'hidden'); if(admDesk) admDesk.classList.remove('hidden'); }
             },
 
-            // --- EMPTY STATE UI (FITUR BARU) ---
             renderAgenda: function(list) {
                 let html = ''; 
                 if (!list || list.length === 0) {
