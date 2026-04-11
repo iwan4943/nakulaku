@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<title>LMS Nakula - Pro Compact</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<style>
+  /* --- THEME VARIABLES --- */
+  :root {
+    --primary: #B3261E; --primary-dark: #901B15;
+    --bg: #FFF8F6; --card: #FFFFFF; --text: #201A19;
+    --subtle: #F3E5E5; --success: #2e7d32; --warning: #ed6c02;
+    --radius: 12px; /* Radius lebih ramping */
+    --shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  
+  /* --- BASE STYLES --- */
+  * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 70px; line-height: 1.4; font-size: 14px; }
+  .hidden { display: none !important; }
+  .flex { display: flex; align-items: center; }
+  .between { justify-content: space-between; }
+  .center { justify-content: center; text-align: center; }
+  .col { display: flex; flex-direction: column; }
+  .mb-2 { margin-bottom: 0.4rem; } .mb-4 { margin-bottom: 1.2rem; }
+  .text-muted { color: #757575; font-size: 0.8rem; }
+  .fw-bold { font-weight: 600; }
+  .w-100 { width: 100%; }
+
+  /* --- COMPONENTS (COMPACT) --- */
+  .card { background: var(--card); border-radius: 14px; padding: 14px; box-shadow: var(--shadow); margin-bottom: 0.8rem; position: relative; }
+  
+  input, select, textarea { width: 100%; padding: 10px 12px; border: 1.5px solid transparent; background: var(--subtle); border-radius: 10px; font-size: 0.9rem; font-family: inherit; transition: 0.2s; margin-bottom: 0.7rem; }
+  input:focus, select:focus, textarea:focus { background: #fff; border-color: var(--primary); }
+  
+  .btn { border: none; padding: 10px 18px; border-radius: 50px; font-weight: 600; cursor: pointer; transition: transform 0.1s; font-size: 0.85rem; }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--primary); color: white; box-shadow: 0 2px 6px rgba(179,38,30,0.25); width: 100%; }
+  .btn-sm { padding: 5px 12px; font-size: 0.75rem; }
+  
+  .nav-pills { display: flex; gap: 4px; margin-bottom: 0.8rem; background: #fff; padding: 4px; border-radius: 50px; }
+  .nav-item { flex: 1; text-align: center; padding: 6px; border-radius: 50px; font-size: 0.8rem; cursor: pointer; color: #555; transition: 0.2s; }
+  .nav-item.active { background: #FFDAD6; color: #410E0B; font-weight: 600; }
+
+  .progress-wrap { background: rgba(255,255,255,0.2); height: 6px; border-radius: 10px; margin: 8px 0; overflow: hidden; }
+  .progress-bar { height: 100%; background: #fff; transition: width 0.5s ease; }
+  
+  .badge { padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; display: inline-flex; align-items: center; white-space: nowrap; }
+  .bg-ok { background: #C3EED0; color: #0F5223; }
+  .bg-wait { background: #FEE4C1; color: #744C00; }
+  .bg-rev { background: #F9DEDC; color: #8C1D18; }
+  
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+  .modal-box { background: #fff; width: 92%; max-width: 400px; padding: 18px; border-radius: 16px; animation: popUp 0.2s ease-out; max-height: 90vh; overflow-y: auto; }
+  @keyframes popUp { from{transform: scale(0.9); opacity: 0;} to{transform: scale(1); opacity: 1;} }
+
+  /* TOGGLE SWITCH STYLE */
+  .switch-box { background: #f0f0f0; padding: 3px; border-radius: 10px; display: flex; gap: 4px; margin-bottom: 8px; }
+  .switch-opt { flex: 1; text-align: center; padding: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; border-radius: 8px; color: #666; transition: 0.2s; }
+  .switch-opt.active { background: #fff; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .file-area { border: 2px dashed #ccc; padding: 15px; text-align: center; border-radius: 10px; margin-bottom: 0.8rem; position: relative; background: #fafafa; }
+
+  #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #323232; color: #fff; padding: 8px 16px; border-radius: 50px; z-index: 2000; font-size: 0.85rem; opacity: 0; pointer-events: none; transition: 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  #toast.show { opacity: 1; top: 30px; }
+  
+  /* LAYOUT SPECIFICS */
+  .icon-lg { width: 40px; height: 40px; } /* Login icon lebih kecil */
+  .header { display: flex; align-items: center; gap: 10px; padding: 10px 14px; }
+  .avatar { width: 38px; height: 38px; background: #FFDAD6; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1rem; }
+  .dash-stat { background: var(--primary); color: white; padding: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .grid-btn { background: #fff; border: 1px solid #eee; padding: 10px 4px; border-radius: 12px; text-align: center; font-size: 0.6rem; font-weight: bold; cursor: pointer; line-height: 1.2; }
+</style>
+</head>
+<body>
+
+<div id="toast">Notifikasi</div>
+<div id="loader" class="modal-overlay" style="z-index: 9999; background: rgba(255,255,255,0.95);"><div style="width: 35px; height: 35px; border: 3px solid #ddd; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite;"></div><style>@keyframes spin { to { transform: rotate(360deg); } }</style></div>
+
+<div id="view-login" class="col center" style="min-height: 100vh; padding: 16px; align-items: center;">
+    <div style="background: #FFDAD6; color: var(--primary); width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+        <svg class="icon-lg" viewBox="0 0 16 16" fill="currentColor"><path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5ZM8 8.46 1.758 5.965 8 3.052l6.242 2.913L8 8.46Z"/></svg>
+    </div>
+    <h3 class="fw-bold mb-1" style="font-size: 1.2rem;">LMS GUGUS NAKULA</h3>
+    <p class="text-muted mb-4" style="font-size: 0.8rem;">Portal Kinerja Guru & KS</p>
+    <div class="card w-100" style="max-width: 300px; padding: 20px;">
+        <label class="text-muted fw-bold" style="font-size: 0.7rem; display: block; margin-bottom: 6px;">MASUKKAN PIN</label>
+        <input type="tel" id="inputPIN" style="text-align: center; font-size: 1.3rem; font-weight: bold; letter-spacing: 4px; height: 48px;" placeholder="••••••" maxlength="6">
+        <button onclick="handleLogin()" class="btn btn-primary" style="margin-top: 5px;">MASUK APLIKASI</button>
+    </div>
+</div>
+
+<div id="view-main" class="hidden" style="padding: 12px; max-width: 600px; margin: 0 auto;">
+    <div class="card header mb-3">
+        <div class="avatar"><i class="bi bi-person-fill"></i></div>
+        <div style="flex: 1; min-width:0;">
+            <div class="fw-bold text-truncate" id="txtNama" style="font-size: 0.95rem;">User</div>
+            <div class="text-muted text-truncate" style="font-size: 0.7rem;" id="txtSekolah">Sekolah</div>
+        </div>
+        <div class="col" style="align-items: flex-end;">
+            <span id="txtRole" class="badge bg-rev mb-1">ROLE</span>
+            <small onclick="doLogout()" style="color: var(--primary); font-weight: bold; font-size: 0.65rem; cursor: pointer;"><i class="bi bi-box-arrow-right"></i> KELUAR</small>
+        </div>
+    </div>
+
+    <div id="panel-guru" class="hidden">
+        <div class="card dash-stat">
+            <small style="opacity: 0.8; font-weight: 600; font-size: 0.7rem;">CAPAIAN KINERJA</small>
+            <div class="flex between">
+                <h1 style="font-size: 2.2rem; margin: 0;" id="g-persen">0%</h1>
+                <i class="bi bi-bar-chart-fill" style="font-size: 2rem; opacity: 0.3;"></i>
+            </div>
+            <div class="progress-wrap"><div id="g-bar" class="progress-bar" style="width: 0%;"></div></div>
+            <small style="font-size: 0.7rem;"><span id="g-target" style="background:white; color:var(--primary); padding:2px 6px; border-radius:8px; font-weight:bold; margin-right:4px;">0/0</span> Selesai</small>
+        </div>
+
+        <div class="nav-pills">
+            <div class="nav-item active" onclick="switchTab('g-tab', 0, this)">Tugas</div>
+            <div class="nav-item" onclick="switchTab('g-tab', 1, this)">Implemen</div>
+            <div class="nav-item" onclick="switchTab('g-tab', 2, this)">Inovasi</div>
+        </div>
+
+        <div id="g-tab-0">
+            <div id="list-tugas"></div>
+            <div class="mt-3 mb-2 small text-muted fw-bold" style="font-size: 0.65rem; letter-spacing:1px;">RIWAYAT LAINNYA</div>
+            <div id="list-tugas-extra"></div>
+        </div>
+        
+        <div id="g-tab-1" class="hidden">
+            <div class="card">
+                <h5 class="mb-3 fw-bold">Lapor Implementasi</h5>
+                <form onsubmit="submitDev(event, 'Implementasi KKG', 'form-imp')">
+                    <label class="text-muted fw-bold" style="font-size: 0.65rem;">PROGRAM KKG</label>
+                    <select id="sel-prog-kkg"></select>
+                    <input id="imp-nama" placeholder="Nama Kegiatan (Cth: Praktik Berdiferensiasi)" required>
+                    <input id="imp-kelas" placeholder="Kelas / Sasaran (Cth: Kelas 4)" required>
+                    
+                    <label class="text-muted fw-bold" style="font-size: 0.65rem; margin-top:5px; display:block;">BUKTI DOKUMENTASI</label>
+                    <div class="switch-box" id="sw-imp">
+                         <div class="switch-opt active" onclick="setMode('sw-imp', 'link')">🔗 Link</div>
+                         <div class="switch-opt" onclick="setMode('sw-imp', 'upload')">📂 Upload</div>
+                    </div>
+                    <div class="inp-link"><input id="imp-link" type="url" placeholder="Tautan Drive/Youtube..." ></div>
+                    <div class="inp-upload hidden">
+                         <div class="file-area">
+                             <input type="file" id="file-imp" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;" onchange="prevFile('file-imp')">
+                             <div class="flab text-muted" id="lab-file-imp" style="font-size:0.8rem;"><i class="bi bi-cloud-upload fs-4 d-block mb-1"></i>Pilih file (Max 5MB)</div>
+                         </div>
+                    </div>
+
+                    <textarea id="imp-desc" rows="2" placeholder="Deskripsi Singkat Pelaksanaan..." required></textarea>
+                    <button class="btn btn-primary" id="btn-imp">KIRIM LAPORAN</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="g-tab-2" class="hidden">
+            <div class="card">
+                <h5 class="mb-3 fw-bold">Karya Inovasi</h5>
+                <form onsubmit="submitDev(event, 'Karya Inovasi', 'form-ino')">
+                    <input id="ino-nama" placeholder="Judul Karya Inovasi" required>
+                    
+                    <label class="text-muted fw-bold" style="font-size: 0.65rem; display:block;">FILE KARYA</label>
+                    <div class="switch-box" id="sw-ino">
+                         <div class="switch-opt active" onclick="setMode('sw-ino', 'link')">🔗 Link</div>
+                         <div class="switch-opt" onclick="setMode('sw-ino', 'upload')">📂 Upload</div>
+                    </div>
+                    <div class="inp-link"><input id="ino-link" type="url" placeholder="Tautan Drive/Youtube..." ></div>
+                    <div class="inp-upload hidden">
+                         <div class="file-area">
+                             <input type="file" id="file-ino" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;" onchange="prevFile('file-ino')">
+                             <div class="flab text-muted" id="lab-file-ino" style="font-size:0.8rem;"><i class="bi bi-cloud-upload fs-4 d-block mb-1"></i>Pilih file (Max 5MB)</div>
+                         </div>
+                    </div>
+
+                    <textarea id="ino-desc" rows="2" placeholder="Penjelasan Inovasi..." required></textarea>
+                    <button class="btn btn-primary" id="btn-ino" style="background: var(--success);">KIRIM KARYA</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="panel-ks" class="hidden">
+        <div class="card p-3">
+            <div class="flex between">
+                <div>
+                    <div class="text-muted fw-bold" style="font-size: 0.65rem;">CAPAIAN SEKOLAH</div>
+                    <h1 class="text-primary mb-0" style="font-size:2rem; line-height:1;" id="ks-persen">0%</h1>
+                </div>
+                <div style="background:#FEE4C1; padding:10px 15px; border-radius:12px; text-align:center;">
+                    <h2 class="mb-0" style="color:#744C00; font-size:1.5rem; line-height:1;" id="ks-total">0</h2>
+                    <small style="color:#744C00; font-weight:bold; font-size:0.6rem;">LAPORAN</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-3 mb-3">
+            <div class="grid-btn" style="border-color:#ffc107; color:#b88804;" onclick="openModal('mdl-pres')"><i class="bi bi-trophy fs-5 d-block mb-1"></i>PRESTASI</div>
+            <div class="grid-btn" style="border-color:#2e7d32; color:#2e7d32;" onclick="openModal('mdl-bias')"><i class="bi bi-calendar-check fs-5 d-block mb-1"></i>BIAS</div>
+            <div class="grid-btn" style="border-color:#1976d2; color:#1976d2;" onclick="openModal('mdl-event')"><i class="bi bi-balloon fs-5 d-block mb-1"></i>EVENT</div>
+        </div>
+
+        <div class="nav-pills mb-2">
+            <div class="nav-item active" onclick="switchTab('ks-tab', 0, this)">Rapor Guru</div>
+            <div class="nav-item" onclick="switchTab('ks-tab', 1, this)">Riwayat</div>
+        </div>
+        <div style="text-align:right; margin-bottom:8px;">
+            <button class="btn btn-sm" onclick="loadKS(true)" style="background:#eee; font-size:0.7rem;"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+        </div>
+
+        <div id="ks-tab-0">
+            <div class="card" style="padding:0; overflow:hidden;"><div id="list-guru-ks"></div></div>
+        </div>
+        <div id="ks-tab-1" class="hidden">
+            <div id="list-riwayat-ks"></div>
+        </div>
+    </div>
+</div>
+
+<div id="mdl-upload" class="modal-overlay">
+    <div class="modal-box">
+        <h5 class="mb-3 fw-bold">Kirim Tugas / Revisi</h5>
+        <form onsubmit="prosesKirimTugas(event)">
+            <input type="hidden" id="tugas-idx">
+            <input type="hidden" id="tugas-jenis">
+            
+            <input id="t-judul" readonly style="font-weight:bold; background:#f5f5f5; color:#555; border:none; padding:12px; margin-bottom:12px;">
+            
+            <div class="switch-box" id="sw-rutin">
+                 <div class="switch-opt active" onclick="setMode('sw-rutin', 'link')">🔗 Link Drive</div>
+                 <div class="switch-opt" onclick="setMode('sw-rutin', 'upload')">📂 Upload File</div>
+            </div>
+            <div class="inp-link"><input id="t-link" type="url" placeholder="Tempel Link Drive/Youtube..." style="margin-bottom:10px;"></div>
+            <div class="inp-upload hidden">
+                 <div class="file-area" style="padding:20px;">
+                     <input type="file" id="file-rutin" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;" onchange="prevFile('file-rutin')">
+                     <div class="flab text-muted" id="lab-file-rutin" style="font-size:0.8rem;"><i class="bi bi-cloud-upload fs-3 d-block"></i>Pilih file (Max 5MB)</div>
+                 </div>
+            </div>
+            
+            <textarea id="t-cat" rows="3" placeholder="Tambahkan Catatan (Wajib)..." required style="margin-bottom:5px;"></textarea>
+            
+            <div class="flex" style="gap:8px; margin-top:10px;">
+                <button type="button" onclick="closeModal('mdl-upload')" class="btn" style="background:#eee; flex:1; font-size:0.8rem;">Batal</button>
+                <button id="btn-rutin" class="btn btn-primary" style="flex:2; font-size:0.8rem;"><i class="bi bi-send-fill me-1"></i> Kirim Data</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="mdl-pres" class="modal-overlay">
+    <div class="modal-box">
+        <h5 class="mb-3 text-warning fw-bold"><i class="bi bi-trophy-fill me-1"></i> Prestasi</h5>
+        <form onsubmit="submitGeneric(event, 'Laporan Prestasi', 'mdl-pres', 'sw-pres', 'pres')">
+            <select class="sel-sekolah" name="sekolah"></select>
+            <input name="nama_siswa" placeholder="Nama Siswa" required>
+            <div class="flex" style="gap:6px">
+                <input name="cabang" placeholder="Cabang Lomba" required>
+                <select name="juara" required><option value="" disabled selected>Juara</option><option value="Juara 1">Juara 1</option><option value="Juara 2">Juara 2</option><option value="Juara 3">Juara 3</option></select>
+            </div>
+            <input name="penyelenggara" placeholder="Penyelenggara" required>
+            <div class="flex" style="gap:6px">
+                 <select name="tingkat"><option value="Kecamatan">Kecamatan</option><option value="Kabupaten">Kabupaten</option><option value="Provinsi">Provinsi</option><option value="Nasional">Nasional</option></select>
+                 <input name="no_piagam" placeholder="No Piagam" required>
+            </div>
+            
+            <label class="text-muted fw-bold" style="font-size:0.65rem;">BUKTI PIAGAM</label>
+            <div class="switch-box" id="sw-pres"><div class="switch-opt active" onclick="setMode('sw-pres', 'link')">Link</div><div class="switch-opt" onclick="setMode('sw-pres', 'upload')">Upload</div></div>
+            <div class="inp-link"><input id="link-pres" name="link_video" type="url" placeholder="Link..."></div>
+            <div class="inp-upload hidden"><div class="file-area"><input type="file" id="file-pres" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;" onchange="prevFile('file-pres')"><div class="flab text-muted" id="lab-file-pres" style="font-size:0.75rem;">Pilih File</div></div></div>
+
+            <div class="flex" style="gap:6px;"><button type="button" onclick="closeModal('mdl-pres')" class="btn w-100" style="background:#eee;">Batal</button><button class="btn btn-primary w-100" id="btn-pres" style="background:var(--warning)">Simpan</button></div>
+        </form>
+    </div>
+</div>
+
+<div id="mdl-bias" class="modal-overlay">
+    <div class="modal-box">
+        <h5 class="mb-3 text-success fw-bold"><i class="bi bi-calendar-check-fill me-1"></i> Pembiasaan</h5>
+        <form onsubmit="submitGeneric(event, 'Laporan Pembiasaan', 'mdl-bias', 'sw-bias', 'bias')">
+            <select class="sel-sekolah" name="sekolah"></select>
+            <input name="a" placeholder="Nama Program" required>
+            <div class="flex" style="gap:6px"><select name="freq" required><option value="Harian">Harian</option><option value="Mingguan">Mingguan</option><option value="Bulanan">Bulanan</option></select><input name="karakter" placeholder="Karakter" required></div>
+            
+            <label class="text-muted fw-bold" style="font-size:0.65rem;">FOTO KEGIATAN</label>
+            <div class="switch-box" id="sw-bias"><div class="switch-opt active" onclick="setMode('sw-bias', 'link')">Link</div><div class="switch-opt" onclick="setMode('sw-bias', 'upload')">Upload</div></div>
+            <div class="inp-link"><input id="link-bias" name="link_video" placeholder="Link..."></div>
+            <div class="inp-upload hidden"><div class="file-area"><input type="file" id="file-bias" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;" onchange="prevFile('file-bias')"><div class="flab text-muted" id="lab-file-bias" style="font-size:0.75rem;">Pilih File</div></div></div>
+
+            <textarea name="desc" placeholder="Keterangan..." rows="2" required></textarea>
+            <div class="flex" style="gap:6px;"><button type="button" onclick="closeModal('mdl-bias')" class="btn w-100" style="background:#eee;">Batal</button><button class="btn btn-primary w-100" id="btn-bias" style="background:var(--success)">Simpan</button></div>
+        </form>
+    </div>
+</div>
+
+<div id="mdl-event" class="modal-overlay">
+    <div class="modal-box">
+        <h5 class="mb-3 text-primary fw-bold"><i class="bi bi-balloon-fill me-1"></i> Event</h5>
+        <form onsubmit="submitGeneric(event, 'Laporan Event', 'mdl-event', 'sw-event', 'event')">
+            <select class="sel-sekolah" name="sekolah"></select>
+            <input name="a" placeholder="Nama Event" required>
+            <div class="flex" style="gap:6px"><input name="b" type="date" required><select name="scale" required><option value="Internal">Internal</option><option value="Orang Tua">Orang Tua</option><option value="Umum">Umum</option></select></div>
+            
+            <label class="text-muted fw-bold" style="font-size:0.65rem;">DOKUMENTASI</label>
+            <div class="switch-box" id="sw-event"><div class="switch-opt active" onclick="setMode('sw-event', 'link')">Link</div><div class="switch-opt" onclick="setMode('sw-event', 'upload')">Upload</div></div>
+            <div class="inp-link"><input id="link-event" name="link_video" placeholder="Link..."></div>
+            <div class="inp-upload hidden"><div class="file-area"><input type="file" id="file-event" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;" onchange="prevFile('file-event')"><div class="flab text-muted" id="lab-file-event" style="font-size:0.75rem;">Pilih File</div></div></div>
+
+            <textarea name="desc" placeholder="Dampak..." rows="2" required></textarea>
+            <div class="flex" style="gap:6px;"><button type="button" onclick="closeModal('mdl-event')" class="btn w-100" style="background:#eee;">Batal</button><button class="btn btn-primary w-100" id="btn-event">Simpan</button></div>
+        </form>
+    </div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyk0nTT7ZTkH_5BOnjcpS8trcH_-gPtKgzy0PC6K5J93xUIBTUdx4gZ9VkvH2le3ftE/exec";
+const $ = id => document.getElementById(id);
+const ls = { get: k => JSON.parse(localStorage.getItem(k)||'null'), set: (k,v) => localStorage.setItem(k, JSON.stringify(v)) };
+const show = (id, s=true) => $(id).classList.toggle('hidden', !s);
+const toast = msg => { const t = $('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); };
+const loading = s => $('loader').style.display = s ? 'flex' : 'none';
+
+let USER = ls.get('LMS_USER') || {};
+let GLOBAL_TASKS_MAP = {};
+let GLOBAL_ALL_TASKS = []; 
+
+// --- 1. INSTANT LOGIN (OPTIMISTIC UI) ---
+window.onload = () => {
+    loading(false);
+    if(USER && USER.pin && USER.role) {
+        show('view-login', false); 
+        show('view-main', true);
+        
+        $('txtNama').innerText = USER.nama; 
+        $('txtSekolah').innerText = USER.sekolah;
+        $('txtRole').innerText = USER.role === 'KS' ? 'Kepala Sekolah' : 'Guru Kelas';
+        $('txtRole').className = `badge ${USER.role === 'KS' ? 'bg-wait' : 'bg-ok'} mb-1`;
+        
+        if(USER.sekolah) {
+            document.querySelectorAll('.sel-sekolah').forEach(s => {
+                s.innerHTML = USER.sekolah.split(',').map(x=>`<option value="${x.trim()}">${x.trim()}</option>`).join('');
+            });
+        }
+        
+        if(USER.role === 'KS') { show('panel-ks'); loadKS(); } 
+        else { show('panel-guru'); loadGuru(); }
+    }
+};
+
+async function req(action, data={}) {
+    try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action, ...data }) });
+        return await res.json();
+    } catch(e) { toast("Gagal koneksi server"); return null; }
+}
+
+/* --- 2. UPLOAD LOGIC --- */
+function setMode(wrapperId, mode) {
+    const w = $(wrapperId).parentNode;
+    const box = $(wrapperId);
+    box.querySelectorAll('.switch-opt').forEach(el => el.classList.remove('active'));
+    box.children[mode === 'link' ? 0 : 1].classList.add('active');
+    
+    const linkDiv = w.querySelector('.inp-link');
+    const upDiv = w.querySelector('.inp-upload');
+    if(mode === 'link') { linkDiv.classList.remove('hidden'); upDiv.classList.add('hidden'); }
+    else { linkDiv.classList.add('hidden'); upDiv.classList.remove('hidden'); }
+    w.dataset.mode = mode;
+}
+
+function prevFile(id) {
+    const f = $(id).files[0];
+    if(f) {
+        if(f.size > 5*1024*1024) { alert("Max 5MB!"); $(id).value=""; return; }
+        $('lab-'+id).innerHTML = `✅ ${f.name} <br><small>(${(f.size/1024).toFixed(0)}KB)</small>`;
+    }
+}
+
+async function processLinkOrUpload(fileId, linkId, contextName, wrapperId, btnId) {
+    const wrapper = $(wrapperId).parentNode;
+    const mode = wrapper.dataset.mode || 'link'; 
+    const btn = $(btnId);
+
+    if (mode === 'link') {
+        return $(linkId).value || "-";
+    } else {
+        const file = $(fileId).files[0];
+        if (!file) {
+            if(!confirm("Anda tidak memilih file. Lanjutkan tanpa lampiran?")) return false;
+            return "-";
+        }
+        
+        btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" style="width:12px;height:12px;border-width:2px;"></span>Upload...';
+        
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const raw = e.target.result.split(',')[1];
+                    const res = await req("uploadFile", { fileName: `${USER.nama}_${contextName}_${file.name}`, mimeType: file.type, fileData: raw });
+                    if(res && res.sukses) { resolve(res.fileUrl); }
+                    else { alert("Gagal Upload: " + res.msg); resolve(false); }
+                } catch(err) { alert("Error Network"); resolve(false); }
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+}
+
+/* --- 3. LOGIN & NAVIGATION --- */
+async function handleLogin(auto=false) {
+    const pin = $('inputPIN').value;
+    if(!pin) return toast("Isi PIN dulu!");
+    if(!auto) loading(true);
+
+    const r = await req("login", { pin });
+    loading(false);
+
+    if(r && r.sukses) {
+        if(r.role === 'ADMIN' || r.role === 'PENILAI') return toast("Gunakan Web Khusus Admin!");
+        USER = { ...r, pin }; ls.set('LMS_USER', USER);
+        show('view-login', false); show('view-main', true);
+        $('txtNama').innerText = r.nama; $('txtSekolah').innerText = r.sekolah;
+        $('txtRole').innerText = r.role === 'KS' ? 'Kepala Sekolah' : 'Guru Kelas';
+        $('txtRole').className = `badge ${r.role === 'KS' ? 'bg-wait' : 'bg-ok'} mb-1`;
+        document.querySelectorAll('.sel-sekolah').forEach(s => {
+            s.innerHTML = r.sekolah.split(',').map(x=>`<option value="${x.trim()}">${x.trim()}</option>`).join('');
+        });
+        if(r.role === 'KS') { show('panel-ks'); loadKS(); }
+        else { show('panel-guru'); loadGuru(); }
+    } else {
+        if(auto) { ls.set('LMS_USER', null); show('view-login'); }
+        else toast(r?.msg || "PIN Salah");
+    }
+}
+
+function doLogout() { if(confirm("Keluar aplikasi?")) { localStorage.clear(); location.reload(); } }
+function switchTab(prefix, idx, el) {
+    [0,1,2].forEach(i => { let pane=$(prefix+'-'+i); if(pane) show(prefix+'-'+i, i===idx); });
+    el.parentNode.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active')); el.classList.add('active');
+}
+
+/* --- LOGIKA STATUS CERDAS --- */
+function getSmartBadge(status, feedback) {
+    if (status === 'Menunggu') return `<span class="badge bg-wait"><i class="bi bi-hourglass-split me-1"></i>MENUNGGU</span>`;
+    if (status === 'Revisi') return `<span class="badge bg-rev"><i class="bi bi-exclamation-triangle-fill me-1"></i>REVISI</span>`;
+    
+    let grade = "";
+    if (feedback && feedback !== '-') {
+        let match = feedback.match(/\[(?:Nilai|Kualitas):\s*([A-E])\]/i);
+        if (match) grade = match[1].toUpperCase();
+    }
+
+    if (grade === 'A') return `<span class="badge" style="background:#ffecb3; color:#f57f17; border:1px solid #ffe082;"><i class="bi bi-trophy-fill me-1"></i>DITERIMA (A)</span>`;
+    if (grade === 'B') return `<span class="badge" style="background:#e3f2fd; color:#1565c0; border:1px solid #bbdefb;"><i class="bi bi-star-fill me-1"></i>DITERIMA (B)</span>`;
+    if (grade === 'C') return `<span class="badge bg-ok"><i class="bi bi-check-circle-fill me-1"></i>DITERIMA (C)</span>`;
+    
+    return `<span class="badge bg-ok"><i class="bi bi-check-circle-fill me-1"></i>DITERIMA</span>`;
+}
+
+function getCleanFeedback(feedback) {
+    if (!feedback || feedback === '-') return '';
+    return feedback.replace(/\[(?:Nilai|Kualitas):\s*[A-E]\]\s*/i, '').trim();
+}
+
+/* --- 4. GURU DASHBOARD --- */
+async function loadGuru() { 
+    loading(true); const d = await req("getDashboardGuru", { pin: USER.pin }); loading(false); 
+    if(d) { GLOBAL_ALL_TASKS = d.tugas; renderGuru(d); }
+}
+
+function renderGuru(d) {
+    GLOBAL_TASKS_MAP = {}; d.tugas.forEach(t => { GLOBAL_TASKS_MAP[t.judul.trim()] = t; });
+    let done = 0, acc = 0;
+    
+    const html = d.agenda.map((a, i) => {
+        const judul = a.kegiatan.trim(), task = GLOBAL_TASKS_MAP[judul], status = task ? task.status : null;
+        if(status === 'Diterima' || status === 'Menunggu' || status === 'Revisi') done++;
+        if(status === 'Diterima') acc++;
+        
+        let act = `<button onclick="openUpload('${judul}')" class="btn btn-primary btn-sm"><i class="bi bi-cloud-arrow-up me-1"></i> KERJAKAN</button>`;
+        let feedBox = "";
+        
+        if(status) {
+            act = getSmartBadge(status, task.feedback);
+            if(status === 'Revisi') { 
+                act += `<br><small onclick="openRevisi('${task.id}')" style="color:red;cursor:pointer;font-weight:bold;display:inline-block;margin-top:4px;font-size:0.65rem;"><i class="bi bi-pencil-square"></i> PERBAIKI</small>`;
+            }
+            let cleanFeed = getCleanFeedback(task.feedback);
+            if(cleanFeed && cleanFeed !== '') {
+                let fStyle = status === 'Revisi' ? 'border:1px dashed red;' : 'border:1px dashed #4CAF50; background:#E8F5E9; color:#2E7D32;';
+                let fIcon = status === 'Revisi' ? 'bi-exclamation-triangle-fill' : 'bi-info-circle-fill';
+                feedBox = `<div class="mt-2 p-2 rounded" style="${fStyle} font-size:0.7rem;"><i class="bi ${fIcon} me-1"></i> <b>Catatan:</b> ${cleanFeed}</div>`;
+            }
+        }
+        return `<div class="card mb-2" style="padding:12px; border-left: 4px solid var(--primary);"><div class="flex between align-items-start"><div><div class="fw-bold" style="font-size:0.85rem;line-height:1.2;margin-bottom:4px;">${judul}</div><div class="text-muted" style="font-size:0.65rem"><i class="bi bi-calendar-event me-1"></i>Tenggat: ${a.tanggal}</div></div><div style="text-align:right;flex-shrink:0;margin-left:10px;">${act}</div></div>${feedBox}</div>`;
+    }).join('');
+    $('list-tugas').innerHTML = html;
+    
+    const agendaTitles = d.agenda.map(a => a.kegiatan.trim());
+    const extraTasks = d.tugas.filter(t => !agendaTitles.includes(t.judul.trim()));
+    
+    $('list-tugas-extra').innerHTML = extraTasks.length > 0 ? extraTasks.map(t => {
+        let badgeStr = getSmartBadge(t.status, t.feedback);
+        let btnRev = t.status==='Revisi' ? `<button onclick="openRevisi('${t.id}')" class="btn btn-sm btn-warning py-0 px-2 mt-1 text-white" style="font-size:0.6rem;"><i class="bi bi-pencil-square"></i> PERBAIKI</button>` : '';
+        let cleanFeed = getCleanFeedback(t.feedback);
+        let feedBox = (cleanFeed && cleanFeed !== '') ? `<div class="mt-2 ${t.status==='Revisi'?'text-danger':'text-success'} border-top pt-1 fw-bold" style="font-size:0.65rem;"><i class="bi ${t.status==='Revisi'?'bi-exclamation-triangle-fill':'bi-info-circle-fill'} me-1"></i> ${cleanFeed}</div>` : '';
+
+        return `<div class="card mb-2 p-3" style="border-left:4px solid #555;">
+            <div class="flex between align-items-start">
+                <div><div class="fw-bold" style="font-size:0.8rem;line-height:1.2;margin-bottom:4px;">${t.judul}</div><div class="text-muted" style="font-size:0.65rem;">${t.jenis||'Umum'}</div></div>
+                <div class="text-end" style="flex-shrink:0;margin-left:10px;">${badgeStr}<br>${btnRev}</div>
+            </div>
+            ${feedBox}
+        </div>`;
+    }).join('') : "<div class='text-center text-muted p-3' style='font-size:0.75rem;'>Belum ada riwayat lain</div>";
+    
+    $('sel-prog-kkg').innerHTML = d.agenda.map(a => `<option>${a.kegiatan}</option>`).join('');
+    let target = d.agenda.length, pct = target > 0 ? Math.min(100, Math.round((acc/target)*100)) : 0;
+    $('g-persen').innerText = pct + "%"; $('g-bar').style.width = pct + "%"; $('g-target').innerText = `${acc}/${target}`;
+}
+
+/* --- 5. KS DASHBOARD --- */
+async function loadKS(force=false) { 
+    loading(true); 
+    const [ds, dp] = await Promise.all([ req("getDataKS", { sekolah: USER.sekolah }), req("getDashboardGuru", { pin: USER.pin }) ]); 
+    loading(false); 
+    if(ds) renderKS(ds); 
+    if(dp) { GLOBAL_ALL_TASKS = dp.tugas; renderHistoryKS(dp); }
+}
+
+function renderKS(d) {
+    let guruMap = {};
+    if (d.master_guru) d.master_guru.forEach(n => guruMap[n] = { nama: n, poin: 0, tugas: 0 });
+    if (d.data_tugas) d.data_tugas.forEach(x => { if(guruMap[x.nama]) { if(x.status==='Diterima') { guruMap[x.nama].poin+=x.skor; guruMap[x.nama].tugas++; } } else { guruMap[x.nama] = { nama:x.nama, poin:(x.status==='Diterima'?x.skor:0), tugas:(x.status==='Diterima'?1:0) }; } });
+    let list = Object.values(guruMap).sort((a,b) => b.poin - a.poin);
+    $('ks-total').innerText = d.data_tugas ? d.data_tugas.length : 0;
+    $('list-guru-ks').innerHTML = list.length===0 ? "<div class='p-3 text-center text-muted' style='font-size:0.8rem;'>Belum ada data guru.</div>" : list.map(g => {
+        let pct = Math.min(100, g.tugas * 10), color = g.tugas===0 ? '#B71C1C' : (pct>=80 ? '#2e7d32' : '#ed6c02'), txt = g.tugas===0 ? 'BELUM SETOR' : `${g.tugas} Tugas`;
+        return `<div style="padding:10px 12px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><div style="flex:1"><div class="fw-bold" style="font-size:0.8rem;"><i class="bi bi-person me-1"></i>${g.nama}</div><span style="font-size:0.65rem; color:${color}">${txt}</span></div><div style="display:flex; align-items:center; gap:8px;"><div style="width:50px; height:5px; background:#eee; border-radius:4px;"><div style="width:${pct}%; height:100%; background:${color}; border-radius:4px;"></div></div><span style="font-size:0.75rem; color:${color}; font-weight:bold;">${g.poin} <i class="bi bi-star-fill text-warning"></i></span></div></div>`;
+    }).join('');
+}
+
+function renderHistoryKS(dp) { 
+    $('list-riwayat-ks').innerHTML = dp&&dp.tugas.length>0 ? dp.tugas.map(r => {
+        let badgeStr = getSmartBadge(r.status, r.feedback);
+        let btnRev = r.status==='Revisi' ? `<button onclick="openRevisi('${r.id}')" class="btn btn-sm btn-warning py-0 px-2 mt-1 text-white" style="font-size:0.6rem;"><i class="bi bi-pencil-square"></i> PERBAIKI</button>` : '';
+        let cleanFeed = getCleanFeedback(r.feedback);
+        let feedBox = (cleanFeed && cleanFeed !== '') ? `<div class="mt-2 ${r.status==='Revisi'?'text-danger':'text-success'} fw-bold border-top pt-1" style="font-size:0.65rem;"><i class="bi ${r.status==='Revisi'?'bi-exclamation-triangle-fill':'bi-info-circle-fill'} me-1"></i> ${cleanFeed}</div>` : '';
+
+        return `<div class="card mb-2" style="padding:12px;">
+            <div class="flex between align-items-start">
+                <div><div class="fw-bold" style="font-size:0.8rem;line-height:1.2;">${r.judul}</div></div>
+                <div class="text-end" style="flex-shrink:0;margin-left:10px;">${badgeStr}<br>${btnRev}</div>
+            </div>
+            ${feedBox}
+        </div>`
+    }).join('') : "<div class='p-3 text-center text-muted' style='font-size:0.8rem;'>Belum ada riwayat.</div>"; 
+}
+
+/* --- 6. ACTION & SUBMIT --- */
+function openModal(id) { $(id).style.display = 'flex'; }
+function closeModal(id) { $(id).style.display = 'none'; }
+
+function openUpload(judul) { 
+    $('mdl-upload').querySelector('form').reset(); 
+    $('t-judul').value = judul; 
+    if(!$('tugas-jenis')) $('mdl-upload').querySelector('form').insertAdjacentHTML('afterbegin', '<input type="hidden" id="tugas-jenis">');
+    $('tugas-idx').value = ""; 
+    $('tugas-jenis').value = "Kegiatan Gugus"; 
+    setMode('sw-rutin', 'link'); 
+    $('btn-rutin').disabled = false; $('btn-rutin').innerHTML = '<i class="bi bi-send-fill me-1"></i> Kirim'; 
+    $('lab-file-rutin').innerHTML = '<i class="bi bi-cloud-upload fs-3 d-block"></i>Pilih file (Max 5MB)'; 
+    openModal('mdl-upload'); 
+}
+
+function openRevisi(id) {
+    let t = GLOBAL_ALL_TASKS.find(x => x.id === id);
+    if(!t) { alert("Data tidak ditemukan!"); return; }
+
+    $('mdl-upload').querySelector('form').reset(); 
+    $('t-judul').value = t.judul; 
+    if(!$('tugas-jenis')) $('mdl-upload').querySelector('form').insertAdjacentHTML('afterbegin', '<input type="hidden" id="tugas-jenis">');
+    $('tugas-idx').value = t.id; 
+    $('tugas-jenis').value = t.jenis; 
+    
+    setMode('sw-rutin', 'link'); 
+    $('btn-rutin').disabled = false; $('btn-rutin').innerHTML = '<i class="bi bi-send-check-fill me-1"></i> Kirim Revisi'; 
+    $('lab-file-rutin').innerHTML = '<i class="bi bi-cloud-upload fs-3 d-block"></i>Pilih file (Max 5MB)'; 
+
+    if(t.link && t.link !== '-') {
+        $('t-link').value = t.link;
+        toast(t.link.includes('drive') ? "Mode Edit: Memuat file sebelumnya" : "Mode Edit: Memuat link sebelumnya");
+    }
+    
+    $('t-cat').value = t.catatan !== '-' ? t.catatan : ''; 
+    openModal('mdl-upload'); 
+}
+
+async function prosesKirimTugas(e) {
+    e.preventDefault();
+    const link = await processLinkOrUpload('file-rutin', 't-link', $('t-judul').value, 'sw-rutin', 'btn-rutin');
+    if(link === false) { $('btn-rutin').disabled=false; $('btn-rutin').innerHTML='<i class="bi bi-send-fill me-1"></i> Kirim'; return; }
+    
+    let isRevisi = $('tugas-idx').value !== "";
+    let jenisLaporan = $('tugas-jenis').value || "Kegiatan Gugus";
+
+    await req("simpanTugas", { 
+        id_tugas: $('tugas-idx').value, pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, 
+        jenis_laporan: jenisLaporan, judul_dokumen: $('t-judul').value, link_video: link, catatan: $('t-cat').value 
+    });
+    
+    closeModal('mdl-upload'); toast(isRevisi ? "Revisi berhasil dikirim!" : "Tugas terkirim!"); 
+    $('btn-rutin').disabled=false; $('btn-rutin').innerHTML='<i class="bi bi-send-fill me-1"></i> Kirim'; 
+    if(USER.role === 'KS') loadKS(true); else loadGuru();
+}
+
+async function submitDev(e, jenis, formId) {
+    e.preventDefault();
+    const isImp=jenis.includes('Implementasi'), nama=$(isImp?'imp-nama':'ino-nama').value, btnId = isImp ? 'btn-imp' : 'btn-ino';
+    const link = await processLinkOrUpload(isImp?'file-imp':'file-ino', isImp?'imp-link':'ino-link', nama, isImp?'sw-imp':'sw-ino', btnId);
+    if(link === false) { $(btnId).disabled=false; $(btnId).innerHTML=isImp?"KIRIM LAPORAN":"KIRIM KARYA"; return; }
+
+    const extra=isImp?`[PROG: ${$('sel-prog-kkg').value}] [KELAS: ${$('imp-kelas').value}] `:'';
+    await req("simpanTugas", { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, jenis_laporan: jenis, judul_dokumen: (isImp?"IMPL: ":"INOV: ")+nama, link_video: link, catatan: extra + $(isImp?'imp-desc':'ino-desc').value });
+    toast("Berhasil disimpan!"); $(isImp?'imp-nama':'ino-nama').value=""; $(btnId).disabled=false; $(btnId).innerHTML=isImp?"KIRIM LAPORAN":"KIRIM KARYA"; loadGuru();
+}
+
+async function submitGeneric(e, jenis, modalId, wrapperId, prefix) {
+    e.preventDefault(); 
+    const btnId = 'btn-'+prefix;
+    const fd = new FormData(e.target); const obj = Object.fromEntries(fd.entries());
+    let judul = jenis.toUpperCase(), catatan = "";
+    if(jenis === 'Laporan Prestasi') { judul = "PRESTASI: " + obj.cabang.toUpperCase(); catatan = `[SISWA: ${obj.nama_siswa}] [JUARA: ${obj.juara}] [TINGKAT: ${obj.tingkat}] [NO: ${obj.no_piagam}] [OLEH: ${obj.penyelenggara}]`; } 
+    else if(jenis === 'Laporan Pembiasaan') { judul = "PEMBIASAAN: " + obj.a; catatan = `[FREQ: ${obj.freq}] [KARAKTER: ${obj.karakter}] ${obj.desc}`; } 
+    else { judul = "EVENT: " + obj.a; catatan = `[SKALA: ${obj.scale}] [TGL: ${obj.b}] ${obj.desc}`; }
+    
+    const link = await processLinkOrUpload('file-'+prefix, 'link-'+prefix, judul, wrapperId, btnId);
+    if(link === false) { $(btnId).disabled=false; $(btnId).innerHTML="SIMPAN DATA"; return; }
+
+    await req("simpanTugas", { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: obj.sekolah, jenis_laporan: jenis, judul_dokumen: judul, link_video: link, catatan: catatan });
+    closeModal(modalId); toast("Data tersimpan!"); $(btnId).disabled=false; $(btnId).innerHTML="SIMPAN DATA"; loadKS(true);
+}
+</script>
+</body>
+</html>
