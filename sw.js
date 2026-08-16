@@ -1,5 +1,5 @@
 // Nama cache
-const CACHE_NAME = 'nakulaku-ecosystem-v2.4'; // Saya naikkan versinya
+const CACHE_NAME = 'nakulaku-ecosystem-v2.5'; // Saya naikkan versinya
 
 const urlsToCache = [
   './',
