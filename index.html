@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <!-- META TEMA DINAMIS (Hanya 1 Baris) -->
+    <!-- META TEMA DINAMIS (STATUS BAR) -->
     <meta name="theme-color" content="#f8fafc" id="theme-color-meta">
     
     <title>NAKULAKU EKOSISTEM</title>
@@ -59,6 +59,12 @@
             overscroll-behavior-y: none; 
         }
         ::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        /* FIX WARNA NAVIGATION BAR HP BAWAAN */
+        html { background-color: #ffffff; }
+        html.dark { background-color: #1e293b; }
+        
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
 
         /* SKELETON LOADING */
         .skeleton {
@@ -154,7 +160,7 @@
         </aside>
 
         <!-- KONTEN UTAMA -->
-        <main class="flex-1 w-full max-w-4xl solid-sheet pb-20 relative">
+        <main class="flex-1 w-full max-w-4xl solid-sheet pb-24 relative">
             
             <!-- OMNIBOX (Search-First Header) -->
             <div class="sticky top-4 z-40 px-4 md:px-8 pt-2 mb-8">
@@ -173,7 +179,7 @@
                 <div class="mb-8 pl-1">
                     <h2 class="text-3xl md:text-4xl font-semibold text-slate-800 dark:text-slate-100 tracking-tight" id="main-greeting">Halo,</h2>
                     
-                    <!-- KAPSUL IDENTITAS PROFESIONAL (MD3 Context Chip) -->
+                    <!-- KAPSUL IDENTITAS PROFESIONAL -->
                     <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white dark:bg-surfaceDark rounded-full mt-3 text-[11px] font-medium text-slate-600 dark:text-slate-400 shadow-sm border border-slate-200 dark:border-slate-700" id="header-identity-desk">
                         <i data-lucide="briefcase" class="w-3.5 h-3.5 text-slate-400 -mt-0.5"></i> <span>Tamu • Nakulaku Ekosistem</span>
                     </div>
@@ -267,21 +273,21 @@
     </div>
 
     <!-- PILL-SHAPED BOTTOM NAV -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 h-[72px] bg-surfaceLight dark:bg-surfaceDark border-t border-slate-100 dark:border-slate-800 flex items-center justify-around px-2 z-40 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
-        <button onclick="app.refreshData(true)" class="nav-button flex flex-col items-center justify-center w-16 h-full group outline-none">
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 min-h-[72px] bg-surfaceLight dark:bg-surfaceDark border-t border-slate-100 dark:border-slate-800 flex items-center justify-around px-2 z-40 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
+        <button onclick="app.refreshData(true)" class="nav-button flex flex-col items-center justify-center w-16 pt-2 group outline-none">
             <div class="nav-pill w-12 h-8 rounded-full flex items-center justify-center mb-1">
                 <i data-lucide="rotate-cw" class="w-5 h-5 text-slate-600 dark:text-slate-400 group-active:text-slate-900 dark:group-active:text-white transition-colors"></i>
             </div>
             <span class="text-[10px] font-medium text-slate-600 dark:text-slate-400 group-active:text-slate-900 dark:group-active:text-white">Sync</span>
         </button>
-        <button onclick="app.toggleTheme()" class="nav-button flex flex-col items-center justify-center w-16 h-full group outline-none">
+        <button onclick="app.toggleTheme()" class="nav-button flex flex-col items-center justify-center w-16 pt-2 group outline-none">
             <div class="nav-pill w-12 h-8 rounded-full flex items-center justify-center mb-1">
                 <i data-lucide="moon" class="w-5 h-5 text-slate-600 block dark:hidden"></i>
                 <i data-lucide="sun" class="w-5 h-5 hidden dark:block text-slate-400 group-active:text-white"></i>
             </div>
             <span class="text-[10px] font-medium text-slate-600 dark:text-slate-400 group-active:text-slate-900 dark:group-active:text-white">Tema</span>
         </button>
-        <button onclick="app.openModal('feedback-modal')" class="nav-button flex flex-col items-center justify-center w-16 h-full group outline-none">
+        <button onclick="app.openModal('feedback-modal')" class="nav-button flex flex-col items-center justify-center w-16 pt-2 group outline-none">
             <div class="nav-pill w-12 h-8 rounded-full flex items-center justify-center mb-1">
                 <i data-lucide="message-square" class="w-5 h-5 text-slate-600 dark:text-slate-400 group-active:text-slate-900 dark:group-active:text-white transition-colors"></i>
             </div>
@@ -460,7 +466,7 @@
                 localStorage.setItem('theme', isDark ? 'dark' : 'light'); 
                 const metaTheme = document.getElementById('theme-color-meta');
                 if(metaTheme) {
-                    metaTheme.setAttribute('content', isDark ? '#0f172a' : '#f8fafc');
+                    metaTheme.setAttribute('content', isDark ? '#0f172a' : '#ffffff');
                 }
             },
             
