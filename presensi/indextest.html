@@ -1,542 +1,1550 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Presensi Mobile</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <style>
-    /* CSS STYLE UTAMA */
-    :root {
-      --md-primary: #B3261E; --md-on-primary: #FFFFFF;
-      --md-primary-container: #FFDAD6; --md-surface: #FFF8F7;
-      --md-text-main: #201A1A; --md-text-sub: #534341;
-      --shape-card: 24px; --shape-pill: 50px;
-    }
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#B3261E">
+    <title>Presensi Mobile Gugus</title>
     
-    body { background-color: var(--md-surface); font-family: 'Roboto', sans-serif; padding-bottom: 120px; color: var(--md-text-main); overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
-    h1, h2, h3, h4, h5, .fw-google { font-family: 'Google Sans', sans-serif; }
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     
-    /* LOGIN */
-    #login-page { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, var(--md-surface) 0%, var(--md-primary-container) 100%); position: fixed; top: 0; left: 0; width: 100%; z-index: 2000; }
-    .login-card { width: 85%; max-width: 360px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-radius: 28px; padding: 40px 24px; box-shadow: 0 10px 30px rgba(179, 38, 30, 0.1); border: 1px solid white; }
-    .form-control-pin { background: var(--md-surface); border: none; border-bottom: 2px solid #857372; border-radius: 12px 12px 0 0; font-size: 1.8rem; letter-spacing: 12px; color: var(--md-primary); text-align: center; }
-
-    /* HEADER APP */
-    #app-page { display: none; }
-    .header-app { background-color: var(--md-surface); padding: 20px 24px 10px 24px; border-radius: 0 0 32px 32px; }
-    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .profile-section h5 { font-size: 1.4rem; font-weight: 500; margin: 0; }
-    .profile-section .jabatan { font-size: 0.9rem; color: var(--md-text-sub); margin-top: 2px; }
-    .btn-logout-header { background: var(--md-primary-container); border:none; width: 42px; height: 42px; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #410002; }
+    <!-- Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    /* CHIPS INFO */
-    .chip-info { font-size: 0.75rem; font-weight: 500; padding: 6px 14px; border-radius: 16px; display: inline-flex; align-items: center; gap: 6px; }
-    .chip-unit { background: var(--md-primary); color: white; }
-    .chip-time { background: #FCEAE9; color: var(--md-text-sub); border: 1px solid #eee; }
-    #infoBar { background: #FFF2F1; border: 1px solid #FFDAD6; color: #410E0B; border-radius: 16px; padding: 10px 16px; margin-top: 16px; font-size: 0.85rem; display:none; }
-
-    /* CARDS */
-    .card-menu { border: none; border-radius: var(--shape-card); box-shadow: 0 2px 12px rgba(0,0,0,0.03); margin-bottom: 16px; background: white; padding: 16px; }
-    .label-header { font-family: 'Google Sans'; font-weight: 600; font-size: 0.9rem; color: var(--md-primary); margin-bottom: 12px; display: block; }
-    .form-control, .form-select { background-color: #FCEAE9; border: 1px solid transparent; border-radius: 12px; padding: 12px 16px; }
-    .btn-google { background-color: var(--md-primary); color: white; border: none; border-radius: var(--shape-pill); font-family: 'Google Sans'; font-weight: 500; height: 50px; width: 100%; }
-
-    /* MAPS & CAMERA */
-    #mapContainer { display: none; margin-top: 10px; }
-    #map { height: 180px; width: 100%; border-radius: 20px; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    
-    .modal-camera { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 5000; display: none; flex-direction: column; }
-    .camera-view { flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-    #video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-    .camera-controls { height: 120px; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; position: relative; }
-    .btn-shutter { width: 70px; height: 70px; background: white; border-radius: 50%; border: 4px solid rgba(255,255,255,0.3); outline: 3px solid var(--md-primary); cursor: pointer; }
-    .btn-close-camera { position: absolute; top: 20px; right: 20px; color: white; background: rgba(0,0,0,0.5); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); z-index: 5001; }
-    #result-container { display: none; margin-top: 10px; }
-    #photo-preview { width: 100%; height: 250px; object-fit: cover; border-radius: 16px; margin-bottom: 10px; border: 1px solid #eee; }
-
-    /* LIST MONITORING ITEMS */
-    .history-item { padding: 16px; margin-bottom: 12px; background: #FFFFFF; border-radius: 20px; border: 1px solid #F0F0F0; }
-    .badge-status { font-family: 'Google Sans'; font-size: 0.75rem; padding: 6px 12px; border-radius: 8px; font-weight: 600; }
-    
-    /* WARNA BADGE */
-    .bg-hadir { background: #C4EED0; color: #074E23; } 
-    .bg-telat { background: #FFEFBF; color: #765600; } 
-    .bg-luar { background: #FFDAD6; color: #410E0B; } 
-    .bg-izin { background: #D3E3FD; color: #041E49; } 
-    .bg-belum { background: #FFDAD6; color: #410E0B; }
-    
-    /* TOMBOL BUKTI & ACC */
-    .btn-view-foto-pill { background: #FCEAE9; color: #534341; border: none; padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; display: inline-flex; align-items: center; font-weight: 500; text-decoration: none; transition: 0.2s; margin-right: 5px; }
-    
-    /* STYLE KHUSUS TOMBOL ACC/TOLAK */
-    .action-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: none; font-size: 1rem; margin-left: 8px; transition: transform 0.1s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .action-btn:active { transform: scale(0.9); }
-    .btn-acc { background: #C4EED0; color: #074E23; } 
-    .btn-rej { background: #FFDAD6; color: #410E0B; }
-
-    /* NAVIGASI BAWAH */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #FFFFFF; height: 80px; padding: 0 16px 10px 16px; z-index: 1000; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #F0F0F0; box-shadow: 0 -4px 20px rgba(0,0,0,0.02); }
-    .nav-item-c { text-align: center; color: var(--md-text-sub); cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 12px; }
-    .nav-icon-container { width: 64px; height: 32px; border-radius: 16px; display: flex; align-items: center; justify-content: center; transition: 0.3s; margin-bottom: 2px; }
-    .nav-item-c.active .nav-icon-container { background-color: var(--md-primary-container); width: 50px; }
-    .nav-item-c.active i { color: #410E0B; }
-    
-    .loading-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(255,248,246,0.9); backdrop-filter:blur(5px); z-index: 9999; display: flex; flex-direction: column; justify-content:center; align-items:center; display:none; }
-    .submit-wrapper { position: fixed; bottom: 80px; left: 0; width: 100%; padding: 12px 24px; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); border-top: 1px solid #eee; z-index: 990; display: flex; }
-  </style>
+    <style>
+        /* ============================================================
+           MATERIAL DESIGN 3 - LIGHT & DARK MODE
+           ============================================================ */
+        :root {
+            --md-primary: #B3261E;
+            --md-on-primary: #FFFFFF;
+            --md-primary-container: #FFDAD6;
+            --md-on-primary-container: #410002;
+            --md-surface: #FEF7F6;
+            --md-surface-container-lowest: #FFFFFF;
+            --md-surface-container: #F0E9E7;
+            --md-on-surface: #201A1A;
+            --md-on-surface-variant: #534341;
+            --md-outline: #7A5E5B;
+            --md-outline-variant: #D1C4C1;
+            --md-error: #BA1A1A;
+            --md-font-family: 'Roboto', sans-serif;
+            --md-elevation-1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --md-elevation-2: 0 3px 6px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.12);
+            --md-elevation-3: 0 10px 20px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.10);
+            --md-shape-small: 8px;
+            --md-shape-medium: 16px;
+            --md-shape-large: 28px;
+            --md-motion-duration-short: 200ms;
+            --md-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --md-surface: #161111;
+                --md-surface-container-lowest: #100C0C;
+                --md-surface-container: #221D1C;
+                --md-on-surface: #ECE3E0;
+                --md-on-surface-variant: #D1C4C1;
+                --md-primary-container: #3E0800;
+                --md-on-primary-container: #FFDAD6;
+                --md-outline: #948885;
+                --md-outline-variant: #3E3230;
+            }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: var(--md-font-family);
+            background: var(--md-surface);
+            color: var(--md-on-surface);
+            padding-bottom: 100px;
+            overflow-x: hidden;
+            transition: background var(--md-motion-duration-short) var(--md-motion-easing-standard);
+        }
+        
+        /* ============================================================
+           TYPOGRAPHY
+           ============================================================ */
+        .md-headline-small { font-size: 1.5rem; font-weight: 400; line-height: 1.3; letter-spacing: 0; }
+        .md-title-medium { font-size: 1.125rem; font-weight: 500; line-height: 1.4; letter-spacing: 0.15px; }
+        .md-title-small { font-size: 0.875rem; font-weight: 500; line-height: 1.4; letter-spacing: 0.1px; }
+        .md-body-large { font-size: 1rem; font-weight: 400; line-height: 1.5; letter-spacing: 0.15px; }
+        .md-body-medium { font-size: 0.875rem; font-weight: 400; line-height: 1.4; letter-spacing: 0.25px; }
+        .md-body-small { font-size: 0.75rem; font-weight: 400; line-height: 1.4; letter-spacing: 0.4px; }
+        .md-label-medium { font-size: 0.75rem; font-weight: 500; line-height: 1.4; letter-spacing: 0.5px; }
+        
+        /* ============================================================
+           COMPONENTS
+           ============================================================ */
+        .md-card {
+            background: var(--md-surface-container-lowest);
+            border-radius: var(--md-shape-medium);
+            box-shadow: var(--md-elevation-1);
+            padding: 20px;
+            border: 1px solid var(--md-outline-variant);
+        }
+        
+        .md-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 100px;
+            font-family: var(--md-font-family);
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+            cursor: pointer;
+            min-height: 48px;
+            transition: all var(--md-motion-duration-short) var(--md-motion-easing-standard);
+            width: 100%;
+        }
+        .md-btn-filled {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            box-shadow: var(--md-elevation-1);
+        }
+        .md-btn-filled:hover { box-shadow: var(--md-elevation-2); }
+        .md-btn-filled:active { transform: scale(0.98); }
+        
+        .md-btn-text {
+            background: transparent;
+            color: var(--md-primary);
+        }
+        .md-btn-text:hover { background: rgba(179, 38, 30, 0.08); }
+        
+        .md-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: var(--md-surface-container);
+            color: var(--md-on-surface);
+            border: 1px solid var(--md-outline-variant);
+        }
+        
+        /* ============================================================
+           LOGIN - KEMBALI KE SATU INPUT (SEPERTI ASLI)
+           ============================================================ */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: var(--md-surface);
+        }
+        .login-card {
+            max-width: 400px;
+            width: 100%;
+            padding: 40px 32px;
+            background: var(--md-surface-container-lowest);
+            border-radius: var(--md-shape-large);
+            box-shadow: var(--md-elevation-2);
+        }
+        .login-card .logo {
+            width: 72px;
+            height: 72px;
+            background: var(--md-primary-container);
+            border-radius: var(--md-shape-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+        .login-card .logo .material-icons-round {
+            font-size: 36px;
+            color: var(--md-primary);
+        }
+        
+        /* ✅ KEMBALI KE SATU INPUT - SEPERTI ASLI */
+        .login-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 1.8rem;
+            font-weight: 500;
+            text-align: center;
+            letter-spacing: 12px;
+            border: 2px solid var(--md-outline-variant);
+            border-radius: var(--md-shape-small);
+            background: var(--md-surface-container);
+            color: var(--md-on-surface);
+            transition: all var(--md-motion-duration-short) var(--md-motion-easing-standard);
+            outline: none;
+            font-family: var(--md-font-family);
+        }
+        .login-input:focus {
+            border-color: var(--md-primary);
+            border-width: 2px;
+            background: var(--md-surface-container-lowest);
+        }
+        .login-input::placeholder {
+            letter-spacing: 12px;
+            color: var(--md-on-surface-variant);
+            opacity: 0.5;
+        }
+        
+        /* ============================================================
+           LOADING & TOAST
+           ============================================================ */
+        .md-loading {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .md-loading.open { display: flex; }
+        .md-loading .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--md-surface-container);
+            border-top-color: var(--md-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .md-toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--md-surface-container);
+            color: var(--md-on-surface);
+            padding: 12px 24px;
+            border-radius: var(--md-shape-small);
+            box-shadow: var(--md-elevation-3);
+            z-index: 9998;
+            opacity: 0;
+            transition: all var(--md-motion-duration-short) var(--md-motion-easing-standard);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 90%;
+        }
+        .md-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        /* ============================================================
+           BOTTOM NAV
+           ============================================================ */
+        .md-nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: var(--md-surface-container);
+            display: none;
+            align-items: stretch;
+            padding: 0 8px;
+            padding-bottom: env(safe-area-inset-bottom);
+            border-top: 1px solid var(--md-outline-variant);
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .md-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 8px 0;
+            border: none;
+            background: transparent;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            font-family: var(--md-font-family);
+            font-size: 0.625rem;
+            font-weight: 500;
+            letter-spacing: 0.25px;
+        }
+        .md-nav-item .material-icons-round {
+            font-size: 28px;
+            transition: all var(--md-motion-duration-short) var(--md-motion-easing-standard);
+        }
+        .md-nav-item.active {
+            color: var(--md-primary);
+        }
+        .md-nav-item.active .material-icons-round {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* ============================================================
+           MAP & OTHER COMPONENTS (SINGKAT)
+           ============================================================ */
+        .map-container {
+            border-radius: var(--md-shape-medium);
+            overflow: hidden;
+            height: 200px;
+            position: relative;
+            border: 1px solid var(--md-outline-variant);
+        }
+        .map-container #map {
+            height: 100%;
+            width: 100%;
+        }
+        .map-status {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 4px 12px;
+            border-radius: 100px;
+            background: var(--md-surface-container-lowest);
+            font-size: 0.75rem;
+            font-weight: 500;
+            box-shadow: var(--md-elevation-1);
+            z-index: 400;
+        }
+        .map-controls {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 400;
+        }
+        .map-controls .md-btn {
+            min-height: 40px;
+            padding: 8px;
+            background: var(--md-surface-container-lowest);
+            color: var(--md-on-surface);
+            box-shadow: var(--md-elevation-1);
+            border: 1px solid var(--md-outline-variant);
+            width: auto;
+        }
+        
+        .photo-placeholder {
+            aspect-ratio: 1/1;
+            max-height: 200px;
+            width: 100%;
+            border: 2px dashed var(--md-outline-variant);
+            border-radius: var(--md-shape-medium);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            background: var(--md-surface-container);
+            color: var(--md-on-surface-variant);
+        }
+        .photo-placeholder:hover {
+            border-color: var(--md-primary);
+            background: var(--md-primary-container);
+        }
+        .photo-placeholder .material-icons-round { font-size: 48px; }
+        .photo-preview {
+            aspect-ratio: 1/1;
+            max-height: 200px;
+            width: 100%;
+            object-fit: cover;
+            border-radius: var(--md-shape-medium);
+        }
+        
+        .history-item {
+            padding: 16px;
+            border-radius: var(--md-shape-medium);
+            background: var(--md-surface-container);
+            margin-bottom: 12px;
+            border: 1px solid var(--md-outline-variant);
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 12px;
+            border-radius: 100px;
+            font-size: 0.688rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        .status-badge.hadir { background: #DCFCE7; color: #166534; }
+        .status-badge.telat { background: #FEF9C3; color: #854D0E; }
+        .status-badge.luar { background: #FEE2E2; color: #991B1B; }
+        .status-badge.izin { background: #DBEAFE; color: #1E40AF; }
+        .status-badge.menunggu { background: #F3F4F6; color: #4B5563; }
+        
+        .stat-card {
+            padding: 16px;
+            border-radius: var(--md-shape-medium);
+            background: var(--md-surface-container);
+            text-align: center;
+            flex: 1;
+        }
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--md-primary);
+        }
+        .stat-card .label {
+            font-size: 0.75rem;
+            color: var(--md-on-surface-variant);
+        }
+        
+        .md-fab {
+            position: fixed;
+            bottom: 90px;
+            right: 24px;
+            z-index: 900;
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            border: none;
+            border-radius: var(--md-shape-large);
+            padding: 16px 24px;
+            box-shadow: var(--md-elevation-3);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--md-font-family);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .camera-modal {
+            position: fixed;
+            inset: 0;
+            background: var(--md-surface);
+            z-index: 5000;
+            display: none;
+            flex-direction: column;
+        }
+        .camera-modal.open { display: flex; }
+        .camera-modal .camera-view {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #000;
+        }
+        .camera-modal .camera-view video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+        .camera-modal .camera-controls {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            background: var(--md-surface-container);
+        }
+        .camera-modal .shutter-btn {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            border: 4px solid var(--md-primary);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .camera-modal .shutter-btn:active { transform: scale(0.92); }
+        .camera-modal .shutter-btn .material-icons-round {
+            font-size: 36px;
+            color: var(--md-primary);
+        }
+        
+        .view-section { display: none; }
+        #viewHome { display: block; }
+        
+        @media (max-width: 480px) {
+            .login-card { padding: 24px 20px; }
+            .login-input { font-size: 1.5rem; letter-spacing: 8px; padding: 14px 16px; }
+        }
+    </style>
 </head>
 <body>
 
-  <div id="loadingOverlay" class="loading-overlay">
-    <div class="spinner-border text-danger mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
-    <div class="fw-google" style="color:var(--md-primary);">Memproses...</div>
-  </div>
-
-  <div id="login-page">
-    <div class="login-card text-center">
-      <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3"><i class="fas fa-school fa-2x text-danger"></i></div>
-      <h2 class="fw-google mb-1">Gugus Nakula</h2>
-      <p class="text-secondary small mb-4">Sistem Presensi Terintegrasi</p>
-      <div class="mb-5 text-start">
-        <label class="small fw-bold ms-1 mb-2 text-danger">MASUKKAN PIN</label>
-        <input type="password" id="inputPin" class="form-control form-control-pin" placeholder="• • • • • •" inputmode="numeric">
-      </div>
-      <button onclick="doLogin()" class="btn btn-google shadow-none">MASUK <i class="fas fa-arrow-right ms-2"></i></button>
+    <!-- LOADING -->
+    <div class="md-loading" id="loadingOverlay">
+        <div class="spinner"></div>
+        <span class="md-body-large">Memproses...</span>
     </div>
-  </div>
 
-  <div id="app-page">
-    
-    <div class="header-app">
-      <div class="header-top">
-        <div class="profile-section">
-          <div class="jabatan" id="dispJabatan">Guru</div>
-          <h5 id="dispNama">Nama Guru</h5>
+    <!-- TOAST -->
+    <div class="md-toast" id="toast">
+        <span class="material-icons-round" id="toastIcon">info</span>
+        <span class="md-body-medium" id="toastMessage">Pesan</span>
+    </div>
+
+    <!-- ============================================================
+    LOGIN PAGE - KEMBALI KE SATU INPUT (SEPERTI ASLI)
+    ============================================================ -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <span class="material-icons-round">school</span>
+            </div>
+            <h1 class="md-headline-small text-center">Gugus Nakula</h1>
+            <p class="md-body-medium text-center" style="color: var(--md-on-surface-variant); margin-bottom: 24px;">
+                Aplikasi Presensi Terintegrasi
+            </p>
+            
+            <div style="margin-bottom: 8px;">
+                <label class="md-label-medium" style="color: var(--md-on-surface-variant);">
+                    MASUKKAN PIN
+                </label>
+            </div>
+            
+            <!-- ✅ KEMBALI KE SATU INPUT - SEPERTI KODE ASLI -->
+            <input type="password" id="inputPin" 
+                   class="login-input" 
+                   placeholder="• • • • • •" 
+                   inputmode="numeric" 
+                   autocomplete="one-time-code">
+            
+            <button class="md-btn md-btn-filled" style="margin-top: 24px;" onclick="doLogin()">
+                <span class="material-icons-round">login</span>
+                MASUK APLIKASI
+            </button>
+            
+            <div style="margin-top: 16px; text-align: center;">
+                <span class="md-body-small" style="color: var(--md-on-surface-variant);">
+                    Versi 3.0 · Material Design 3
+                </span>
+            </div>
         </div>
-        <button onclick="doLogout()" class="btn-logout-header"><i class="fas fa-power-off"></i></button>
-      </div>
-      <div class="d-flex gap-2 flex-wrap">
-          <span id="dispUnit" class="chip-info chip-unit">Unit Kerja</span>
-          <div class="chip-info chip-time">
-             <span id="labelJamMulai">06:00</span><span style="opacity:0.3">|</span><span id="labelJamTutup">14:00</span>
-          </div>
-      </div>
-      <div id="infoBar"><i class="fas fa-bullhorn me-2 text-danger"></i><marquee id="textInfo">Selamat Datang</marquee></div>
     </div>
 
-    <div class="container pt-3 pb-5 mb-5 px-3">
-      
-      <div id="view-home" class="view-section">
-          <div class="card card-menu py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                    <div class="bg-danger bg-opacity-10 p-2 rounded-circle me-3 text-danger"><i class="fas fa-map-marker-alt"></i></div>
-                    <div>
-                        <span class="d-block fw-bold" style="font-size:0.9rem;">Lokasi Anda</span>
-                        <div id="lokasiStatusText" class="small text-muted" style="font-size:0.75rem;">Mencari...</div>
+    <!-- ============================================================
+    MAIN APP - (SAMA SEPERTI ASLI, HANYA STYLING MD3)
+    ============================================================ -->
+    <div id="appPage" style="display: none;">
+        
+        <!-- Header -->
+        <header style="padding: 16px 20px 8px; background: var(--md-surface-container);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                <div>
+                    <div class="md-label-medium" style="color: var(--md-on-surface-variant);" id="dispJabatan">Guru</div>
+                    <div class="md-headline-small" id="dispNama" style="color: var(--md-on-surface);">Nama Pengguna</div>
+                </div>
+                <button class="md-btn md-btn-text" style="width: auto; min-height: 40px; padding: 8px 12px;" onclick="doLogout()">
+                    <span class="material-icons-round">logout</span>
+                </button>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
+                <span class="md-chip" id="dispUnit" style="background: var(--md-primary); color: var(--md-on-primary); border: none;">
+                    <span class="material-icons-round" style="font-size: 16px;">business</span>
+                    Unit Kerja
+                </span>
+                <span class="md-chip">
+                    <span class="material-icons-round" style="font-size: 16px;">schedule</span>
+                    <span id="labelJamMulai">06:00</span> - <span id="labelJamTutup">14:00</span>
+                </span>
+            </div>
+            <div id="infoBar" style="display: none; background: var(--md-primary-container); color: var(--md-on-primary-container); padding: 8px 16px; border-radius: var(--md-shape-small); margin-top: 8px;">
+                <span class="material-icons-round" style="font-size: 18px;">campaign</span>
+                <marquee id="textInfo" style="vertical-align: bottom; margin-left: 8px;">Selamat Datang</marquee>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main style="padding: 16px 20px 100px;">
+
+            <!-- VIEW: HOME -->
+            <div id="viewHome" class="view-section">
+                <!-- Location Card -->
+                <div class="md-card" style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--md-primary-container); display: flex; align-items: center; justify-content: center;">
+                                <span class="material-icons-round" style="color: var(--md-primary);">location_on</span>
+                            </div>
+                            <div>
+                                <div class="md-title-small">Lokasi Saat Ini</div>
+                                <div class="md-body-small" style="color: var(--md-on-surface-variant);" id="lokasiStatusText">Mencari GPS...</div>
+                            </div>
+                        </div>
+                        <span class="md-chip" id="badgeJarak" style="background: var(--md-surface-container);">Cek...</span>
+                    </div>
+                    
+                    <div class="map-container">
+                        <div id="map"></div>
+                        <div class="map-status">
+                            <span class="material-icons-round" style="font-size: 16px;">pin_drop</span>
+                            Target: <span id="dispLokasiTarget">...</span>
+                        </div>
+                        <div class="map-controls">
+                            <button class="md-btn md-btn-text" style="width: auto; min-height: 40px; padding: 8px;" onclick="startGPS()">
+                                <span class="material-icons-round">my_location</span>
+                            </button>
+                            <button class="md-btn md-btn-text" style="width: auto; min-height: 40px; padding: 8px;" onclick="centerMap()">
+                                <span class="material-icons-round">center_focus_strong</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <span id="badgeJarak" class="badge bg-light text-secondary rounded-pill border">Cek GPS...</span>
+
+                <!-- Photo Capture -->
+                <div class="md-card" style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span class="md-title-small">
+                            <span class="material-icons-round" style="font-size: 20px; vertical-align: middle;">photo_camera</span>
+                            Bukti Foto Selfie
+                        </span>
+                    </div>
+                    
+                    <div id="cameraBtnStart" class="photo-placeholder" onclick="openCameraModal()">
+                        <span class="material-icons-round">add_a_photo</span>
+                        <span class="md-body-medium" style="color: var(--md-on-surface-variant);">Ketuk untuk Foto</span>
+                    </div>
+                    
+                    <div id="resultContainer" style="display: none;">
+                        <img id="photoPreview" class="photo-preview" alt="Preview foto">
+                        <button class="md-btn md-btn-text" style="width: 100%; margin-top: 12px;" onclick="openCameraModal()">
+                            <span class="material-icons-round">refresh</span>
+                            Ambil Ulang
+                        </button>
+                    </div>
+                    
+                    <input type="hidden" id="fotoBase64">
+                </div>
+
+                <!-- Activity Report -->
+                <div class="md-card" style="margin-bottom: 16px;">
+                    <span class="md-title-small" style="display: block; margin-bottom: 12px;">
+                        <span class="material-icons-round" style="font-size: 20px; vertical-align: middle;">description</span>
+                        Laporan Kegiatan
+                    </span>
+                    <textarea id="materiInput" class="login-input" style="font-size: 1rem; letter-spacing: 0; text-align: left; padding: 12px 16px; min-height: 80px; resize: vertical;" placeholder="Tulis ringkasan kegiatan..."></textarea>
+                </div>
+
+                <!-- Hidden Fields -->
+                <input type="hidden" id="pNama">
+                <input type="hidden" id="pEmail">
+                <input type="hidden" id="pUnit">
+                <input type="hidden" id="pJabatan">
+                <input type="hidden" id="lat">
+                <input type="hidden" id="long">
+                <input type="hidden" id="lokasiTargetNama">
             </div>
-            <div class="text-end mt-1"><button class="btn btn-sm btn-link text-decoration-none text-muted" onclick="toggleMap()"><i class="fas fa-chevron-down me-1"></i>Peta</button></div>
-            <div id="mapContainer">
-                <div id="map"></div>
-                <div class="d-flex justify-content-between align-items-center mt-2">
-                    <div class="small text-secondary"><i class="fas fa-crosshairs me-1"></i>Target: <strong id="dispLokasiTarget">...</strong></div>
-                    <button type="button" onclick="startGPS()" class="btn btn-sm btn-light text-danger rounded-circle shadow-sm"><i class="fas fa-sync-alt"></i></button>
+
+            <!-- VIEW: IZIN -->
+            <div id="viewIzin" class="view-section" style="display: none;">
+                <div class="md-card">
+                    <div class="md-title-medium" style="margin-bottom: 16px;">
+                        <span class="material-icons-round" style="font-size: 24px; vertical-align: middle;">note_add</span>
+                        Formulir Izin
+                    </div>
+                    
+                    <form id="formIzin">
+                        <div style="margin-bottom: 16px;">
+                            <label class="md-label-medium" style="color: var(--md-on-surface-variant);">Jenis Izin</label>
+                            <select id="selectJenisIzin" class="login-input" style="font-size: 1rem; letter-spacing: 0; text-align: left; padding: 12px 16px; appearance: auto;">
+                                <option value="">-- Pilih Kategori --</option>
+                            </select>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label class="md-label-medium" style="color: var(--md-on-surface-variant);">Alasan Lengkap</label>
+                            <textarea id="alasanIzin" class="login-input" style="font-size: 1rem; letter-spacing: 0; text-align: left; padding: 12px 16px; min-height: 100px; resize: vertical;" placeholder="Jelaskan alasan detail..."></textarea>
+                        </div>
+                        
+                        <button type="button" class="md-btn md-btn-filled" onclick="kirimIzin()">
+                            <span class="material-icons-round">send</span>
+                            AJUKAN PERMOHONAN
+                        </button>
+                    </form>
                 </div>
             </div>
-          </div>
 
-          <div class="card card-menu">
-             <div class="d-flex justify-content-between align-items-center mb-3"><span class="label-header mb-0"><i class="fas fa-camera me-2"></i>Bukti Kehadiran</span></div>
-             <div id="camera-btn-start" onclick="openCameraModal()" class="text-center py-4 bg-light rounded-3 border border-1 border-dashed" style="cursor:pointer; border-color: #d0d0d0 !important;">
-                <div class="bg-white p-3 rounded-circle shadow-sm d-inline-block mb-2"><i class="fas fa-camera fa-2x text-danger"></i></div>
-                <div class="small fw-bold text-secondary">Ketuk untuk Buka Kamera</div>
-             </div>
-             <div id="result-container">
-                <img id="photo-preview" class="shadow-sm">
-                <button type="button" class="btn btn-light text-danger w-100 fw-bold py-2 rounded-pill border" onclick="openCameraModal()"><i class="fas fa-redo me-2"></i>Foto Ulang</button>
-             </div>
-             <input type="hidden" id="foto_base64" name="foto_base64">
-          </div>
-
-          <div class="card card-menu mb-4">
-            <span class="label-header">Catatan Kegiatan</span>
-            <textarea name="materi" class="form-control bg-light border-0" rows="2" placeholder="Ringkasan kegiatan..." required></textarea>
-            <input type="hidden" id="p_nama"><input type="hidden" id="p_email"><input type="hidden" id="p_unit"><input type="hidden" id="p_jabatan">
-            <input type="hidden" id="lat"><input type="hidden" id="long"><input type="hidden" id="lokasi_target_nama">
-          </div>
-          
-          <div class="submit-wrapper">
-              <button type="button" onclick="kirimPresensi()" class="btn btn-google shadow-sm"><i class="fas fa-paper-plane me-2"></i> KIRIM PRESENSI</button>
-          </div>
-      </div>
-
-      <div id="view-izin" class="view-section" style="display:none;">
-         <div class="card card-menu">
-            <h5 class="fw-google fw-bold text-danger mb-1">Pengajuan Izin</h5>
-            <p class="text-muted small mb-4">Pilih kategori yang sesuai.</p>
-            <form id="formIzin">
-               <div class="mb-3">
-                 <label class="label-header small text-muted">Kategori Izin</label>
-                 <select name="jenis_izin" id="selectJenisIzin" class="form-select py-3"><option value="">-- Memuat Opsi... --</option></select>
-               </div>
-               <div class="mb-4">
-                 <label class="label-header small text-muted">Keterangan Detail</label>
-                 <textarea name="alasan_izin" class="form-control p-3" rows="4" placeholder="Jelaskan alasan detail..."></textarea>
-               </div>
-               <button type="button" onclick="kirimIzin()" class="btn btn-google w-100 fw-bold py-3">AJUKAN PERMOHONAN</button>
-            </form>
-         </div>
-      </div>
-
-      <div id="view-riwayat" class="view-section" style="display:none;">
-         <div class="d-flex justify-content-between align-items-center mb-3">
-             <h6 class="fw-bold m-0 text-dark">Riwayat Saya</h6>
-             <button class="btn btn-sm btn-light rounded-pill px-3 fw-bold text-secondary" onclick="loadRiwayat()">Refresh</button>
-         </div>
-         <div id="listRiwayatContainer"></div>
-      </div>
-      
-      <div id="view-monitoring" class="view-section" style="display:none;">
-         <div class="d-flex justify-content-between align-items-center mb-3">
-             <h6 class="fw-bold m-0 text-dark">Monitoring Guru</h6>
-             <button class="btn btn-sm btn-light text-danger rounded-pill fw-bold" onclick="loadMonitoring()">Refresh</button>
-         </div>
-         <div id="listMonitoringContainer"></div>
-      </div>
-
-      <div id="view-setting" class="view-section" style="display:none;">
-         <div class="card card-menu">
-            <h5 class="fw-bold text-danger mb-4">Pengaturan Sistem</h5>
-            <div class="mb-3"><label class="label-header">Lokasi Target</label><select id="set_lokasi" class="form-select"></select></div>
-            <div class="mb-3"><label class="label-header">Info Running Text</label><textarea id="set_info" class="form-control" rows="2"></textarea></div>
-            <div class="row g-2 mb-3">
-                <div class="col-4"><label>Mulai</label><input type="time" id="set_mulai" class="form-control"></div>
-                <div class="col-4"><label>Selesai</label><input type="time" id="set_selesai" class="form-control"></div>
-                <div class="col-4"><label>Batas</label><input type="time" id="set_batas" class="form-control border-danger"></div>
+            <!-- VIEW: RIWAYAT -->
+            <div id="viewRiwayat" class="view-section" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <div class="md-title-medium">
+                        <span class="material-icons-round" style="font-size: 24px; vertical-align: middle;">history</span>
+                        Riwayat Kehadiran
+                    </div>
+                    <button class="md-btn md-btn-text" style="width: auto; min-height: 40px; padding: 8px 16px;" onclick="loadRiwayat()">
+                        <span class="material-icons-round">refresh</span>
+                    </button>
+                </div>
+                
+                <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                    <div class="stat-card"><div class="number" id="statTotal">0</div><div class="label">Total</div></div>
+                    <div class="stat-card" style="border-left: 3px solid #166534;"><div class="number" style="color: #166534;" id="statHadir">0</div><div class="label">Hadir</div></div>
+                    <div class="stat-card" style="border-left: 3px solid #854D0E;"><div class="number" style="color: #854D0E;" id="statTelat">0</div><div class="label">Terlambat</div></div>
+                    <div class="stat-card" style="border-left: 3px solid #1E40AF;"><div class="number" style="color: #1E40AF;" id="statIzin">0</div><div class="label">Izin</div></div>
+                </div>
+                
+                <div id="listRiwayatContainer"></div>
             </div>
-            <button onclick="simpanSettings()" class="btn btn-google w-100">SIMPAN</button>
-         </div>
-      </div>
+
+            <!-- VIEW: MONITORING -->
+            <div id="viewMonitoring" class="view-section" style="display: none;">
+                <div style="background: var(--md-primary-container); padding: 16px; border-radius: var(--md-shape-medium); margin-bottom: 16px; display: flex; align-items: center; gap: 12px;">
+                    <span class="material-icons-round" style="color: var(--md-primary); font-size: 32px;">shield</span>
+                    <div>
+                        <div class="md-title-small" style="color: var(--md-on-primary-container);">Area Kepala Sekolah</div>
+                        <div class="md-body-small" style="color: var(--md-on-primary-container);">Pantau kehadiran guru harian</div>
+                    </div>
+                </div>
+                
+                <div class="md-card" style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px;">
+                    <div style="flex: 1;">
+                        <label class="md-label-medium" style="color: var(--md-on-surface-variant);">Pilih Tanggal</label>
+                        <input type="date" id="monTanggal" class="login-input" style="font-size: 1rem; letter-spacing: 0; text-align: left; padding: 12px 16px;">
+                    </div>
+                    <button class="md-btn md-btn-filled" style="width: auto; min-height: 48px; padding: 0 20px; margin-top: 6px;" onclick="loadMonitoring()">
+                        <span class="material-icons-round">search</span>
+                    </button>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div class="md-title-small">Data Guru</div>
+                    <span class="md-chip" id="monLabelDate">Hari Ini</span>
+                </div>
+                
+                <div id="listMonitoringContainer"></div>
+            </div>
+
+            <!-- VIEW: SETTINGS -->
+            <div id="viewSetting" class="view-section" style="display: none;">
+                <div class="md-card">
+                    <div class="md-title-medium" style="margin-bottom: 16px;">
+                        <span class="material-icons-round" style="font-size: 24px; vertical-align: middle;">settings</span>
+                        Pengaturan Sistem
+                    </div>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label class="md-label-medium" style="color: var(--md-on-surface-variant);">Lokasi Target</label>
+                        <select id="setLokasi" class="login-input" style="font-size: 1rem; letter-spacing: 0; text-align: left; padding: 12px 16px; appearance: auto;"></select>
+                    </div>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label class="md-label-medium" style="color: var(--md-on-surface-variant);">Info Running Text</label>
+                        <textarea id="setInfo" class="login-input" style="font-size: 1rem; letter-spacing: 0; text-align: left; padding: 12px 16px; min-height: 80px; resize: vertical;" placeholder="Tulis info..."></textarea>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                        <div>
+                            <label class="md-label-small" style="color: var(--md-on-surface-variant);">Mulai</label>
+                            <input type="time" id="setMulai" class="login-input" style="font-size: 1rem; letter-spacing: 0; text-align: center; padding: 12px 8px;">
+                        </div>
+                        <div>
+                            <label class="md-label-small" style="color: var(--md-on-surface-variant);">Selesai</label>
+                            <input type="time" id="setSelesai" class="login-input" style="font-size: 1rem; letter-spacing: 0; text-align: center; padding: 12px 8px;">
+                        </div>
+                        <div>
+                            <label class="md-label-small" style="color: var(--md-error);">Batas</label>
+                            <input type="time" id="setBatas" class="login-input" style="font-size: 1rem; letter-spacing: 0; text-align: center; padding: 12px 8px; border-color: var(--md-error);">
+                        </div>
+                    </div>
+                    
+                    <button class="md-btn md-btn-filled" onclick="simpanSettings()">
+                        <span class="material-icons-round">save</span>
+                        SIMPAN PENGATURAN
+                    </button>
+                </div>
+            </div>
+
+        </main>
     </div>
-  </div>
 
-  <div class="bottom-nav" id="bottomNav" style="display:none;">
-     <div class="nav-item-c active" onclick="switchView('home', this)"><div class="nav-icon-container"><i class="fas fa-home"></i></div><span>Absen</span></div>
-     <div class="nav-item-c" onclick="switchView('izin', this)"><div class="nav-icon-container"><i class="fas fa-envelope-open-text"></i></div><span>Izin</span></div>
-     <div class="nav-item-c" onclick="switchView('riwayat', this)"><div class="nav-icon-container"><i class="fas fa-history"></i></div><span>Riwayat</span></div>
-     <div class="nav-item-c" id="navMonitor" style="display:none;" onclick="switchView('monitoring', this)"><div class="nav-icon-container"><i class="fas fa-users"></i></div><span>Monitor</span></div>
-     <div class="nav-item-c" id="navSetting" style="display:none;" onclick="switchView('setting', this)"><div class="nav-icon-container"><i class="fas fa-sliders-h"></i></div><span>Admin</span></div>
-  </div>
+    <!-- BOTTOM NAV -->
+    <nav class="md-nav-bar" id="bottomNav">
+        <button class="md-nav-item active" onclick="switchView('home', this)" data-view="home">
+            <span class="material-icons-round">fingerprint</span>
+            <span>Absen</span>
+        </button>
+        <button class="md-nav-item" onclick="switchView('izin', this)" data-view="izin">
+            <span class="material-icons-round">note_add</span>
+            <span>Izin</span>
+        </button>
+        <button class="md-nav-item" onclick="switchView('riwayat', this)" data-view="riwayat">
+            <span class="material-icons-round">history</span>
+            <span>Riwayat</span>
+        </button>
+        <button class="md-nav-item" id="navMonitor" style="display: none;" onclick="switchView('monitoring', this)" data-view="monitoring">
+            <span class="material-icons-round">people</span>
+            <span>Monitor</span>
+        </button>
+        <button class="md-nav-item" id="navSetting" style="display: none;" onclick="switchView('setting', this)" data-view="setting">
+            <span class="material-icons-round">settings</span>
+            <span>Admin</span>
+        </button>
+    </nav>
 
-  <div id="cameraModal" class="modal-camera">
-      <button class="btn-close-camera" onclick="closeCameraModal()"><i class="fas fa-times me-2"></i>Tutup</button>
-      <div class="camera-view"><video id="video" autoplay playsinline></video></div>
-      <div class="camera-controls"><div class="btn-shutter" onclick="takeSnapshot()"></div></div>
-  </div>
-  <canvas id="canvas" style="display:none;"></canvas>
+    <!-- FAB -->
+    <button class="md-fab" id="fabSubmit" onclick="kirimPresensi()">
+        <span class="material-icons-round">send</span>
+        <span class="md-body-medium">Kirim Presensi</span>
+    </button>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  
-  <script>
-    // --- WAJIB: PASTE URL WEB APP BARU DISINI ---
-    const API_URL = "https://script.google.com/macros/s/AKfycbweTTiW0sPe1SAnJZlUK4KCiiks4cDhc420PWmvf1IOJ7mIKGUhudz42SpAJ1KZP4__cg/exec"; 
+    <!-- CAMERA MODAL -->
+    <div class="camera-modal" id="cameraModal">
+        <div style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; background: var(--md-surface-container);">
+            <span class="md-title-medium">Ambil Foto</span>
+            <button class="md-btn md-btn-text" style="width: auto; min-height: 40px; padding: 8px 16px;" onclick="closeCameraModal()">
+                <span class="material-icons-round">close</span>
+                Batal
+            </button>
+        </div>
+        <div class="camera-view">
+            <video id="video" autoplay playsinline></video>
+        </div>
+        <div class="camera-controls">
+            <button class="md-btn md-btn-text" style="width: auto; min-height: 48px; padding: 8px 16px;" onclick="closeCameraModal()">
+                <span class="material-icons-round">close</span>
+            </button>
+            <button class="shutter-btn" onclick="takeSnapshot()">
+                <span class="material-icons-round">photo_camera</span>
+            </button>
+            <button class="md-btn md-btn-text" style="width: auto; min-height: 48px; padding: 8px 16px;" onclick="switchCamera()">
+                <span class="material-icons-round">flip_camera_android</span>
+            </button>
+        </div>
+    </div>
+    <canvas id="canvas" style="display: none;"></canvas>
 
-    var userData = null; var targetLokasi = null;
-    var userLat = 0, userLong = 0; var map, marker, streamKamera;
-
-    async function callAPI(action, data = {}) {
-        data.action = action;
-        try {
-            const response = await fetch(API_URL, { method: "POST", body: JSON.stringify(data) });
-            return await response.json();
-        } catch (error) { Swal.fire('Error', 'Koneksi gagal.', 'error'); return null; }
-    }
-
-    window.onload = function() {
-      var savedUser = localStorage.getItem('gugusUser');
-      if (savedUser) { userData = JSON.parse(savedUser); initApp(); }
-    };
-
-    async function doLogin() {
-      var pin = document.getElementById('inputPin').value;
-      if (!pin) return Swal.fire('Error', 'PIN Kosong', 'error');
-      document.getElementById('loadingOverlay').style.display = 'flex';
-      const res = await callAPI('login', { pin: pin });
-      document.getElementById('loadingOverlay').style.display = 'none';
-      if (res && res.status === 'SUKSES') {
-          userData = res;
-          localStorage.setItem('gugusUser', JSON.stringify(userData));
-          initApp(res.targetLokasi);
-      } else { Swal.fire('Gagal', 'PIN Salah / Tidak Ditemukan', 'error'); }
-    }
-
-    async function initApp(targetBaru) {
-       document.getElementById('login-page').style.display = 'none';
-       document.getElementById('app-page').style.display = 'block';
-       document.getElementById('bottomNav').style.display = 'flex';
-       
-       document.getElementById('dispNama').innerText = userData.nama;
-       document.getElementById('dispUnit').innerText = userData.unitKerja;
-       document.getElementById('dispJabatan').innerText = userData.jabatan || "Guru";
-
-       // --- LOGIKA MENAMPILKAN MENU MONITOR ---
-       // Menu monitor muncul jika isAdmin = true ATAU Jabatan mengandung "Kepala"
-       if(userData.isAdmin || (userData.jabatan && userData.jabatan.toString().toLowerCase().includes("kepala"))) {
-           document.getElementById('navMonitor').style.display = 'flex';
-       }
-       if(userData.isAdmin) { document.getElementById('navSetting').style.display = 'flex'; }
-
-       document.getElementById('p_nama').value = userData.nama;
-       document.getElementById('p_email').value = userData.email;
-       document.getElementById('p_unit').value = userData.unitKerja;
-       document.getElementById('p_jabatan').value = userData.jabatan;
-
-       if(targetBaru) setupTarget(targetBaru);
-       else { const loc = await callAPI('getLokasi'); if(loc) setupTarget(loc); }
-    }
-
-    function setupTarget(res) {
-       targetLokasi = res;
-       document.getElementById('lokasi_target_nama').value = res.nama;
-       document.getElementById('dispLokasiTarget').innerText = res.nama;
-       document.getElementById('labelJamMulai').innerText = res.jamMulai;
-       document.getElementById('labelJamTutup').innerText = res.jamSelesai;
-       if(res.info && res.info !== "-") {
-          document.getElementById('infoBar').style.display = 'block';
-          document.getElementById('textInfo').innerText = res.info;
-       }
-       
-       var sel = document.getElementById('selectJenisIzin');
-       if (res.listOpsiIzin && res.listOpsiIzin.length > 0) {
-           sel.innerHTML = '<option value="">-- Pilih Kategori --</option>';
-           res.listOpsiIzin.forEach(opsi => {
-               var opt = document.createElement('option'); opt.value = opsi; opt.innerText = opsi; sel.appendChild(opt);
-           });
-       } else {
-           sel.innerHTML = '<option value="">-- Pilih Kategori --</option><option>Izin Pribadi</option><option>Sakit</option><option>Dinas Luar</option>';
-       }
-       startGPS();
-    }
-
-    function switchView(viewName, el) {
-       if(streamKamera) closeCameraModal();
-       document.querySelectorAll('.view-section').forEach(v => v.style.display = 'none');
-       document.getElementById('view-' + viewName).style.display = 'block';
-       document.querySelectorAll('.nav-item-c').forEach(n => n.classList.remove('active'));
-       if(el) el.classList.add('active');
-       
-       if(viewName === 'home') document.querySelector('.submit-wrapper').style.display = 'flex';
-       else document.querySelector('.submit-wrapper').style.display = 'none';
-
-       if(viewName === 'riwayat') loadRiwayat();
-       if(viewName === 'monitoring') loadMonitoring();
-       if(viewName === 'setting') loadSettings();
-    }
-
-    // --- LOGIKA MAPS & GPS ---
-    function toggleMap() {
-        var c = document.getElementById('mapContainer');
-        c.style.display = (c.style.display === 'none' || c.style.display === '') ? 'block' : 'none';
-        if(c.style.display === 'block' && map) map.invalidateSize();
-    }
-    function startGPS() { if (navigator.geolocation) navigator.geolocation.watchPosition(updatePos, null, {enableHighAccuracy:true}); }
-    function updatePos(pos) {
-       userLat = pos.coords.latitude; userLong = pos.coords.longitude;
-       document.getElementById('lat').value = userLat; document.getElementById('long').value = userLong;
-       document.getElementById('lokasiStatusText').innerText = userLat.toFixed(5) + ", " + userLong.toFixed(5);
-       
-       if(!targetLokasi) return;
-       var dist = hitungJarak(userLat, userLong, targetLokasi.lat, targetLokasi.long);
-       if (dist <= targetLokasi.radius) {
-          document.getElementById('badgeJarak').className = "badge bg-success rounded-pill"; 
-          document.getElementById('badgeJarak').innerHTML = "<i class='fas fa-check-circle me-1'></i>Aman";
-       } else {
-          document.getElementById('badgeJarak').className = "badge bg-danger rounded-pill"; 
-          document.getElementById('badgeJarak').innerHTML = "Luar Radius ("+Math.round(dist)+"m)";
-       }
-       if (!map) { 
-           map = L.map('map', {zoomControl:false}).setView([userLat, userLong], 15); 
-           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map); 
-           marker = L.marker([userLat, userLong]).addTo(map); 
-           if(targetLokasi.lat) L.circle([targetLokasi.lat, targetLokasi.long], {color:'red', radius:targetLokasi.radius}).addTo(map); 
-       } else { marker.setLatLng([userLat, userLong]); map.setView([userLat, userLong]); }
-    }
-    function hitungJarak(lat1, lon1, lat2, lon2) { 
-        var R = 6371e3; var p = Math.PI/180;
-        var a = 0.5 - Math.cos((lat2-lat1)*p)/2 + Math.cos(lat1*p)*Math.cos(lat2*p) * (1-Math.cos((lon2-lon1)*p))/2;
-        return 2 * R * Math.asin(Math.sqrt(a));
-    }
-
-    // --- LOGIKA KAMERA ---
-    function openCameraModal() {
-        document.getElementById('cameraModal').style.display = 'flex';
-        navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s => { 
-            streamKamera = s; document.getElementById('video').srcObject = s; 
-        }).catch(e => { Swal.fire('Error', 'Kamera tidak dapat diakses', 'error'); closeCameraModal(); });
-    }
-    function closeCameraModal() {
-        if(streamKamera) { streamKamera.getTracks().forEach(t => t.stop()); streamKamera = null; }
-        document.getElementById('cameraModal').style.display='none'; 
-    }
-    function takeSnapshot() { 
-        var v = document.getElementById('video'); var c = document.getElementById('canvas'); 
-        c.width = v.videoWidth; c.height = v.videoHeight; 
-        c.getContext('2d').drawImage(v, 0, 0); 
-        var d = c.toDataURL('image/jpeg', 0.7); 
-        document.getElementById('foto_base64').value = d; document.getElementById('photo-preview').src = d; 
-        closeCameraModal();
-        document.getElementById('camera-btn-start').style.display='none'; document.getElementById('result-container').style.display='block'; 
-    }
-
-    // --- TRANSAKSI DATA (ABSEN, IZIN) ---
-    async function kirimPresensi() {
-       if(!document.getElementById('foto_base64').value) return Swal.fire('Foto Wajib', 'Ambil foto selfie dulu.', 'warning');
-       document.getElementById('loadingOverlay').style.display = 'flex';
-       
-       var payload = { 
-           nama: document.getElementById('p_nama').value, email: document.getElementById('p_email').value, 
-           unit: document.getElementById('p_unit').value, jabatan: document.getElementById('p_jabatan').value, 
-           lat: document.getElementById('lat').value, long: document.getElementById('long').value, 
-           materi: document.querySelector('[name="materi"]').value, lokasi_target: document.getElementById('lokasi_target_nama').value, 
-           foto: document.getElementById('foto_base64').value 
-       };
-       const r = await callAPI('absen', payload);
-       document.getElementById('loadingOverlay').style.display = 'none';
-       Swal.fire(r.includes("SUKSES")?"Berhasil":"Gagal", r, r.includes("SUKSES")?"success":"error");
-       if(r.includes("SUKSES")) location.reload();
-    }
-
-    async function kirimIzin() {
-       var j = document.getElementById('selectJenisIzin').value;
-       if(!j) return Swal.fire('Pilih Kategori', 'Harap pilih jenis izin.', 'warning');
-       
-       document.getElementById('loadingOverlay').style.display = 'flex';
-       var payload = { 
-           nama: userData.nama, email: userData.email, unit: userData.unitKerja, jabatan: userData.jabatan,
-           jenis: j, alasan: document.querySelector('[name="alasan_izin"]').value 
-       };
-       const r = await callAPI('izin', payload);
-       document.getElementById('loadingOverlay').style.display = 'none';
-       Swal.fire(r.includes("SUKSES")?"Terkirim":"Gagal", r, r.includes("SUKSES")?"success":"error");
-       if(r.includes("SUKSES")) { document.getElementById('formIzin').reset(); switchView('home'); }
-    }
-
-    // --- FUNGSI LOAD DATA ---
-    async function loadRiwayat() {
-       document.getElementById('loadingOverlay').style.display = 'flex';
-       const list = await callAPI('riwayat', { nama: userData.nama });
-       document.getElementById('loadingOverlay').style.display = 'none';
-       var html = "";
-       if(list && list.length > 0) {
-          list.forEach(i => {
-             var cls = i.status.includes("Tepat")?"bg-hadir":i.status.includes("Terlambat")?"bg-telat":i.status.includes("Luar")?"bg-luar":"bg-izin";
-             var btnFoto = ""; if(i.foto && i.foto.includes("http")) btnFoto = `<button class="btn-view-foto-pill" onclick="lihatFoto(event, '${i.foto}')"><i class="fas fa-image me-1"></i>Bukti</button>`;
-             html += `<div class="history-item"><div class="d-flex justify-content-between mb-2"><span class="fw-bold small">${i.tanggal}</span><span class="badge badge-status ${cls}">${i.status}</span></div><div class="d-flex justify-content-between align-items-center"><div class="small text-muted"><i class="fas fa-clock me-1"></i> ${i.jam} - ${i.lokasi}</div>${btnFoto}</div></div>`;
-          });
-       } else { html = "<div class='text-center py-5 text-muted'>Belum ada data.</div>"; }
-       document.getElementById('listRiwayatContainer').innerHTML = html;
-    }
-
-    async function loadMonitoring() {
-        document.getElementById('loadingOverlay').style.display = 'flex';
-        const d = await callAPI('monitoring', { sekolah: userData.unitKerja });
-        if(d) renderMonitoring(d);
-    }
-
-    // --- RENDER MONITORING (FIXED BUTTON LOGIC) ---
-    function renderMonitoring(data) {
-        document.getElementById('loadingOverlay').style.display = 'none';
-        var html = ""; var allGuru = data.listSudah.concat(data.listBelum);
+    <!-- ============================================================
+    SCRIPTS
+    ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // ================================================================
+        // ⚠️ GANTI DENGAN URL GAS ANDA
+        // ================================================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbweTTiW0sPe1SAnJZlUK4KCiiks4cDhc420PWmvf1IOJ7mIKGUhudz42SpAJ1KZP4__cg/exec";
         
-        if(allGuru.length === 0) { document.getElementById('listMonitoringContainer').innerHTML = "<div class='text-center py-5 text-muted'>Tidak ada data.</div>"; return; }
+        // ================================================================
+        // STATE
+        // ================================================================
+        let userData = null;
+        let targetLokasi = null;
+        let userLat = 0, userLong = 0;
+        let map = null, marker = null;
+        let streamKamera = null;
+        let currentFacing = 'user';
+        let watchId = null;
         
-        allGuru.forEach(g => {
-            var badgeClass = "bg-secondary"; var actionButtons = ""; var btnBukti = ""; var safeNama = g.nama.replace(/'/g, "\\'");
+        // ================================================================
+        // UTILITY
+        // ================================================================
+        function showToast(message, icon = 'info', duration = 3000) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            document.getElementById('toastIcon').textContent = icon;
+            toast.classList.add('show');
+            clearTimeout(toast._hideTimer);
+            toast._hideTimer = setTimeout(() => toast.classList.remove('show'), duration);
+        }
+        
+        function showLoading(show = true) {
+            document.getElementById('loadingOverlay').classList.toggle('open', show);
+        }
+        
+        function formatDate(date) {
+            const d = new Date(date);
+            return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+        
+        // ================================================================
+        // API
+        // ================================================================
+        async function callAPI(action, data = {}) {
+            data.action = action;
+            console.log('📤 [API]', { action, data });
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const result = await response.json();
+                console.log('📥 [API] Response:', result);
+                return result;
+            } catch (error) {
+                console.error('❌ API Error:', error);
+                showToast('Gagal terhubung ke server', 'error');
+                return null;
+            }
+        }
+        
+        // ================================================================
+        // ✅ LOGIN - KEMBALI KE KODE ASLI (TIDAK MEMAKSA 6 DIGIT)
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Enter key untuk login
+            document.getElementById('inputPin').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') doLogin();
+            });
             
-            // Logika Warna Badge
-            if(g.status === "Belum Hadir") badgeClass = "bg-belum";
-            else if(g.status.includes("Tepat")) badgeClass = "bg-hadir";
-            else if(g.status.includes("Terlambat")) badgeClass = "bg-telat";
-            else if(g.status.includes("Luar")) badgeClass = "bg-luar";
-            else if(g.status.includes("Izin") || g.status.includes("Sakit")) { 
-                badgeClass = "bg-izin"; 
-                // --- LOGIKA PENTING TOMBOL ACC ---
-                if(g.status.includes("Menunggu")) { 
+            // Cek session
+            const saved = localStorage.getItem('gugusUser_v3');
+            if (saved) {
+                try {
+                    userData = JSON.parse(saved);
+                    if (userData && userData.nama) {
+                        initApp();
+                    }
+                } catch (e) {}
+            }
+        });
+        
+        // ✅ LOGIN - TIDAK MEMAKSA JUMLAH DIGIT
+        async function doLogin() {
+            const pin = document.getElementById('inputPin').value;
+            
+            // ✅ HANYA CEK APAKAH PIN KOSONG, TIDAK MEMAKSA 6 DIGIT
+            if (!pin) {
+                showToast('Masukkan PIN dulu', 'warning');
+                return;
+            }
+            
+            showLoading(true);
+            const res = await callAPI('login', { pin: pin });
+            showLoading(false);
+            
+            if (res && res.status === 'SUKSES') {
+                userData = res;
+                localStorage.setItem('gugusUser_v3', JSON.stringify(userData));
+                await initApp(res.targetLokasi);
+                showToast('Selamat datang, ' + userData.nama, 'check_circle');
+                document.getElementById('inputPin').value = '';
+            } else {
+                showToast(res?.message || 'PIN salah / tidak terdaftar', 'error');
+                document.getElementById('inputPin').value = '';
+                document.getElementById('inputPin').focus();
+            }
+        }
+        
+        function doLogout() {
+            localStorage.removeItem('gugusUser_v3');
+            if (watchId) navigator.geolocation.clearWatch(watchId);
+            location.reload();
+        }
+        
+        // ================================================================
+        // APP INIT
+        // ================================================================
+        async function initApp(targetBaru) {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('appPage').style.display = 'block';
+            document.getElementById('bottomNav').style.display = 'flex';
+            document.getElementById('fabSubmit').style.display = 'flex';
+            
+            document.getElementById('dispNama').textContent = userData.nama || 'Pengguna';
+            document.getElementById('dispUnit').textContent = userData.unitKerja || 'Unit Kerja';
+            document.getElementById('dispJabatan').textContent = userData.jabatan || 'Guru';
+            
+            document.getElementById('pNama').value = userData.nama || '';
+            document.getElementById('pEmail').value = userData.email || '';
+            document.getElementById('pUnit').value = userData.unitKerja || '';
+            document.getElementById('pJabatan').value = userData.jabatan || '';
+            
+            const isKepala = userData.jabatan && userData.jabatan.toLowerCase().includes('kepala');
+            if (userData.isAdmin || isKepala) {
+                document.getElementById('navMonitor').style.display = 'flex';
+            }
+            if (userData.isAdmin) {
+                document.getElementById('navSetting').style.display = 'flex';
+            }
+            
+            if (targetBaru) {
+                setupTarget(targetBaru);
+            } else {
+                const loc = await callAPI('getLokasi');
+                if (loc) setupTarget(loc);
+            }
+            
+            loadRiwayat();
+        }
+        
+        function setupTarget(res) {
+            targetLokasi = res;
+            document.getElementById('lokasiTargetNama').value = res.nama || '';
+            document.getElementById('dispLokasiTarget').textContent = res.nama || '...';
+            document.getElementById('labelJamMulai').textContent = res.jamMulai || '06:00';
+            document.getElementById('labelJamTutup').textContent = res.jamSelesai || '14:00';
+            
+            if (res.info && res.info !== '-' && res.info !== '') {
+                document.getElementById('infoBar').style.display = 'flex';
+                document.getElementById('textInfo').textContent = res.info;
+            }
+            
+            const sel = document.getElementById('selectJenisIzin');
+            if (res.listOpsiIzin && res.listOpsiIzin.length > 0) {
+                sel.innerHTML = '<option value="">-- Pilih Kategori --</option>';
+                res.listOpsiIzin.forEach(opsi => {
+                    const opt = document.createElement('option');
+                    opt.value = opsi;
+                    opt.textContent = opsi;
+                    sel.appendChild(opt);
+                });
+            } else {
+                sel.innerHTML = '<option value="">-- Pilih Kategori --</option>' +
+                    '<option value="Izin Pribadi">Izin Pribadi</option>' +
+                    '<option value="Sakit">Sakit</option>' +
+                    '<option value="Dinas Luar">Dinas Luar</option>';
+            }
+            
+            startGPS();
+        }
+        
+        // ================================================================
+        // NAVIGATION
+        // ================================================================
+        function switchView(viewName, el) {
+            if (streamKamera) closeCameraModal();
+            
+            document.querySelectorAll('.view-section').forEach(v => v.style.display = 'none');
+            
+            const viewMap = {
+                'home': 'viewHome',
+                'izin': 'viewIzin',
+                'riwayat': 'viewRiwayat',
+                'monitoring': 'viewMonitoring',
+                'setting': 'viewSetting'
+            };
+            const targetView = document.getElementById(viewMap[viewName]);
+            if (targetView) targetView.style.display = 'block';
+            
+            document.querySelectorAll('.md-nav-item').forEach(n => n.classList.remove('active'));
+            if (el) el.classList.add('active');
+            
+            document.getElementById('fabSubmit').style.display = viewName === 'home' ? 'flex' : 'none';
+            
+            if (viewName === 'riwayat') loadRiwayat();
+            if (viewName === 'monitoring') loadMonitoring();
+            if (viewName === 'setting') loadSettings();
+            if (viewName === 'home' && map) setTimeout(() => map.invalidateSize(), 200);
+        }
+        
+        // ================================================================
+        // GPS & MAP
+        // ================================================================
+        function startGPS() {
+            if (!navigator.geolocation) {
+                showToast('GPS tidak didukung', 'error');
+                return;
+            }
+            if (watchId) navigator.geolocation.clearWatch(watchId);
+            watchId = navigator.geolocation.watchPosition(
+                updatePos,
+                (err) => {
+                    console.error('GPS Error:', err);
+                    showToast('Gagal mendapatkan lokasi', 'error');
+                    document.getElementById('lokasiStatusText').textContent = 'Gagal mendapatkan lokasi';
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 }
+            );
+        }
+        
+        function updatePos(pos) {
+            userLat = pos.coords.latitude;
+            userLong = pos.coords.longitude;
+            
+            document.getElementById('lat').value = userLat;
+            document.getElementById('long').value = userLong;
+            document.getElementById('lokasiStatusText').textContent = 
+                `${userLat.toFixed(6)}, ${userLong.toFixed(6)}`;
+            
+            if (!targetLokasi) return;
+            
+            const dist = hitungJarak(userLat, userLong, targetLokasi.lat, targetLokasi.long);
+            const radius = targetLokasi.radius || 100;
+            const badge = document.getElementById('badgeJarak');
+            
+            if (dist <= radius) {
+                badge.style.background = '#DCFCE7';
+                badge.style.color = '#166534';
+                badge.innerHTML = `<span class="material-icons-round" style="font-size: 14px;">check_circle</span> ${Math.round(dist)}m`;
+            } else {
+                badge.style.background = '#FEE2E2';
+                badge.style.color = '#991B1B';
+                badge.innerHTML = `<span class="material-icons-round" style="font-size: 14px;">warning</span> ${Math.round(dist)}m`;
+            }
+            
+            if (!map) {
+                map = L.map('map', { zoomControl: false }).setView([userLat, userLong], 16);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+                
+                const icon = L.divIcon({
+                    html: `<div style="background: #B3261E; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"></div>`,
+                    className: '',
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+                
+                marker = L.marker([userLat, userLong], { icon }).addTo(map);
+                
+                if (targetLokasi.lat) {
+                    L.circle([targetLokasi.lat, targetLokasi.long], {
+                        color: '#B3261E',
+                        fillColor: '#B3261E',
+                        fillOpacity: 0.1,
+                        radius: targetLokasi.radius || 100
+                    }).addTo(map);
+                }
+            } else {
+                marker.setLatLng([userLat, userLong]);
+                map.setView([userLat, userLong]);
+            }
+        }
+        
+        function centerMap() {
+            if (map && userLat && userLong) {
+                map.setView([userLat, userLong], 16);
+                showToast('Peta dipusatkan', 'center_focus_strong');
+            }
+        }
+        
+        function hitungJarak(lat1, lon1, lat2, lon2) {
+            const R = 6371e3;
+            const p = Math.PI / 180;
+            const a = 0.5 - Math.cos((lat2 - lat1) * p) / 2 +
+                Math.cos(lat1 * p) * Math.cos(lat2 * p) *
+                (1 - Math.cos((lon2 - lon1) * p)) / 2;
+            return 2 * R * Math.asin(Math.sqrt(a));
+        }
+        
+        // ================================================================
+        // CAMERA
+        // ================================================================
+        function openCameraModal() {
+            document.getElementById('cameraModal').classList.add('open');
+            startCamera();
+        }
+        
+        function closeCameraModal() {
+            document.getElementById('cameraModal').classList.remove('open');
+            if (streamKamera) {
+                streamKamera.getTracks().forEach(t => t.stop());
+                streamKamera = null;
+            }
+        }
+        
+        function switchCamera() {
+            currentFacing = currentFacing === 'user' ? 'environment' : 'user';
+            startCamera();
+            showToast('Mengganti kamera', 'flip_camera_android', 1000);
+        }
+        
+        function startCamera() {
+            if (streamKamera) {
+                streamKamera.getTracks().forEach(t => t.stop());
+            }
+            navigator.mediaDevices.getUserMedia({
+                video: { facingMode: currentFacing, width: { ideal: 640 }, height: { ideal: 480 } }
+            }).then(s => {
+                streamKamera = s;
+                document.getElementById('video').srcObject = s;
+            }).catch(e => {
+                console.error('Camera Error:', e);
+                showToast('Gagal mengakses kamera', 'error');
+                closeCameraModal();
+            });
+        }
+        
+        function takeSnapshot() {
+            const v = document.getElementById('video');
+            const c = document.getElementById('canvas');
+            c.width = v.videoWidth || 640;
+            c.height = v.videoHeight || 480;
+            c.getContext('2d').drawImage(v, 0, 0);
+            const dataUrl = c.toDataURL('image/jpeg', 0.75);
+            
+            document.getElementById('fotoBase64').value = dataUrl;
+            document.getElementById('photoPreview').src = dataUrl;
+            document.getElementById('cameraBtnStart').style.display = 'none';
+            document.getElementById('resultContainer').style.display = 'block';
+            
+            closeCameraModal();
+            showToast('Foto berhasil diambil!', 'check_circle');
+        }
+        
+        // ================================================================
+        // PRESENSI
+        // ================================================================
+        async function kirimPresensi() {
+            const foto = document.getElementById('fotoBase64').value;
+            if (!foto) {
+                showToast('Ambil foto selfie dulu', 'warning');
+                return;
+            }
+            
+            const materi = document.getElementById('materiInput').value.trim();
+            if (!materi) {
+                showToast('Isi laporan kegiatan', 'warning');
+                return;
+            }
+            
+            showLoading(true);
+            const payload = {
+                nama: document.getElementById('pNama').value,
+                email: document.getElementById('pEmail').value,
+                unit: document.getElementById('pUnit').value,
+                jabatan: document.getElementById('pJabatan').value,
+                lat: document.getElementById('lat').value,
+                long: document.getElementById('long').value,
+                materi: materi,
+                lokasi_target: document.getElementById('lokasiTargetNama').value,
+                foto: foto
+            };
+            
+            const r = await callAPI('absen', payload);
+            showLoading(false);
+            
+            if (r && r.includes('SUKSES')) {
+                showToast('Presensi berhasil!', 'check_circle');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showToast(r || 'Gagal mengirim presensi', 'error');
+            }
+        }
+        
+        // ================================================================
+        // IZIN
+        // ================================================================
+        async function kirimIzin() {
+            const jenis = document.getElementById('selectJenisIzin').value;
+            if (!jenis) {
+                showToast('Pilih jenis izin', 'warning');
+                return;
+            }
+            
+            const alasan = document.getElementById('alasanIzin').value.trim();
+            if (!alasan) {
+                showToast('Isi alasan izin', 'warning');
+                return;
+            }
+            
+            showLoading(true);
+            const payload = {
+                nama: userData.nama,
+                email: userData.email,
+                unit: userData.unitKerja,
+                jabatan: userData.jabatan,
+                jenis: jenis,
+                alasan: alasan
+            };
+            
+            const r = await callAPI('izin', payload);
+            showLoading(false);
+            
+            if (r && r.includes('SUKSES')) {
+                showToast('Izin berhasil diajukan!', 'check_circle');
+                document.getElementById('formIzin').reset();
+                switchView('home', document.querySelector('.md-nav-item[data-view="home"]'));
+            } else {
+                showToast(r || 'Gagal mengajukan izin', 'error');
+            }
+        }
+        
+        // ================================================================
+        // RIWAYAT
+        // ================================================================
+        async function loadRiwayat() {
+            showLoading(true);
+            const list = await callAPI('riwayat', { nama: userData.nama });
+            showLoading(false);
+            
+            if (!list || list.length === 0) {
+                document.getElementById('listRiwayatContainer').innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: var(--md-on-surface-variant);">
+                        <span class="material-icons-round" style="font-size: 48px;">history</span>
+                        <div class="md-body-large" style="margin-top: 8px;">Belum ada riwayat</div>
+                    </div>
+                `;
+                ['statTotal', 'statHadir', 'statTelat', 'statIzin'].forEach(id => 
+                    document.getElementById(id).textContent = '0'
+                );
+                return;
+            }
+            
+            let total = list.length;
+            let hadir = list.filter(i => i.status && (i.status.includes('Tepat') || i.status === 'Hadir')).length;
+            let telat = list.filter(i => i.status && i.status.includes('Terlambat')).length;
+            let izin = list.filter(i => i.status && (i.status.includes('Izin') || i.status.includes('Sakit'))).length;
+            
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statHadir').textContent = hadir;
+            document.getElementById('statTelat').textContent = telat;
+            document.getElementById('statIzin').textContent = izin;
+            
+            let html = '';
+            list.forEach(i => {
+                let statusClass = 'hadir';
+                let statusIcon = 'check_circle';
+                if (i.status && i.status.includes('Terlambat')) { statusClass = 'telat'; statusIcon = 'warning'; }
+                else if (i.status && i.status.includes('Luar')) { statusClass = 'luar'; statusIcon = 'place'; }
+                else if (i.status && (i.status.includes('Izin') || i.status.includes('Sakit'))) { statusClass = 'izin'; statusIcon = 'event_busy'; }
+                else if (i.status && i.status.includes('Menunggu')) { statusClass = 'menunggu'; statusIcon = 'hourglass_top'; }
+                
+                const btnFoto = i.foto && i.foto.includes('http') 
+                    ? `<button class="md-btn md-btn-text" style="width: auto; min-height: 32px; padding: 4px 8px;" onclick="lihatFoto('${i.foto}')">
+                        <span class="material-icons-round" style="font-size: 18px;">image</span>
+                       </button>` 
+                    : '';
+                
+                html += `
+                    <div class="history-item">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+                            <div>
+                                <div class="md-body-medium">${formatDate(i.tanggal)} · ${i.jam || '-'}</div>
+                                <div class="md-body-small" style="color: var(--md-on-surface-variant);">
+                                    <span class="material-icons-round" style="font-size: 14px; vertical-align: middle;">place</span>
+                                    ${i.lokasi || '-'}
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 4px;">
+                                ${btnFoto}
+                                <span class="status-badge ${statusClass}">
+                                    <span class="material-icons-round" style="font-size: 14px;">${statusIcon}</span>
+                                    ${i.status || 'Belum'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('listRiwayatContainer').innerHTML = html;
+        }
+        
+        // ================================================================
+        // MONITORING
+        // ================================================================
+        async function loadMonitoring() {
+            let tgl = document.getElementById('monTanggal').value;
+            if (!tgl) {
+                tgl = new Date().toISOString().split('T')[0];
+                document.getElementById('monTanggal').value = tgl;
+            }
+            document.getElementById('monLabelDate').textContent = tgl.split('-').reverse().join('-');
+            
+            showLoading(true);
+            const data = await callAPI('monitoring', { sekolah: userData.unitKerja, tanggal: tgl });
+            showLoading(false);
+            
+            if (!data) {
+                document.getElementById('listMonitoringContainer').innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: var(--md-on-surface-variant);">
+                        <span class="material-icons-round" style="font-size: 48px;">people_outline</span>
+                        <div class="md-body-large" style="margin-top: 8px;">Tidak ada data</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            const allGuru = [...(data.listSudah || []), ...(data.listBelum || [])];
+            
+            if (allGuru.length === 0) {
+                document.getElementById('listMonitoringContainer').innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: var(--md-on-surface-variant);">
+                        <span class="material-icons-round" style="font-size: 48px;">people_outline</span>
+                        <div class="md-body-large" style="margin-top: 8px;">Belum ada data guru</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            allGuru.forEach(g => {
+                let statusClass = 'hadir';
+                let statusIcon = 'check_circle';
+                if (g.status === 'Belum Hadir') { statusClass = 'menunggu'; statusIcon = 'hourglass_empty'; }
+                else if (g.status && g.status.includes('Terlambat')) { statusClass = 'telat'; statusIcon = 'warning'; }
+                else if (g.status && g.status.includes('Luar')) { statusClass = 'luar'; statusIcon = 'place'; }
+                else if (g.status && (g.status.includes('Izin') || g.status.includes('Sakit'))) { statusClass = 'izin'; statusIcon = 'event_busy'; }
+                else if (g.status && g.status.includes('Menunggu')) { statusClass = 'menunggu'; statusIcon = 'hourglass_top'; }
+                
+                const safeNama = g.nama ? g.nama.replace(/'/g, "\\'") : '';
+                
+                let actionButtons = '';
+                if (g.status && g.status.includes('Menunggu')) {
                     actionButtons = `
-                    <div class="mt-2 d-flex justify-content-end border-top pt-2">
-                        <small class="me-auto text-muted d-flex align-items-center fst-italic">Setujui izin ini?</small>
-                        <button type="button" class="action-btn btn-acc me-2" onclick="prosesIzin('${safeNama}', 'Disetujui')"><i class="fas fa-check"></i></button>
-                        <button type="button" class="action-btn btn-rej" onclick="prosesIzin('${safeNama}', 'Ditolak')"><i class="fas fa-times"></i></button>
-                    </div>`; 
+                        <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; border-top: 1px solid var(--md-outline-variant); padding-top: 8px;">
+                            <button class="md-btn md-btn-text" onclick="prosesIzin('${safeNama}', 'Disetujui')" style="background: #DCFCE7; color: #166534; width: auto; min-height: 36px; padding: 4px 16px;">
+                                <span class="material-icons-round" style="font-size: 18px;">check</span>
+                                Setujui
+                            </button>
+                            <button class="md-btn md-btn-text" onclick="prosesIzin('${safeNama}', 'Ditolak')" style="background: #FEE2E2; color: #991B1B; width: auto; min-height: 36px; padding: 4px 16px;">
+                                <span class="material-icons-round" style="font-size: 18px;">close</span>
+                                Tolak
+                            </button>
+                        </div>
+                    `;
+                }
+                
+                let buktiBtns = '';
+                if (g.maps && g.maps.includes('http')) {
+                    buktiBtns += `<button class="md-btn md-btn-text" style="width: auto; min-height: 32px; padding: 4px 8px;" onclick="window.open('${g.maps}', '_blank')">
+                        <span class="material-icons-round" style="font-size: 18px;">map</span>
+                    </button>`;
+                }
+                if (g.foto && g.foto.includes('http')) {
+                    buktiBtns += `<button class="md-btn md-btn-text" style="width: auto; min-height: 32px; padding: 4px 8px;" onclick="lihatFoto('${g.foto}')">
+                        <span class="material-icons-round" style="font-size: 18px;">image</span>
+                    </button>`;
+                }
+                
+                html += `
+                    <div class="history-item">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <div class="md-body-medium">${g.nama || '-'}</div>
+                                <div class="md-body-small" style="color: var(--md-on-surface-variant);">
+                                    ${g.jam ? `<span class="material-icons-round" style="font-size: 14px; vertical-align: middle;">schedule</span> ${g.jam}` : ''}
+                                    ${g.alasan ? `<br><span style="color: var(--md-secondary);">📝 ${g.alasan}</span>` : ''}
+                                </div>
+                                <div style="display: flex; gap: 4px; margin-top: 4px;">
+                                    ${buktiBtns}
+                                </div>
+                            </div>
+                            <span class="status-badge ${statusClass}">
+                                <span class="material-icons-round" style="font-size: 14px;">${statusIcon}</span>
+                                ${g.status || 'Belum'}
+                            </span>
+                        </div>
+                        ${actionButtons}
+                    </div>
+                `;
+            });
+            
+            document.getElementById('listMonitoringContainer').innerHTML = html;
+        }
+        
+        async function prosesIzin(namaGuru, newStatus) {
+            const result = await Swal.fire({
+                title: 'Konfirmasi',
+                text: `${newStatus} izin ${namaGuru}?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#B3261E',
+                cancelButtonColor: '#6B7280',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Batal'
+            });
+            
+            if (!result.isConfirmed) return;
+            
+            showLoading(true);
+            const res = await callAPI('updateIzin', { nama: namaGuru, status: newStatus });
+            showLoading(false);
+            
+            if (res === 'SUKSES') {
+                showToast(`Izin ${newStatus} untuk ${namaGuru}`, 'check_circle');
+                loadMonitoring();
+            } else {
+                showToast(res || 'Gagal memproses izin', 'error');
+            }
+        }
+        
+        function lihatFoto(url) {
+            Swal.fire({
+                imageUrl: url,
+                showConfirmButton: false,
+                showCloseButton: true,
+                width: 'auto',
+                background: 'var(--md-surface-container)',
+                padding: 0,
+                borderRadius: 'var(--md-shape-large)'
+            });
+        }
+        
+        // ================================================================
+        // SETTINGS
+        // ================================================================
+        async function loadSettings() {
+            showLoading(true);
+            const d = await callAPI('getSettings');
+            showLoading(false);
+            
+            if (!d) return;
+            
+            const sel = document.getElementById('setLokasi');
+            sel.innerHTML = '';
+            if (d.listSekolah) {
+                d.listSekolah.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s;
+                    opt.textContent = s;
+                    if (s === d.namaLokasi) opt.selected = true;
+                    sel.appendChild(opt);
+                });
+            }
+            document.getElementById('setInfo').value = d.info || '';
+            document.getElementById('setMulai').value = d.jamMulai || '06:00';
+            document.getElementById('setSelesai').value = d.jamSelesai || '14:00';
+            document.getElementById('setBatas').value = d.jamBatas || '07:00';
+        }
+        
+        async function simpanSettings() {
+            const payload = {
+                set_lokasi: document.getElementById('setLokasi').value,
+                set_info: document.getElementById('setInfo').value,
+                set_mulai: document.getElementById('setMulai').value,
+                set_selesai: document.getElementById('setSelesai').value,
+                set_batas: document.getElementById('setBatas').value
+            };
+            
+            showLoading(true);
+            const r = await callAPI('saveSettings', payload);
+            showLoading(false);
+            
+            showToast(r || 'Pengaturan disimpan', 'save');
+            if (r && r.includes('SUKSES')) {
+                loadSettings();
+                const loc = await callAPI('getLokasi');
+                if (loc) setupTarget(loc);
+            }
+        }
+        
+        // ================================================================
+        // KEYBOARD SHORTCUTS
+        // ================================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('cameraModal').classList.contains('open')) {
+                    closeCameraModal();
                 }
             }
-            
-            // Logika Tombol Bukti
-            if(g.maps && g.maps.includes("http")) btnBukti += `<a href="${g.maps}" target="_blank" class="btn-view-foto-pill me-1" style="text-decoration:none;"><i class="fas fa-map-marker-alt text-danger"></i></a>`; 
-            if(g.foto && g.foto.includes("http")) btnBukti += `<button type="button" class="btn-view-foto-pill" onclick="lihatFoto(event, '${g.foto}')"><i class="fas fa-image text-primary"></i></button>`; 
-
-            // Susun HTML
-            html += `
-            <div class="history-item">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <span class="fw-bold text-dark text-truncate" style="max-width:55%; font-family:'Google Sans'">${g.nama}</span>
-                    <span class="badge badge-status ${badgeClass}">${g.status}</span>
-                </div>
-                <div class="d-flex align-items-center mt-2">
-                    <div class="small text-muted flex-grow-1" style="line-height:1.4;">
-                        <i class="fas fa-clock me-1 text-secondary opacity-50"></i> ${g.jam} 
-                        ${g.alasan ? '<br><span class="text-warning"><i class="fas fa-comment-alt me-1"></i> ' + g.alasan + '</span>' : ''}
-                    </div>
-                    <div class="d-flex align-items-center">${btnBukti}</div>
-                </div>
-                ${actionButtons}
-            </div>`;
         });
-        document.getElementById('listMonitoringContainer').innerHTML = html;
-    }
-
-    function prosesIzin(namaGuru, newStatus) {
-        Swal.fire({ title: 'Konfirmasi', text: newStatus + ' izin ' + namaGuru + '?', icon: 'question', showCancelButton: true, confirmButtonColor: '#B3261E', confirmButtonText: 'Ya' }).then(async (result) => {
-            if (result.isConfirmed) {
-                document.getElementById('loadingOverlay').style.display = 'flex';
-                const res = await callAPI('updateIzin', { nama: namaGuru, status: newStatus });
-                document.getElementById('loadingOverlay').style.display = 'none';
-                if(res === 'SUKSES') { await loadMonitoring(); Swal.fire('Selesai','Data diperbarui','success'); } else { Swal.fire('Gagal', res, 'error'); }
-            }
-        });
-    }
-
-    function lihatFoto(e, url) { if(e) { e.stopPropagation(); e.preventDefault(); } Swal.fire({ imageUrl: url, imageAlt: 'Foto Bukti', showConfirmButton: false, showCloseButton: true, background: '#fff', imageHeight: 'auto', imageWidth: '100%', customClass: {popup: 'rounded-4', image: 'rounded-4 shadow-sm'} }); }
-
-    async function loadSettings() {
-        const d = await callAPI('getSettings');
-        if(d) {
-             var sel = document.getElementById('set_lokasi'); sel.innerHTML = "";
-             d.listSekolah.forEach(s => { var opt = document.createElement('option'); opt.value = s; opt.innerText = s; if(s === d.namaLokasi) opt.selected = true; sel.appendChild(opt); });
-             document.getElementById('set_info').value = d.info; 
-             document.getElementById('set_mulai').value = d.jamMulai; 
-             document.getElementById('set_selesai').value = d.jamSelesai; 
-             document.getElementById('set_batas').value = d.jamBatas;
-        }
-    }
-    
-    function simpanSettings() {
-        var f = { set_lokasi: document.getElementById('set_lokasi').value, set_info: document.getElementById('set_info').value, set_mulai: document.getElementById('set_mulai').value, set_selesai: document.getElementById('set_selesai').value, set_batas: document.getElementById('set_batas').value };
-        callAPI('saveSettings', f).then(r => Swal.fire('Info', r, 'info'));
-    }
-
-    function doLogout() { localStorage.removeItem('gugusUser'); location.reload(); }
-  </script>
+        
+        console.log('🚀 Presensi Mobile Gugus v3.0 (Material Design 3)');
+        console.log('✅ Login: BEBAS JUMLAH DIGIT (seperti kode asli)');
+        console.log('📌 Ganti API_URL dengan URL GAS Anda');
+    </script>
 </body>
 </html>
