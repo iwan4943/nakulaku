@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- META TEMA DINAMIS (STATUS BAR) -->
+    <meta name="theme-color" content="#f8fafc" id="theme-color-meta">
+    
+    <title>NAKULAKU EKOSISTEM</title>
+
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- SCRIPT INSTAN UNTUK STATUS BAR & DARK MODE -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('theme-color-meta').setAttribute('content', '#0f172a');
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.getElementById('theme-color-meta').setAttribute('content', '#f8fafc');
+        }
+    </script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class', 
+            theme: { 
+                extend: { 
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { primary: '#4f46e5', bgLight: '#f8fafc', bgDark: '#0f172a', surfaceLight: '#ffffff', surfaceDark: '#1e293b' },
+                    animation: { 
+                        'pop-in': 'popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'shimmer': 'shimmer 2s linear infinite'
+                    },
+                    keyframes: { 
+                        popIn: { '0%': { opacity: '0', transform: 'scale(0.95)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+                        shimmer: { '0%': { backgroundPosition: '-1000px 0' }, '100%': { backgroundPosition: '1000px 0' } }
+                    }
+                } 
+            }
+        }
+    </script>
+
+    <style>
+        /* SCROLL NATIVE - OPTIMASI ANTI LAG */
+        body { 
+            -webkit-tap-highlight-color: transparent; 
+            touch-action: manipulation; 
+            user-select: none; 
+            margin: 0; padding: 0; 
+            overflow-x: hidden; 
+            -webkit-overflow-scrolling: touch; 
+            overscroll-behavior-y: none; 
+        }
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        /* FIX WARNA NAVIGATION BAR HP BAWAAN */
+        html { background-color: #ffffff; }
+        html.dark { background-color: #1e293b; }
+        
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+        /* SKELETON LOADING */
+        .skeleton {
+            background: #f1f5f9;
+            background-image: linear-gradient(to right, #f1f5f9 0%, #e2e8f0 20%, #f1f5f9 40%, #f1f5f9 100%);
+            background-repeat: no-repeat; background-size: 1000px 100%; 
+            animation: shimmer 1.5s infinite linear forwards;
+        }
+        .dark .skeleton {
+            background: #1e293b;
+            background-image: linear-gradient(to right, #1e293b 0%, #334155 20%, #1e293b 40%, #1e293b 100%);
+        }
+
+        /* SOLID SHEET MD3 BACKGROUND PURE GOOGLE STYLE (TANPA GRADASI) */
+        .solid-sheet {
+            background-color: #f8fafc; min-height: 100vh;
+            padding-bottom: 6rem; position: relative; z-index: 10;
+        }
+        .dark .solid-sheet { background-color: #0f172a; }
+
+        /* TOAST */
+        #exit-toast {
+            visibility: hidden; opacity: 0;
+            min-width: 220px; background-color: #334155; color: #fff; text-align: center;
+            border-radius: 50px; padding: 12px 24px; position: fixed; z-index: 10000;
+            left: 50%; bottom: 100px; transform: translateX(-50%); font-size: 13px; font-weight: 600;
+            transition: all 0.3s; pointer-events: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        #exit-toast.show { visibility: visible; opacity: 1; bottom: 110px; }
+        
+        .custom-modal-overlay { background: rgba(0, 0, 0, 0.6); z-index: 9999; }
+        
+        .loader-ring { display: inline-block; position: relative; width: 60px; height: 60px; }
+        .loader-ring div { box-sizing: border-box; display: block; position: absolute; width: 48px; height: 48px; margin: 6px; border: 4px solid #4f46e5; border-radius: 50%; animation: loader-ring 1.2s infinite; border-color: #4f46e5 transparent transparent transparent; }
+        @keyframes loader-ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(156, 163, 175, 0.5); border-radius: 20px; }
+
+        /* OMNIBOX SHADOW TRANSITION */
+        .omnibox { transition: box-shadow 0.3s ease, border-color 0.3s ease; }
+        .omnibox:focus-within { box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); border-color: transparent; }
+        .dark .omnibox:focus-within { box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); }
+
+        /* MATERIAL YOU NAV PILL ACTIVE EFFECT */
+        .nav-pill { transition: background-color 0.2s ease, width 0.2s ease; }
+        .nav-button:active .nav-pill { background-color: #e2e8f0; width: 4rem; }
+        .dark .nav-button:active .nav-pill { background-color: #334155; width: 4rem; }
+
+    </style>
+</head>
+<body class="bg-bgLight text-slate-800 dark:bg-bgDark dark:text-slate-200 transition-colors duration-300 antialiased relative overflow-x-hidden min-h-screen">
+
+    <div id="offline-banner" class="fixed top-0 left-0 right-0 bg-red-600 text-white text-[11px] font-bold text-center py-2 z-[10002] hidden flex items-center justify-center gap-2 transition-transform duration-300 transform -translate-y-full shadow-md">
+        <i data-lucide="wifi-off" class="w-3 h-3"></i> Anda sedang offline. Mohon periksa koneksi internet.
+    </div>
+
+    <div class="relative min-h-screen md:flex z-10 w-full justify-center">
+        
+        <!-- SIDEBAR DESKTOP -->
+        <aside class="hidden md:flex w-72 flex-col bg-surfaceLight dark:bg-surfaceDark h-screen sticky top-0 border-r border-slate-200 dark:border-slate-800 z-30 p-6 gap-6 shrink-0 shadow-sm">
+            <div class="flex items-center gap-3 px-2 mb-4">
+                <img src="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png" class="w-12 h-12 rounded-2xl border border-slate-100 dark:border-slate-700">
+                <div><h1 class="font-black text-xl tracking-tight text-slate-900 dark:text-white">Nakulaku</h1><p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sistem Sekolah</p></div>
+            </div>
+            
+            <nav class="flex-1 space-y-2">
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Utilitas</div>
+                <button onclick="app.refreshData(true)" class="w-full text-left p-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl flex items-center gap-4 transition">
+                    <i data-lucide="rotate-cw" class="w-5 h-5 text-slate-600 dark:text-slate-400"></i><span class="font-medium text-sm text-slate-700 dark:text-slate-300">Sinkronisasi</span>
+                </button>
+                <button onclick="app.toggleTheme()" class="w-full text-left p-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl flex items-center gap-4 transition">
+                    <i data-lucide="moon" class="w-5 h-5 text-slate-600 block dark:hidden"></i><i data-lucide="sun" class="w-5 h-5 text-slate-400 hidden dark:block"></i><span class="font-medium text-sm text-slate-700 dark:text-slate-300">Ganti Tema</span>
+                </button>
+                <button onclick="app.openModal('feedback-modal')" class="w-full text-left p-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl flex items-center gap-4 transition">
+                    <i data-lucide="message-square" class="w-5 h-5 text-slate-600 dark:text-slate-400"></i><span class="font-medium text-sm text-slate-700 dark:text-slate-300">Saran</span>
+                </button>
+                <div id="desktop-admin-menu" class="space-y-2 mt-8 hidden"><div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Admin</div></div>
+            </nav>
+
+            <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-3xl flex items-center gap-3 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition border border-slate-100 dark:border-slate-800" onclick="app.openModal('profile-modal')">
+                <div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-900 flex items-center justify-center overflow-hidden shrink-0">
+                    <img id="desk-user-photo" src="" class="w-full h-full object-cover hidden">
+                    <i id="desk-user-icon" data-lucide="user" class="w-5 h-5 text-slate-500"></i>
+                </div>
+                <div class="overflow-hidden">
+                    <h3 id="desk-user-name" class="font-bold text-sm truncate text-slate-900 dark:text-white">Tamu</h3>
+                    <p id="desk-user-role" class="text-[10px] opacity-70 uppercase font-bold tracking-tight text-slate-500">Klik Masuk</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- KONTEN UTAMA -->
+        <main class="flex-1 w-full max-w-4xl solid-sheet pb-24 relative">
+            
+            <!-- OMNIBOX (Search-First Header) -->
+            <div class="sticky top-4 z-40 px-4 md:px-8 pt-2 mb-8">
+                <div class="omnibox flex items-center gap-3 bg-surfaceLight dark:bg-surfaceDark rounded-full px-4 py-2.5 shadow-sm border border-slate-200 dark:border-slate-700">
+                    <i data-lucide="search" class="w-5 h-5 text-slate-400 shrink-0 ml-1"></i>
+                    <input type="text" id="menu-search-omnibox" onkeyup="app.filterMenus(this.value)" class="w-full bg-transparent border-none outline-none text-slate-800 dark:text-slate-100 text-[15px] placeholder-slate-400" placeholder="Telusuri aplikasi Nakulaku...">
+                    <div class="w-9 h-9 rounded-full overflow-hidden shrink-0 cursor-pointer bg-slate-100 dark:bg-slate-800 ml-2" onclick="app.openModal('profile-modal')">
+                        <img id="omnibox-profile-img" src="https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+
+            <!-- AREA KONTEN -->
+            <div class="px-5 md:px-10 relative z-10">
+                
+                <div class="mb-8 pl-1">
+                    <h2 class="text-3xl md:text-4xl font-semibold text-slate-800 dark:text-slate-100 tracking-tight" id="main-greeting">Halo,</h2>
+                    
+                    <!-- KAPSUL IDENTITAS PROFESIONAL -->
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white dark:bg-surfaceDark rounded-full mt-3 text-[11px] font-medium text-slate-600 dark:text-slate-400 shadow-sm border border-slate-200 dark:border-slate-700" id="header-identity-desk">
+                        <i data-lucide="briefcase" class="w-3.5 h-3.5 text-slate-400 -mt-0.5"></i> <span>Tamu • Nakulaku Ekosistem</span>
+                    </div>
+                </div>
+
+                <div id="sticky-info-container" class="hidden animate-pop-in mb-6"></div>
+
+                <div id="news-hero-card" class="hidden mb-8 animate-pop-in md:hidden"></div>
+
+                <div id="dashboard-guru" class="hidden animate-pop-in">
+                    
+                    <!-- WIDGET PERFORMA (Tonal Elevation MD3) -->
+                    <div id="widget-performa" class="grid grid-cols-2 gap-4 mb-10 md:grid-cols-4">
+                        
+                        <!-- Presensi (Emerald Tonal) -->
+                        <div class="relative overflow-hidden rounded-[24px] p-5 flex flex-col justify-between h-36 bg-emerald-100 dark:bg-emerald-900/30 cursor-default">
+                            <i data-lucide="check-circle-2" class="absolute -right-4 -bottom-4 w-28 h-28 text-emerald-500 dark:text-emerald-400 opacity-10 pointer-events-none"></i>
+                            <div class="flex items-center gap-2 z-10">
+                                <div class="w-8 h-8 rounded-full bg-emerald-200 dark:bg-emerald-800/50 flex items-center justify-center">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-700 dark:text-emerald-300"></i>
+                                </div>
+                                <p class="text-[11px] font-bold text-emerald-800 dark:text-emerald-200 uppercase tracking-widest">Presensi</p>
+                            </div>
+                            <h3 id="score-presensi" class="text-4xl font-bold text-emerald-900 dark:text-emerald-50 mt-auto z-10">0%</h3>
+                            <p id="detail-presensi" class="text-[10px] text-emerald-700 dark:text-emerald-300 mt-1 line-clamp-1 hidden z-10 font-medium">-</p>
+                        </div>
+                        
+                        <!-- Tugas (Blue Tonal) -->
+                        <div class="relative overflow-hidden rounded-[24px] p-5 flex flex-col justify-between h-36 bg-blue-100 dark:bg-blue-900/30 cursor-default">
+                            <i data-lucide="clipboard-list" class="absolute -right-4 -bottom-4 w-28 h-28 text-blue-500 dark:text-blue-400 opacity-10 pointer-events-none"></i>
+                            <div class="flex items-center gap-2 z-10">
+                                <div class="w-8 h-8 rounded-full bg-blue-200 dark:bg-blue-800/50 flex items-center justify-center">
+                                    <i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700 dark:text-blue-300"></i>
+                                </div>
+                                <p class="text-[11px] font-bold text-blue-800 dark:text-blue-200 uppercase tracking-widest">Tugas</p>
+                            </div>
+                            <h3 id="score-tugas" class="text-4xl font-bold text-blue-900 dark:text-blue-50 mt-auto z-10">0%</h3>
+                            <p id="detail-tugas" class="text-[10px] text-blue-700 dark:text-blue-300 mt-1 line-clamp-1 hidden z-10 font-medium">-</p>
+                        </div>
+                         <div class="hidden md:block col-span-2"></div>
+                    </div>
+
+                    <!-- LAYANAN UTAMA -->
+                    <div class="mb-10">
+                        <h3 class="text-[15px] font-semibold text-slate-800 dark:text-white mb-4 pl-1">Layanan Utama</h3>
+                        
+                        <!-- Peringatan Jika Pencarian Kosong -->
+                        <div id="empty-search-msg" class="hidden py-10 text-center flex-col items-center justify-center col-span-full">
+                            <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
+                                <i data-lucide="search-x" class="w-8 h-8 text-slate-400"></i>
+                            </div>
+                            <h4 class="font-medium text-slate-800 dark:text-slate-200">Tidak menemukan layanan</h4>
+                            <p class="text-xs text-slate-500 mt-1">Coba gunakan kata kunci yang berbeda.</p>
+                        </div>
+
+                        <div id="mobile-menu-container" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                    </div>
+
+                    <!-- ADMIN PANEL -->
+                    <div id="mobile-admin-section" class="hidden mb-12">
+                        <h3 class="text-[15px] font-semibold text-slate-800 dark:text-white mb-4 pl-1">Kontrol Panel</h3>
+                        <div id="mobile-admin-container" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                    </div>
+                </div>
+
+                <!-- WIDGET QUOTES (Tonal Pastel) -->
+                <div id="widget-quote" class="hidden md:col-span-4 relative overflow-hidden rounded-[24px] p-8 md:p-10 mb-10 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-900 dark:text-indigo-100 flex flex-col justify-center items-center text-center">
+                    <i data-lucide="quote" class="absolute -top-4 -left-4 w-32 h-32 opacity-[0.05] pointer-events-none"></i>
+                    
+                    <div class="mb-4 flex items-center justify-center gap-2 opacity-60">
+                        <span class="text-[10px] font-bold uppercase tracking-[0.15em]">Pesan Hari Ini</span>
+                    </div>
+                    
+                    <p id="quote-text" class="text-xl md:text-2xl font-semibold leading-relaxed tracking-tight z-10 mb-6 max-w-2xl">"Pendidikan adalah senjata paling ampuh..."</p>
+                    
+                    <div class="z-10 flex flex-col items-center">
+                        <p id="quote-author" class="text-xs font-bold uppercase tracking-widest opacity-70"></p>
+                    </div>
+                </div>
+                
+                <div id="agenda-section" class="mb-12">
+                    <h3 class="text-[15px] font-semibold text-slate-800 dark:text-white mb-4 pl-1">Agenda Mendatang</h3>
+                    <div id="mobile-agenda-list" class="space-y-3"></div>
+                </div>
+
+                <footer class="mt-12 mb-8 text-center opacity-60">
+                    <p id="footer-text" class="text-[11px] font-medium text-slate-500 dark:text-slate-400 tracking-wide">&copy; 2026 Nakulaku Ekosistem</p>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <!-- PILL-SHAPED BOTTOM NAV -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 min-h-[72px] bg-surfaceLight dark:bg-surfaceDark border-t border-slate-100 dark:border-slate-800 flex items-center justify-around px-2 z-40 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
+        <button onclick="app.refreshData(true)" class="nav-button flex flex-col items-center justify-center w-16 pt-2 group outline-none">
+            <div class="nav-pill w-12 h-8 rounded-full flex items-center justify-center mb-1">
+                <i data-lucide="rotate-cw" class="w-5 h-5 text-slate-600 dark:text-slate-400 group-active:text-slate-900 dark:group-active:text-white transition-colors"></i>
+            </div>
+            <span class="text-[10px] font-medium text-slate-600 dark:text-slate-400 group-active:text-slate-900 dark:group-active:text-white">Sync</span>
+        </button>
+        <button onclick="app.toggleTheme()" class="nav-button flex flex-col items-center justify-center w-16 pt-2 group outline-none">
+            <div class="nav-pill w-12 h-8 rounded-full flex items-center justify-center mb-1">
+                <i data-lucide="moon" class="w-5 h-5 text-slate-600 block dark:hidden"></i>
+                <i data-lucide="sun" class="w-5 h-5 hidden dark:block text-slate-400 group-active:text-white"></i>
+            </div>
+            <span class="text-[10px] font-medium text-slate-600 dark:text-slate-400 group-active:text-slate-900 dark:group-active:text-white">Tema</span>
+        </button>
+        <button onclick="app.openModal('feedback-modal')" class="nav-button flex flex-col items-center justify-center w-16 pt-2 group outline-none">
+            <div class="nav-pill w-12 h-8 rounded-full flex items-center justify-center mb-1">
+                <i data-lucide="message-square" class="w-5 h-5 text-slate-600 dark:text-slate-400 group-active:text-slate-900 dark:group-active:text-white transition-colors"></i>
+            </div>
+            <span class="text-[10px] font-medium text-slate-600 dark:text-slate-400 group-active:text-slate-900 dark:group-active:text-white">Saran</span>
+        </button>
+    </nav>
+
+    <!-- TOAST & MODALS -->
+    <div id="exit-toast">Tekan sekali lagi untuk keluar</div>
+    
+    <div id="custom-alert" class="fixed inset-0 z-[10001] hidden flex items-center justify-center p-6 custom-modal-overlay"><div class="bg-white dark:bg-surfaceDark w-full max-w-xs rounded-3xl p-6 text-center shadow-2xl animate-pop-in border border-slate-100 dark:border-slate-800"><div id="alert-icon-bg" class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 text-primary"><i id="alert-icon" data-lucide="info" class="w-8 h-8"></i></div><h3 id="alert-title" class="font-bold text-xl mb-2 text-slate-900 dark:text-white">Info</h3><p id="alert-msg" class="text-sm text-slate-500 dark:text-slate-400 mb-6">...</p><button onclick="app.closeAlert()" class="w-full py-3.5 bg-slate-900 text-white dark:bg-white dark:text-slate-900 rounded-full font-bold text-sm active:scale-95 transition">Mengerti</button></div></div>
+    
+    <div id="custom-confirm" class="fixed inset-0 z-[10001] hidden flex items-center justify-center p-6 custom-modal-overlay"><div class="bg-white dark:bg-surfaceDark w-full max-w-xs rounded-3xl p-6 text-center shadow-2xl animate-pop-in border border-slate-100 dark:border-slate-800"><div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-red-50 dark:bg-red-900/30 text-red-600"><i data-lucide="log-out" class="w-8 h-8"></i></div><h3 id="confirm-title" class="font-bold text-xl mb-2 text-slate-900 dark:text-white">Konfirmasi</h3><p id="confirm-msg" class="text-sm text-slate-500 dark:text-slate-400 mb-6">...</p><div class="flex gap-3"><button onclick="app.closeConfirm()" class="flex-1 py-3.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-white rounded-full font-bold text-sm active:scale-95 transition">Batal</button><button id="confirm-yes-btn" class="flex-1 py-3.5 bg-red-600 text-white rounded-full font-bold text-sm active:scale-95 transition">Ya</button></div></div></div>
+    
+    <div id="loading-overlay" class="fixed inset-0 z-[9999] bg-white/95 dark:bg-bgDark/95 hidden flex-col items-center justify-center text-center"><div class="loader-ring"><div></div><div></div><div></div><div></div></div></div>
+    
+    <!-- MODAL PROFIL -->
+    <div id="profile-modal" class="fixed inset-0 z-[9999] hidden flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="absolute inset-0 bg-black/60 transition-opacity duration-500" onclick="app.closeModal('profile-modal')"></div>
+        <div class="bg-surfaceLight dark:bg-surfaceDark w-full md:max-w-sm rounded-t-[32px] rounded-b-none md:rounded-[32px] p-8 pb-10 md:pb-8 shadow-2xl transform translate-y-full md:translate-y-0 md:scale-95 opacity-0 modal-content transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] relative z-10 border-t border-slate-100 dark:border-slate-800">
+            <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-8 mt-[-10px] md:hidden"></div>
+            <div id="profile-content-login">
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center md:text-left tracking-tight">Login Akses</h3>
+                <div class="space-y-4">
+                    <input type="text" id="sync-pin" class="w-full bg-slate-50 dark:bg-slate-900 p-4 rounded-2xl text-center text-xl font-bold tracking-widest outline-none focus:ring-2 focus:ring-primary dark:text-white transition-all border border-slate-200 dark:border-slate-700" placeholder="PIN AKSES">
+                    <button onclick="app.syncData()" id="btn-sync" class="w-full bg-primary hover:bg-indigo-700 text-white font-bold py-4 rounded-full active:scale-95 transition-all duration-200">Masuk Aplikasi</button>
+                </div>
+            </div>
+            <div id="loggedin-actions" class="hidden text-center">
+                <div class="relative w-24 h-24 mx-auto mb-4 group">
+                    <img id="modal-photo" src="" class="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-sm">
+                    <label for="upload-photo" class="absolute bottom-0 right-0 bg-slate-900 dark:bg-white text-white dark:text-slate-900 p-2.5 rounded-full cursor-pointer shadow-md active:scale-90 transition border-2 border-white dark:border-slate-800"><i data-lucide="camera" class="w-4 h-4"></i></label>
+                    <input type="file" id="upload-photo" hidden accept="image/*" onchange="app.handlePhotoUpload(this)">
+                </div>
+                <h3 id="modal-user-name" class="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Nama</h3>
+                <p id="modal-user-role" class="text-[11px] text-slate-500 mb-8 font-semibold bg-slate-100 dark:bg-slate-800 inline-block px-3 py-1 rounded-full mt-2">Jabatan</p>
+                <div class="space-y-3">
+                    <button onclick="app.confirmLogout()" class="w-full py-4 text-red-600 dark:text-red-400 font-bold text-sm bg-red-50 hover:bg-red-100 dark:bg-red-900/20 rounded-full transition-colors">Keluar Akun</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL SUBMENU -->
+    <div id="submenu-modal" class="fixed inset-0 z-[9999] hidden flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="absolute inset-0 bg-black/60 transition-opacity duration-500" onclick="app.closeModal('submenu-modal')"></div>
+        <div class="bg-surfaceLight dark:bg-surfaceDark w-full md:max-w-md rounded-t-[32px] rounded-b-none md:rounded-[32px] p-6 pb-10 md:pb-6 shadow-2xl transform translate-y-full md:translate-y-0 md:scale-95 opacity-0 modal-content transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] max-h-[85vh] flex flex-col relative z-10 border-t border-slate-100 dark:border-slate-800">
+            <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6 mt-1 md:hidden shrink-0"></div>
+            <div class="flex items-center justify-between mb-4 px-2">
+                <h3 id="submenu-title" class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Menu Layanan</h3>
+                <button onclick="app.closeModal('submenu-modal')" class="hidden md:flex w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 items-center justify-center transition text-slate-500"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div id="submenu-list" class="overflow-y-auto space-y-2 pr-1 pb-4 custom-scrollbar px-1"></div>
+        </div>
+    </div>
+
+    <!-- MODAL SARAN -->
+    <div id="feedback-modal" class="fixed inset-0 z-[9999] hidden flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="absolute inset-0 bg-black/60 transition-opacity duration-500" onclick="app.closeModal('feedback-modal')"></div>
+        <div class="bg-surfaceLight dark:bg-surfaceDark w-full md:max-w-md rounded-t-[32px] rounded-b-none md:rounded-[32px] p-8 pb-10 md:pb-8 shadow-2xl transform translate-y-full md:translate-y-0 md:scale-95 opacity-0 modal-content transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] relative z-10 border-t border-slate-100 dark:border-slate-800">
+            <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6 mt-[-10px] md:hidden"></div>
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Bantuan & Masukan</h3>
+                <button onclick="app.closeModal('feedback-modal')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 items-center justify-center transition flex text-slate-500"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <form onsubmit="app.submitFeedback(event)" class="space-y-4">
+                <textarea name="pesan" rows="4" class="w-full bg-slate-50 dark:bg-slate-900 rounded-2xl p-4 text-sm outline-none focus:ring-2 focus:ring-primary dark:text-white resize-none border border-slate-200 dark:border-slate-700 transition-all" placeholder="Tulis pesan Anda..."></textarea>
+                <div class="flex justify-between items-center pt-2">
+                    <label class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer select-none">
+                        <input type="checkbox" id="anonim-check" name="isAnonim" class="rounded w-4 h-4 text-primary focus:ring-primary bg-white border-slate-300"> <span>Kirim Anonim</span>
+                    </label>
+                    <button id="btn-feedback-submit" type="submit" class="bg-primary hover:bg-indigo-700 text-white px-8 py-3 rounded-full font-bold text-sm active:scale-95 transition-all">Kirim</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { if (window.location.protocol.includes('http')) navigator.serviceWorker.register('sw.js').catch(e=>console.log(e)); }); }
+        function closeInstallModal() { const m=document.getElementById('install-modal'); if(m){m.classList.add('opacity-0'); setTimeout(()=>{m.classList.add('hidden');sessionStorage.setItem('install_rejected','true');},500);} }
+        function safeClass(id,a,c){const e=document.getElementById(id);if(e){a==='add'?e.classList.add(c):e.classList.remove(c);}}
+        function safeText(id,t){const e=document.getElementById(id);if(e)e.innerText=t;}
+
+        const app = {
+            apiURL: "https://script.google.com/macros/s/AKfycbzgyeCMcnsLzBMkVreP8mdw-ImRev9Q-hHn0eVpEBw6YYgD_JlOz8oXBFQ-6vtMPFAe/exec", 
+            menuMap: {}, schools: [], currentUser: null, schoolInterval: null, deferredPrompt: null,
+            
+            init: function() {
+                if (window.location.hash === '#reset') { localStorage.clear(); location.reload(); return; }
+                this.initTheme(); this.checkAutoLogin();
+                const cached = localStorage.getItem('nakula_cache'); if(cached) try { this.render(JSON.parse(cached)); } catch(e){}
+                this.refreshData(false); 
+                this.setupBackButton(); lucide.createIcons();
+                this.updateTimeAwareBg(); setInterval(() => this.updateTimeAwareBg(), 60000);
+                this.setupOfflineListener();
+            },
+
+            filterMenus: function(query) {
+                const q = query.toLowerCase();
+                const items = document.querySelectorAll('.menu-item-card');
+                let hasVisible = false;
+                
+                items.forEach(item => {
+                    const title = item.getAttribute('data-title');
+                    const desc = item.getAttribute('data-desc');
+                    if (title.includes(q) || desc.includes(q)) {
+                        item.style.display = '';
+                        hasVisible = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                const emptyMsg = document.getElementById('empty-search-msg');
+                if (!hasVisible && q.length > 0) { emptyMsg.classList.remove('hidden'); emptyMsg.classList.add('flex'); } 
+                else { emptyMsg.classList.add('hidden'); emptyMsg.classList.remove('flex'); }
+            },
+
+            setupOfflineListener: function() {
+                window.addEventListener('offline', () => { 
+                    const b = document.getElementById('offline-banner');
+                    b.classList.remove('hidden');
+                    setTimeout(() => { b.classList.remove('-translate-y-full'); b.classList.add('translate-y-0'); }, 10);
+                });
+                window.addEventListener('online', () => { 
+                    const b = document.getElementById('offline-banner');
+                    b.classList.remove('translate-y-0');
+                    b.classList.add('-translate-y-full');
+                    setTimeout(() => b.classList.add('hidden'), 300);
+                    this.refreshData(false); 
+                });
+            },
+
+            sendLog: function(activity, detail = '-') {
+                if (!this.currentUser || !this.currentUser.nama) return;
+                fetch(this.apiURL, {
+                    method: 'POST', mode: 'no-cors',
+                    headers: {'Content-Type': 'text/plain'}, 
+                    body: JSON.stringify({ action: 'log', user: this.currentUser.realName || this.currentUser.nama, realName: this.currentUser.realName, activity: activity, detail: detail })
+                }).catch(e => console.log('Log silent fail', e));
+            },
+
+            openLink: function(url, title) {
+                if (navigator.vibrate) navigator.vibrate(50);
+                this.sendLog('Buka Menu', title);
+                window.open(url, '_blank');
+            },
+
+            showAlert: function(title, msg, type = 'info') {
+                const modal = document.getElementById('custom-alert');
+                const icon = document.getElementById('alert-icon');
+                const iconBg = document.getElementById('alert-icon-bg');
+                safeText('alert-title', title); safeText('alert-msg', msg);
+                if(type === 'error') { iconBg.className = "w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-red-50 text-red-600 dark:bg-red-900/30"; icon.setAttribute('data-lucide', 'alert-triangle'); } 
+                else if(type === 'success') { iconBg.className = "w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30"; icon.setAttribute('data-lucide', 'check-circle-2'); } 
+                else { iconBg.className = "w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-indigo-50 text-primary dark:bg-indigo-900/30"; icon.setAttribute('data-lucide', 'info'); }
+                lucide.createIcons(); modal.classList.remove('hidden');
+            },
+            closeAlert: function() { document.getElementById('custom-alert').classList.add('hidden'); },
+            showConfirm: function(title, msg, onYes) {
+                const modal = document.getElementById('custom-confirm');
+                safeText('confirm-title', title); safeText('confirm-msg', msg);
+                const btnYes = document.getElementById('confirm-yes-btn');
+                btnYes.onclick = function() { onYes(); app.closeConfirm(); };
+                modal.classList.remove('hidden');
+            },
+            closeConfirm: function() { document.getElementById('custom-confirm').classList.add('hidden'); },
+            
+            initTheme: function() { 
+                const dark = document.documentElement.classList.contains('dark');
+                const metaTheme = document.getElementById('theme-color-meta');
+                if(metaTheme) metaTheme.setAttribute('content', dark ? '#0f172a' : '#f8fafc');
+            },
+            toggleTheme: function() { 
+                const isDark = document.documentElement.classList.toggle('dark'); 
+                localStorage.setItem('theme', isDark ? 'dark' : 'light'); 
+                const metaTheme = document.getElementById('theme-color-meta');
+                if(metaTheme) {
+                    metaTheme.setAttribute('content', isDark ? '#0f172a' : '#ffffff');
+                }
+            },
+            
+            updateTimeAwareBg: function() {
+                const h = new Date().getHours();
+                let greet = '';
+                
+                if (h >= 5 && h < 10) { greet = "Selamat Pagi,"; } 
+                else if (h >= 10 && h < 15) { greet = "Selamat Siang,"; } 
+                else if (h >= 15 && h < 18) { greet = "Selamat Sore,"; } 
+                else { greet = "Selamat Malam,"; }
+                
+                let nama = '';
+                let subText = 'Tamu • Nakulaku Ekosistem';
+
+                if (this.currentUser) {
+                    nama = this.currentUser.realName.split(' ')[0];
+                    subText = `${this.currentUser.role || 'Guru'} • ${this.currentUser.instansi || 'Sekolah'}`;
+                }
+
+                const greetElDesk = document.getElementById('main-greeting');
+                if(greetElDesk) greetElDesk.innerText = nama ? `${greet} ${nama}` : greet.replace(',', '');
+
+                const idDesk = document.getElementById('header-identity-desk');
+                if(idDesk) idDesk.innerHTML = `<i data-lucide="briefcase" class="w-3.5 h-3.5 text-slate-400 -mt-0.5"></i> <span>${subText}</span>`;
+
+                lucide.createIcons();
+            },
+
+            refreshData: function(manual) {
+                const loader = document.getElementById('loading-overlay');
+                if (manual && loader) { loader.classList.remove('hidden'); loader.classList.add('flex'); }
+                const p = JSON.parse(localStorage.getItem('nakula_profile') || '{}');
+                Promise.all([
+                    fetch(`${this.apiURL}?action=content&t=${Date.now()}`).then(r=>r.json()),
+                    p.nama ? fetch(`${this.apiURL}?action=refresh&email=${p.nama}`).then(r=>r.json()) : null
+                ]).then(([content, user]) => {
+                    if (content?.status === 'success') { localStorage.setItem('nakula_cache', JSON.stringify(content)); this.schools = content.schools || []; this.render(content); }
+                    if (user?.status === 'success') { p.performa = user.performa; localStorage.setItem('nakula_profile', JSON.stringify(p)); this.updateStats(user.performa); }
+                    if (manual && loader) setTimeout(() => { loader.classList.add('hidden'); loader.classList.remove('flex'); app.showAlert('Berhasil', 'Data tersinkronisasi', 'success'); }, 500);
+                }).catch(() => { if(manual && loader) { loader.classList.add('hidden'); loader.classList.remove('flex'); app.showAlert('Gagal', 'Koneksi bermasalah', 'error'); } });
+            },
+
+            render: function(data) {
+                const info = data.info || {};
+                this.updateTimeAwareBg();
+
+                if (info.quote) {
+                   safeText('quote-text', info.quote);
+                   safeText('quote-author', info.author || '');
+                   safeClass('widget-quote', 'remove', 'hidden');
+                }
+
+                const stickyInfo = document.getElementById('sticky-info-container');
+                if(stickyInfo) {
+                    if (info.Info_Status === 'ON') {
+                        let clickAttr = '';
+                        if (info.Info_Link && info.Info_Link.length > 5) clickAttr = `onclick="window.open('${info.Info_Link}', '_blank')" class="cursor-pointer active:scale-95 transition"`;
+                        stickyInfo.innerHTML = `<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 flex items-start gap-3 rounded-2xl"><i data-lucide="info" class="w-5 h-5 text-red-600 mt-0.5 shrink-0"></i><div ${clickAttr} class="flex-1"><h4 class="font-bold text-sm text-red-800 dark:text-red-300">Info Penting</h4><p class="text-xs text-red-600 dark:text-red-400 mt-1 leading-snug">${info.Info_Pesan}</p></div></div>`;
+                        stickyInfo.classList.remove('hidden');
+                    } else stickyInfo.classList.add('hidden');
+                }
+
+                this.renderMenus(data.menu || []); this.renderAgenda(data.agenda || []);
+                const footerText = document.getElementById('footer-text'); 
+                if(footerText && (info.Footer || info.footer)) footerText.innerText = info.Footer || info.footer;
+                lucide.createIcons();
+            },
+
+            renderMenus: function(list) {
+                this.menuMap = {}; list.forEach(m => { if(m.parent) { const p = m.parent.toLowerCase().trim(); if(!this.menuMap[p]) this.menuMap[p]=[]; this.menuMap[p].push(m); } });
+                const role = (localStorage.getItem('nakula_role')||'').toLowerCase();
+                const ctrMob = document.getElementById('mobile-menu-container'); 
+                const admMob = document.getElementById('mobile-admin-container');
+                const admDesk = document.getElementById('desktop-admin-menu');
+                if(admDesk) admDesk.innerHTML = '<div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">Admin</div>';
+                let hMob='', hAdm='';
+
+                list.forEach(m => {
+                    if (m.parent || (m.posisi && m.posisi === 'dock')) return; if (m.role && m.role !== 'all' && !role.includes(m.role)) return;
+                    const title = m.judul.trim(); const hasChild = this.menuMap[title.toLowerCase()];
+                    let action = hasChild ? `onclick="app.openSubmenu('${title}')"` : `onclick="app.openLink('${m.url}','${title}')"`;
+                    const isWide = m.ukuran === 'wide'; const gridClass = isWide ? 'col-span-2' : 'col-span-1';
+                    
+                    let colorClass = "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-900 dark:text-indigo-100 hover:bg-indigo-100 dark:hover:bg-indigo-900/50";
+                    let iconBg = "text-indigo-700 dark:text-indigo-300";
+                    
+                    if (m.warna === 'red') { colorClass = "bg-rose-50 dark:bg-rose-900/30 text-rose-900 dark:text-rose-100 hover:bg-rose-100 dark:hover:bg-rose-900/50"; iconBg = "text-rose-700 dark:text-rose-300"; }
+                    if (m.warna === 'blue') { colorClass = "bg-blue-50 dark:bg-blue-900/30 text-blue-900 dark:text-blue-100 hover:bg-blue-100 dark:hover:bg-blue-900/50"; iconBg = "text-blue-700 dark:text-blue-300"; }
+                    if (m.warna === 'green') { colorClass = "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-900 dark:text-emerald-100 hover:bg-emerald-100 dark:hover:bg-emerald-900/50"; iconBg = "text-emerald-700 dark:text-emerald-300"; }
+                    if (m.warna === 'yellow') { colorClass = "bg-amber-50 dark:bg-amber-900/30 text-amber-900 dark:text-amber-100 hover:bg-amber-100 dark:hover:bg-amber-900/50"; iconBg = "text-amber-700 dark:text-amber-300"; }
+
+                    const cardHtml = `
+                    <button data-title="${title.toLowerCase()}" data-desc="${(m.deskripsi||'').toLowerCase()}" ${action} class="menu-item-card ${gridClass} rounded-[24px] flex items-stretch h-[5.5rem] text-left group transition-colors duration-200 ${colorClass} overflow-hidden active:scale-[0.98] outline-none">
+                        <div class="w-16 shrink-0 flex items-center justify-center relative overflow-hidden">
+                            <i data-lucide="${m.icon||'box'}" class="w-7 h-7 z-10 ${iconBg}"></i>
+                        </div>
+                        <div class="flex-1 pr-4 py-3 flex flex-col justify-center min-w-0">
+                            <h4 class="font-semibold text-[13px] md:text-sm leading-tight truncate">${title}</h4>
+                            <p class="text-[10px] md:text-[11px] line-clamp-2 mt-0.5 opacity-70 leading-snug">${m.deskripsi||'Akses layanan'}</p>
+                        </div>
+                    </button>`;
+                    
+                    const listHtml = `<button ${action} class="w-full text-left py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg flex items-center gap-4 transition px-3"><i data-lucide="${m.icon||'box'}" class="w-5 h-5 text-slate-500"></i><span class="text-sm text-slate-700 dark:text-slate-300 font-medium truncate">${title}</span></button>`;
+
+                    if (m.role === 'admin' || m.role === 'narasumber') { hAdm += cardHtml; if(admDesk) admDesk.innerHTML += listHtml; }
+                    else { if (m.posisi !== 'desktop') hMob += cardHtml; }
+                });
+
+                if(ctrMob) ctrMob.innerHTML = hMob; 
+                if (hAdm) { if(admMob) admMob.innerHTML = hAdm; safeClass('mobile-admin-section', 'remove', 'hidden'); if(admDesk) safeClass('desktop-admin-menu', 'remove', 'hidden'); }
+            },
+
+            renderAgenda: function(list) {
+                let html = ''; 
+                if (!list || list.length === 0) {
+                    html = `
+                    <div class="py-8 text-center bg-white dark:bg-surfaceDark rounded-3xl border border-dashed border-slate-200 dark:border-slate-700">
+                        <i data-lucide="calendar-check" class="w-10 h-10 text-slate-300 dark:text-slate-600 mb-3 mx-auto"></i>
+                        <h4 class="font-medium text-slate-700 dark:text-white mb-1">Jadwal Kosong</h4>
+                        <p class="text-xs text-slate-500">Saat ini tidak ada kegiatan mendesak.</p>
+                    </div>`;
+                }
+                else { 
+                    list.forEach(item => { 
+                        html += `<div class="flex gap-4 items-center p-4 bg-white dark:bg-surfaceDark rounded-2xl border border-slate-100 dark:border-slate-800 mb-3"><div class="w-12 text-center shrink-0"><span class="block text-[10px] font-bold text-primary uppercase">${item.tanggal.split(' ')[1]}</span><span class="block text-xl font-bold text-slate-800 dark:text-white leading-none mt-1">${item.tanggal.split(' ')[0]}</span></div><div class="pl-3 border-l border-slate-100 dark:border-slate-800 flex-1 min-w-0"><h4 class="font-semibold text-sm text-slate-800 dark:text-white truncate">${item.kegiatan}</h4><p class="text-[11px] text-slate-500 truncate mt-0.5">${item.ket||'Agenda Ekosistem'}</p></div></div>`; 
+                    }); 
+                }
+                const mobAg = document.getElementById('mobile-agenda-list'); if(mobAg) mobAg.innerHTML = html;
+            },
+
+            checkAutoLogin: function() { const p = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); if (p.nama) this.updateUI(p); else this.updateUIGuest(); },
+            
+            syncData: function() { 
+                const pin = document.getElementById('sync-pin').value; 
+                const btn = document.getElementById('btn-sync');
+                if(!pin) return app.showAlert('Error', 'Isi PIN', 'error'); 
+                
+                btn.innerText = "Memproses...";
+                if (navigator.vibrate) navigator.vibrate(50);
+                
+                fetch(`${this.apiURL}?action=sync&pin=${pin}`).then(r=>r.json()).then(d => { 
+                    if (d.status === 'success') { 
+                        const p = { nama: d.nama, realName: d.realName, role: d.jabatan, instansi: d.instansi, photo: d.foto || "", performa: d.performa }; 
+                        localStorage.setItem('nakula_profile', JSON.stringify(p)); localStorage.setItem('nakula_role', d.roleAccess); 
+                        this.updateUI(p); this.closeModal('profile-modal'); this.sendLog('Login');
+                    } else { app.showAlert('Gagal', d.message, 'error'); }
+                }).catch(()=>app.showAlert('Error', 'Koneksi bermasalah', 'error')).finally(()=>btn.innerText="Masuk Aplikasi"); 
+            },
+            
+            updateUI: function(p) {
+                this.currentUser = p; this.updateTimeAwareBg();
+                const defaultPhoto = "https://raw.githubusercontent.com/iwan4943/nakulaku/refs/heads/main/nakula.png";
+                const photoUrl = p.photo && p.photo.length > 10 ? p.photo : defaultPhoto;
+                
+                const setImg = (id) => { const el = document.getElementById(id); if(el) el.src = photoUrl; };
+                setImg('desk-user-photo'); setImg('modal-photo'); setImg('omnibox-profile-img');
+                
+                safeClass('desk-user-photo', 'remove', 'hidden'); safeClass('desk-user-icon', 'add', 'hidden');
+                safeText('desk-user-name', p.realName); safeText('modal-user-name', p.realName); safeText('modal-user-role', p.instansi); 
+                
+                safeClass('profile-content-login', 'add', 'hidden'); safeClass('loggedin-actions', 'remove', 'hidden');
+                safeClass('dashboard-guru', 'remove', 'hidden'); safeClass('agenda-section', 'add', 'hidden'); safeClass('widget-quote', 'add', 'hidden');
+                
+                if(p.performa) { 
+                    this.animateValue('score-presensi', 0, p.performa.presensi, 1000, '%');
+                    this.animateValue('score-tugas', 0, p.performa.tugas, 1200, '%');
+                    if (p.performa.det_presensi) { safeText('detail-presensi', p.performa.det_presensi); safeClass('detail-presensi', 'remove', 'hidden'); }
+                    if (p.performa.det_tugas) { safeText('detail-tugas', p.performa.det_tugas); safeClass('detail-tugas', 'remove', 'hidden'); }
+                }
+            },
+            
+            updateUIGuest: function() { 
+                this.currentUser = null; this.updateTimeAwareBg(); 
+                safeClass('desk-user-photo', 'add', 'hidden'); safeClass('desk-user-icon', 'remove', 'hidden');
+                safeText('desk-user-name', 'Tamu');
+                safeClass('profile-content-login', 'remove', 'hidden'); safeClass('loggedin-actions', 'add', 'hidden'); 
+                safeClass('dashboard-guru', 'add', 'hidden'); safeClass('agenda-section', 'remove', 'hidden'); safeClass('widget-quote', 'remove', 'hidden'); 
+            },
+            
+            handlePhotoUpload: function(input) { 
+                if (input.files && input.files[0]) { 
+                    const reader = new FileReader(); 
+                    reader.onload = (e) => { const p = JSON.parse(localStorage.getItem('nakula_profile') || '{}'); p.photo = e.target.result; localStorage.setItem('nakula_profile', JSON.stringify(p)); app.updateUI(p); }; 
+                    reader.readAsDataURL(input.files[0]); 
+                } 
+            },
+            
+            updateStats: function(p) { this.animateValue('score-presensi', 0, p.presensi, 1000, '%'); this.animateValue('score-tugas', 0, p.tugas, 1200, '%'); },
+
+            animateValue: function(id, start, end, duration, suffix = '') {
+                if (start === end) return; const range = end - start; let current = start; const increment = end > start ? 1 : -1;
+                const stepTime = Math.abs(Math.floor(duration / range)); const obj = document.getElementById(id); if(!obj) return;
+                const timer = setInterval(() => { current += increment; obj.innerHTML = current + suffix; if (current == end) clearInterval(timer); }, Math.max(stepTime, 10));
+            },
+            
+            openModal: function(id) { 
+                if (navigator.vibrate) navigator.vibrate(20);
+                const el = document.getElementById(id); el.classList.remove('hidden'); 
+                setTimeout(()=>el.querySelector('.modal-content').classList.remove('opacity-0','translate-y-full'),10); 
+            },
+            
+            closeModal: function(id) { 
+                const el = document.getElementById(id); el.querySelector('.modal-content').classList.add('opacity-0','translate-y-full'); 
+                setTimeout(()=>el.classList.add('hidden'),300); 
+            },
+            
+            openSubmenu: function(title) { 
+                const list = this.menuMap[title.toLowerCase()]; safeText('submenu-title', title); const ctr = document.getElementById('submenu-list'); 
+                if(ctr) {
+                    ctr.innerHTML = list.map(m => `
+                    <button onclick="app.openLink('${m.url}','${m.judul}')" class="w-full text-left p-4 bg-white dark:bg-surfaceDark hover:bg-slate-50 dark:hover:bg-slate-800 rounded-[20px] flex items-center gap-4 transition-colors border border-slate-100 dark:border-slate-800 mb-2">
+                        <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center shrink-0 text-slate-600 dark:text-slate-400">
+                            <i data-lucide="${m.icon||'link'}" class="w-5 h-5"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-semibold text-sm text-slate-800 dark:text-white truncate">${m.judul}</h4>
+                        </div>
+                    </button>
+                    `).join('');
+                }
+                lucide.createIcons(); this.openModal('submenu-modal'); 
+            },
+
+            confirmLogout: function() { app.showConfirm('Keluar Akun', 'Anda harus login kembali nanti.', () => { localStorage.removeItem('nakula_profile'); localStorage.removeItem('nakula_role'); location.reload(); }); },
+            setupBackButton: function() { window.onpopstate = () => { const activeModal = document.querySelector('.fixed.z-[9999]:not(.hidden)'); if (activeModal) this.closeModal(activeModal.id); else { const now = new Date().getTime(); if (now - this.backPressedTime < 2000) history.back(); else { this.backPressedTime = now; document.getElementById('exit-toast').classList.add('show'); setTimeout(() => document.getElementById('exit-toast').classList.remove('show'), 2000); window.history.pushState(null, null, window.location.href); } } }; window.history.pushState(null, null, window.location.href); },
+            
+            submitFeedback: function(e) { 
+                e.preventDefault(); const btn = document.getElementById('btn-feedback-submit'); const old = btn.innerText; btn.innerText = '...'; 
+                const fd = new FormData(e.target); const obj = Object.fromEntries(fd.entries()); obj.isAnonim = document.getElementById('anonim-check').checked; 
+                if (!obj.isAnonim && this.currentUser) { obj.pengirim = this.currentUser.realName; obj.kontak = this.currentUser.nama; }
+                fetch(this.apiURL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(obj)}).then(()=>{ app.showAlert("Terkirim!", "Terima kasih atas sarannya", "success"); this.closeModal('feedback-modal'); e.target.reset(); }).catch(()=>app.showAlert("Gagal", "Coba lagi nanti", "error")).finally(()=>btn.innerText=old); 
+            }
+        };
+        
+        document.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
+</body>
+</html>
