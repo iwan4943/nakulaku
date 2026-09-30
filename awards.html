@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-<title>Awards — Gugus Nakula</title>
+<title>Awards — Gugus Nakula 2026</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -74,7 +74,7 @@
   .tab-panel.active { display: block; animation: fadeIn 0.35s ease-out; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* CHAMPION HERO */
+  /* HERO */
   .champion-hero { text-align: center; padding: 40px 20px 32px; margin-bottom: 32px; background: linear-gradient(135deg, #FFF9E6 0%, #FFEDC2 50%, #FFE4D6 100%); border-radius: 24px; border: 1px solid var(--gold-border); position: relative; overflow: hidden; }
   .champion-hero::before { content: ""; position: absolute; top: -50%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(212,160,23,0.15) 0%, transparent 70%); pointer-events: none; }
   .champion-hero-icon { width: 72px; height: 72px; border-radius: 20px; background: linear-gradient(135deg, var(--gold) 0%, #B8860B 100%); display: flex; align-items: center; justify-content: center; color: white; margin: 0 auto 16px; box-shadow: 0 12px 32px rgba(212,160,23,0.35); position: relative; z-index: 1; }
@@ -82,10 +82,8 @@
   .champion-hero h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; color: #7A5500; margin-bottom: 8px; letter-spacing: -0.03em; position: relative; z-index: 1; }
   .champion-hero p { font-size: 0.95rem; color: #7A5500; opacity: 0.8; max-width: 600px; margin: 0 auto; position: relative; z-index: 1; }
 
-  /* LEGEND */
   .champion-legend { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 20px; position: relative; z-index: 1; }
   .legend-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(255,255,255,0.7); border: 1px solid var(--gold-border); border-radius: 50px; font-size: 0.72rem; font-weight: 700; color: #7A5500; backdrop-filter: blur(10px); }
-  .legend-pill svg { width: 12px; height: 12px; }
   .legend-pill .dot { width: 8px; height: 8px; border-radius: 50%; }
 
   /* CHAMPION GRID */
@@ -96,7 +94,7 @@
   .champion-card::before { content: ""; position: absolute; top: -60px; right: -60px; width: 180px; height: 180px; background: rgba(255,255,255,0.12); border-radius: 50%; pointer-events: none; }
   .champion-card::after { content: ""; position: absolute; bottom: -40px; left: -40px; width: 120px; height: 120px; background: rgba(255,255,255,0.08); border-radius: 50%; pointer-events: none; }
 
-  .champion-top-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; position: relative; z-index: 1; }
+  .champion-top-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; position: relative; z-index: 1; flex-wrap: wrap; }
   .champion-rank { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; background: rgba(255,255,255,0.2); border-radius: 50px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(10px); }
   .champion-rank svg { width: 12px; height: 12px; }
   .champion-sumber { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.4); border-radius: 50px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; backdrop-filter: blur(10px); }
@@ -301,7 +299,7 @@
       <div class="brand-icon"><i data-lucide="trophy"></i></div>
       <div>
         <div class="brand-title">Awards Gugus Nakula</div>
-        <div class="brand-sub">Nominasi & Peringkat Tahunan</div>
+        <div class="brand-sub">Nominasi & Peringkat Tahunan 2026</div>
       </div>
     </div>
     <div class="topbar-actions">
@@ -365,16 +363,22 @@
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbxaaUcgZNBqJgCLbAtPRlikZG6t4ZGLFOY20ID7C3OiBoxlEUykpPgwWMHfFhWeckK-7g/exec";
-const CACHE_KEY = "awards_cache_v30_";
+const CACHE_KEY = "awards_cache_v40_";
 const CACHE_TTL = 30 * 60 * 1000;
 let dataAwards = null;
 
-// Mapping sumber → icon & warna
+// Konfigurasi sumber
 const SUMBER_CONFIG = {
-  "Presensi":   { icon: "fingerprint",   color: "#2563EB" },
-  "Kekompakan": { icon: "users-round",   color: "#14B8A6" },
-  "LMS":        { icon: "file-text",     color: "#EC4899" },
-  "Feedback":   { icon: "message-square",color: "#F97316" }
+  "Presensi": { icon: "fingerprint",   color: "#2563EB" },
+  "LMS":      { icon: "file-text",     color: "#EC4899" },
+  "Feedback": { icon: "message-square",color: "#F97316" }
+};
+
+// Custom ikon per award (Lucide)
+const AWARD_ICON_OVERRIDE = {
+  "target": "target", "book-heart": "book-heart", "megaphone": "megaphone",
+  "zap": "zap", "gem": "gem", "shield-check": "shield-check", "medal": "medal",
+  "lightbulb": "lightbulb", "users-round": "users-round"
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -468,19 +472,14 @@ function renderJuara() {
   const tahun = dataAwards.meta?.tahun || "2026";
   if (!list.length) { document.getElementById("panel-juara").innerHTML = `<div class="empty"><i data-lucide="inbox"></i><p>Belum ada data.</p></div>`; return; }
 
-  // Hitung jumlah sekolah & cek kelengkapan
   var uniqSekolah = {};
   list.forEach(function(n){ uniqSekolah[n.sekolah] = true; });
   var jmlSekolah = Object.keys(uniqSekolah).length;
 
-  // Legend sumber
   var sumberCount = {};
-  list.forEach(function(n){
-    if (!n.sumber) return;
-    sumberCount[n.sumber] = (sumberCount[n.sumber] || 0) + 1;
-  });
+  list.forEach(function(n){ if (!n.sumber) return; sumberCount[n.sumber] = (sumberCount[n.sumber] || 0) + 1; });
   var legendHtml = Object.keys(sumberCount).map(function(s){
-    var cfg = SUMBER_CONFIG[s] || { icon: "circle", color: "#666" };
+    var cfg = SUMBER_CONFIG[s] || { color: "#666" };
     return `<span class="legend-pill"><span class="dot" style="background:${cfg.color};"></span> ${s} (${sumberCount[s]})</span>`;
   }).join("");
 
@@ -561,7 +560,7 @@ function showDetail(n) {
       </div>`;
   }
 
-  const warningHtml = n.nilaiTerbatas ? `<div class="warning-box">Award ini diberikan meskipun data tahun ini terbatas. Untuk perbaikan, diharapkan sekolah aktif mengumpulkan data di periode berikutnya.</div>` : "";
+  const warningHtml = n.nilaiTerbatas ? `<div class="warning-box">Award ini diberikan meskipun data tahun ini terbatas. Diharapkan sekolah aktif mengumpulkan data di periode berikutnya.</div>` : "";
 
   box.innerHTML = `
     <div class="modal-hero" style="--m-accent: ${n.warna}; --m-accent-dark: ${accentDark};">
@@ -780,7 +779,7 @@ function renderSekolah() {
     { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}<small>${x.jmlGuru||0} guru</small></div>` },
     { label: "Tepat", key: "jmlTepat", align: "right" }, { label: "Hadir", key: "jmlHadir", align: "right" }, { label: "Rata Jam", key: "rataJam", align: "right" }, { label: "Skor", render: x => `<span class="cell-score">${x.skorAkhir}</span>`, align: "right" }
   ]), s.disiplin?.length || 0));
-  html.push(buildSection("medal", "Sekolah Champion", "Total poin dari Laporan Prestasi Siswa", buildPodium(s.champion, x => ({ name: x.sekolah, sub: `${x.jmlGuru||0} guru`, score: x.poinPrestasi, unit: "poin" })), buildTable(s.champion || [], [
+  html.push(buildSection("medal", "Sekolah Berprestasi", "Total poin dari Laporan Prestasi Siswa", buildPodium(s.champion, x => ({ name: x.sekolah, sub: `${x.jmlGuru||0} guru`, score: x.poinPrestasi, unit: "poin" })), buildTable(s.champion || [], [
     { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}<small>${x.jmlGuru||0} guru</small></div>` },
     { label: "Frekuensi", key: "frekuensi", align: "right" }, { label: "Total XP", key: "totalXP", align: "right" }, { label: "Poin Prestasi", render: x => `<span class="cell-score">${x.poinPrestasi}</span>`, align: "right" }
   ]), s.champion?.length || 0));
@@ -788,11 +787,11 @@ function renderSekolah() {
     { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}<small>${x.jmlGuru||0} guru</small></div>` },
     { label: "Frekuensi", render: x => `<span class="cell-score">${x.frekuensi}</span>`, align: "right" }, { label: "Total XP", key: "totalXP", align: "right" }
   ]), s.activist?.length || 0));
-  html.push(buildSection("lightbulb", "Sekolah Innovator", "Poin Karya Inovasi Guru tertinggi", buildPodium(s.innovator, x => ({ name: x.sekolah, sub: `${x.jmlGuru||0} guru`, score: x.poinInovasi, unit: "poin" })), buildTable(s.innovator || [], [
+  html.push(buildSection("lightbulb", "Sekolah Inovatif", "Poin Karya Inovasi + Implementasi KKG", buildPodium(s.innovator, x => ({ name: x.sekolah, sub: `${x.jmlGuru||0} guru`, score: x.poinInovasiTotal || x.poinInovasi, unit: "poin" })), buildTable(s.innovator || [], [
     { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}<small>${x.jmlGuru||0} guru</small></div>` },
-    { label: "Poin Inovasi", render: x => `<span class="cell-score">${x.poinInovasi}</span>`, align: "right" }, { label: "Frekuensi", key: "frekuensi", align: "right" }
+    { label: "Poin Inovasi", render: x => `<span class="cell-score">${x.poinInovasiTotal || x.poinInovasi}</span>`, align: "right" }, { label: "Frekuensi", key: "frekuensi", align: "right" }
   ]), s.innovator?.length || 0));
-  html.push(buildSection("users-round", "Sekolah Paling Kompak", "Seragam + Antusiasme + Kerjasama Tim", buildPodium(s.kompak, x => ({ name: x.sekolah, sub: `${x.count||0}× dinilai`, score: x.total, unit: "poin" })), buildTable(s.kompak || [], [
+  html.push(buildSection("users-round", "Sekolah Terkompak", "Seragam + Antusiasme + Kerjasama Tim", buildPodium(s.kompak, x => ({ name: x.sekolah, sub: `${x.count||0}× dinilai`, score: x.total, unit: "poin" })), buildTable(s.kompak || [], [
     { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}<small>${x.count||0}× dinilai</small></div>` },
     { label: "Total", render: x => `<span class="cell-score">${x.total}</span>`, align: "right" }, { label: "Rata-rata", key: "rata", align: "right" }
   ]), s.kompak?.length || 0));
@@ -801,7 +800,7 @@ function renderSekolah() {
     { label: "Total Aksi", render: x => `<span class="cell-score">${x.total}</span>`, align: "right" }
   ]), s.tergiat?.length || 0));
   html.push(groupLabel("Partisipasi Feedback"));
-  html.push(buildSection("message-square", "Sekolah Paling Rajin Feedback", "Frekuensi pengisian umpan balik terbanyak", buildPodium(fa.rajinFeedback, x => ({ name: x.sekolah, sub: "responden", score: x.total, unit: "feedback" })), buildTable(fa.rajinFeedback || [], [
+  html.push(buildSection("megaphone", "Partisipasi Prima", "Frekuensi pengisian umpan balik terbanyak", buildPodium(fa.rajinFeedback, x => ({ name: x.sekolah, sub: "responden", score: x.total, unit: "feedback" })), buildTable(fa.rajinFeedback || [], [
     { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}</div>` },
     { label: "Total Feedback", render: x => `<span class="cell-score">${x.total}</span>`, align: "right" }
   ]), fa.rajinFeedback?.length || 0));
@@ -869,9 +868,6 @@ function renderFun() {
   html.push(buildSection("turtle", "Paling Sering Terlambat", "Konsisten datang setelah jam masuk", buildPodium(f.seringTelat, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "×" })), buildTable(f.seringTelat || [], [
     { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` }, { label: "Total", render: x => `<span class="cell-score">${x.total}×</span>`, align: "right" }
   ]), f.seringTelat?.length || 0, true));
-  html.push(buildSection("file-warning", "Paling Sering Revisi", "Rajin upload, rajin diperbaiki", buildPodium(f.seringRevisi, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "×" })), buildTable(f.seringRevisi || [], [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` }, { label: "Total", render: x => `<span class="cell-score">${x.total}×</span>`, align: "right" }
-  ]), f.seringRevisi?.length || 0, true));
   html.push(buildSection("bed", "Paling Sering Izin", "Ahli mengajukan izin resmi", buildPodium(f.seringIzin, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "izin" })), buildTable(f.seringIzin || [], [
     { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` }, { label: "Total Izin", render: x => `<span class="cell-score">${x.total}×</span>`, align: "right" }
   ]), f.seringIzin?.length || 0, true));
