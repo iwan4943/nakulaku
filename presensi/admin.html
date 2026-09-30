@@ -4,59 +4,47 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin Dashboard Gugus Nakula (Ultimate)</title>
-  
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏫</text></svg>">
-  
+
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
+
   <style>
     :root { --primary: #B3261E; --bg: #FFF8F7; --sidebar-width: 260px; }
     body { font-family: 'Google Sans', sans-serif; background: var(--bg); display: flex; min-height: 100vh; overflow-x: hidden; }
-    
+
     /* SIDEBAR */
     .sidebar { width: var(--sidebar-width); background: white; border-right: 1px solid #eee; position: fixed; height: 100vh; z-index: 1000; display: flex; flex-direction: column; transition: 0.3s; }
-    
-    /* HEADER SIDEBAR (Diperbaiki untuk Mobile) */
-    .sidebar-header { 
-        padding: 20px 25px; 
-        border-bottom: 1px solid #f0f0f0; 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-    }
-    
+    .sidebar-header { padding: 20px 25px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
     .menu-item { padding: 12px 25px; color: #555; cursor: pointer; display: flex; align-items: center; transition: 0.2s; text-decoration: none; font-weight: 500; }
     .menu-item:hover, .menu-item.active { background: #ffeaea; color: var(--primary); border-right: 4px solid var(--primary); }
     .menu-item i { width: 30px; }
-    
-    /* TOMBOL CLOSE SIDEBAR (Hanya muncul di HP) */
     .btn-close-sidebar { display: none; background: none; border: none; font-size: 1.2rem; color: #999; cursor: pointer; }
     .btn-close-sidebar:hover { color: var(--primary); }
 
     /* CONTENT */
     .content { margin-left: var(--sidebar-width); padding: 30px; width: 100%; transition: 0.3s; }
     .card-stat { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); height: 100%; }
-    
-    /* GRID TABLE (REKAP 1-31) */
+
+    /* GRID TABLE */
     .table-grid th, .table-grid td { text-align: center; vertical-align: middle; font-size: 0.8rem; padding: 4px; border: 1px solid #dee2e6; }
     .table-grid th:first-child, .table-grid td:first-child { text-align: left; min-width: 180px; position: sticky; left: 0; background: white; z-index: 10; border-right: 2px solid #ccc; }
-    .cell-h { background-color: #d1e7dd; color: #0f5132; font-weight: bold; } /* Hadir */
-    .cell-t { background-color: #fff3cd; color: #856404; font-weight: bold; } /* Telat */
-    .cell-i { background-color: #cfe2ff; color: #084298; } /* Izin */
-    .cell-a { background-color: #f8d7da; color: #842029; } /* Alpha */
+    .cell-h { background-color: #d1e7dd; color: #0f5132; font-weight: bold; }
+    .cell-t { background-color: #fff3cd; color: #856404; font-weight: bold; }
+    .cell-i { background-color: #cfe2ff; color: #084298; }
+    .cell-a { background-color: #f8d7da; color: #842029; }
 
-    /* RESPONSIVE MOBILE */
-    @media (max-width: 768px) { 
-        .sidebar { transform: translateX(-100%); } 
-        .sidebar.show { transform: translateX(0); box-shadow: 5px 0 15px rgba(0,0,0,0.1); } 
-        .content { margin-left: 0; padding: 15px; } 
-        .btn-close-sidebar { display: block; } /* Tombol X muncul di HP */
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.show { transform: translateX(0); box-shadow: 5px 0 15px rgba(0,0,0,0.1); }
+      .content { margin-left: 0; padding: 15px; }
+      .btn-close-sidebar { display: block; }
     }
   </style>
 </head>
@@ -72,10 +60,10 @@
         <i class="fas fa-times"></i>
       </button>
     </div>
-    
+
     <div class="mt-3">
       <div class="menu-item active" onclick="switchPage('dashboard')"><i class="fas fa-home"></i> Dashboard</div>
-      <div class="menu-item" onclick="switchPage('rekap')"><i class="fas fa-calendar-alt"></i> Rekap Grid & Excel</div>
+      <div class="menu-item" onclick="switchPage('rekap')"><i class="fas fa-calendar-alt"></i> Rekap Grid &amp; Excel</div>
       <div class="menu-item" onclick="switchPage('settings')"><i class="fas fa-cog"></i> Pengaturan</div>
       <hr class="mx-3">
       <div class="menu-item text-warning" onclick="cetakAward()"><i class="fas fa-trophy"></i> Nominasi Award</div>
@@ -85,26 +73,48 @@
 
   <div class="content">
     <button class="btn btn-light d-md-none mb-3 shadow-sm" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i> Menu
+      <i class="fas fa-bars"></i> Menu
     </button>
 
     <div id="page-dashboard">
       <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <h4 class="fw-bold m-0">Monitoring Presensi</h4>
         <div class="d-flex gap-2">
-           <input type="date" id="filterTanggal" class="form-control shadow-sm" onchange="loadDashboard()" title="Pilih Tanggal">
-           <select id="filterSekolah" class="form-select w-auto shadow-sm" onchange="loadDashboard()"><option value="SEMUA">Semua Sekolah</option></select>
+          <input type="date" id="filterTanggal" class="form-control shadow-sm" onchange="loadDashboard()" title="Pilih Tanggal">
+          <select id="filterSekolah" class="form-select w-auto shadow-sm" onchange="loadDashboard()">
+            <option value="SEMUA">Semua Sekolah</option>
+          </select>
         </div>
       </div>
 
       <div class="row g-3 mb-4">
-        <div class="col-md-3 col-6"><div class="card-stat border-start border-5 border-success"><small class="text-muted fw-bold">SUDAH HADIR</small><h2 class="fw-bold mt-2 mb-0 text-success" id="count-hadir">0</h2></div></div>
-        <div class="col-md-3 col-6"><div class="card-stat border-start border-5 border-secondary"><small class="text-muted fw-bold">BELUM HADIR</small><h2 class="fw-bold mt-2 mb-0 text-secondary" id="count-belum">0</h2></div></div>
-        <div class="col-md-6"><div class="card-stat d-flex align-items-center justify-content-between"><div><h6 class="fw-bold">Statistik Harian</h6><small class="text-muted">Update Realtime</small></div><div style="height:80px; width:80px;"><canvas id="chartHarian"></canvas></div></div></div>
+        <div class="col-md-3 col-6">
+          <div class="card-stat border-start border-5 border-success">
+            <small class="text-muted fw-bold">SUDAH HADIR</small>
+            <h2 class="fw-bold mt-2 mb-0 text-success" id="count-hadir">0</h2>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="card-stat border-start border-5 border-secondary">
+            <small class="text-muted fw-bold">BELUM HADIR</small>
+            <h2 class="fw-bold mt-2 mb-0 text-secondary" id="count-belum">0</h2>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card-stat d-flex align-items-center justify-content-between">
+            <div>
+              <h6 class="fw-bold">Statistik Harian</h6>
+              <small class="text-muted">Update Realtime</small>
+            </div>
+            <div style="height:80px; width:80px;"><canvas id="chartHarian"></canvas></div>
+          </div>
+        </div>
       </div>
 
       <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white py-3 border-bottom-0"><h6 class="m-0 fw-bold text-secondary"><i class="fas fa-chart-line me-2"></i>Tren Kehadiran (Guru) Bulanan</h6></div>
+        <div class="card-header bg-white py-3 border-bottom-0">
+          <h6 class="m-0 fw-bold text-secondary"><i class="fas fa-chart-line me-2"></i>Tren Kehadiran (Guru) Bulanan</h6>
+        </div>
         <div class="card-body pt-0"><canvas id="chartTren" height="70"></canvas></div>
       </div>
 
@@ -116,8 +126,10 @@
           </div>
           <div class="table-responsive">
             <table class="table table-hover align-middle">
-                <thead class="table-light"><tr><th>Nama Guru</th><th>Status</th><th>Jam</th><th class="text-center">Bukti</th><th>Aksi</th></tr></thead>
-                <tbody id="tabel-monitor"></tbody>
+              <thead class="table-light">
+                <tr><th>Nama Guru</th><th>Status</th><th>Jam</th><th class="text-center">Bukti</th><th>Aksi</th></tr>
+              </thead>
+              <tbody id="tabel-monitor"></tbody>
             </table>
           </div>
         </div>
@@ -125,45 +137,81 @@
     </div>
 
     <div id="page-rekap" style="display:none;">
-      <h4 class="fw-bold mb-4">Rekapitulasi & Excel</h4>
+      <h4 class="fw-bold mb-4">Rekapitulasi &amp; Excel</h4>
       <div class="card border-0 shadow-sm p-3 mb-4">
-         <div class="row g-2 align-items-end">
-             <div class="col-md-3"><label class="small fw-bold">Bulan</label><select id="grid_bulan" class="form-select"><option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option><option value="4">April</option><option value="5">Mei</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">Agustus</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option></select></div>
-             <div class="col-md-3"><label class="small fw-bold">Tahun</label><input type="number" id="grid_tahun" class="form-control" value="2026"></div>
-             <div class="col-md-3"><label class="small fw-bold">Filter Sekolah</label><select id="grid_sekolah" class="form-select"><option value="SEMUA">Semua Sekolah</option></select></div>
-             <div class="col-md-3 d-flex gap-2">
-                 <button onclick="loadRekapGrid()" class="btn btn-primary flex-grow-1"><i class="fas fa-search me-1"></i> Tampil</button>
-                 <button onclick="downloadExcel()" class="btn btn-success" title="Download Excel"><i class="fas fa-file-excel"></i></button>
-             </div>
-         </div>
+        <div class="row g-2 align-items-end">
+          <div class="col-md-3">
+            <label class="small fw-bold">Bulan</label>
+            <select id="grid_bulan" class="form-select">
+              <option value="1">Januari</option><option value="2">Februari</option>
+              <option value="3">Maret</option><option value="4">April</option>
+              <option value="5">Mei</option><option value="6">Juni</option>
+              <option value="7">Juli</option><option value="8">Agustus</option>
+              <option value="9">September</option><option value="10">Oktober</option>
+              <option value="11">November</option><option value="12">Desember</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="small fw-bold">Tahun</label>
+            <input type="number" id="grid_tahun" class="form-control" value="2026">
+          </div>
+          <div class="col-md-3">
+            <label class="small fw-bold">Filter Sekolah</label>
+            <select id="grid_sekolah" class="form-select"><option value="SEMUA">Semua Sekolah</option></select>
+          </div>
+          <div class="col-md-3 d-flex gap-2">
+            <button onclick="loadRekapGrid()" class="btn btn-primary flex-grow-1"><i class="fas fa-search me-1"></i> Tampil</button>
+            <button onclick="downloadExcel()" class="btn btn-success" title="Download Excel"><i class="fas fa-file-excel"></i></button>
+          </div>
+        </div>
       </div>
-      
+
       <div class="card border-0 shadow-sm">
-         <div class="card-body p-0">
-             <div class="table-responsive" style="max-height: 600px;">
-                 <table class="table table-grid mb-0">
-                     <thead class="table-light">
-                         <tr id="grid-header"><th>Nama Guru</th></tr>
-                     </thead>
-                     <tbody id="grid-body"></tbody>
-                 </table>
-             </div>
-         </div>
-         <div class="card-footer bg-white text-end">
-             <small class="text-muted"><span class="badge bg-success">H</span> Tepat • <span class="badge bg-warning text-dark">T</span> Telat • <span class="badge bg-primary">I</span> Izin • <span class="badge bg-danger">A</span> Alpha</small>
-         </div>
+        <div class="card-body p-0">
+          <div class="table-responsive" style="max-height: 600px;">
+            <table class="table table-grid mb-0">
+              <thead class="table-light">
+                <tr id="grid-header"><th>Nama Guru</th></tr>
+              </thead>
+              <tbody id="grid-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer bg-white text-end">
+          <small class="text-muted">
+            <span class="badge bg-success">H</span> Tepat •
+            <span class="badge bg-warning text-dark">T</span> Telat •
+            <span class="badge bg-primary">I</span> Izin •
+            <span class="badge bg-danger">A</span> Alpha
+          </small>
+        </div>
       </div>
     </div>
 
     <div id="page-settings" style="display:none;">
       <h4 class="fw-bold mb-4">Pengaturan Kegiatan</h4>
       <div class="card border-0 shadow-sm p-4" style="max-width: 700px;">
-        <div class="mb-3"><label class="fw-bold">Lokasi Tuan Rumah</label><select id="set_lokasi" class="form-select"></select></div>
-        <div class="mb-3"><label class="fw-bold">Info Running Text</label><textarea id="set_info" class="form-control" rows="2"></textarea></div>
+        <div class="mb-3">
+          <label class="fw-bold">Lokasi Tuan Rumah</label>
+          <select id="set_lokasi" class="form-select"></select>
+        </div>
+        <div class="mb-3">
+          <label class="fw-bold">Info Running Text</label>
+          <textarea id="set_info" class="form-control" rows="2"></textarea>
+        </div>
         <div class="row">
-            <div class="col-md-4 mb-3"><label class="fw-bold">Jam Mulai</label><input type="time" id="set_mulai" class="form-control"></div>
-            <div class="col-md-4 mb-3"><label class="fw-bold">Jam Selesai</label><input type="time" id="set_selesai" class="form-control"></div>
-            <div class="col-md-4 mb-3"><label class="fw-bold">Batas Terlambat</label><input type="time" id="set_batas" class="form-control"></div>
+          <div class="col-md-4 mb-3">
+            <label class="fw-bold">Jam Mulai</label>
+            <input type="time" id="set_mulai" class="form-control">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="fw-bold">Jam Selesai</label>
+            <input type="time" id="set_selesai" class="form-control">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="fw-bold">Batas Terlambat</label>
+            <input type="time" id="set_batas" class="form-control">
+          </div>
         </div>
         <button onclick="simpanSettings()" class="btn btn-danger"><i class="fas fa-save me-2"></i> Simpan Pengaturan</button>
       </div>
@@ -171,219 +219,319 @@
 
   </div>
 
-  <script>
-    // ==========================================
-    // CONFIG: PASTIKAN URL INI SUDAH YANG TERBARU
-    // ==========================================
-    const API_URL = "https://nakulaku-api.iwan4943.workers.dev"; 
-    // ==========================================
+<script>
+  // ==========================================
+  // CONFIG: PASTIKAN URL INI SUDAH YANG TERBARU
+  // ==========================================
+  const API_URL = "https://nakulaku-api.iwan4943.workers.dev";
+  // ==========================================
 
-    let chartInstance = null; let chartTrenInstance = null;
+  let chartInstance = null;
+  let chartTrenInstance = null;
 
-    document.addEventListener("DOMContentLoaded", function() {
-        checkLogin();
-        initDashboard();
-        // Set Default Date hari ini
-        document.getElementById('filterTanggal').valueAsDate = new Date();
-        // Set Default Bulan sekarang
-        document.getElementById('grid_bulan').value = new Date().getMonth() + 1;
+  document.addEventListener("DOMContentLoaded", function() {
+    checkLogin();
+    initDashboard();
+    document.getElementById('filterTanggal').valueAsDate = new Date();
+    document.getElementById('grid_bulan').value = new Date().getMonth() + 1;
+    document.getElementById('grid_tahun').value = new Date().getFullYear();
+    loadGrafikTren();
+  });
+
+  function checkLogin() {
+    if (!sessionStorage.getItem('admin_login')) {
+      sessionStorage.setItem('admin_login', 'true');
+    }
+  }
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('show');
+  }
+
+  function switchPage(page) {
+    document.querySelectorAll('.menu-item').forEach(e => e.classList.remove('active'));
+    document.querySelectorAll('.menu-item').forEach(m => {
+      const oc = m.getAttribute('onclick') || '';
+      if (oc.indexOf("switchPage('" + page + "')") > -1) m.classList.add('active');
     });
 
-    function checkLogin() { if(!sessionStorage.getItem('admin_login')) sessionStorage.setItem('admin_login', 'true'); }
+    ['dashboard', 'rekap', 'settings'].forEach(p => {
+      const el = document.getElementById('page-' + p);
+      if (el) el.style.display = 'none';
+    });
+    const target = document.getElementById('page-' + page);
+    if (target) target.style.display = 'block';
 
-    // --- FUNGSI TOGGLE SIDEBAR (BARU) ---
-    function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('show');
+    if (window.innerWidth <= 768) {
+      document.getElementById('sidebar').classList.remove('show');
     }
+  }
 
-    function switchPage(page) {
-        // Logika Tab Aktif
-        document.querySelectorAll('.menu-item').forEach(e => e.classList.remove('active'));
-        const menus = document.querySelectorAll('.menu-item');
-        menus.forEach(m => { if(m.getAttribute('onclick') && m.getAttribute('onclick').includes(page)) m.classList.add('active'); });
-        
-        // Logika Ganti Halaman
-        document.getElementById('page-dashboard').style.display = 'none';
-        document.getElementById('page-rekap').style.display = 'none';
-        document.getElementById('page-settings').style.display = 'none';
-        if(document.getElementById('page-'+page)) document.getElementById('page-'+page).style.display = 'block';
+  async function callAPI(action, data = {}) {
+    data.action = action;
+    try {
+      let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(data) });
+      return await res.json();
+    } catch (e) {
+      console.error(e);
+      Swal.fire('Error', 'Gagal koneksi server', 'error');
+      return null;
+    }
+  }
 
-        // OTOMATIS TUTUP SIDEBAR DI HP (BARU)
-        if (window.innerWidth <= 768) {
-            document.getElementById('sidebar').classList.remove('show');
+  // Helper escape nama untuk onclick (fix bug apostrof)
+  function escName(n) {
+    return String(n).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  }
+
+  // --- DASHBOARD ---
+  async function initDashboard() {
+    let d = await callAPI('listSekolah');
+    let sel = document.getElementById('filterSekolah');
+    let sel2 = document.getElementById('grid_sekolah');
+    let sel3 = document.getElementById('set_lokasi');
+    sel.innerHTML = `<option value="SEMUA">Semua Sekolah</option>`;
+    sel2.innerHTML = `<option value="SEMUA">Semua Sekolah</option>`;
+    sel3.innerHTML = "";
+    if (d) d.forEach(s => {
+      sel.innerHTML += `<option value="${s}">${s}</option>`;
+      sel2.innerHTML += `<option value="${s}">${s}</option>`;
+      let opt = document.createElement('option');
+      opt.value = s; opt.innerText = s;
+      sel3.appendChild(opt);
+    });
+    loadDashboard();
+    loadSettings();
+  }
+
+  function loadDashboard() {
+    let sekolah = document.getElementById('filterSekolah').value;
+    let tgl = document.getElementById('filterTanggal').value;
+    Swal.showLoading();
+
+    callAPI('monitoring', { sekolah: sekolah, tanggal: tgl }).then(res => {
+      Swal.close();
+      if (!res) return;
+      document.getElementById('count-hadir').innerText = res.listSudah.length;
+      document.getElementById('count-belum').innerText = res.listBelum.length;
+
+      let html = "";
+      let gabung = [...res.listSudah, ...res.listBelum].sort((a, b) =>
+        (a.status.includes("Menunggu") ? -1 : 1)
+      );
+
+      gabung.forEach(g => {
+        let bg = g.status.includes('Belum') ? 'bg-secondary'
+          : g.status.includes('Terlambat') ? 'bg-warning text-dark'
+            : g.status.includes('Tepat') ? 'bg-success'
+              : g.status.includes('Menunggu') ? 'bg-info text-dark'
+                : 'bg-danger';
+
+        let bukti = '-';
+        if (g.foto && g.foto.includes('http')) {
+          bukti = `<a href="${g.foto}" target="_blank" title="Lihat Foto"><i class="fas fa-check-circle text-success fa-lg"></i></a>`;
         }
-    }
 
-    async function callAPI(action, data={}) {
-        data.action = action;
-        try {
-            let res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(data) });
-            return await res.json();
-        } catch(e) { console.error(e); Swal.fire('Error', 'Gagal koneksi server', 'error'); return null; }
-    }
+        let btn = "";
+        if (g.status.includes("Menunggu")) {
+          btn = `<button class="btn btn-sm btn-success me-1" onclick="accIzin('${escName(g.nama)}','Disetujui')"><i class="fas fa-check"></i></button>
+                 <button class="btn btn-sm btn-danger" onclick="accIzin('${escName(g.nama)}','Ditolak')"><i class="fas fa-times"></i></button>`;
+        } else if (g.maps) {
+          btn = `<a href="${g.maps}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-map-marker-alt"></i></a>`;
+        }
 
-    // --- DASHBOARD LOGIC ---
-    async function initDashboard() {
-        let d = await callAPI('listSekolah');
-        let sel = document.getElementById('filterSekolah');
-        let sel2 = document.getElementById('grid_sekolah');
-        let sel3 = document.getElementById('set_lokasi');
-        sel.innerHTML = `<option value="SEMUA">Semua Sekolah</option>`;
-        sel2.innerHTML = `<option value="SEMUA">Semua Sekolah</option>`;
-        sel3.innerHTML = "";
-        if(d) d.forEach(s => { 
-            sel.innerHTML += `<option value="${s}">${s}</option>`;
-            sel2.innerHTML += `<option value="${s}">${s}</option>`;
-            let opt = document.createElement('option'); opt.value = s; opt.innerText = s; sel3.appendChild(opt);
-        });
-        loadDashboard(); loadSettings();
-    }
-
-    function loadDashboard() {
-        let sekolah = document.getElementById('filterSekolah').value;
-        let tgl = document.getElementById('filterTanggal').value;
-        Swal.showLoading();
-        
-        callAPI('monitoring', { sekolah: sekolah, tanggal: tgl }).then(res => {
-            Swal.close(); if(!res) return;
-            document.getElementById('count-hadir').innerText = res.listSudah.length;
-            document.getElementById('count-belum').innerText = res.listBelum.length;
-            
-            let html = "";
-            let gabung = [...res.listSudah, ...res.listBelum].sort((a,b) => (a.status.includes("Menunggu") ? -1 : 1));
-            
-            gabung.forEach(g => {
-                let bg = g.status.includes('Belum')?'bg-secondary':g.status.includes('Terlambat')?'bg-warning text-dark':g.status.includes('Tepat')?'bg-success':g.status.includes('Menunggu')?'bg-info text-dark':'bg-danger';
-                
-                // --- KLIK FOTO ---
-                let bukti = '-';
-                if(g.foto && g.foto.includes('http')) {
-                    bukti = `<a href="${g.foto}" target="_blank" title="Lihat Foto"><i class="fas fa-check-circle text-success fa-lg"></i></a>`;
-                }
-
-                let btn = "";
-                if(g.status.includes("Menunggu")) btn = `<button class="btn btn-sm btn-success me-1" onclick="accIzin('${g.nama}','Disetujui')"><i class="fas fa-check"></i></button><button class="btn btn-sm btn-danger" onclick="accIzin('${g.nama}','Ditolak')"><i class="fas fa-times"></i></button>`;
-                else if(g.maps) btn = `<a href="${g.maps}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-map-marker-alt"></i></a>`;
-                
-                html += `<tr><td><strong>${g.nama}</strong></td><td><span class="badge ${bg}">${g.status}</span></td><td>${g.jam}</td><td class="text-center">${bukti}</td><td>${btn}</td></tr>`;
-            });
-            document.getElementById('tabel-monitor').innerHTML = html;
-
-            const ctx = document.getElementById('chartHarian').getContext('2d');
-            if(chartInstance) chartInstance.destroy();
-            chartInstance = new Chart(ctx, { type: 'doughnut', data: { labels:['Hadir','Belum'], datasets:[{data:[res.listSudah.length, res.listBelum.length], backgroundColor:['#198754','#e9ecef'], borderWidth:0}] }, options:{plugins:{legend:{display:false}}, cutout:'70%'} });
-        });
-        loadGrafikTren();
-    }
-    
-    function loadGrafikTren() {
-      callAPI('tren', { tahun: new Date().getFullYear() }).then(data => {
-        if (!data) return;
-        const ctx = document.getElementById('chartTren').getContext('2d');
-        if(chartTrenInstance) chartTrenInstance.destroy();
-        chartTrenInstance = new Chart(ctx, { type: 'bar', data: { labels: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'], datasets: [{label:'Tepat',data:data.hadir,backgroundColor:'#198754'},{label:'Telat',data:data.telat,backgroundColor:'#ffc107'},{label:'Izin',data:data.izin,backgroundColor:'#0d6efd'}] }, options: {responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10}}},scales:{x:{grid:{display:false}}}}});
+        html += `<tr>
+          <td><strong>${g.nama}</strong></td>
+          <td><span class="badge ${bg}">${g.status}</span></td>
+          <td>${g.jam}</td>
+          <td class="text-center">${bukti}</td>
+          <td>${btn}</td>
+        </tr>`;
       });
-    }
+      document.getElementById('tabel-monitor').innerHTML = html;
 
-    // --- REKAP GRID (1-31) ---
-    function loadRekapGrid() {
-        let bln = document.getElementById('grid_bulan').value;
-        let thn = document.getElementById('grid_tahun').value;
-        let sek = document.getElementById('grid_sekolah').value;
-        Swal.fire({title:'Memuat Data...', didOpen:()=>Swal.showLoading()});
-        
-        let daysInMonth = new Date(thn, bln, 0).getDate();
-        let headerHtml = `<th>Nama Guru</th>`;
-        for(let i=1; i<=daysInMonth; i++) headerHtml += `<th style="min-width:25px;">${i}</th>`;
-        document.getElementById('grid-header').innerHTML = headerHtml;
-        
-        callAPI('rekapGrid', { bulan: bln, tahun: thn, sekolah: sek }).then(data => {
-            Swal.close(); if(!data) return;
-            let bodyHtml = "";
-            data.forEach(u => {
-                let row = `<tr><td><div style="line-height:1.1"><strong>${u.nama}</strong><br><small class="text-muted" style="font-size:0.7em">${u.sekolah}</small></div></td>`;
-                for(let i=1; i<=daysInMonth; i++) {
-                    let st = u.presensi[i] || "-";
-                    let cls = st=="H"?"cell-h":st=="T"?"cell-t":st=="I"?"cell-i":"cell-a";
-                    row += `<td class="${cls}">${st}</td>`;
-                }
-                bodyHtml += row + `</tr>`;
-            });
-            document.getElementById('grid-body').innerHTML = bodyHtml;
-        });
-    }
+      const ctx = document.getElementById('chartHarian').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Hadir', 'Belum'],
+          datasets: [{
+            data: [res.listSudah.length, res.listBelum.length],
+            backgroundColor: ['#198754', '#e9ecef'],
+            borderWidth: 0
+          }]
+        },
+        options: { plugins: { legend: { display: false } }, cutout: '70%' }
+      });
+    });
+  }
 
-    function downloadExcel() {
-        let bln = document.getElementById('grid_bulan').value;
-        let thn = document.getElementById('grid_tahun').value;
-        Swal.fire({title:'Mengunduh...', didOpen:()=>Swal.showLoading()});
-        
-        callAPI('exportData', { bulan: bln, tahun: thn }).then(data => {
-            Swal.close(); if(!data || data.length === 0) { Swal.fire('Info','Data kosong','info'); return; }
-            const header = ["Waktu", "Nama Lengkap", "Sekolah", "Jabatan", "Status", "Alasan", "Lokasi"];
-            let csvContent = header.join(",") + "\n";
-            data.forEach(row => {
-                let r = [row.waktu, row.nama, row.sekolah, row.jabatan, row.status, row.alasan, row.lokasi].map(f => `"${String(f).replace(/"/g, '""')}"`);
-                csvContent += r.join(",") + "\n";
-            });
-            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            let link = document.createElement("a");
-            if (link.download !== undefined) {
-                let url = URL.createObjectURL(blob);
-                link.setAttribute("href", url);
-                link.setAttribute("download", `Rekap_${bln}_${thn}.csv`);
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-        });
-    }
-
-    // --- CETAK AWARD ---
-    function cetakAward() {
-        let y = new Date().getFullYear(); Swal.fire({title:'Menghitung...',didOpen:()=>Swal.showLoading()});
-        callAPI('laporanAward',{tahun:y}).then(d=>{
-            Swal.close(); if(!d) return;
-            let hS=`<table class="table table-bordered table-striped"><thead class="table-dark"><tr><th>#</th><th>Instansi</th><th>Guru</th><th>Skor</th></tr></thead><tbody>`;
-            d.sekolah.forEach((s,i)=> hS+=`<tr><td>${i+1}</td><td>${s.sekolah}</td><td>${s.populasi}</td><td>${s.skorAkhir}</td></tr>`); hS+=`</tbody></table>`;
-            let hG=`<table class="table table-bordered table-sm mt-3"><thead class="table-primary"><tr><th>#</th><th>Nama</th><th>Sekolah</th><th>Hadir</th><th>Tepat</th><th>Poin</th></tr></thead><tbody>`;
-            d.guru.forEach((g,i)=>{ if(i<50) hG+=`<tr><td>${i+1}</td><td>${g.nama}</td><td>${g.sekolah}</td><td>${g.hadir}</td><td>${g.tepat}</td><td>${g.totalPoin}</td></tr>`; }); hG+=`</tbody></table>`;
-            let w=window.open('','','width=900,height=600');
-            w.document.write(`<html><head><title>Award ${y}</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></head><body class="p-4"><h3>🏆 AWARD GUGUS ${y}</h3><h5>KATEGORI INSTANSI</h5>${hS}<h5>KATEGORI GURU</h5>${hG}<script>window.print();`+'<'+'/script>'+'<'+'/body>'+'<'+'/html>');
-            w.document.close();
-        });
-    }
-
-    function accIzin(nama, status) {
-        Swal.fire({title:'Konfirmasi', text:`Ubah status ${nama} jadi ${status}?`, icon:'question', showCancelButton:true}).then((res)=>{
-            if(res.isConfirmed) callAPI('updateIzin',{nama:nama,status:status}).then(r=>{ if(r.includes('SUKSES')) loadDashboard(); });
-        });
-    }
-    
-    function filterTable() {
-      var filter = document.getElementById("searchTable").value.toUpperCase();
-      var tr = document.getElementById("tabel-monitor").getElementsByTagName("tr");
-      for (var i=0; i<tr.length; i++) {
-        var txt = tr[i].textContent || tr[i].innerText;
-        tr[i].style.display = txt.toUpperCase().indexOf(filter) > -1 ? "" : "none";
-      }
-    }
-    
-    async function loadSettings() {
-        let d = await callAPI('getSettings');
-        if(d) {
-             document.getElementById('set_lokasi').value = d.nama; 
-             document.getElementById('set_info').value = d.info; document.getElementById('set_mulai').value = d.jamMulai; 
-             document.getElementById('set_selesai').value = d.jamSelesai; document.getElementById('set_batas').value = d.jamBatas;
+  function loadGrafikTren() {
+    callAPI('tren', { tahun: new Date().getFullYear() }).then(data => {
+      if (!data) return;
+      const ctx = document.getElementById('chartTren').getContext('2d');
+      if (chartTrenInstance) chartTrenInstance.destroy();
+      chartTrenInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+          datasets: [
+            { label: 'Tepat', data: data.hadir || new Array(12).fill(0), backgroundColor: '#198754' },
+            { label: 'Telat', data: data.telat || new Array(12).fill(0), backgroundColor: '#ffc107' },
+            { label: 'Izin', data: data.izin || new Array(12).fill(0), backgroundColor: '#0d6efd' }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'top', labels: { boxWidth: 10 } } },
+          scales: { x: { grid: { display: false } } }
         }
+      });
+    });
+  }
+
+  // --- REKAP GRID ---
+  function loadRekapGrid() {
+    let bln = document.getElementById('grid_bulan').value;
+    let thn = document.getElementById('grid_tahun').value;
+    let sek = document.getElementById('grid_sekolah').value;
+    Swal.fire({ title: 'Memuat Data...', didOpen: () => Swal.showLoading() });
+
+    let daysInMonth = new Date(thn, bln, 0).getDate();
+    let headerHtml = `<th>Nama Guru</th>`;
+    for (let i = 1; i <= daysInMonth; i++) headerHtml += `<th style="min-width:25px;">${i}</th>`;
+    document.getElementById('grid-header').innerHTML = headerHtml;
+
+    callAPI('rekapGrid', { bulan: bln, tahun: thn, sekolah: sek }).then(data => {
+      Swal.close();
+      if (!data) return;
+      if (sek && sek !== 'SEMUA') {
+        data = data.filter(u => (u.sekolah || '').toString().includes(sek));
+      }
+      let bodyHtml = "";
+      data.forEach(u => {
+        let row = `<tr><td><div style="line-height:1.1"><strong>${u.nama}</strong><br><small class="text-muted" style="font-size:0.7em">${u.sekolah}</small></div></td>`;
+        for (let i = 1; i <= daysInMonth; i++) {
+          let st = (u.presensi && u.presensi[i]) ? u.presensi[i] : "-";
+          let cls = st == "H" ? "cell-h" : st == "T" ? "cell-t" : st == "I" ? "cell-i" : "cell-a";
+          row += `<td class="${cls}">${st}</td>`;
+        }
+        bodyHtml += row + `</tr>`;
+      });
+      document.getElementById('grid-body').innerHTML = bodyHtml;
+    });
+  }
+
+  function downloadExcel() {
+    let bln = document.getElementById('grid_bulan').value;
+    let thn = document.getElementById('grid_tahun').value;
+    Swal.fire({ title: 'Mengunduh...', didOpen: () => Swal.showLoading() });
+
+    callAPI('exportData', { bulan: bln, tahun: thn }).then(data => {
+      Swal.close();
+      if (!data || data.length === 0) { Swal.fire('Info', 'Data kosong', 'info'); return; }
+      const header = ["Waktu", "Nama Lengkap", "Sekolah", "Jabatan", "Status", "Alasan", "Lokasi"];
+      let csvContent = header.join(",") + "\n";
+      data.forEach(row => {
+        let r = [row.waktu, row.nama, row.sekolah, row.jabatan, row.status, row.alasan, row.lokasi]
+          .map(f => `"${String(f == null ? '' : f).replace(/"/g, '""')}"`);
+        csvContent += r.join(",") + "\n";
+      });
+      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      let link = document.createElement("a");
+      if (link.download !== undefined) {
+        let url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `Rekap_${bln}_${thn}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    });
+  }
+
+  // --- CETAK AWARD ---
+  function cetakAward() {
+    let y = new Date().getFullYear();
+    Swal.fire({ title: 'Menghitung...', didOpen: () => Swal.showLoading() });
+    callAPI('award', { tahun: y }).then(d => {
+      Swal.close();
+      if (!d) return;
+      let hS = `<table class="table table-bordered table-striped"><thead class="table-dark"><tr><th>#</th><th>Instansi</th><th>Guru</th><th>Skor</th></tr></thead><tbody>`;
+      (d.sekolah || []).forEach((s, i) => {
+        hS += `<tr><td>${i + 1}</td><td>${s.sekolah}</td><td>${s.guru != null ? s.guru : s.populasi}</td><td>${s.skorAkhir}</td></tr>`;
+      });
+      hS += `</tbody></table>`;
+
+      let hG = `<table class="table table-bordered table-sm mt-3"><thead class="table-primary"><tr><th>#</th><th>Nama</th><th>Sekolah</th><th>Hadir</th><th>Tepat</th><th>Poin</th></tr></thead><tbody>`;
+      (d.guru || []).forEach((g, i) => {
+        if (i < 50) hG += `<tr><td>${i + 1}</td><td>${g.nama}</td><td>${g.sekolah}</td><td>${g.hadir}</td><td>${g.tepat}</td><td>${g.totalPoin}</td></tr>`;
+      });
+      hG += `</tbody></table>`;
+
+      let w = window.open('', '', 'width=900,height=600');
+      w.document.write(`<html><head><title>Award ${y}</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></head><body class="p-4"><h3>🏆 AWARD GUGUS ${y}</h3><h5>KATEGORI INSTANSI</h5>${hS}<h5>KATEGORI GURU</h5>${hG}<script>window.print();<\/script><\/body><\/html>`);
+      w.document.close();
+    });
+  }
+
+  function accIzin(nama, status) {
+    Swal.fire({
+      title: 'Konfirmasi',
+      text: `Ubah status ${nama} jadi ${status}?`,
+      icon: 'question',
+      showCancelButton: true
+    }).then((res) => {
+      if (res.isConfirmed) {
+        callAPI('updateIzin', { nama: nama, status: status }).then(r => {
+          if (r && r.includes('SUKSES')) loadDashboard();
+          else Swal.fire('Gagal', r || 'Tidak ada respon', 'error');
+        });
+      }
+    });
+  }
+
+  function filterTable() {
+    var filter = document.getElementById("searchTable").value.toUpperCase();
+    var tr = document.getElementById("tabel-monitor").getElementsByTagName("tr");
+    for (var i = 0; i < tr.length; i++) {
+      var txt = tr[i].textContent || tr[i].innerText;
+      tr[i].style.display = txt.toUpperCase().indexOf(filter) > -1 ? "" : "none";
     }
-    function simpanSettings() {
-        let f = { set_lokasi:document.getElementById('set_lokasi').value, set_info:document.getElementById('set_info').value, set_mulai:document.getElementById('set_mulai').value, set_selesai:document.getElementById('set_selesai').value, set_batas:document.getElementById('set_batas').value };
-        Swal.fire({title:'Menyimpan...',didOpen:()=>Swal.showLoading()});
-        callAPI('saveSettings',f).then(r => Swal.fire(r==='SUKSES'?'Berhasil':'Gagal', r, r==='SUKSES'?'success':'error'));
+  }
+
+  async function loadSettings() {
+    let d = await callAPI('getSettings');
+    if (d) {
+      document.getElementById('set_lokasi').value = d.nama;
+      document.getElementById('set_info').value = d.info;
+      document.getElementById('set_mulai').value = d.jamMulai;
+      document.getElementById('set_selesai').value = d.jamSelesai;
+      document.getElementById('set_batas').value = d.jamBatas;
     }
-    function logout() { sessionStorage.removeItem('admin_login'); location.reload(); }
-  </script>
+  }
+
+  function simpanSettings() {
+    let f = {
+      set_lokasi: document.getElementById('set_lokasi').value,
+      set_info: document.getElementById('set_info').value,
+      set_mulai: document.getElementById('set_mulai').value,
+      set_selesai: document.getElementById('set_selesai').value,
+      set_batas: document.getElementById('set_batas').value
+    };
+    Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+    callAPI('saveSettings', f).then(r => {
+      Swal.fire(r === 'SUKSES' ? 'Berhasil' : 'Gagal', r, r === 'SUKSES' ? 'success' : 'error');
+    });
+  }
+
+  function logout() {
+    sessionStorage.removeItem('admin_login');
+    location.reload();
+  }
+</script>
 </body>
 </html>
