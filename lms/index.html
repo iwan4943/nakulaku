@@ -34,8 +34,8 @@
   .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(179,38,30,0.25); width: 100%; }
   .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
   
-  .nav-pills { display: flex; gap: 8px; margin-bottom: 1rem; background: #fff; padding: 4px; border-radius: 50px; }
-  .nav-item { flex: 1; text-align: center; padding: 8px; border-radius: 50px; font-size: 0.85rem; cursor: pointer; color: #555; transition: 0.2s; }
+  .nav-pills { display: flex; gap: 6px; margin-bottom: 1rem; background: #fff; padding: 4px; border-radius: 50px; overflow-x: auto; }
+  .nav-item { flex: 1; text-align: center; padding: 8px 4px; border-radius: 50px; font-size: 0.78rem; cursor: pointer; color: #555; transition: 0.2s; white-space: nowrap; min-width: 0; }
   .nav-item.active { background: #FFDAD6; color: #410E0B; font-weight: 600; }
 
   .progress-wrap { background: rgba(255,255,255,0.2); height: 8px; border-radius: 10px; margin: 10px 0; overflow: hidden; }
@@ -44,6 +44,7 @@
   .bg-ok { background: #C3EED0; color: #0F5223; }
   .bg-wait { background: #FEE4C1; color: #744C00; }
   .bg-rev { background: #F9DEDC; color: #8C1D18; }
+  .bg-ku { background: #E3F2FD; color: #0D47A1; }
   
   .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
   .modal-box { background: #fff; width: 90%; max-width: 400px; padding: 24px; border-radius: 24px; animation: popUp 0.2s ease-out; max-height: 90vh; overflow-y: auto; }
@@ -62,6 +63,40 @@
   .dash-stat { background: var(--primary); color: white; }
   .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
   .grid-btn { background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 16px; text-align: center; font-size: 0.7rem; font-weight: bold; cursor: pointer; }
+  .swal-btn-custom { 
+      margin: 3px !important; 
+      border-radius: 50px !important; 
+      font-size: 0.82rem !important; 
+      padding: 10px 18px !important; 
+      font-weight: 600 !important;
+  }
+
+  /* Filter chips */
+  .filter-row { display: flex; gap: 6px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 4px; }
+  .filter-chip {
+      padding: 6px 14px; border-radius: 50px; font-size: 0.72rem; font-weight: 600;
+      background: #fff; border: 1px solid #e0e0e0; color: #666; cursor: pointer;
+      white-space: nowrap; transition: 0.2s;
+  }
+  .filter-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+  /* History card */
+  .hist-card {
+      background: #fff; border-radius: 14px; padding: 12px 14px; margin-bottom: 10px;
+      border-left: 4px solid #ccc; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .hist-card.prestasi { border-left-color: #ed6c02; }
+  .hist-card.pembiasaan { border-left-color: #2e7d32; }
+  .hist-card.event { border-left-color: #1976d2; }
+  .hist-card.mine { background: #F0F7FF; }
+
+  .hist-jenis-icon {
+      width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 1rem;
+  }
+  .icon-prestasi { background: #FFF4E5; color: #ed6c02; }
+  .icon-pembiasaan { background: #E8F5E9; color: #2e7d32; }
+  .icon-event { background: #E3F2FD; color: #1976d2; }
 </style>
 </head>
 <body>
@@ -96,6 +131,17 @@
     </div>
 
     <div id="panel-guru" class="hidden">
+        <div class="card" style="background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%); color: white; padding: 14px 16px; margin-bottom: 1rem;">
+            <div class="flex between" style="gap: 10px;">
+                <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 0.62rem; opacity: 0.85; font-weight: 700; letter-spacing: 0.5px;">📢 KONTRIBUSI LAPORAN SEKOLAH</div>
+                    <div style="font-size: 0.76rem; margin-top: 4px; opacity: 0.95; line-height: 1.3;">Bantu input Prestasi, Pembiasaan, atau Event sekolah</div>
+                </div>
+                <button onclick="bukaLaporanSekolah()" class="btn" style="background: white; color: #1976d2; font-weight: 700; padding: 8px 14px; font-size: 0.72rem; border-radius: 50px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+                    <i class="bi bi-plus-circle-fill me-1"></i> INPUT
+                </button>
+            </div>
+        </div>
         <div class="card dash-stat">
             <small style="opacity: 0.8; font-weight: 600; font-size: 0.7rem;">CAPAIAN KINERJA</small>
             <div class="flex between">
@@ -110,6 +156,7 @@
             <div class="nav-item active" onclick="switchTab('g-tab', 0, this)">Tugas</div>
             <div class="nav-item" onclick="switchTab('g-tab', 1, this)">Implemen</div>
             <div class="nav-item" onclick="switchTab('g-tab', 2, this)">Inovasi</div>
+            <div class="nav-item" onclick="switchTab('g-tab', 3, this)">Sekolah</div>
         </div>
 
         <div id="g-tab-0">
@@ -168,6 +215,53 @@
                     <textarea id="ino-desc" rows="2" placeholder="Penjelasan Inovasi..." required></textarea>
                     <button class="btn btn-primary" id="btn-ino" style="background: var(--success);"><i class="bi bi-send-fill me-1"></i> KIRIM KARYA</button>
                 </form>
+            </div>
+        </div>
+
+        <!-- TAB BARU: RIWAYAT LAPORAN SEKOLAH -->
+        <div id="g-tab-3" class="hidden">
+            <div class="card" style="background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%); padding: 14px 16px; margin-bottom: 1rem; border: none;">
+                <div class="flex between" style="gap: 10px;">
+                    <div style="flex: 1;">
+                        <div style="font-size: 0.68rem; color: #0D47A1; font-weight: 700; letter-spacing: 0.5px;">🏫 RIWAYAT LAPORAN SEKOLAH</div>
+                        <div style="font-size: 0.75rem; color: #1565C0; margin-top: 3px; line-height: 1.3;">Lihat semua Prestasi, Pembiasaan, dan Event dari sekolah Anda</div>
+                    </div>
+                    <button onclick="loadLaporanSekolah(true)" class="btn btn-sm" style="background: white; color: #1565C0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 0.7rem; padding: 6px 12px;">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistik mini -->
+            <div class="grid-3 mb-3" id="hist-stats">
+                <div class="card p-2" style="text-align: center; border-left: 3px solid #ed6c02; margin-bottom: 0;">
+                    <div style="font-size: 1.4rem; font-weight: 800; color: #ed6c02;" id="hist-cnt-prestasi">0</div>
+                    <div style="font-size: 0.62rem; color: #666; font-weight: 700; letter-spacing: 0.5px;">PRESTASI</div>
+                </div>
+                <div class="card p-2" style="text-align: center; border-left: 3px solid #2e7d32; margin-bottom: 0;">
+                    <div style="font-size: 1.4rem; font-weight: 800; color: #2e7d32;" id="hist-cnt-bias">0</div>
+                    <div style="font-size: 0.62rem; color: #666; font-weight: 700; letter-spacing: 0.5px;">BIAS</div>
+                </div>
+                <div class="card p-2" style="text-align: center; border-left: 3px solid #1976d2; margin-bottom: 0;">
+                    <div style="font-size: 1.4rem; font-weight: 800; color: #1976d2;" id="hist-cnt-event">0</div>
+                    <div style="font-size: 0.62rem; color: #666; font-weight: 700; letter-spacing: 0.5px;">EVENT</div>
+                </div>
+            </div>
+
+            <!-- Filter -->
+            <div class="filter-row" id="hist-filter">
+                <div class="filter-chip active" onclick="filterHist('semua', this)">Semua</div>
+                <div class="filter-chip" onclick="filterHist('Laporan Prestasi', this)">🏆 Prestasi</div>
+                <div class="filter-chip" onclick="filterHist('Laporan Pembiasaan', this)">📚 Pembiasaan</div>
+                <div class="filter-chip" onclick="filterHist('Laporan Event', this)">🎉 Event</div>
+                <div class="filter-chip" onclick="filterHist('saya', this)">👤 Milik Saya</div>
+            </div>
+
+            <div id="hist-list">
+                <div class="card p-4 text-center text-muted" style="font-size: 0.85rem;">
+                    <i class="bi bi-hourglass-split fs-3 d-block mb-2 opacity-50"></i>
+                    Memuat riwayat...
+                </div>
             </div>
         </div>
     </div>
@@ -235,6 +329,27 @@
             <div class="flex" style="gap:8px; margin-top:10px;">
                 <button type="button" onclick="closeModal('mdl-upload')" class="btn" style="background:#eee; flex:1; font-size:0.8rem;">Batal</button>
                 <button id="btn-rutin" class="btn btn-primary" style="flex:2; font-size:0.8rem;"><i class="bi bi-send-fill me-1"></i> Kirim Data</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL VERIFIKASI NPSN -->
+<div id="mdl-npsn" class="modal-overlay">
+    <div class="modal-box">
+        <div style="text-align: center; margin-bottom: 16px;">
+            <div style="width: 60px; height: 60px; background: #E3F2FD; color: #1976d2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+                <i class="bi bi-shield-lock-fill" style="font-size: 1.8rem;"></i>
+            </div>
+            <h5 class="fw-bold mb-1">Verifikasi NPSN</h5>
+            <p class="text-muted" style="font-size: 0.8rem; padding: 0 10px;">Untuk berkontribusi menginput laporan sekolah, verifikasi NPSN sekali saja.</p>
+        </div>
+        <form onsubmit="prosesVerifikasiNPSN(event)">
+            <label class="text-muted fw-bold" style="font-size: 0.68rem; display: block; margin-bottom: 6px; letter-spacing: 0.5px;">NPSN SEKOLAH ANDA</label>
+            <input id="inp-npsn" placeholder="Contoh: 20512345" required inputmode="numeric" style="text-align: center; font-size: 1.1rem; letter-spacing: 2px; font-weight: bold;">
+            <div class="flex" style="gap: 8px; margin-top: 8px;">
+                <button type="button" onclick="closeModal('mdl-npsn')" class="btn" style="background: #eee; flex: 1; font-size: 0.85rem;">Batal</button>
+                <button class="btn btn-primary" style="flex: 2; font-size: 0.85rem;"><i class="bi bi-shield-check me-1"></i> Verifikasi</button>
             </div>
         </form>
     </div>
@@ -315,8 +430,12 @@ const loading = s => $('loader').style.display = s ? 'flex' : 'none';
 let USER = ls.get('LMS_USER') || {};
 let GLOBAL_TASKS_MAP = {};
 let GLOBAL_ALL_TASKS = []; 
+let IS_KONTRIBUTOR = false;
 
-// --- 1. INSTANT LOGIN (OPTIMISTIC UI) ---
+// Untuk riwayat laporan sekolah
+let HIST_DATA = [];
+let HIST_FILTER = 'semua';
+
 window.onload = () => {
     loading(false);
     if(USER && USER.pin && USER.role) {
@@ -427,9 +546,12 @@ async function handleLogin(auto=false) {
 }
 
 function doLogout() { if(confirm("Keluar aplikasi?")) { localStorage.clear(); location.reload(); } }
+
 function switchTab(prefix, idx, el) {
-    [0,1,2].forEach(i => { let pane=$(prefix+'-'+i); if(pane) show(prefix+'-'+i, i===idx); });
-    el.parentNode.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active')); el.classList.add('active');
+    // Support 4 tabs (0,1,2,3)
+    [0,1,2,3].forEach(i => { let pane=$(prefix+'-'+i); if(pane) show(prefix+'-'+i, i===idx); });
+    el.parentNode.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active')); 
+    el.classList.add('active');
 }
 
 /* --- LOGIKA STATUS CERDAS --- */
@@ -457,8 +579,16 @@ function getCleanFeedback(feedback) {
 
 /* --- 4. GURU DASHBOARD --- */
 async function loadGuru() { 
-    loading(true); const d = await req("getDashboardGuru", { pin: USER.pin }); loading(false); 
+    loading(true); 
+    const [d, k] = await Promise.all([
+        req("getDashboardGuru", { pin: USER.pin }),
+        req("cekKontributor", { pin: USER.pin })
+    ]);
+    loading(false); 
+    if (k) IS_KONTRIBUTOR = k.kontributor || false;
     if(d) { GLOBAL_ALL_TASKS = d.tugas; renderGuru(d); }
+    // Preload riwayat laporan sekolah (background)
+    loadLaporanSekolah();
 }
 
 function renderGuru(d) {
@@ -510,6 +640,115 @@ function renderGuru(d) {
     $('sel-prog-kkg').innerHTML = d.agenda.map(a => `<option>${a.kegiatan}</option>`).join('');
     let target = d.agenda.length, pct = target > 0 ? Math.min(100, Math.round((acc/target)*100)) : 0;
     $('g-persen').innerText = pct + "%"; $('g-bar').style.width = pct + "%"; $('g-target').innerText = `${acc}/${target}`;
+}
+
+/* === RIWAYAT LAPORAN SEKOLAH (untuk Guru) === */
+async function loadLaporanSekolah(showLoader=false) {
+    if (showLoader) {
+        $('hist-list').innerHTML = `<div class="card p-4 text-center text-muted" style="font-size: 0.85rem;"><i class="bi bi-hourglass-split fs-3 d-block mb-2 opacity-50"></i> Memuat riwayat...</div>`;
+    }
+    const r = await req("getLaporanSekolah", { pin: USER.pin, sekolah: USER.sekolah });
+    if (!r || !r.laporan) {
+        $('hist-list').innerHTML = `<div class="card p-4 text-center text-muted" style="font-size: 0.85rem;"><i class="bi bi-inbox fs-3 d-block mb-2 opacity-50"></i> Belum ada laporan sekolah</div>`;
+        return;
+    }
+    HIST_DATA = r.laporan;
+    renderHistStats();
+    renderHistList();
+}
+
+function renderHistStats() {
+    let cP = 0, cB = 0, cE = 0;
+    HIST_DATA.forEach(x => {
+        if (x.jenis === "Laporan Prestasi") cP++;
+        else if (x.jenis === "Laporan Pembiasaan") cB++;
+        else if (x.jenis === "Laporan Event") cE++;
+    });
+    $('hist-cnt-prestasi').innerText = cP;
+    $('hist-cnt-bias').innerText = cB;
+    $('hist-cnt-event').innerText = cE;
+}
+
+function filterHist(filter, el) {
+    HIST_FILTER = filter;
+    document.querySelectorAll('#hist-filter .filter-chip').forEach(c => c.classList.remove('active'));
+    if (el) el.classList.add('active');
+    renderHistList();
+}
+
+function renderHistList() {
+    let data = HIST_DATA;
+    if (HIST_FILTER === 'saya') {
+        data = data.filter(x => x.isSaya);
+    } else if (HIST_FILTER !== 'semua') {
+        data = data.filter(x => x.jenis === HIST_FILTER);
+    }
+
+    if (data.length === 0) {
+        $('hist-list').innerHTML = `<div class="card p-4 text-center text-muted" style="font-size: 0.85rem;"><i class="bi bi-inbox fs-3 d-block mb-2 opacity-50"></i> Tidak ada laporan untuk filter ini</div>`;
+        return;
+    }
+
+    $('hist-list').innerHTML = data.map(x => {
+        // Klasifikasi jenis
+        let cls = "event", iconCls = "icon-event", icon = "bi-balloon-fill";
+        let label = "EVENT", color = "#1976d2";
+        if (x.jenis === "Laporan Prestasi") {
+            cls = "prestasi"; iconCls = "icon-prestasi"; icon = "bi-trophy-fill"; label = "PRESTASI"; color = "#ed6c02";
+        } else if (x.jenis === "Laporan Pembiasaan") {
+            cls = "pembiasaan"; iconCls = "icon-pembiasaan"; icon = "bi-calendar-check-fill"; label = "PEMBIASAAN"; color = "#2e7d32";
+        }
+
+        // Waktu ringkas
+        let tgl = (x.waktu || "").split(" ")[0] || "";
+
+        // Penulis
+        let penulis = x.nama;
+        let badgeKontr = x.isKontributor ? `<span class="badge" style="background:#E3F2FD; color:#0D47A1; font-size:0.58rem; padding: 2px 6px;"><i class="bi bi-people-fill"></i> Kontributor</span>` : "";
+        let badgeSaya = x.isSaya ? `<span class="badge" style="background:#E8F5E9; color:#2E7D32; font-size:0.58rem; padding: 2px 6px;"><i class="bi bi-person-fill"></i> Saya</span>` : "";
+
+        // Status
+        let badgeStatus = getSmartBadge(x.status, x.feedback);
+
+        // Feedback ringkas
+        let cleanFeed = getCleanFeedback(x.feedback);
+        let feedHtml = "";
+        if (cleanFeed && cleanFeed !== '') {
+            let isRev = x.status === 'Revisi';
+            feedHtml = `<div class="mt-2 p-2 rounded" style="${isRev ? 'background:#FFF0F0; color:#B71C1C; border-left: 3px solid #B71C1C;' : 'background:#F1F8E9; color:#2E7D32; border-left: 3px solid #4CAF50;'} font-size:0.7rem; line-height: 1.4;">
+                <i class="bi ${isRev ? 'bi-exclamation-triangle-fill' : 'bi-info-circle-fill'} me-1"></i> ${cleanFeed}
+            </div>`;
+        }
+
+        // Link (kalau ada)
+        let linkHtml = "";
+        if (x.link && x.link !== "-" && x.link.startsWith("http")) {
+            linkHtml = `<a href="${x.link}" target="_blank" style="font-size: 0.65rem; color: ${color}; text-decoration: none; font-weight: 600;"><i class="bi bi-link-45deg"></i> Lihat Lampiran</a>`;
+        }
+
+        return `<div class="hist-card ${cls} ${x.isSaya ? 'mine' : ''}">
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
+                <div class="hist-jenis-icon ${iconCls}"><i class="bi ${icon}"></i></div>
+                <div style="flex: 1; min-width: 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px;">
+                        <div style="font-size: 0.62rem; color: ${color}; font-weight: 800; letter-spacing: 0.5px;">${label}</div>
+                        ${badgeStatus}
+                    </div>
+                    <div style="font-weight: 700; font-size: 0.85rem; line-height: 1.3; margin-bottom: 6px; color: #201A19;">${x.judul.replace(/^(PRESTASI|PEMBIASAAN|EVENT):\s*/i, '')}</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 6px;">
+                        <span style="font-size: 0.68rem; color: #555;"><i class="bi bi-person-circle me-1"></i>${penulis}</span>
+                        ${badgeKontr}
+                        ${badgeSaya}
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.65rem; color: #999; margin-top: 6px;">
+                        <span><i class="bi bi-clock me-1"></i>${tgl}</span>
+                        ${linkHtml}
+                    </div>
+                    ${feedHtml}
+                </div>
+            </div>
+        </div>`;
+    }).join('');
 }
 
 /* --- 5. KS DASHBOARD --- */
@@ -597,18 +836,15 @@ async function prosesKirimTugas(e) {
     let isRevisi = $('tugas-idx').value !== "";
     let jenisLaporan = $('tugas-jenis').value || "Kegiatan Gugus";
 
-    // 1. OPTIMISTIC UI: Langsung tutup dan tampilkan popup
     closeModal('mdl-upload'); 
     Swal.fire({ title: isRevisi ? 'Revisi Meluncur!' : 'Tugas Meluncur!', text: 'Sistem sedang memproses data di latar belakang.', icon: 'success', timer: 2500, showConfirmButton: false });
     $('btn-rutin').disabled=false; $('btn-rutin').innerHTML='<i class="bi bi-send-fill me-1"></i> Kirim'; 
 
-    // 2. BACKGROUND SYNC
     req("simpanTugas", { 
         id_tugas: $('tugas-idx').value, pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, 
         jenis_laporan: jenisLaporan, judul_dokumen: $('t-judul').value, link_video: link, catatan: $('t-cat').value 
     }).then(() => {
-        // Refresh silently after done
-        if(USER.role === 'KS') loadKS(true); else loadGuru();
+        if(USER.role === 'KS') loadKS(true); else { loadGuru(); }
     });
 }
 
@@ -620,14 +856,76 @@ async function submitDev(e, jenis, formId) {
 
     const extra=isImp?`[PROG: ${$('sel-prog-kkg').value}] [KELAS: ${$('imp-kelas').value}] `:'';
     
-    // OPTIMISTIC UI
     Swal.fire({ title: 'Laporan Meluncur!', text: 'Sistem sedang menyimpan data Anda...', icon: 'success', timer: 2500, showConfirmButton: false });
     $(isImp?'imp-nama':'ino-nama').value=""; 
     $(btnId).disabled=false; $(btnId).innerHTML=isImp?"<i class='bi bi-send-fill me-1'></i> KIRIM LAPORAN":"<i class='bi bi-send-fill me-1'></i> KIRIM KARYA"; 
     
-    // BACKGROUND SYNC
     req("simpanTugas", { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: USER.sekolah, jenis_laporan: jenis, judul_dokumen: (isImp?"IMPL: ":"INOV: ")+nama, link_video: link, catatan: extra + $(isImp?'imp-desc':'ino-desc').value })
     .then(() => loadGuru());
+}
+
+/* === KONTRIBUSI LAPORAN SEKOLAH === */
+
+function bukaLaporanSekolah() {
+    if (IS_KONTRIBUTOR) {
+        Swal.fire({
+            title: '<span style="font-size: 1.1rem;">Pilih Jenis Laporan</span>',
+            html: '<p style="font-size: 0.85rem; color: #666; margin-bottom: 5px;">Laporan akan tercatat atas nama sekolah Anda</p>',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: '<i class="bi bi-trophy-fill"></i> Prestasi',
+            denyButtonText: '<i class="bi bi-calendar-check-fill"></i> Pembiasaan',
+            cancelButtonText: '<i class="bi bi-balloon-fill"></i> Event',
+            confirmButtonColor: '#ed6c02',
+            denyButtonColor: '#2e7d32',
+            cancelButtonColor: '#1976d2',
+            customClass: {
+                confirmButton: 'swal-btn-custom',
+                denyButton: 'swal-btn-custom',
+                cancelButton: 'swal-btn-custom'
+            }
+        }).then((res) => {
+            if (res.isConfirmed) openModal('mdl-pres');
+            else if (res.isDenied) openModal('mdl-bias');
+            else if (res.dismiss === Swal.DismissReason.cancel) openModal('mdl-event');
+        });
+    } else {
+        openModal('mdl-npsn');
+        setTimeout(() => { $('inp-npsn').value = ""; $('inp-npsn').focus(); }, 200);
+    }
+}
+
+async function prosesVerifikasiNPSN(e) {
+    e.preventDefault();
+    const npsn = $('inp-npsn').value.trim();
+    if (!npsn) return toast("Masukkan NPSN dulu");
+
+    loading(true);
+    const r = await req("verifikasiNPSN", { pin: USER.pin, npsn: npsn });
+    loading(false);
+
+    if (r && r.sukses) {
+        IS_KONTRIBUTOR = true;
+        ls.set('LMS_KONTRIBUTOR', { npsn: npsn, sekolah: r.sekolah });
+        closeModal('mdl-npsn');
+
+        Swal.fire({
+            title: '✅ Berhasil!',
+            html: `Anda terverifikasi sebagai <b>Kontributor ${r.sekolah}</b>.<br><small style="color: #666;">Sekarang Anda bisa input Prestasi, Pembiasaan, dan Event sekolah.</small>`,
+            icon: 'success',
+            timer: 3000,
+            showConfirmButton: false
+        });
+
+        setTimeout(() => bukaLaporanSekolah(), 2200);
+    } else {
+        Swal.fire({
+            title: 'Verifikasi Gagal',
+            text: (r && r.msg) ? r.msg : 'NPSN tidak cocok dengan sekolah Anda. Hubungi Admin.',
+            icon: 'error',
+            confirmButtonText: 'Coba Lagi'
+        });
+    }
 }
 
 async function submitGeneric(e, jenis, modalId, wrapperId, prefix) {
@@ -642,15 +940,38 @@ async function submitGeneric(e, jenis, modalId, wrapperId, prefix) {
     const link = await processLinkOrUpload('file-'+prefix, 'link-'+prefix, judul, wrapperId, btnId);
     if(link === false) { $(btnId).disabled=false; $(btnId).innerHTML="SIMPAN DATA"; return; }
 
-    // OPTIMISTIC UI
     closeModal(modalId); 
     Swal.fire({ title: 'Data Disimpan!', text: 'Laporan sedang disinkronisasi ke server.', icon: 'success', timer: 2500, showConfirmButton: false });
     $(btnId).disabled=false; $(btnId).innerHTML="SIMPAN DATA"; 
-    e.target.reset(); // Reset form
+    e.target.reset();
 
-    // BACKGROUND SYNC
-    req("simpanTugas", { pin_user: USER.pin, nama_user: USER.nama, sekolah_user: obj.sekolah, jenis_laporan: jenis, judul_dokumen: judul, link_video: link, catatan: catatan })
-    .then(() => loadKS(true));
+    const action = USER.role === 'KS' ? 'simpanTugas' : 'simpanLaporanSekolah';
+
+    req(action, { 
+        pin_user: USER.pin, 
+        nama_user: USER.nama, 
+        sekolah_user: obj.sekolah, 
+        jenis_laporan: jenis, 
+        judul_dokumen: judul, 
+        link_video: link, 
+        catatan: catatan 
+    })
+    .then((res) => {
+        if (USER.role === 'KS') {
+            loadKS(true);
+        } else {
+            if (res && res.status === "success") {
+                toast("✅ Laporan sekolah berhasil dikirim!");
+            } else if (res && res.needsVerification) {
+                toast("⚠️ Verifikasi NPSN dulu!");
+                IS_KONTRIBUTOR = false;
+                openModal('mdl-npsn');
+            } else {
+                toast("Laporan terkirim");
+            }
+            loadGuru(); // akan reload riwayat juga
+        }
+    });
 }
 </script>
 </body>
