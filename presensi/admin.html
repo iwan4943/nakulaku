@@ -66,7 +66,7 @@
       <div class="menu-item" onclick="switchPage('rekap')"><i class="fas fa-calendar-alt"></i> Rekap Grid &amp; Excel</div>
       <div class="menu-item" onclick="switchPage('settings')"><i class="fas fa-cog"></i> Pengaturan</div>
       <hr class="mx-3">
-      <div class="menu-item text-warning" onclick="cetakAward()"><i class="fas fa-trophy"></i> Nominasi Award</div>
+      <div class="menu-item text-warning" onclick="switchPage('award')"><i class="fas fa-trophy"></i> Nominasi Award</div>
       <div class="menu-item text-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Keluar</div>
     </div>
   </div>
@@ -188,6 +188,146 @@
       </div>
     </div>
 
+    <div id="page-award" style="display:none;">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+          <h4 class="fw-bold m-0"><i class="fas fa-trophy text-warning me-2"></i>Nominasi Award</h4>
+          <small class="text-muted">Tahun <span id="awardYearLabel">2026</span> — peringkat berdasarkan poin kehadiran</small>
+        </div>
+        <div class="d-flex gap-2">
+          <input type="number" id="awardTahun" class="form-control w-auto shadow-sm" value="2026" style="max-width:120px;">
+          <button onclick="loadAward()" class="btn btn-outline-danger"><i class="fas fa-sync-alt me-1"></i> Refresh</button>
+          <button onclick="printAward()" class="btn btn-danger"><i class="fas fa-print me-1"></i> Cetak</button>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <!-- KOLOM KIRI: RANKING SEKOLAH -->
+        <div class="col-lg-5">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white py-3 border-bottom-0">
+              <h6 class="m-0 fw-bold text-secondary"><i class="fas fa-school me-2"></i>Ranking Instansi</h6>
+            </div>
+            <div class="card-body pt-0">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th style="width:50px;">#</th>
+                      <th>Instansi</th>
+                      <th class="text-center">Guru</th>
+                      <th class="text-end">Skor</th>
+                    </tr>
+                  </thead>
+                  <tbody id="award-sekolah-body">
+                    <tr><td colspan="4" class="text-center text-muted py-4">Memuat data...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KOLOM KANAN: RANKING GURU -->
+        <div class="col-lg-7">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white py-3 border-bottom-0">
+              <h6 class="m-0 fw-bold text-secondary"><i class="fas fa-user-graduate me-2"></i>Ranking Guru (Top 50)</h6>
+            </div>
+            <div class="card-body pt-0">
+              <div class="table-responsive" style="max-height: 600px;">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light" style="position:sticky;top:0;z-index:2;">
+                    <tr>
+                      <th style="width:50px;">#</th>
+                      <th>Nama Guru</th>
+                      <th>Sekolah</th>
+                      <th class="text-center">Hadir</th>
+                      <th class="text-center">Tepat</th>
+                      <th class="text-end">Poin</th>
+                    </tr>
+                  </thead>
+                  <tbody id="award-guru-body">
+                    <tr><td colspan="6" class="text-center text-muted py-4">Memuat data...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-award" style="display:none;">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+          <h4 class="fw-bold m-0"><i class="fas fa-trophy text-warning me-2"></i>Nominasi Award</h4>
+          <small class="text-muted">Tahun <span id="awardYearLabel">2026</span> — peringkat berdasarkan poin kehadiran</small>
+        </div>
+        <div class="d-flex gap-2">
+          <input type="number" id="awardTahun" class="form-control w-auto shadow-sm" value="2026" style="max-width:120px;">
+          <button onclick="loadAward()" class="btn btn-outline-danger"><i class="fas fa-sync-alt me-1"></i> Refresh</button>
+          <button onclick="printAward()" class="btn btn-danger"><i class="fas fa-print me-1"></i> Cetak</button>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-5">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white py-3 border-bottom-0">
+              <h6 class="m-0 fw-bold text-secondary"><i class="fas fa-school me-2"></i>Ranking Instansi</h6>
+            </div>
+            <div class="card-body pt-0">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th style="width:50px;">#</th>
+                      <th>Instansi</th>
+                      <th class="text-center">Guru</th>
+                      <th class="text-end">Skor</th>
+                    </tr>
+                  </thead>
+                  <tbody id="award-sekolah-body">
+                    <tr><td colspan="4" class="text-center text-muted py-4">Memuat data...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white py-3 border-bottom-0">
+              <h6 class="m-0 fw-bold text-secondary"><i class="fas fa-user-graduate me-2"></i>Ranking Guru (Top 50)</h6>
+            </div>
+            <div class="card-body pt-0">
+              <div class="table-responsive" style="max-height: 600px;">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light" style="position:sticky;top:0;z-index:2;">
+                    <tr>
+                      <th style="width:50px;">#</th>
+                      <th>Nama Guru</th>
+                      <th>Sekolah</th>
+                      <th class="text-center">Hadir</th>
+                      <th class="text-center">Tepat</th>
+                      <th class="text-end">Poin</th>
+                    </tr>
+                  </thead>
+                  <tbody id="award-guru-body">
+                    <tr><td colspan="6" class="text-center text-muted py-4">Memuat data...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-settings" style="display:none;">
+
     <div id="page-settings" style="display:none;">
       <h4 class="fw-bold mb-4">Pengaturan Kegiatan</h4>
       <div class="card border-0 shadow-sm p-4" style="max-width: 700px;">
@@ -223,7 +363,7 @@
   // ==========================================
   // CONFIG: PASTIKAN URL INI SUDAH YANG TERBARU
   // ==========================================
-  const API_URL = "https://nakulaku-api.iwan4943.workers.dev";
+  const API_URL = "https://script.google.com/macros/s/AKfycbweTTiW0sPe1SAnJZlUK4KCiiks4cDhc420PWmvf1IOJ7mIKGUhudz42SpAJ1KZP4__cg/exec";
   // ==========================================
 
   let chartInstance = null;
@@ -255,12 +395,18 @@
       if (oc.indexOf("switchPage('" + page + "')") > -1) m.classList.add('active');
     });
 
-    ['dashboard', 'rekap', 'settings'].forEach(p => {
+    ['dashboard', 'rekap', 'settings', 'award'].forEach(p => {
       const el = document.getElementById('page-' + p);
       if (el) el.style.display = 'none';
     });
     const target = document.getElementById('page-' + page);
     if (target) target.style.display = 'block';
+
+    // Auto-load data award saat halaman dibuka
+    if (page === 'award') loadAward();
+
+    // Auto-load data award saat halaman dibuka
+    if (page === 'award') loadAward();
 
     if (window.innerWidth <= 768) {
       document.getElementById('sidebar').classList.remove('show');
@@ -287,13 +433,37 @@
   // --- DASHBOARD ---
   async function initDashboard() {
     let d = await callAPI('listSekolah');
+    console.log('[initDashboard] listSekolah response:', d);
+
+    // FIX: pastikan array, unwrap jika dibungkus Worker
+    let listSekolah = [];
+    if (Array.isArray(d)) {
+      listSekolah = d;
+    } else if (d && Array.isArray(d.data)) {
+      listSekolah = d.data;
+    } else if (d && Array.isArray(d.result)) {
+      listSekolah = d.result;
+    } else {
+      console.error('listSekolah bukan array:', d);
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal memuat daftar sekolah',
+        html: `Server mengembalikan format tidak dikenal.<br><br>
+               <small class="text-start d-block" style="word-break:break-all;">
+               ${JSON.stringify(d).slice(0, 300)}
+               </small>`
+      });
+      return;
+    }
+
     let sel = document.getElementById('filterSekolah');
     let sel2 = document.getElementById('grid_sekolah');
     let sel3 = document.getElementById('set_lokasi');
     sel.innerHTML = `<option value="SEMUA">Semua Sekolah</option>`;
     sel2.innerHTML = `<option value="SEMUA">Semua Sekolah</option>`;
     sel3.innerHTML = "";
-    if (d) d.forEach(s => {
+
+    listSekolah.forEach(s => {
       sel.innerHTML += `<option value="${s}">${s}</option>`;
       sel2.innerHTML += `<option value="${s}">${s}</option>`;
       let opt = document.createElement('option');
@@ -311,7 +481,12 @@
 
     callAPI('monitoring', { sekolah: sekolah, tanggal: tgl }).then(res => {
       Swal.close();
-      if (!res) return;
+      console.log('[loadDashboard] monitoring response:', res);
+      if (!res || !Array.isArray(res.listSudah) || !Array.isArray(res.listBelum)) {
+        console.error('Format monitoring salah:', res);
+        Swal.fire('Error', 'Format data monitoring tidak sesuai. Cek console.', 'error');
+        return;
+      }
       document.getElementById('count-hadir').innerText = res.listSudah.length;
       document.getElementById('count-belum').innerText = res.listBelum.length;
 
@@ -406,7 +581,11 @@
 
     callAPI('rekapGrid', { bulan: bln, tahun: thn, sekolah: sek }).then(data => {
       Swal.close();
-      if (!data) return;
+      console.log('[loadRekapGrid] response:', data);
+      if (!Array.isArray(data)) {
+        Swal.fire('Error', 'Format rekapGrid tidak sesuai. Cek console.', 'error');
+        return;
+      }
       if (sek && sek !== 'SEMUA') {
         data = data.filter(u => (u.sekolah || '').toString().includes(sek));
       }
@@ -431,7 +610,12 @@
 
     callAPI('exportData', { bulan: bln, tahun: thn }).then(data => {
       Swal.close();
-      if (!data || data.length === 0) { Swal.fire('Info', 'Data kosong', 'info'); return; }
+      console.log('[downloadExcel] response:', data);
+      if (!Array.isArray(data)) {
+        Swal.fire('Error', 'Format exportData tidak sesuai. Cek console.', 'error');
+        return;
+      }
+      if (data.length === 0) { Swal.fire('Info', 'Data kosong', 'info'); return; }
       const header = ["Waktu", "Nama Lengkap", "Sekolah", "Jabatan", "Status", "Alasan", "Lokasi"];
       let csvContent = header.join(",") + "\n";
       data.forEach(row => {
@@ -453,29 +637,142 @@
     });
   }
 
-  // --- CETAK AWARD ---
-  function cetakAward() {
-    let y = new Date().getFullYear();
-    Swal.fire({ title: 'Menghitung...', didOpen: () => Swal.showLoading() });
+  // --- NOMINASI AWARD ---
+  let awardCache = null;
+
+  function loadAward() {
+    let y = document.getElementById('awardTahun').value || new Date().getFullYear();
+    document.getElementById('awardYearLabel').innerText = y;
+    document.getElementById('award-sekolah-body').innerHTML =
+      `<tr><td colspan="4" class="text-center text-muted py-4"><div class="spinner-border spinner-border-sm me-2"></div>Memuat...</td></tr>`;
+    document.getElementById('award-guru-body').innerHTML =
+      `<tr><td colspan="6" class="text-center text-muted py-4"><div class="spinner-border spinner-border-sm me-2"></div>Memuat...</td></tr>`;
+
     callAPI('award', { tahun: y }).then(d => {
-      Swal.close();
-      if (!d) return;
-      let hS = `<table class="table table-bordered table-striped"><thead class="table-dark"><tr><th>#</th><th>Instansi</th><th>Guru</th><th>Skor</th></tr></thead><tbody>`;
-      (d.sekolah || []).forEach((s, i) => {
-        hS += `<tr><td>${i + 1}</td><td>${s.sekolah}</td><td>${s.guru != null ? s.guru : s.populasi}</td><td>${s.skorAkhir}</td></tr>`;
-      });
-      hS += `</tbody></table>`;
+      console.log('[loadAward] response:', d);
 
-      let hG = `<table class="table table-bordered table-sm mt-3"><thead class="table-primary"><tr><th>#</th><th>Nama</th><th>Sekolah</th><th>Hadir</th><th>Tepat</th><th>Poin</th></tr></thead><tbody>`;
-      (d.guru || []).forEach((g, i) => {
-        if (i < 50) hG += `<tr><td>${i + 1}</td><td>${g.nama}</td><td>${g.sekolah}</td><td>${g.hadir}</td><td>${g.tepat}</td><td>${g.totalPoin}</td></tr>`;
-      });
-      hG += `</tbody></table>`;
+      if (!d || !Array.isArray(d.sekolah) || !Array.isArray(d.guru)) {
+        document.getElementById('award-sekolah-body').innerHTML =
+          `<tr><td colspan="4" class="text-center text-danger py-4">Gagal memuat data. Cek console.</td></tr>`;
+        document.getElementById('award-guru-body').innerHTML =
+          `<tr><td colspan="6" class="text-center text-danger py-4">Gagal memuat data. Cek console.</td></tr>`;
+        return;
+      }
 
-      let w = window.open('', '', 'width=900,height=600');
-      w.document.write(`<html><head><title>Award ${y}</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></head><body class="p-4"><h3>🏆 AWARD GUGUS ${y}</h3><h5>KATEGORI INSTANSI</h5>${hS}<h5>KATEGORI GURU</h5>${hG}<script>window.print();<\/script><\/body><\/html>`);
-      w.document.close();
+      awardCache = d;
+
+      // Ranking Sekolah
+      let htmlS = "";
+      if (d.sekolah.length === 0) {
+        htmlS = `<tr><td colspan="4" class="text-center text-muted py-4">Belum ada data tahun ${y}.</td></tr>`;
+      } else {
+        d.sekolah.forEach((s, i) => {
+          let medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+          let boldClass = i < 3 ? 'fw-bold' : '';
+          htmlS += `<tr>
+            <td class="${boldClass}">${medal}</td>
+            <td class="${boldClass}">${s.sekolah}</td>
+            <td class="text-center">${s.guru != null ? s.guru : s.populasi}</td>
+            <td class="text-end ${boldClass}">${s.skorAkhir}</td>
+          </tr>`;
+        });
+      }
+      document.getElementById('award-sekolah-body').innerHTML = htmlS;
+
+      // Ranking Guru (Top 50)
+      let htmlG = "";
+      if (d.guru.length === 0) {
+        htmlG = `<tr><td colspan="6" class="text-center text-muted py-4">Belum ada data tahun ${y}.</td></tr>`;
+      } else {
+        d.guru.slice(0, 50).forEach((g, i) => {
+          let medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+          let boldClass = i < 3 ? 'fw-bold' : '';
+          htmlG += `<tr>
+            <td class="${boldClass}">${medal}</td>
+            <td class="${boldClass}">${g.nama}</td>
+            <td><small class="text-muted">${g.sekolah}</small></td>
+            <td class="text-center">${g.hadir}</td>
+            <td class="text-center">${g.tepat}</td>
+            <td class="text-end ${boldClass}">${g.totalPoin}</td>
+          </tr>`;
+        });
+      }
+      document.getElementById('award-guru-body').innerHTML = htmlG;
     });
+  }
+
+  function printAward() {
+    if (!awardCache || !awardCache.sekolah || !awardCache.guru) {
+      Swal.fire('Info', 'Data belum siap. Klik Refresh dulu.', 'info');
+      return;
+    }
+    let y = document.getElementById('awardTahun').value || new Date().getFullYear();
+    let d = awardCache;
+
+    let hS = `<table class="table table-bordered table-striped" style="font-size:12px;">
+      <thead style="background:#212529;color:#fff;">
+        <tr><th>#</th><th>Instansi</th><th>Jumlah Guru</th><th>Skor</th></tr>
+      </thead><tbody>`;
+    d.sekolah.forEach((s, i) => {
+      hS += `<tr><td>${i + 1}</td><td>${s.sekolah}</td><td>${s.guru != null ? s.guru : s.populasi}</td><td>${s.skorAkhir}</td></tr>`;
+    });
+    hS += `</tbody></table>`;
+
+    let hG = `<table class="table table-bordered table-sm mt-3" style="font-size:12px;">
+      <thead style="background:#0d6efd;color:#fff;">
+        <tr><th>#</th><th>Nama</th><th>Sekolah</th><th>Hadir</th><th>Tepat</th><th>Poin</th></tr>
+      </thead><tbody>`;
+    d.guru.slice(0, 50).forEach((g, i) => {
+      hG += `<tr><td>${i + 1}</td><td>${g.nama}</td><td>${g.sekolah}</td><td>${g.hadir}</td><td>${g.tepat}</td><td>${g.totalPoin}</td></tr>`;
+    });
+    hG += `</tbody></table>`;
+
+    const htmlContent = `<!DOCTYPE html><html><head><meta charset="utf-8">
+      <title>Award Gugus Nakula ${y}</title>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 24px; color: #222; }
+        h2 { text-align: center; margin-bottom: 4px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 24px; font-size: 13px; }
+        h4 { margin-top: 24px; border-bottom: 2px solid #B3261E; padding-bottom: 4px; color: #B3261E; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 5px 8px; }
+        @media print { body { padding: 12px; } }
+      </style>
+      </head><body>
+      <h2>🏆 AWARD GUGUS NAKULA ${y}</h2>
+      <div class="subtitle">Dihasilkan otomatis dari sistem presensi digital</div>
+      <h4>KATEGORI INSTANSI</h4>${hS}
+      <h4>KATEGORI GURU (Top 50)</h4>${hG}
+      <div style="text-align:right;margin-top:20px;font-size:11px;color:#888;">
+        Dicetak: ${new Date().toLocaleString('id-ID')}
+      </div>
+      </body></html>`;
+
+    // Pakai iframe internal (aman dari file://)
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow.document;
+    doc.open();
+    doc.write(htmlContent);
+    doc.close();
+
+    setTimeout(function () {
+      try {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+      } catch (err) {
+        console.error('Print error:', err);
+        Swal.fire('Info', 'Gagal membuka dialog print.', 'warning');
+      }
+      setTimeout(function () { document.body.removeChild(iframe); }, 2000);
+    }, 600);
   }
 
   function accIzin(nama, status) {
@@ -505,7 +802,8 @@
 
   async function loadSettings() {
     let d = await callAPI('getSettings');
-    if (d) {
+    console.log('[loadSettings] response:', d);
+    if (d && !d.status) {
       document.getElementById('set_lokasi').value = d.nama;
       document.getElementById('set_info').value = d.info;
       document.getElementById('set_mulai').value = d.jamMulai;
