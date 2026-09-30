@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<title>Awards — Gugus Nakula</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<style>
+  :root {
+    --primary: #B3261E;
+    --primary-dark: #8B1C16;
+    --primary-light: #FCEAE9;
+    --bg: #FAFAFA;
+    --bg-elevated: #FFFFFF;
+    --border: #EBEBEF;
+    --border-strong: #D9D9E0;
+    --text: #121217;
+    --text-secondary: #5A5A66;
+    --text-tertiary: #8E8E99;
+    --gold: #D4A017;
+    --gold-bg: linear-gradient(135deg, #FFF9E6 0%, #FFEDC2 100%);
+    --gold-border: #F4D88A;
+    --silver: #7A8291;
+    --silver-bg: linear-gradient(135deg, #F5F6F8 0%, #E4E7EB 100%);
+    --silver-border: #C8CDD5;
+    --bronze: #A66A3E;
+    --bronze-bg: linear-gradient(135deg, #FBF2EB 0%, #F0DDCB 100%);
+    --bronze-border: #D9B899;
+    --success: #10B981;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --shadow-sm: 0 1px 2px rgba(18,18,23,0.04);
+    --shadow-md: 0 4px 12px rgba(18,18,23,0.06);
+    --shadow-lg: 0 12px 32px rgba(18,18,23,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.5; font-size: 14px; min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; letter-spacing: -0.02em; }
+
+  /* TOPBAR */
+  .topbar { background: var(--bg-elevated); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+  .topbar-inner {
+    max-width: 1280px; margin: 0 auto; padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(179,38,30,0.25);
+  }
+  .brand-icon svg { width: 22px; height: 22px; }
+  .brand-title { font-size: 1.15rem; font-weight: 800; color: var(--text); line-height: 1.2; }
+  .brand-sub { font-size: 0.75rem; color: var(--text-tertiary); font-weight: 500; }
+  .topbar-actions { display: flex; align-items: center; gap: 8px; }
+  .select-year {
+    padding: 9px 36px 9px 14px; border-radius: 10px;
+    border: 1px solid var(--border-strong); background: var(--bg-elevated);
+    font-weight: 600; font-size: 0.85rem; color: var(--text); cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235A5A66' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; transition: 0.15s;
+  }
+  .select-year:hover { border-color: var(--text-secondary); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 16px; border-radius: 10px; border: 1px solid var(--border-strong);
+    background: var(--bg-elevated); color: var(--text);
+    font-family: inherit; font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; transition: 0.15s;
+  }
+  .btn:hover { border-color: var(--text-secondary); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+  .btn svg { width: 15px; height: 15px; }
+  .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
+  .btn-primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
+
+  /* META BAR */
+  .meta-bar { background: var(--bg-elevated); border-bottom: 1px solid var(--border); font-size: 0.78rem; color: var(--text-secondary); }
+  .meta-bar-inner { max-width: 1280px; margin: 0 auto; padding: 10px 24px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+  .meta-item { display: inline-flex; align-items: center; gap: 6px; }
+  .meta-item svg { width: 13px; height: 13px; color: var(--text-tertiary); }
+  .meta-item strong { color: var(--text); font-weight: 700; }
+  .meta-item.success strong { color: var(--success); }
+
+  /* TABS */
+  .tabs-bar { background: var(--bg-elevated); border-bottom: 1px solid var(--border); position: sticky; top: 77px; z-index: 49; }
+  .tabs-inner {
+    max-width: 1280px; margin: 0 auto; padding: 0 24px;
+    display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
+  }
+  .tabs-inner::-webkit-scrollbar { display: none; }
+  .tab {
+    display: inline-flex; align-items: center; gap: 8px; padding: 16px 18px;
+    background: transparent; border: none; border-bottom: 3px solid transparent;
+    font-family: inherit; font-size: 0.88rem; font-weight: 600;
+    color: var(--text-tertiary); cursor: pointer; transition: 0.15s;
+    white-space: nowrap; margin-bottom: -1px;
+  }
+  .tab svg { width: 16px; height: 16px; }
+  .tab:hover { color: var(--text-secondary); }
+  .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+  /* MAIN */
+  .main { max-width: 1280px; margin: 0 auto; padding: 28px 24px 80px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn 0.35s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SUB-SECTION GROUP */
+  .group-label {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0; margin-bottom: 16px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700; font-size: 0.75rem;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-tertiary);
+  }
+  .group-label::after {
+    content: ""; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* AWARD CARD */
+  .award-card {
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); margin-bottom: 20px; overflow: hidden; transition: 0.2s;
+  }
+  .award-card:hover { box-shadow: var(--shadow-md); }
+  .award-head {
+    padding: 18px 22px; display: flex; align-items: center; gap: 14px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #FFFFFF 0%, #FCFCFD 100%);
+  }
+  .award-head-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--primary-light); color: var(--primary);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .award-head-icon svg { width: 22px; height: 22px; }
+  .award-head-icon.fun {
+    background: #FFF4E5; color: #D97706;
+  }
+  .award-head-text { flex: 1; min-width: 0; }
+  .award-head-text h2 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .award-head-text p { font-size: 0.75rem; color: var(--text-tertiary); font-weight: 500; }
+  .award-head-count {
+    padding: 4px 11px; border-radius: 50px;
+    background: var(--primary-light); color: var(--primary);
+    font-size: 0.68rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap;
+  }
+  .award-head-count.fun { background: #FFF4E5; color: #D97706; }
+
+  /* PODIUM */
+  .podium { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 18px 22px; }
+  @media (max-width: 720px) { .podium { grid-template-columns: 1fr; } }
+  .podium-item {
+    position: relative; border-radius: var(--radius-md);
+    padding: 18px 14px 14px; border: 1.5px solid var(--border);
+    background: #FFF; transition: 0.2s;
+  }
+  .podium-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .podium-item.rank-1 { background: var(--gold-bg); border-color: var(--gold-border); box-shadow: 0 8px 24px rgba(212,160,23,0.12); }
+  .podium-item.rank-2 { background: var(--silver-bg); border-color: var(--silver-border); }
+  .podium-item.rank-3 { background: var(--bronze-bg); border-color: var(--bronze-border); }
+  .podium-badge {
+    position: absolute; top: -10px; left: 16px;
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 50px;
+    font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    background: var(--text); color: white;
+  }
+  .podium-badge svg { width: 11px; height: 11px; }
+  .rank-1 .podium-badge { background: var(--gold); color: #4A3300; }
+  .rank-2 .podium-badge { background: var(--silver); color: white; }
+  .rank-3 .podium-badge { background: var(--bronze); color: white; }
+  .podium-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.7); border: 2px solid rgba(255,255,255,0.9);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;
+    font-size: 1rem; color: var(--text); margin-bottom: 10px;
+  }
+  .rank-1 .podium-avatar { background: linear-gradient(135deg, #FFE9A8 0%, #F9CF5C 100%); color: #5A4000; }
+  .rank-2 .podium-avatar { background: linear-gradient(135deg, #E8EBEF 0%, #C5CBD3 100%); color: #3A4048; }
+  .rank-3 .podium-avatar { background: linear-gradient(135deg, #E8C9A8 0%, #CB9E71 100%); color: #3E2410; }
+  .podium-name {
+    font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 3px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden; line-height: 1.3;
+  }
+  .podium-sub { font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .podium-score { display: flex; align-items: baseline; gap: 4px; font-family: 'Plus Jakarta Sans', sans-serif; }
+  .podium-score-val { font-size: 1.4rem; font-weight: 800; color: var(--text); line-height: 1; letter-spacing: -0.03em; }
+  .rank-1 .podium-score-val { color: #7A5500; }
+  .podium-score-unit { font-size: 0.7rem; color: var(--text-tertiary); font-weight: 600; }
+
+  /* TABLE */
+  .table-wrap { border-top: 1px solid var(--border); overflow-x: auto; max-height: 460px; overflow-y: auto; }
+  table.lb { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+  table.lb thead { position: sticky; top: 0; z-index: 2; background: #FAFAFB; }
+  table.lb th {
+    text-align: left; padding: 12px 16px;
+    font-size: 0.66rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.6px; color: var(--text-tertiary);
+    border-bottom: 1px solid var(--border); white-space: nowrap;
+  }
+  table.lb th.num { text-align: right; }
+  table.lb td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  table.lb td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text); }
+  table.lb tbody tr:last-child td { border-bottom: none; }
+  table.lb tbody tr:hover { background: #FAFAFB; }
+  .cell-rank {
+    width: 52px; text-align: center;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: var(--text-tertiary);
+  }
+  .rank-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%; font-size: 0.78rem;
+  }
+  .rank-badge.gold { background: var(--gold-bg); color: #7A5500; border: 1px solid var(--gold-border); }
+  .rank-badge.silver { background: var(--silver-bg); color: #3A4048; border: 1px solid var(--silver-border); }
+  .rank-badge.bronze { background: var(--bronze-bg); color: #5A3010; border: 1px solid var(--bronze-border); }
+  .rank-badge svg { width: 13px; height: 13px; }
+  .cell-name { font-weight: 600; color: var(--text); }
+  .cell-name small { display: block; color: var(--text-tertiary); font-size: 0.7rem; font-weight: 500; margin-top: 2px; }
+  .cell-score { font-weight: 700; color: var(--primary); font-variant-numeric: tabular-nums; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 50px;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.2px; white-space: nowrap;
+  }
+  .chip svg { width: 11px; height: 11px; }
+  .chip-gold { background: linear-gradient(135deg, #FFF9E6 0%, #FFEDC2 100%); color: #7A5500; }
+  .chip-red { background: var(--primary-light); color: var(--primary); }
+  .chip-green { background: #E7F6EE; color: #0F7A44; }
+  .chip-blue { background: #E8F0FE; color: #1A56C4; }
+  .chip-gray { background: #F1F2F4; color: #4A4A55; }
+
+  /* LOADING / ERROR / EMPTY */
+  .loading-overlay {
+    position: fixed; inset: 0; background: var(--bg); z-index: 100;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  }
+  .spinner-box {
+    width: 52px; height: 52px; border-radius: 16px;
+    background: var(--primary-light); display: flex; align-items: center; justify-content: center;
+  }
+  .spinner-box svg { width: 24px; height: 24px; color: var(--primary); animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; }
+  .empty { padding: 50px 20px; text-align: center; color: var(--text-tertiary); }
+  .empty svg { width: 36px; height: 36px; margin-bottom: 12px; opacity: 0.4; }
+  .empty p { font-size: 0.85rem; font-weight: 500; }
+  .error-box {
+    max-width: 460px; margin: 80px auto; padding: 32px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); text-align: center; box-shadow: var(--shadow-lg);
+  }
+  .error-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--primary-light); color: var(--primary);
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+  }
+  .error-icon svg { width: 26px; height: 26px; }
+  .error-box h3 { font-size: 1.1rem; margin-bottom: 8px; }
+  .error-box p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; word-break: break-word; }
+  .error-box code {
+    display: block; background: #F5F5F7; padding: 10px; border-radius: 8px;
+    font-size: 0.72rem; color: var(--text-secondary); margin-top: 8px; text-align: left;
+    font-family: 'SF Mono', Monaco, monospace; word-break: break-all;
+  }
+  .hidden { display: none !important; }
+
+  /* RESPONSIVE */
+  @media (max-width: 720px) {
+    .topbar-inner, .meta-bar-inner, .tabs-inner, .main { padding-left: 16px; padding-right: 16px; }
+    .brand-title { font-size: 1rem; }
+    .award-head { padding: 14px; gap: 12px; }
+    .award-head-icon { width: 38px; height: 38px; }
+    .award-head-icon svg { width: 18px; height: 18px; }
+    .award-head-text h2 { font-size: 0.92rem; }
+    .podium { padding: 14px; }
+    table.lb th, table.lb td { padding: 10px 12px; }
+  }
+
+  /* PRINT */
+  @media print {
+    body { background: white; }
+    .topbar-actions, .tabs-bar, .btn { display: none !important; }
+    .topbar, .meta-bar { border: none; }
+    .tab-panel { display: block !important; page-break-before: always; }
+    .tab-panel:first-child { page-break-before: auto; }
+    .award-card { break-inside: avoid; box-shadow: none; page-break-inside: avoid; }
+    .table-wrap { max-height: none !important; overflow: visible !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loading" class="loading-overlay">
+  <div class="spinner-box"><i data-lucide="loader-2"></i></div>
+  <div class="loading-text">Memuat data award...</div>
+</div>
+
+<div id="topbar" class="topbar hidden">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-icon"><i data-lucide="trophy"></i></div>
+      <div>
+        <div class="brand-title">Awards Gugus Nakula</div>
+        <div class="brand-sub">Nominasi & Peringkat Tahunan</div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <select id="select-tahun" class="select-year">
+        <option value="2026">Tahun 2026</option>
+        <option value="2025">Tahun 2025</option>
+      </select>
+      <button class="btn" onclick="refresh()"><i data-lucide="refresh-cw"></i> Refresh</button>
+      <button class="btn btn-primary" onclick="window.print()"><i data-lucide="printer"></i> Cetak</button>
+    </div>
+  </div>
+</div>
+
+<div id="meta-bar" class="meta-bar hidden">
+  <div class="meta-bar-inner">
+    <span class="meta-item"><i data-lucide="users"></i> <strong id="meta-guru">-</strong> guru</span>
+    <span class="meta-item"><i data-lucide="school"></i> <strong id="meta-sekolah">-</strong> sekolah</span>
+    <span class="meta-item"><i data-lucide="file-text"></i> <strong id="meta-lms">-</strong> laporan LMS</span>
+    <span class="meta-item"><i data-lucide="message-square"></i> <strong id="meta-feedback">-</strong> umpan balik</span>
+    <span class="meta-item"><i data-lucide="calendar-check"></i> <strong id="meta-sesi">-</strong> sesi KKG</span>
+    <span class="meta-item success"><i data-lucide="zap"></i> <strong id="meta-speed">-</strong> ms</span>
+  </div>
+</div>
+
+<div id="tabs-bar" class="tabs-bar hidden">
+  <div class="tabs-inner">
+    <button class="tab active" data-tab="individu" onclick="showTab('individu', this)">
+      <i data-lucide="users-round"></i> Individu
+    </button>
+    <button class="tab" data-tab="sekolah" onclick="showTab('sekolah', this)">
+      <i data-lucide="building-2"></i> Sekolah
+    </button>
+    <button class="tab" data-tab="panitia" onclick="showTab('panitia', this)">
+      <i data-lucide="mic"></i> Panitia
+    </button>
+    <button class="tab" data-tab="overall" onclick="showTab('overall', this)">
+      <i data-lucide="star"></i> Overall
+    </button>
+    <button class="tab" data-tab="fun" onclick="showTab('fun', this)">
+      <i data-lucide="laugh"></i> Fun
+    </button>
+  </div>
+</div>
+
+<div id="main" class="main hidden">
+  <div id="panel-individu" class="tab-panel active"></div>
+  <div id="panel-sekolah" class="tab-panel"></div>
+  <div id="panel-panitia" class="tab-panel"></div>
+  <div id="panel-overall" class="tab-panel"></div>
+  <div id="panel-fun" class="tab-panel"></div>
+</div>
+
+<div id="error-box" class="error-box hidden">
+  <div class="error-icon"><i data-lucide="alert-triangle"></i></div>
+  <h3>Gagal Memuat Data</h3>
+  <p id="error-msg">Terjadi kesalahan.</p>
+  <code id="error-detail"></code>
+  <div style="margin-top: 20px;">
+    <button class="btn btn-primary" onclick="refresh()"><i data-lucide="refresh-cw"></i> Coba Lagi</button>
+  </div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxaaUcgZNBqJgCLbAtPRlikZG6t4ZGLFOY20ID7C3OiBoxlEUykpPgwWMHfFhWeckK-7g/exec";
+const CACHE_KEY = "awards_cache_v2_";
+const CACHE_TTL = 30 * 60 * 1000;
+
+let dataAwards = null;
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.lucide) lucide.createIcons();
+  const savedYear = localStorage.getItem("awards_tahun") || "2026";
+  document.getElementById("select-tahun").value = savedYear;
+  document.getElementById("select-tahun").addEventListener("change", (e) => {
+    localStorage.setItem("awards_tahun", e.target.value);
+    loadAwards(e.target.value);
+  });
+  loadAwards(savedYear);
+});
+
+async function loadAwards(tahun) {
+  showLoading(true);
+  hideError();
+  const cacheKey = CACHE_KEY + tahun;
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      const obj = JSON.parse(cached);
+      if (Date.now() - obj.ts < CACHE_TTL) {
+        dataAwards = obj.data;
+        renderAll();
+        showLoading(false);
+        return;
+      }
+    }
+  } catch (e) {}
+
+  try {
+    const res = await fetch(API_URL + "?action=getAllAwards&tahun=" + tahun);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    dataAwards = data;
+    localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data }));
+    renderAll();
+    showLoading(false);
+  } catch (err) {
+    showLoading(false);
+    showError(err.message || "Gagal koneksi ke server.", API_URL);
+  }
+}
+
+function refresh() {
+  const tahun = document.getElementById("select-tahun").value;
+  localStorage.removeItem(CACHE_KEY + tahun);
+  loadAwards(tahun);
+}
+
+function renderAll() {
+  if (!dataAwards) return;
+  const m = dataAwards.meta || {};
+  document.getElementById("meta-guru").innerText = m.totalGuru || 0;
+  document.getElementById("meta-sekolah").innerText = m.totalSekolah || 0;
+  document.getElementById("meta-lms").innerText = m.totalLMS || 0;
+  document.getElementById("meta-feedback").innerText = m.totalFeedback || 0;
+  document.getElementById("meta-sesi").innerText = m.totalSesiKKG || 0;
+  document.getElementById("meta-speed").innerText = m.durasiMs || 0;
+
+  renderIndividu();
+  renderSekolah();
+  renderPanitia();
+  renderOverall();
+  renderFun();
+
+  document.getElementById("topbar").classList.remove("hidden");
+  document.getElementById("meta-bar").classList.remove("hidden");
+  document.getElementById("tabs-bar").classList.remove("hidden");
+  document.getElementById("main").classList.remove("hidden");
+  if (window.lucide) lucide.createIcons();
+}
+
+// ==================== HELPERS ====================
+function initials(nama) {
+  const parts = String(nama || "?").trim().split(/\s+/);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+function podiumBadge(rank) {
+  const icons = ["trophy", "medal", "award"];
+  return `<span class="podium-badge"><i data-lucide="${icons[rank-1]}"></i> Peringkat ${rank}</span>`;
+}
+
+function buildPodium(list, formatter) {
+  if (!list || list.length === 0) {
+    return `<div class="empty"><i data-lucide="inbox"></i><p>Belum ada data</p></div>`;
+  }
+  return '<div class="podium">' + list.slice(0, 3).map((item, i) => {
+    const f = formatter(item);
+    return `
+      <div class="podium-item rank-${i+1}">
+        ${podiumBadge(i+1)}
+        <div class="podium-avatar">${initials(f.name)}</div>
+        <div class="podium-name">${escapeHtml(f.name)}</div>
+        <div class="podium-sub">${escapeHtml(f.sub || "")}</div>
+        <div class="podium-score">
+          <span class="podium-score-val">${f.score}</span>
+          <span class="podium-score-unit">${f.unit || ""}</span>
+        </div>
+      </div>`;
+  }).join("") + '</div>';
+}
+
+function rankCell(i) {
+  if (i === 0) return `<span class="rank-badge gold"><i data-lucide="trophy"></i></span>`;
+  if (i === 1) return `<span class="rank-badge silver"><i data-lucide="medal"></i></span>`;
+  if (i === 2) return `<span class="rank-badge bronze"><i data-lucide="award"></i></span>`;
+  return (i + 1);
+}
+
+function buildTable(list, columns) {
+  if (!list || list.length === 0) {
+    return `<div class="empty"><i data-lucide="inbox"></i><p>Belum ada data</p></div>`;
+  }
+  const thead = '<tr><th class="cell-rank">#</th>' +
+    columns.map(c => `<th${c.align === "right" ? ' class="num"' : ""}>${c.label}</th>`).join("") +
+    '</tr>';
+  const tbody = list.map((item, i) => {
+    const cells = columns.map(c => {
+      let val = c.render ? c.render(item) : (item[c.key] ?? "-");
+      return `<td${c.align === "right" ? ' class="num"' : ""}>${val}</td>`;
+    }).join("");
+    return `<tr><td class="cell-rank">${rankCell(i)}</td>${cells}</tr>`;
+  }).join("");
+  return `<div class="table-wrap"><table class="lb"><thead>${thead}</thead><tbody>${tbody}</tbody></table></div>`;
+}
+
+function buildSection(icon, title, subtitle, podiumHtml, tableHtml, count, isFun) {
+  return `
+    <div class="award-card">
+      <div class="award-head">
+        <div class="award-head-icon${isFun ? ' fun' : ''}"><i data-lucide="${icon}"></i></div>
+        <div class="award-head-text">
+          <h2>${title}</h2>
+          <p>${subtitle}</p>
+        </div>
+        ${count !== undefined ? `<div class="award-head-count${isFun ? ' fun' : ''}">${count} nominasi</div>` : ""}
+      </div>
+      ${podiumHtml}
+      ${tableHtml}
+    </div>`;
+}
+
+function groupLabel(text) {
+  return `<div class="group-label">${text}</div>`;
+}
+
+function chipLevel(warna, level, badge) {
+  const icon = (badge||"").indexOf("👑") > -1 ? "crown" : "award";
+  return `<span class="chip chip-${warna || 'gray'}"><i data-lucide="${icon}"></i> ${level}</span>`;
+}
+
+// ==================== TAB: INDIVIDU ====================
+function renderIndividu() {
+  const g = dataAwards.guru || {};
+  const pa = dataAwards.presensiAdvanced || {};
+  const la = dataAwards.lmsAdvanced || {};
+  const kb = dataAwards.kombinasi || {};
+  const bk = dataAwards.berkembang || [];
+  const html = [];
+
+  // Group 1: Award Utama
+  html.push(groupLabel("Award Utama"));
+
+  html.push(buildSection("gem", "Guru Teladan",
+    "Total XP tertinggi dari seluruh aktivitas LMS",
+    buildPodium(g.teladan, x => ({ name: x.nama, sub: `${x.sekolah} • ${x.level}`, score: x.totalXP, unit: "XP" })),
+    buildTable((g.teladan || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Level", render: x => chipLevel(x.warna, x.level, x.badge) },
+      { label: "Tugas", key: "tugas", align: "right" },
+      { label: "Inovasi", key: "inovasi", align: "right" },
+      { label: "Total XP", render: x => `<span class="cell-score">${x.totalXP}</span>`, align: "right" }
+    ]), g.teladan?.length || 0));
+
+  html.push(buildSection("palette", "Guru Kreatif",
+    "Rata-rata nilai mutu tertinggi — banyak mendapat nilai A",
+    buildPodium(g.kreatif, x => ({ name: x.nama, sub: `${x.sekolah} • ${x.gradeA}× A`, score: x.rataGrade, unit: "/4" })),
+    buildTable((g.kreatif || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Grade A", key: "gradeA", align: "right" },
+      { label: "Grade B", key: "gradeB", align: "right" },
+      { label: "Grade C", key: "gradeC", align: "right" },
+      { label: "Rata-rata", render: x => `<span class="cell-score">${x.rataGrade}</span>`, align: "right" }
+    ]), g.kreatif?.length || 0));
+
+  // Group 2: Presensi
+  html.push(groupLabel("Disiplin & Kehadiran"));
+
+  html.push(buildSection("clock", "Paling Tepat Waktu",
+    "Frekuensi kehadiran tepat waktu terbanyak",
+    buildPodium(g.tepatWaktu, x => ({ name: x.nama, sub: x.sekolah, score: x.tepat, unit: "×" })),
+    buildTable((g.tepatWaktu || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Tepat", key: "tepat", align: "right" },
+      { label: "Terlambat", key: "terlambat", align: "right" },
+      { label: "Total Hadir", key: "totalHadir", align: "right" },
+      { label: "Persen", render: x => `<span class="cell-score">${x.persenTepat}%</span>`, align: "right" }
+    ]), g.tepatWaktu?.length || 0));
+
+  html.push(buildSection("calendar-check-2", "Paling Rajin",
+    "Total kehadiran fisik terbanyak",
+    buildPodium(g.rajin, x => ({ name: x.nama, sub: x.sekolah, score: x.totalHadir, unit: "× hadir" })),
+    buildTable((g.rajin || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Hadir", key: "totalHadir", align: "right" },
+      { label: "Total Poin", key: "totalPoin", align: "right" },
+      { label: "Rata Poin", key: "rataPoin", align: "right" }
+    ]), g.rajin?.length || 0));
+
+  html.push(buildSection("sunrise", "Paling Pagi",
+    "Rata-rata jam kedatangan paling awal sepanjang tahun",
+    buildPodium(g.pagi, x => ({ name: x.nama, sub: x.sekolah, score: x.rataJam, unit: "WIB" })),
+    buildTable((g.pagi || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Rata Jam", render: x => `<span class="cell-score">${x.rataJam}</span>`, align: "right" },
+      { label: "Kehadiran", key: "totalHadir", align: "right" },
+      { label: "Tepat", key: "tepat", align: "right" }
+    ]), g.pagi?.length || 0));
+
+  html.push(buildSection("map-pin", "Patuh Lokasi",
+    "Persentase kehadiran dalam radius tertinggi",
+    buildPodium(g.patuh, x => ({ name: x.nama, sub: x.sekolah, score: x.persenDalamRadius + "%", unit: "radius" })),
+    buildTable((g.patuh || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Dalam Radius", render: x => `<span class="cell-score">${x.persenDalamRadius}%</span>`, align: "right" },
+      { label: "Tepat", key: "tepat", align: "right" },
+      { label: "Total Entri", key: "totalEntri", align: "right" }
+    ]), g.patuh?.length || 0));
+
+  // Group 3: Presensi Advanced
+  html.push(groupLabel("Presensi Advanced"));
+
+  html.push(buildSection("shield-check", "Guru Zero Alpha",
+    "100% entri bersih — tidak ada status pending sepanjang tahun",
+    buildPodium(pa.zeroAlpha, x => ({ name: x.nama, sub: x.sekolah, score: x.totalEntri, unit: "entri" })),
+    buildTable((pa.zeroAlpha || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total Entri", key: "totalEntri", align: "right" },
+      { label: "Tepat", key: "tepat", align: "right" },
+      { label: "Status", render: () => `<span class="chip chip-green"><i data-lucide="check"></i> Bersih</span>` }
+    ]), pa.zeroAlpha?.length || 0));
+
+  html.push(buildSection("calendar-heart", "Guru Full Week",
+    `Hadir di semua sesi KKG (${dataAwards.meta?.totalSesiKKG || 0} sesi Sabtu)`,
+    buildPodium(pa.fullWeek, x => ({ name: x.nama, sub: x.sekolah, score: x.hadirSesi + "/" + x.totalSesi, unit: "sesi" })),
+    buildTable((pa.fullWeek || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Hadir", key: "hadirSesi", align: "right" },
+      { label: "Total Sesi", key: "totalSesi", align: "right" },
+      { label: "Persen", render: x => `<span class="cell-score">${x.persen}%</span>`, align: "right" }
+    ]), pa.fullWeek?.length || 0));
+
+  html.push(buildSection("sun", "Guru Paling Awal Datang",
+    "Rekor jam kedatangan paling pagi sepanjang tahun",
+    buildPodium(pa.awalDatang, x => ({ name: x.nama, sub: x.sekolah, score: x.jamFormatted, unit: "WIB" })),
+    buildTable((pa.awalDatang || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Jam Terpagi", render: x => `<span class="cell-score">${x.jamFormatted}</span>`, align: "right" }
+    ]), pa.awalDatang?.length || 0));
+
+  html.push(buildSection("file-check", "Disiplin Izin",
+    "Rasio izin resmi tertinggi (minimal 3 izin dalam setahun)",
+    buildPodium(pa.disiplinIzin, x => ({ name: x.nama, sub: x.sekolah, score: x.totalIzin, unit: "izin" })),
+    buildTable((pa.disiplinIzin || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total Izin", key: "totalIzin", align: "right" },
+      { label: "Rasio", render: x => `<span class="cell-score">${x.rasioIzin}%</span>`, align: "right" },
+      { label: "Total Entri", key: "totalEntri", align: "right" }
+    ]), pa.disiplinIzin?.length || 0));
+
+  html.push(buildSection("graduation-cap", "Kepala Sekolah Teladan",
+    "KS dengan rata-rata poin presensi tertinggi",
+    buildPodium(pa.ksTeladan, x => ({ name: x.nama, sub: x.sekolah, score: x.rataPoin, unit: "rata poin" })),
+    buildTable((pa.ksTeladan || []).slice(0, 15), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Rata Poin", render: x => `<span class="cell-score">${x.rataPoin}</span>`, align: "right" },
+      { label: "Tepat", key: "tepat", align: "right" },
+      { label: "Total Entri", key: "totalEntri", align: "right" }
+    ]), pa.ksTeladan?.length || 0));
+
+  // Group 4: LMS Advanced
+  html.push(groupLabel("Kualitas Laporan LMS"));
+
+  html.push(buildSection("shield", "Guru Bebas Revisi",
+    "Zero revisi dari minimal 3 tugas — kualitas di atas kuantitas",
+    buildPodium(la.bebasRevisi, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "tugas" })),
+    buildTable((la.bebasRevisi || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total", key: "total", align: "right" },
+      { label: "Diterima", key: "diterima", align: "right" },
+      { label: "Persen", render: x => `<span class="cell-score">${x.persenDiterima}%</span>`, align: "right" }
+    ]), la.bebasRevisi?.length || 0));
+
+  html.push(buildSection("upload-cloud", "Paling Aktif Upload",
+    "Frekuensi upload tugas terbanyak",
+    buildPodium(la.aktifUpload, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "upload" })),
+    buildTable((la.aktifUpload || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total Upload", render: x => `<span class="cell-score">${x.total}</span>`, align: "right" },
+      { label: "Diterima", key: "diterima", align: "right" }
+    ]), la.aktifUpload?.length || 0));
+
+  html.push(buildSection("file-text", "Paling Detail",
+    "Rata-rata panjang catatan refleksi tertinggi",
+    buildPodium(la.palingDetail, x => ({ name: x.nama, sub: x.sekolah, score: x.rataPanjang, unit: "karakter" })),
+    buildTable((la.palingDetail || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Rata Panjang", render: x => `<span class="cell-score">${x.rataPanjang}</span>`, align: "right" },
+      { label: "Total Tugas", key: "total", align: "right" }
+    ]), la.palingDetail?.length || 0));
+
+  html.push(buildSection("lightbulb", "Paling Banyak Inovasi",
+    "Frekuensi Karya Inovasi terbanyak",
+    buildPodium(la.banyakInovasi, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "karya" })),
+    buildTable((la.banyakInovasi || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total Karya", render: x => `<span class="cell-score">${x.total}</span>`, align: "right" },
+      { label: "Grade A", key: "gradeA", align: "right" }
+    ]), la.banyakInovasi?.length || 0));
+
+  // Group 5: Kombinasi
+  html.push(groupLabel("Kombinasi Lintas Sistem"));
+
+  html.push(buildSection("star", "Guru Multi-Talenta",
+    "Aktif di minimal 3 kategori — presensi, XP, inovasi, atau grade A",
+    buildPodium(kb.multiTalenta, x => ({ name: x.nama, sub: x.sekolah, score: x.totalKategori, unit: "kategori" })),
+    buildTable((kb.multiTalenta || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Tepat", key: "tepat", align: "right" },
+      { label: "XP", key: "xp", align: "right" },
+      { label: "Grade A", key: "gradeA", align: "right" },
+      { label: "Kategori", render: x => `<span class="chip chip-green">${x.totalKategori}/4</span>`, align: "right" }
+    ]), kb.multiTalenta?.length || 0));
+
+  html.push(buildSection("zap", "Guru Serba Bisa",
+    "Tepat ≥8× DAN XP ≥250 — tinggi di dua sistem sekaligus",
+    buildPodium(kb.serbaBisa, x => ({ name: x.nama, sub: x.sekolah, score: x.skor, unit: "skor" })),
+    buildTable((kb.serbaBisa || []).slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Tepat", key: "tepat", align: "right" },
+      { label: "XP", key: "xp", align: "right" },
+      { label: "Skor", render: x => `<span class="cell-score">${x.skor}</span>`, align: "right" }
+    ]), kb.serbaBisa?.length || 0));
+
+  html.push(buildSection("trending-up", "Guru Paling Berkembang",
+    "Peningkatan rata-rata poin terbesar dari semester 1 ke 2",
+    buildPodium(bk, x => ({ name: x.nama, sub: x.sekolah, score: "+" + x.delta, unit: "poin" })),
+    buildTable(bk.slice(0, 20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Sem 1", render: x => x.rataSem1, align: "right" },
+      { label: "Sem 2", render: x => x.rataSem2, align: "right" },
+      { label: "Delta", render: x => `<span class="cell-score">+${x.delta}</span>`, align: "right" }
+    ]), bk.length || 0));
+
+  document.getElementById("panel-individu").innerHTML = html.join("");
+}
+
+// ==================== TAB: SEKOLAH ====================
+function renderSekolah() {
+  const s = dataAwards.sekolah || {};
+  const fa = dataAwards.feedbackAdvanced || {};
+  const html = [];
+
+  html.push(groupLabel("Award Utama"));
+
+  html.push(buildSection("shield-check", "Sekolah Paling Disiplin",
+    "Skor akhir tertinggi — Σpoin dibagi Σkehadiran",
+    buildPodium(s.disiplin, x => ({ name: x.sekolah, sub: `${x.jmlGuru||0} guru • ${x.jmlTepat||0} tepat`, score: x.skorAkhir, unit: "skor" })),
+    buildTable(s.disiplin || [], [
+      { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}<small>${x.jmlGuru||0} guru</small></div>` },
+      { label: "Tepat", key: "jmlTepat", align: "right" },
+      { label: "Hadir", key: "jmlHadir", align: "right" },
+      { label: "Rata Jam", key: "rataJam", align: "right" },
+      { label: "Skor", render: x => `<span class="cell-score">${x.skorAkhir}</span>`, align: "right" }
+    ]), s.disiplin?.length || 0));
+
+  html.push(buildSection("medal", "Sekolah Champion",
+    "Total poin tertinggi dari Laporan Prestasi Siswa",
+    buildPodium(s.champion, x => ({ name: x.sekolah, sub: `${x.jmlGuru||0} guru`, score: x.poinPrestasi, unit: "poin" })),
+    buildTable(s.champion || [], [
+      { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}<small>${x.jmlGuru||0} guru</small></div>` },
+      { label: "Frekuensi", key: "frekuensi", align: "right" },
+      { label: "Total XP", key: "totalXP", align: "right" },
+      { label: "Poin Prestasi", render: x => `<span class="cell-score">${x.poinPrestasi}</span>`, align: "right" }
+    ]), s.champion?.length || 0));
+
+  html.push(buildSection("activity", "Sekolah Activist",
+    "Frekuensi laporan terbanyak — paling aktif berpartisipasi",
+    buildPodium(s.activist, x => ({ name: x.sekolah, sub: `${x.jmlGuru||0} guru`, score: x.frekuensi, unit: "laporan" })),
+    buildTable(s.activist || [], [
+      { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}<small>${x.jmlGuru||0} guru</small></div>` },
+      { label: "Frekuensi", render: x => `<span class="cell-score">${x.frekuensi}</span>`, align: "right" },
+      { label: "Total XP", key: "totalXP", align: "right" },
+      { label: "Poin Prestasi", key: "poinPrestasi", align: "right" }
+    ]), s.activist?.length || 0));
+
+  html.push(buildSection("lightbulb", "Sekolah Innovator",
+    "Akumulasi poin tertinggi dari Karya Inovasi Guru",
+    buildPodium(s.innovator, x => ({ name: x.sekolah, sub: `${x.jmlGuru||0} guru`, score: x.poinInovasi, unit: "poin" })),
+    buildTable(s.innovator || [], [
+      { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}<small>${x.jmlGuru||0} guru</small></div>` },
+      { label: "Poin Inovasi", render: x => `<span class="cell-score">${x.poinInovasi}</span>`, align: "right" },
+      { label: "Frekuensi", key: "frekuensi", align: "right" }
+    ]), s.innovator?.length || 0));
+
+  html.push(buildSection("users-round", "Sekolah Paling Kompak",
+    "Total poin dari Seragam + Antusiasme + Kerjasama Tim",
+    buildPodium(s.kompak, x => ({ name: x.sekolah, sub: `${x.count||0}× dinilai`, score: x.total, unit: "poin" })),
+    buildTable(s.kompak || [], [
+      { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}<small>${x.count||0}× dinilai</small></div>` },
+      { label: "Total", render: x => `<span class="cell-score">${x.total}</span>`, align: "right" },
+      { label: "Rata-rata", key: "rata", align: "right" },
+      { label: "Penilaian", key: "count", align: "right" }
+    ]), s.kompak?.length || 0));
+
+  html.push(buildSection("flame", "Sekolah Paling Tergiat",
+    "Frekuensi aktivitas bertanya, menjawab, presentasi, ice breaking",
+    buildPodium(s.tergiat, x => ({ name: x.sekolah, sub: "dari log keaktifan", score: x.total, unit: "aksi" })),
+    buildTable(s.tergiat || [], [
+      { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}</div>` },
+      { label: "Total Aksi", render: x => `<span class="cell-score">${x.total}</span>`, align: "right" }
+    ]), s.tergiat?.length || 0));
+
+  html.push(groupLabel("Partisipasi Feedback"));
+
+  html.push(buildSection("message-square", "Sekolah Paling Rajin Feedback",
+    "Frekuensi pengisian umpan balik terbanyak",
+    buildPodium(fa.rajinFeedback, x => ({ name: x.sekolah, sub: "responden", score: x.total, unit: "feedback" })),
+    buildTable(fa.rajinFeedback || [], [
+      { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}</div>` },
+      { label: "Total Feedback", render: x => `<span class="cell-score">${x.total}</span>`, align: "right" }
+    ]), fa.rajinFeedback?.length || 0));
+
+  document.getElementById("panel-sekolah").innerHTML = html.join("");
+}
+
+// ==================== TAB: PANITIA ====================
+function renderPanitia() {
+  const p = dataAwards.panitia || {};
+  const fa = dataAwards.feedbackAdvanced || {};
+  const html = [];
+
+  html.push(groupLabel("Award Utama"));
+
+  html.push(buildSection("mic", "Narasumber Terbaik",
+    "Rata-rata dari Materi + Penyajian + Interaksi + Waktu",
+    buildPodium(p.narasumber, x => ({ name: x.nama, sub: `${x.responden||0} responden`, score: x.skor, unit: "/5" })),
+    buildTable(p.narasumber || [], [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${x.responden||0} responden</small></div>` },
+      { label: "Materi", render: x => x.rincian?.materi || "-", align: "right" },
+      { label: "Penyajian", render: x => x.rincian?.penyajian || "-", align: "right" },
+      { label: "Interaksi", render: x => x.rincian?.interaksi || "-", align: "right" },
+      { label: "Skor", render: x => `<span class="cell-score">${x.skor}</span>`, align: "right" }
+    ]), p.narasumber?.length || 0));
+
+  html.push(buildSection("home", "Tuan Rumah Terbaik",
+    "Rata-rata dari Tempat + Budaya + Pengemasan + Kebersihan",
+    buildPodium(p.tuanRumah, x => ({ name: x.lokasi, sub: `${x.responden||0} responden`, score: x.skor, unit: "/5" })),
+    buildTable(p.tuanRumah || [], [
+      { label: "Lokasi", render: x => `<div class="cell-name">${escapeHtml(x.lokasi)}<small>${x.responden||0} responden</small></div>` },
+      { label: "Skor", render: x => `<span class="cell-score">${x.skor}</span>`, align: "right" },
+      { label: "Responden", key: "responden", align: "right" }
+    ]), p.tuanRumah?.length || 0));
+
+  html.push(buildSection("briefcase", "Panitia Terbaik",
+    "Rata-rata dari Sarana + Pelayanan + Susunan Acara",
+    buildPodium(p.panitia, x => ({ name: x.lokasi, sub: `${x.responden||0} responden`, score: x.skor, unit: "/5" })),
+    buildTable(p.panitia || [], [
+      { label: "Lokasi", render: x => `<div class="cell-name">${escapeHtml(x.lokasi)}<small>${x.responden||0} responden</small></div>` },
+      { label: "Skor", render: x => `<span class="cell-score">${x.skor}</span>`, align: "right" },
+      { label: "Responden", key: "responden", align: "right" }
+    ]), p.panitia?.length || 0));
+
+  html.push(groupLabel("Spesifik Aspek"));
+
+  html.push(buildSection("message-circle", "Narasumber Paling Interaktif",
+    "Nilai aspek Interaksi tertinggi",
+    buildPodium(fa.narasumberInteraktif, x => ({ name: x.nama, sub: `${x.responden||0} responden`, score: x.skor, unit: "/5" })),
+    buildTable(fa.narasumberInteraktif || [], [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${x.responden||0} responden</small></div>` },
+      { label: "Skor Interaksi", render: x => `<span class="cell-score">${x.skor}</span>`, align: "right" }
+    ]), fa.narasumberInteraktif?.length || 0));
+
+  html.push(buildSection("sparkles", "Tuan Rumah Paling Bersih",
+    "Nilai aspek Kebersihan tertinggi",
+    buildPodium(fa.tuanRumahBersih, x => ({ name: x.lokasi, sub: `${x.responden||0} responden`, score: x.skor, unit: "/5" })),
+    buildTable(fa.tuanRumahBersih || [], [
+      { label: "Lokasi", render: x => `<div class="cell-name">${escapeHtml(x.lokasi)}<small>${x.responden||0} responden</small></div>` },
+      { label: "Skor Kebersihan", render: x => `<span class="cell-score">${x.skor}</span>`, align: "right" }
+    ]), fa.tuanRumahBersih?.length || 0));
+
+  html.push(buildSection("heart-handshake", "Panitia Paling Ramah",
+    "Nilai aspek Pelayanan tertinggi",
+    buildPodium(fa.panitiaRamah, x => ({ name: x.lokasi, sub: `${x.responden||0} responden`, score: x.skor, unit: "/5" })),
+    buildTable(fa.panitiaRamah || [], [
+      { label: "Lokasi", render: x => `<div class="cell-name">${escapeHtml(x.lokasi)}<small>${x.responden||0} responden</small></div>` },
+      { label: "Skor Pelayanan", render: x => `<span class="cell-score">${x.skor}</span>`, align: "right" }
+    ]), fa.panitiaRamah?.length || 0));
+
+  document.getElementById("panel-panitia").innerHTML = html.join("");
+}
+
+// ==================== TAB: OVERALL ====================
+function renderOverall() {
+  const o = dataAwards.overall || {};
+  const html = [];
+
+  html.push(buildSection("crown", "Guru Terbaik Overall",
+    "Kombinasi Presensi (60%) + LMS (40%), dinormalisasi 0–100",
+    buildPodium(o.guru, x => ({ name: x.nama, sub: `${x.sekolah} • ${x.level}`, score: x.skorOverall, unit: "skor" })),
+    buildTable((o.guru || []).slice(0, 30), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Level", render: x => `<span class="chip chip-red"><i data-lucide="award"></i> ${x.level}</span>` },
+      { label: "Presensi", render: x => x.skorPresensi, align: "right" },
+      { label: "LMS", render: x => x.skorLMS, align: "right" },
+      { label: "Overall", render: x => `<span class="cell-score">${x.skorOverall}</span>`, align: "right" }
+    ]), o.guru?.length || 0));
+
+  html.push(buildSection("trophy", "Sekolah Terbaik Overall",
+    "Kombinasi Presensi (40%) + LMS (40%) + Kekompakan (20%)",
+    buildPodium(o.sekolah, x => ({ name: x.sekolah, sub: `P ${x.skorPresensi} • L ${x.skorLMS} • K ${x.skorKompak}`, score: x.skorOverall, unit: "skor" })),
+    buildTable(o.sekolah || [], [
+      { label: "Sekolah", render: x => `<div class="cell-name">${escapeHtml(x.sekolah)}</div>` },
+      { label: "Presensi", render: x => x.skorPresensi, align: "right" },
+      { label: "LMS", render: x => x.skorLMS, align: "right" },
+      { label: "Kompak", render: x => x.skorKompak, align: "right" },
+      { label: "Overall", render: x => `<span class="cell-score">${x.skorOverall}</span>`, align: "right" }
+    ]), o.sekolah?.length || 0));
+
+  document.getElementById("panel-overall").innerHTML = html.join("");
+}
+
+// ==================== TAB: FUN ====================
+function renderFun() {
+  const f = dataAwards.fun || {};
+  const html = [];
+
+  html.push(`<div style="background:linear-gradient(135deg,#FFF4E5 0%,#FFE5C2 100%); border-radius:14px; padding:16px 20px; margin-bottom:24px; display:flex; gap:12px; align-items:center; border:1px solid #FFD9A3;">
+    <i data-lucide="party-popper" style="color:#D97706; flex-shrink:0; width:22px; height:22px;"></i>
+    <div style="font-size:0.88rem; color:#7A4A0A; font-weight:600;">
+      <strong>Award Fun</strong> — bukan untuk mempermalukan, hanya untuk mencairkan suasana dan memotivasi perbaikan. 😄
+    </div>
+  </div>`);
+
+  html.push(buildSection("map-pin-off", "Paling Sering Luar Radius",
+    "Sering absen dari luar jangkauan GPS",
+    buildPodium(f.seringLuarRadius, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "×" })),
+    buildTable(f.seringLuarRadius || [], [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total", render: x => `<span class="cell-score">${x.total}×</span>`, align: "right" }
+    ]), f.seringLuarRadius?.length || 0, true));
+
+  html.push(buildSection("turtle", "Paling Sering Terlambat",
+    "Konsisten datang setelah jam masuk",
+    buildPodium(f.seringTelat, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "×" })),
+    buildTable(f.seringTelat || [], [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total", render: x => `<span class="cell-score">${x.total}×</span>`, align: "right" }
+    ]), f.seringTelat?.length || 0, true));
+
+  html.push(buildSection("file-warning", "Paling Sering Revisi",
+    "Rajin upload, rajin diperbaiki",
+    buildPodium(f.seringRevisi, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "×" })),
+    buildTable(f.seringRevisi || [], [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total", render: x => `<span class="cell-score">${x.total}×</span>`, align: "right" }
+    ]), f.seringRevisi?.length || 0, true));
+
+  html.push(buildSection("bed", "Paling Sering Izin",
+    "Ahli mengajukan izin resmi",
+    buildPodium(f.seringIzin, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "izin" })),
+    buildTable(f.seringIzin || [], [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total Izin", render: x => `<span class="cell-score">${x.total}×</span>`, align: "right" }
+    ]), f.seringIzin?.length || 0, true));
+
+  html.push(buildSection("megaphone", "Speaker KKG",
+    "Paling aktif bertanya/menjawab di log keaktifan",
+    buildPodium(f.speakerKKG, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "aksi" })),
+    buildTable(f.speakerKKG || [], [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total Aksi", render: x => `<span class="cell-score">${x.total}</span>`, align: "right" }
+    ]), f.speakerKKG?.length || 0, true));
+
+  html.push(buildSection("volume-x", "Paling Pendiam",
+    "Setia mendengarkan tanpa banyak bicara (0 log setahun)",
+    buildPodium(f.pendiam, x => ({ name: x.nama, sub: x.sekolah, score: x.totalEntri, unit: "hadir" })),
+    buildTable(f.pendiam || [], [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total Entri", render: x => `<span class="cell-score">${x.totalEntri}</span>`, align: "right" }
+    ]), f.pendiam?.length || 0, true));
+
+  document.getElementById("panel-fun").innerHTML = html.join("");
+}
+
+// ==================== UI HELPERS ====================
+function showTab(name, btn) {
+  document.querySelectorAll(".tab-panel").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+  document.getElementById("panel-" + name).classList.add("active");
+  btn.classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (window.lucide) lucide.createIcons();
+}
+
+function showLoading(show) { document.getElementById("loading").classList.toggle("hidden", !show); }
+function showError(msg, url) {
+  document.getElementById("error-msg").innerText = msg;
+  document.getElementById("error-detail").innerText = url ? "URL: " + url : "";
+  document.getElementById("error-box").classList.remove("hidden");
+  if (window.lucide) lucide.createIcons();
+}
+function hideError() { document.getElementById("error-box").classList.add("hidden"); }
+</script>
+</body>
+</html>
