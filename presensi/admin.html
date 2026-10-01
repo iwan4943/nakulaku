@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin Dashboard Gugus Nakula (Ultimate)</title>
+  <title>Admin Dashboard Gugus Nakula</title>
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏫</text></svg>">
 
@@ -54,7 +54,7 @@
     <div class="sidebar-header">
       <div>
         <h5 class="fw-bold mb-0 text-danger"><i class="fas fa-school me-2"></i>Gugus Nakula</h5>
-        <small class="text-muted">Admin Ultimate</small>
+        <small class="text-muted">Admin Dashboard</small>
       </div>
       <button class="btn-close-sidebar" onclick="toggleSidebar()">
         <i class="fas fa-times"></i>
@@ -76,6 +76,7 @@
       <i class="fas fa-bars"></i> Menu
     </button>
 
+    <!-- ===================== PAGE: DASHBOARD ===================== -->
     <div id="page-dashboard">
       <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <h4 class="fw-bold m-0">Monitoring Presensi</h4>
@@ -136,6 +137,7 @@
       </div>
     </div>
 
+    <!-- ===================== PAGE: REKAP ===================== -->
     <div id="page-rekap" style="display:none;">
       <h4 class="fw-bold mb-4">Rekapitulasi &amp; Excel</h4>
       <div class="card border-0 shadow-sm p-3 mb-4">
@@ -188,6 +190,7 @@
       </div>
     </div>
 
+    <!-- ===================== PAGE: AWARD ===================== -->
     <div id="page-award" style="display:none;">
       <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
@@ -256,6 +259,7 @@
       </div>
     </div>
 
+    <!-- ===================== PAGE: SETTINGS ===================== -->
     <div id="page-settings" style="display:none;">
       <h4 class="fw-bold mb-4">Pengaturan Kegiatan</h4>
       <div class="card border-0 shadow-sm p-4" style="max-width: 700px;">
@@ -289,20 +293,22 @@
 
 <script>
   // ==========================================
-  // CONFIG: PASTIKAN URL INI SUDAH YANG TERBARU
+  // CONFIG: GANTI SESUAI URL BACKEND ANDA
   // ==========================================
   const API_URL = "https://script.google.com/macros/s/AKfycbweTTiW0sPe1SAnJZlUK4KCiiks4cDhc420PWmvf1IOJ7mIKGUhudz42SpAJ1KZP4__cg/exec";
   // ==========================================
 
   let chartInstance = null;
   let chartTrenInstance = null;
+  let awardCache = null;
 
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function () {
     checkLogin();
     initDashboard();
     document.getElementById('filterTanggal').valueAsDate = new Date();
     document.getElementById('grid_bulan').value = new Date().getMonth() + 1;
     document.getElementById('grid_tahun').value = new Date().getFullYear();
+    document.getElementById('awardTahun').value = new Date().getFullYear();
     loadGrafikTren();
   });
 
@@ -330,10 +336,6 @@
     const target = document.getElementById('page-' + page);
     if (target) target.style.display = 'block';
 
-    // Auto-load data award saat halaman dibuka
-    if (page === 'award') loadAward();
-
-    // Auto-load data award saat halaman dibuka
     if (page === 'award') loadAward();
 
     if (window.innerWidth <= 768) {
@@ -358,27 +360,36 @@
     return String(n).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
   }
 
-  // --- DASHBOARD ---
+  // ======================= DASHBOARD =======================
   async function initDashboard() {
     let d = await callAPI('listSekolah');
     console.log('[initDashboard] listSekolah response:', d);
+    if (d) console.log('[initDashboard] keys:', Object.keys(d));
 
-    // FIX: pastikan array, unwrap jika dibungkus Worker
+    // Auto-unwrap: cari array di mana pun
     let listSekolah = [];
     if (Array.isArray(d)) {
       listSekolah = d;
-    } else if (d && Array.isArray(d.data)) {
-      listSekolah = d.data;
-    } else if (d && Array.isArray(d.result)) {
-      listSekolah = d.result;
-    } else {
-      console.error('listSekolah bukan array:', d);
+    } else if (d && typeof d === 'object') {
+      // Cek semua property: cari yang berupa array
+      for (const key of Object.keys(d)) {
+        if (Array.isArray(d[key])) {
+          listSekolah = d[key];
+          console.log('[initDashboard] unwrap dari key:', key);
+          break;
+        }
+      }
+    }
+
+    // Kalau masih kosong DAN response bukan array
+    if (listSekolah.length === 0 && !Array.isArray(d)) {
+      console.error('listSekolah gagal di-unwrap:', d);
       Swal.fire({
         icon: 'error',
         title: 'Gagal memuat daftar sekolah',
-        html: `Server mengembalikan format tidak dikenal.<br><br>
-               <small class="text-start d-block" style="word-break:break-all;">
-               ${JSON.stringify(d).slice(0, 300)}
+        html: `Server mengembalikan format tidak dikenal:<br><br>
+               <small class="text-start d-block" style="word-break:break-all;font-size:0.75rem;">
+               ${JSON.stringify(d).slice(0, 400)}
                </small>`
       });
       return;
@@ -410,17 +421,19 @@
     callAPI('monitoring', { sekolah: sekolah, tanggal: tgl }).then(res => {
       Swal.close();
       console.log('[loadDashboard] monitoring response:', res);
+
       if (!res || !Array.isArray(res.listSudah) || !Array.isArray(res.listBelum)) {
         console.error('Format monitoring salah:', res);
         Swal.fire('Error', 'Format data monitoring tidak sesuai. Cek console.', 'error');
         return;
       }
+
       document.getElementById('count-hadir').innerText = res.listSudah.length;
       document.getElementById('count-belum').innerText = res.listBelum.length;
 
       let html = "";
       let gabung = [...res.listSudah, ...res.listBelum].sort((a, b) =>
-        (a.status.includes("Menunggu") ? -1 : 1)
+        (a.status.includes("Menunggu") || a.status.includes("Perlu Verifikasi")) ? -1 : 1
       );
 
       gabung.forEach(g => {
@@ -428,19 +441,28 @@
           : g.status.includes('Terlambat') ? 'bg-warning text-dark'
             : g.status.includes('Tepat') ? 'bg-success'
               : g.status.includes('Menunggu') ? 'bg-info text-dark'
-                : 'bg-danger';
+                : g.status.includes('Perlu Verifikasi') ? 'bg-warning text-dark'
+                  : g.status.includes('Disetujui') ? 'bg-primary'
+                    : g.status.includes('Ditolak') ? 'bg-danger'
+                      : 'bg-danger';
 
+        // Bukti foto
         let bukti = '-';
         if (g.foto && g.foto.includes('http')) {
-          bukti = `<a href="${g.foto}" target="_blank" title="Lihat Foto"><i class="fas fa-check-circle text-success fa-lg"></i></a>`;
+          bukti = `<a href="${g.foto}" target="_blank" title="Lihat Foto"><i class="fas fa-image text-primary fa-lg"></i></a>`;
         }
 
+        // Tombol aksi
         let btn = "";
         if (g.status.includes("Menunggu")) {
-          btn = `<button class="btn btn-sm btn-success me-1" onclick="accIzin('${escName(g.nama)}','Disetujui')"><i class="fas fa-check"></i></button>
-                 <button class="btn btn-sm btn-danger" onclick="accIzin('${escName(g.nama)}','Ditolak')"><i class="fas fa-times"></i></button>`;
-        } else if (g.maps) {
-          btn = `<a href="${g.maps}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-map-marker-alt"></i></a>`;
+          btn = `<button class="btn btn-sm btn-success me-1" onclick="accIzin('${escName(g.nama)}','Disetujui','${escName(g.waktu || '')}')" title="Setujui"><i class="fas fa-check"></i></button>
+                 <button class="btn btn-sm btn-danger me-1" onclick="accIzin('${escName(g.nama)}','Ditolak','${escName(g.waktu || '')}')" title="Tolak"><i class="fas fa-times"></i></button>`;
+        }
+        if (g.maps && g.maps.includes('http')) {
+          btn += `<a href="${g.maps}" target="_blank" class="btn btn-sm btn-outline-primary me-1" title="Lihat Maps"><i class="fas fa-map-marker-alt"></i></a>`;
+        }
+        if (g.waktu) {
+          btn += `<button class="btn btn-sm btn-outline-warning" onclick="ubahStatus('${escName(g.nama)}','${escName(g.waktu)}','${escName(g.status)}')" title="Ubah Status"><i class="fas fa-edit"></i></button>`;
         }
 
         html += `<tr>
@@ -495,7 +517,7 @@
     });
   }
 
-  // --- REKAP GRID ---
+  // ======================= REKAP GRID =======================
   function loadRekapGrid() {
     let bln = document.getElementById('grid_bulan').value;
     let thn = document.getElementById('grid_tahun').value;
@@ -565,9 +587,7 @@
     });
   }
 
-  // --- NOMINASI AWARD ---
-  let awardCache = null;
-
+  // ======================= AWARD =======================
   function loadAward() {
     let y = document.getElementById('awardTahun').value || new Date().getFullYear();
     document.getElementById('awardYearLabel').innerText = y;
@@ -703,22 +723,98 @@
     }, 600);
   }
 
-  function accIzin(nama, status) {
+  // ======================= AKSI: ACC IZIN & UBAH STATUS =======================
+  function accIzin(nama, status, waktu) {
     Swal.fire({
       title: 'Konfirmasi',
       text: `Ubah status ${nama} jadi ${status}?`,
       icon: 'question',
-      showCancelButton: true
+      showCancelButton: true,
+      confirmButtonColor: '#B3261E'
     }).then((res) => {
       if (res.isConfirmed) {
-        callAPI('updateIzin', { nama: nama, status: status }).then(r => {
-          if (r && r.includes('SUKSES')) loadDashboard();
-          else Swal.fire('Gagal', r || 'Tidak ada respon', 'error');
+        Swal.fire({ title: 'Memproses...', didOpen: () => Swal.showLoading() });
+        callAPI('updateIzin', { nama: nama, status: status, waktu: waktu || '' }).then(r => {
+          Swal.close();
+          if (r && r.includes('SUKSES')) {
+            Swal.fire('Berhasil', 'Status diperbarui.', 'success');
+            loadDashboard();
+          } else {
+            Swal.fire('Gagal', r || 'Tidak ada respon', 'error');
+          }
         });
       }
     });
   }
 
+  function ubahStatus(nama, waktu, statusLama) {
+    // Daftar status yang bisa dipilih admin
+    const opsiStatus = {
+      'Hadir (Tepat Waktu)': 'Hadir (Tepat Waktu)',
+      'Hadir (Terlambat)': 'Hadir (Terlambat)',
+      'Hadir (Luar Radius)': 'Hadir (Luar Radius)',
+      'Hadir (Perlu Verifikasi)': 'Hadir (Perlu Verifikasi)',
+      'Menunggu ACC (Izin Pribadi)': 'Menunggu ACC (Izin Pribadi)',
+      'Menunggu ACC (Sakit)': 'Menunggu ACC (Sakit)',
+      'Menunggu ACC (Dinas Luar)': 'Menunggu ACC (Dinas Luar)',
+      'Disetujui (Izin Pribadi)': 'Disetujui (Izin Pribadi)',
+      'Disetujui (Sakit)': 'Disetujui (Sakit)',
+      'Disetujui (Dinas Luar)': 'Disetujui (Dinas Luar)',
+      'Disetujui (Cuti Melahirkan)': 'Disetujui (Cuti Melahirkan)',
+      'Ditolak (Izin Pribadi)': 'Ditolak (Izin Pribadi)',
+      'Ditolak (Sakit)': 'Ditolak (Sakit)',
+      'Ditolak (Dinas Luar)': 'Ditolak (Dinas Luar)'
+    };
+
+    Swal.fire({
+      title: 'Ubah Status Kehadiran',
+      html: `<div class="text-start mb-2">
+               <small class="text-muted">Guru:</small><br>
+               <b>${nama}</b><br>
+               <small class="text-muted">Waktu: ${waktu}</small><br>
+               <small class="text-muted">Status saat ini: <span class="badge bg-secondary">${statusLama}</span></small>
+             </div>
+             <hr>
+             <label class="fw-bold d-block text-start mb-1">Status Baru:</label>`,
+      input: 'select',
+      inputOptions: opsiStatus,
+      inputValue: statusLama,
+      inputPlaceholder: 'Pilih status baru...',
+      showCancelButton: true,
+      confirmButtonText: 'Simpan',
+      cancelButtonText: 'Batal',
+      confirmButtonColor: '#B3261E',
+      inputValidator: (value) => {
+        if (!value) return 'Pilih salah satu status';
+        if (value === statusLama) return 'Status baru masih sama dengan yang lama';
+      }
+    }).then((res) => {
+      if (res.isConfirmed && res.value) {
+        Swal.fire({ title: 'Memproses...', didOpen: () => Swal.showLoading() });
+        callAPI('updateIzin', {
+          nama: nama,
+          status: res.value,
+          waktu: waktu
+        }).then(r => {
+          Swal.close();
+          if (r && r.includes('SUKSES')) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Berhasil',
+              text: `Status diubah menjadi: ${res.value}`,
+              timer: 1800,
+              showConfirmButton: false
+            });
+            loadDashboard();
+          } else {
+            Swal.fire('Gagal', r || 'Tidak ada respon', 'error');
+          }
+        });
+      }
+    });
+  }
+
+  // ======================= FILTER TABLE =======================
   function filterTable() {
     var filter = document.getElementById("searchTable").value.toUpperCase();
     var tr = document.getElementById("tabel-monitor").getElementsByTagName("tr");
@@ -728,15 +824,16 @@
     }
   }
 
+  // ======================= SETTINGS =======================
   async function loadSettings() {
     let d = await callAPI('getSettings');
     console.log('[loadSettings] response:', d);
     if (d && !d.status) {
-      document.getElementById('set_lokasi').value = d.nama;
-      document.getElementById('set_info').value = d.info;
-      document.getElementById('set_mulai').value = d.jamMulai;
-      document.getElementById('set_selesai').value = d.jamSelesai;
-      document.getElementById('set_batas').value = d.jamBatas;
+      document.getElementById('set_lokasi').value = d.nama || '';
+      document.getElementById('set_info').value = d.info || '';
+      document.getElementById('set_mulai').value = d.jamMulai || '';
+      document.getElementById('set_selesai').value = d.jamSelesai || '';
+      document.getElementById('set_batas').value = d.jamBatas || '';
     }
   }
 
