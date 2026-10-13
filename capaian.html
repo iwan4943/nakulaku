@@ -472,7 +472,47 @@ function renderGuru(){
   }
 
   // Breakdown kartu
-  const bdHtml = Object.keys(g.kriteria).map(function(k){
+  const isKS = g.isKS === true;
+
+const bdHtml = isKS
+  ? `<div class="todo-item done" style="background:#F5F3FF;border-color:#C4B5FD;">
+      <div class="todo-check" style="background:#8B5CF6;border-color:#8B5CF6;"><i data-lucide="shield"></i></div>
+      <div class="todo-text">
+        <div class="todo-name" style="color:#4C1D95;">Kepala Sekolah</div>
+        <div class="todo-desc" style="color:#5B21B6;">Sebagai Kepala Sekolah, Anda otomatis dinyatakan <b>LULUS</b> dan tidak dihitung dalam kriteria peserta KKG.</div>
+      </div>
+    </div>`
+  : Object.keys(g.kriteria).map(function(k){
+    const b = g.kriteria[k];
+    const iconMap = {
+      kehadiran: "calendar-check",
+      tugas: "file-text",
+      kualitas: "star",
+      inovasi: "lightbulb",
+      feedback: "message-square",
+      keaktifan: "mic"
+    };
+    let valueText = "";
+    if(k === "kehadiran") valueText = `${b.nilai}/${b.target} sesi`;
+    else if(k === "tugas") valueText = `${b.nilai}/${b.target} tugas`;
+    else if(k === "kualitas") valueText = b.nilai > 0 ? `${b.nilai} / 4` : "-";
+    else if(k === "inovasi") valueText = `${b.nilai} karya`;
+    else if(k === "feedback") valueText = `${b.nilai} fb`;
+    else if(k === "keaktifan") valueText = `${b.nilai} aksi`;
+
+    return `
+      <div class="bd-item">
+        <div class="bd-item-icon ${b.status}"><i data-lucide="${iconMap[k]}"></i></div>
+        <div class="bd-item-name">
+          <div class="bd-item-label">
+            <span>${escapeHtml(b.label)} ${b.wajib ? '⭐' : ''}</span>
+            <small>${valueText}</small>
+          </div>
+          <div class="bd-item-bar"><div class="bd-item-fill ${b.status}" style="width:${b.persen}%"></div></div>
+        </div>
+      </div>
+    `;
+  }).join("");
     const b = g.kriteria[k];
     const iconMap = {
       kehadiran: "calendar-check",
@@ -566,11 +606,11 @@ function renderGuru(){
     <div class="hero">
       <div class="hero-greet">Selamat datang 👋</div>
       <div class="hero-name">${escapeHtml(g.nama)}</div>
-      <div class="hero-meta">
-        <span><i data-lucide="building-2"></i> ${escapeHtml(g.sekolah)}</span>
-        <span><i data-lucide="briefcase"></i> ${escapeHtml(g.jabatan || '-')}</span>
-        <span><i data-lucide="hash"></i> PIN ${escapeHtml(g.pin)}</span>
-      </div>
+<div class="hero-meta">
+  <span><i data-lucide="building-2"></i> ${escapeHtml(g.sekolah)}</span>
+  <span><i data-lucide="briefcase"></i> ${escapeHtml(g.jabatan || '-')}${g.isKS ? ' <b>(Pimpinan)</b>' : ''}</span>
+  <span><i data-lucide="hash"></i> PIN ${escapeHtml(g.pin)}</span>
+</div>
     </div>
 
     <div class="grid">
@@ -594,10 +634,10 @@ function renderGuru(){
           ${hintText ? `<div class="hint-text">${escapeHtml(hintText)}</div>` : ''}
         </div>
 
-        <div class="breakdown-wrap">
-          <div class="breakdown-title">Breakdown 6 Kriteria</div>
-          <div class="bd-list">${bdHtml}</div>
-        </div>
+<div class="breakdown-wrap">
+  <div class="breakdown-title">${isKS ? 'Status Kepala Sekolah' : 'Breakdown 6 Kriteria'}</div>
+  <div class="bd-list">${bdHtml}</div>
+</div>
       </div>
 
       <div class="side-panel">
