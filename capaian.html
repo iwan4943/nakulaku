@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<title>Capaian KKG — Gugus Nakula 2026</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<style>
+:root{
+  --primary:#B3261E; --primary-dark:#8B1C16; --primary-light:#FCEAE9;
+  --bg:#FAFAFA; --bg-elevated:#FFFFFF;
+  --border:#EBEBEF; --border-strong:#D9D9E0;
+  --text:#121217; --text-secondary:#5A5A66; --text-tertiary:#8E8E99;
+  --gold:#D4A017; --gold-bg:linear-gradient(135deg,#FFF9E6 0%,#FFEDC2 100%); --gold-border:#F4D88A;
+  --success:#10B981; --success-bg:#E7F6EE; --success-text:#0F7A44;
+  --warning:#F59E0B; --warning-bg:#FFF4E5; --warning-text:#A16207;
+  --danger:#DC2626; --danger-bg:#FEE2E2; --danger-text:#991B1B;
+  --purple:#8B5CF6; --purple-bg:#F5F3FF; --purple-border:#C4B5FD; --purple-text:#4C1D95;
+  --shadow-sm:0 1px 2px rgba(18,18,23,0.04);
+  --shadow-md:0 4px 12px rgba(18,18,23,0.06);
+  --shadow-lg:0 12px 32px rgba(18,18,23,0.08);
+  --shadow-xl:0 24px 60px rgba(18,18,23,0.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;font-size:14px;min-height:100vh;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;letter-spacing:-0.02em;}
+.hidden{display:none !important;}
+
+/* ==== LOGIN ==== */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#F5F3FF 0%,#EDE9FE 50%,#FCE7F3 100%);position:relative;overflow:hidden;}
+.login-wrap::before{content:"";position:absolute;top:-30%;left:-10%;width:700px;height:700px;background:radial-gradient(circle,rgba(139,92,246,0.15) 0%,transparent 70%);pointer-events:none;}
+.login-wrap::after{content:"";position:absolute;bottom:-30%;right:-10%;width:700px;height:700px;background:radial-gradient(circle,rgba(179,38,30,0.1) 0%,transparent 70%);pointer-events:none;}
+.login-card{background:white;border-radius:24px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 24px 60px rgba(18,18,23,0.12);position:relative;z-index:1;}
+.login-brand{text-align:center;margin-bottom:28px;}
+.login-brand-icon{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 12px 32px rgba(179,38,30,0.3);}
+.login-brand-icon svg{width:32px;height:32px;}
+.login-brand h1{font-size:1.35rem;font-weight:800;margin-bottom:4px;}
+.login-brand p{font-size:0.85rem;color:var(--text-tertiary);font-weight:500;}
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-secondary);margin-bottom:8px;}
+.form-input{width:100%;padding:14px 18px;border:1.5px solid var(--border-strong);border-radius:12px;font-family:'Plus Jakarta Sans',monospace;font-size:1.4rem;font-weight:700;outline:none;letter-spacing:0.5em;text-align:center;background:white;transition:0.15s;}
+.form-input:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(179,38,30,0.1);}
+.form-input::placeholder{letter-spacing:0.15em;color:#B8B8C0;font-size:1rem;}
+.form-hint{font-size:0.72rem;color:var(--text-tertiary);margin-top:8px;text-align:center;}
+.login-btn{width:100%;padding:14px;border-radius:12px;border:none;background:var(--primary);color:white;font-family:inherit;font-size:0.95rem;font-weight:800;cursor:pointer;transition:0.15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;letter-spacing:0.3px;}
+.login-btn:hover{background:var(--primary-dark);transform:translateY(-1px);box-shadow:0 8px 20px rgba(179,38,30,0.3);}
+.login-btn svg{width:17px;height:17px;}
+.login-alert{margin-top:14px;padding:12px 16px;border-radius:10px;font-size:0.83rem;font-weight:600;background:var(--danger-bg);color:var(--danger-text);border:1px solid #FECACA;display:flex;align-items:center;gap:8px;}
+.login-alert svg{width:16px;height:16px;flex-shrink:0;}
+
+/* ==== TOPBAR ==== */
+.topbar{background:white;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+.topbar-inner{max-width:1100px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand-icon{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:white;display:flex;align-items:center;justify-content:center;}
+.brand-icon svg{width:20px;height:20px;}
+.brand-title{font-size:1rem;font-weight:800;line-height:1.2;}
+.brand-sub{font-size:0.7rem;color:var(--text-tertiary);font-weight:500;}
+.user-menu{display:flex;align-items:center;gap:10px;}
+.user-chip{display:flex;align-items:center;gap:9px;padding:7px 14px 7px 7px;background:#F5F5F7;border-radius:50px;}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:white;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;}
+.user-name{font-size:0.8rem;font-weight:700;}
+.user-role{font-size:0.66rem;color:var(--text-tertiary);font-weight:500;text-transform:uppercase;letter-spacing:0.4px;}
+.logout-btn{width:34px;height:34px;border-radius:50%;background:white;border:1px solid var(--border-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.15s;color:var(--text-secondary);}
+.logout-btn:hover{background:var(--danger-bg);border-color:var(--danger);color:var(--danger-text);}
+.logout-btn svg{width:15px;height:15px;}
+
+/* ==== MAIN ==== */
+.main{max-width:1100px;margin:0 auto;padding:28px 24px 80px;}
+
+/* ==== HERO GURU ==== */
+.hero{background:linear-gradient(135deg,#F5F3FF 0%,#EDE9FE 50%,#FCE7F3 100%);border-radius:22px;padding:32px 36px;margin-bottom:24px;border:1px solid var(--purple-border);position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;top:-60px;right:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(139,92,246,0.15) 0%,transparent 70%);pointer-events:none;}
+.hero-greet{font-size:0.85rem;font-weight:700;color:#5B21B6;opacity:0.8;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px;position:relative;z-index:1;}
+.hero-name{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--purple-text);margin-bottom:8px;letter-spacing:-0.03em;position:relative;z-index:1;}
+.hero-meta{font-size:0.85rem;color:#5B21B6;opacity:0.8;display:flex;gap:16px;flex-wrap:wrap;position:relative;z-index:1;}
+.hero-meta span{display:inline-flex;align-items:center;gap:6px;}
+.hero-meta svg{width:14px;height:14px;}
+
+/* ==== GRID UTAMA ==== */
+.grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:22px;align-items:start;}
+@media (max-width:900px){.grid{grid-template-columns:1fr;}}
+
+/* ==== KARTU UTAMA ==== */
+.main-card{background:white;border:1px solid var(--border);border-radius:22px;overflow:hidden;box-shadow:var(--shadow-md);}
+.main-card-hero{padding:36px 32px;text-align:center;position:relative;overflow:hidden;}
+.main-card-hero.lulus{background:linear-gradient(135deg,#E7F6EE 0%,#D1FAE5 100%);}
+.main-card-hero.cumlaude{background:linear-gradient(135deg,#FFF9E6 0%,#FDE68A 100%);}
+.main-card-hero.belum{background:linear-gradient(135deg,#FFF4E5 0%,#FED7AA 100%);}
+.main-card-hero.tidak{background:linear-gradient(135deg,#FEE2E2 0%,#FECACA 100%);}
+.main-card-hero::before{content:"";position:absolute;top:-80px;right:-80px;width:240px;height:240px;background:rgba(255,255,255,0.5);border-radius:50%;pointer-events:none;}
+.status-badge-huge{display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:50px;font-size:0.85rem;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:20px;position:relative;z-index:1;}
+.status-badge-huge.lulus{background:linear-gradient(135deg,#10B981 0%,#059669 100%);color:white;box-shadow:0 8px 24px rgba(16,185,129,0.35);}
+.status-badge-huge.cumlaude{background:linear-gradient(135deg,#D4A017 0%,#B8860B 100%);color:white;box-shadow:0 8px 24px rgba(212,160,23,0.4);}
+.status-badge-huge.belum{background:linear-gradient(135deg,#F59E0B 0%,#D97706 100%);color:white;box-shadow:0 8px 24px rgba(245,158,11,0.35);}
+.status-badge-huge.tidak{background:linear-gradient(135deg,#DC2626 0%,#991B1B 100%);color:white;box-shadow:0 8px 24px rgba(220,38,38,0.35);}
+.status-badge-huge svg{width:18px;height:18px;}
+.score-ring{width:170px;height:170px;margin:0 auto 20px;position:relative;z-index:1;}
+.score-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.score-ring-bg{fill:none;stroke:rgba(255,255,255,0.5);stroke-width:11;}
+.score-ring-fill{fill:none;stroke-width:11;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1);}
+.ring-lulus{stroke:#059669;}
+.ring-cumlaude{stroke:#B8860B;}
+.ring-belum{stroke:#D97706;}
+.ring-tidak{stroke:#991B1B;}
+.score-center{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;}
+.score-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:2.6rem;font-weight:800;line-height:1;letter-spacing:-0.04em;color:#121217;}
+.score-suffix{font-size:1rem;opacity:0.6;}
+.score-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(0,0,0,0.5);margin-top:4px;}
+.hero-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1;}
+.btn-cert-main{padding:14px 28px;border-radius:12px;border:none;background:var(--success);color:white;font-family:inherit;font-size:0.95rem;font-weight:800;cursor:pointer;transition:0.15s;display:inline-flex;align-items:center;gap:8px;text-decoration:none;box-shadow:0 6px 20px rgba(16,185,129,0.3);letter-spacing:0.3px;}
+.btn-cert-main:hover{background:#059669;transform:translateY(-2px);box-shadow:0 10px 28px rgba(16,185,129,0.4);}
+.btn-cert-main svg{width:17px;height:17px;}
+.btn-cert-locked{padding:14px 28px;border-radius:12px;border:1.5px dashed #D1D5DB;background:#F3F4F6;color:#9CA3AF;font-family:inherit;font-size:0.9rem;font-weight:700;cursor:not-allowed;display:inline-flex;align-items:center;gap:8px;letter-spacing:0.3px;}
+.btn-cert-locked svg{width:17px;height:17px;}
+.hint-text{font-size:0.75rem;color:var(--text-tertiary);margin-top:12px;font-style:italic;text-align:center;position:relative;z-index:1;line-height:1.5;}
+
+/* ==== BREAKDOWN ==== */
+.breakdown-wrap{padding:24px 32px 28px;}
+.breakdown-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-tertiary);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.breakdown-title::after{content:"";flex:1;height:1px;background:var(--border);}
+.bd-list{display:flex;flex-direction:column;gap:11px;}
+.bd-item{display:flex;align-items:center;gap:12px;}
+.bd-item-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bd-item-icon svg{width:15px;height:15px;}
+.bd-item-icon.ok{background:var(--success-bg);color:var(--success-text);}
+.bd-item-icon.warn{background:var(--warning-bg);color:var(--warning-text);}
+.bd-item-icon.fail{background:var(--danger-bg);color:var(--danger-text);}
+.bd-item-name{flex:1;min-width:0;}
+.bd-item-label{font-size:0.85rem;font-weight:700;color:var(--text);margin-bottom:5px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
+.bd-item-label small{font-size:0.72rem;font-weight:600;color:var(--text-tertiary);}
+.bd-item-bar{height:6px;background:#F1F2F4;border-radius:50px;overflow:hidden;}
+.bd-item-fill{height:100%;border-radius:50px;transition:width 1s cubic-bezier(0.4,0,0.2,1);}
+.bd-item-fill.ok{background:linear-gradient(90deg,#10B981 0%,#059669 100%);}
+.bd-item-fill.warn{background:linear-gradient(90deg,#FBBF24 0%,#F59E0B 100%);}
+.bd-item-fill.fail{background:linear-gradient(90deg,#F87171 0%,#DC2626 100%);}
+
+/* ==== SIDE PANEL ==== */
+.side-panel{display:flex;flex-direction:column;gap:16px;}
+.panel-card{background:white;border:1px solid var(--border);border-radius:18px;padding:22px;}
+.panel-card-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.panel-card-title svg{width:16px;height:16px;color:var(--primary);}
+.panel-card-sub{font-size:0.75rem;color:var(--text-tertiary);margin-bottom:14px;}
+.todo-list{display:flex;flex-direction:column;gap:10px;}
+.todo-item{display:flex;gap:11px;padding:12px 14px;background:var(--warning-bg);border:1px solid #FED7AA;border-radius:11px;align-items:flex-start;}
+.todo-item.done{background:var(--success-bg);border-color:#A7F3D0;}
+.todo-check{width:22px;height:22px;border-radius:50%;background:white;border:2px solid #F59E0B;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.todo-check svg{width:11px;height:11px;color:#F59E0B;}
+.todo-item.done .todo-check{background:#10B981;border-color:#10B981;}
+.todo-item.done .todo-check svg{color:white;}
+.todo-text{flex:1;min-width:0;}
+.todo-name{font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:2px;}
+.todo-desc{font-size:0.74rem;color:var(--text-secondary);line-height:1.5;}
+.info-list{display:flex;flex-direction:column;gap:8px;font-size:0.82rem;}
+.info-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--border);}
+.info-row:last-child{border-bottom:none;}
+.info-label{color:var(--text-secondary);font-weight:600;}
+.info-value{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--text);}
+
+/* ==== ADMIN VIEW ==== */
+.admin-kpi{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px;}
+@media (max-width:900px){.admin-kpi{grid-template-columns:repeat(2,1fr);}}
+.kpi{background:white;border:1.5px solid var(--border);border-radius:16px;padding:18px;}
+.kpi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.kpi-icon svg{width:18px;height:18px;}
+.kpi-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.9rem;font-weight:800;line-height:1;letter-spacing:-0.03em;}
+.kpi-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-tertiary);margin-top:4px;}
+.kpi-lulus .kpi-icon{background:var(--success-bg);color:var(--success-text);} .kpi-lulus .kpi-num{color:var(--success-text);}
+.kpi-cumlaude .kpi-icon{background:var(--gold-bg);color:#7A5500;} .kpi-cumlaude .kpi-num{color:#7A5500;}
+.kpi-belum .kpi-icon{background:var(--warning-bg);color:var(--warning-text);} .kpi-belum .kpi-num{color:var(--warning-text);}
+.kpi-tidak .kpi-icon{background:var(--danger-bg);color:var(--danger-text);} .kpi-tidak .kpi-num{color:var(--danger-text);}
+.kpi-rate .kpi-icon{background:#E8F0FE;color:#1A56C4;} .kpi-rate .kpi-num{color:#1A56C4;}
+
+.admin-filter{background:white;border:1px solid var(--border);border-radius:14px;padding:12px 16px;margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.search-box{flex:1;min-width:220px;position:relative;}
+.search-box svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-tertiary);pointer-events:none;}
+.search-box input{width:100%;padding:10px 14px 10px 38px;border:1px solid var(--border-strong);border-radius:10px;font-family:inherit;font-size:0.85rem;outline:none;background:white;}
+.filter-select{padding:10px 32px 10px 14px;border:1px solid var(--border-strong);border-radius:10px;font-family:inherit;font-size:0.85rem;font-weight:600;cursor:pointer;outline:none;background:white;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235A5A66' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
+
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.mini-card{background:white;border:1.5px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:0.2s;border-left:4px solid var(--border);}
+.mini-card:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,0.08);}
+.mini-card.status-lulus{border-left-color:var(--success);}
+.mini-card.status-cumlaude{border-left-color:var(--gold);background:linear-gradient(180deg,#FFFDF5 0%,#FFF 60%);}
+.mini-card.status-belum{border-left-color:var(--warning);}
+.mini-card.status-tidak{border-left-color:var(--danger);}
+.mini-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.mini-avatar{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.8rem;flex-shrink:0;}
+.status-lulus .mini-avatar{background:var(--success-bg);color:var(--success-text);}
+.status-cumlaude .mini-avatar{background:var(--gold-bg);color:#5A4000;}
+.status-belum .mini-avatar{background:var(--warning-bg);color:var(--warning-text);}
+.status-tidak .mini-avatar{background:var(--danger-bg);color:var(--danger-text);}
+.mini-nama{font-weight:700;font-size:0.85rem;line-height:1.2;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mini-sekolah{font-size:0.7rem;color:var(--text-tertiary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mini-skor-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.mini-skor{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.4rem;font-weight:800;line-height:1;}
+.mini-progress{height:6px;background:#F1F2F4;border-radius:50px;overflow:hidden;}
+.mini-progress-fill{height:100%;border-radius:50px;}
+.status-lulus .mini-progress-fill{background:var(--success);}
+.status-cumlaude .mini-progress-fill{background:var(--gold);}
+.status-belum .mini-progress-fill{background:var(--warning);}
+.status-tidak .mini-progress-fill{background:var(--danger);}
+
+/* ==== MODAL ==== */
+.modal-overlay{position:fixed;inset:0;background:rgba(18,18,23,0.75);backdrop-filter:blur(8px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:white;border-radius:22px;width:100%;max-width:640px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:#FAFAFB;}
+.modal-head h3{font-size:1rem;font-weight:800;}
+.modal-close{width:34px;height:34px;border-radius:50%;background:white;border:1px solid var(--border-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.modal-close svg{width:16px;height:16px;}
+.modal-body{padding:24px;overflow-y:auto;}
+
+/* ==== TOAST ==== */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#121217;color:white;padding:12px 22px;border-radius:50px;font-size:0.85rem;font-weight:600;box-shadow:0 12px 32px rgba(0,0,0,0.25);transition:0.3s;z-index:200;opacity:0;pointer-events:none;display:flex;align-items:center;gap:8px;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media (max-width:640px){
+  .topbar-inner,.main{padding-left:16px;padding-right:16px;}
+  .hero{padding:24px 20px;}
+  .hero-name{font-size:1.5rem;}
+  .main-card-hero{padding:24px 20px;}
+  .breakdown-wrap{padding:20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="view-login" class="login-wrap">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-brand-icon"><i data-lucide="graduation-cap"></i></div>
+      <h1>Capaian KKG 2026</h1>
+      <p>Gugus Nakula · Kecamatan Selogiri</p>
+    </div>
+    <form id="form-login" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label class="form-label">PIN Peserta</label>
+        <input type="text" id="inp-pin" class="form-input" placeholder="•••••" inputmode="numeric" maxlength="6" autocomplete="off">
+        <div class="form-hint">Masukkan PIN 5 digit yang terdaftar</div>
+      </div>
+      <div id="login-alert" class="login-alert hidden">
+        <i data-lucide="alert-circle"></i>
+        <span id="login-alert-msg"></span>
+      </div>
+      <button type="submit" class="login-btn">
+        <i data-lucide="log-in"></i> Masuk
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div id="view-dashboard" class="hidden">
+  <nav class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-icon"><i data-lucide="graduation-cap"></i></div>
+        <div>
+          <div class="brand-title">Capaian KKG 2026</div>
+          <div class="brand-sub">Gugus Nakula · Selogiri</div>
+        </div>
+      </div>
+      <div class="user-menu">
+        <div class="user-chip">
+          <div class="user-avatar" id="user-avatar">--</div>
+          <div>
+            <div class="user-name" id="user-name">-</div>
+            <div class="user-role" id="user-role">Guru</div>
+          </div>
+        </div>
+        <button class="logout-btn" onclick="logout()" title="Logout"><i data-lucide="log-out"></i></button>
+      </div>
+    </div>
+  </nav>
+  <main class="main" id="main-content"></main>
+</div>
+
+<div class="modal-overlay" id="modal-detail" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="modal-title">Detail</h3>
+      <button class="modal-close" onclick="closeModal()"><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div id="toast"><i data-lucide="check-circle" style="width:16px;height:16px;"></i><span id="toast-msg">Pesan</span></div>
+
+<script>
+// ==================== CONFIG ====================
+const API_URL = "https://script.google.com/macros/s/AKfycbxaaUcgZNBqJgCLbAtPRlikZG6t4ZGLFOY20ID7C3OiBoxlEUykpPgwWMHfFhWeckK-7g/exec";
+const CACHE_KEY = "capaian_cache_v1_";
+const CACHE_TTL = 10 * 60 * 1000;
+
+// ==================== STATE ====================
+let currentUser = null;    // { pin, nama, sekolah, jabatan, isAdmin }
+let dataProgress = null;   // { meta, guru } / { meta, guru: { single } }
+let adminAllData = null;   // untuk admin: { meta, guru: [...] }
+
+// ==================== UTILS ====================
+function initials(n){
+  const p = String(n||"?").trim().split(/\s+/);
+  if(!p.length) return "?";
+  if(p.length === 1) return p[0].substring(0,2).toUpperCase();
+  return (p[0][0]+p[p.length-1][0]).toUpperCase();
+}
+function escapeHtml(s){
+  return String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function showToast(msg){
+  const t = document.getElementById("toast");
+  document.getElementById("toast-msg").innerText = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 2500);
+  if(window.lucide) lucide.createIcons();
+}
+function showView(name){
+  ["login","dashboard"].forEach(v => {
+    document.getElementById("view-"+v).classList.toggle("hidden", v !== name);
+  });
+  if(window.lucide) lucide.createIcons();
+}
+function saveSession(u){ localStorage.setItem("capaian_session", JSON.stringify(u)); }
+function loadSession(){ try { return JSON.parse(localStorage.getItem("capaian_session")); } catch(e){ return null; } }
+function clearSession(){ localStorage.removeItem("capaian_session"); }
+
+// ==================== LOGIN ====================
+async function handleLogin(e){
+  e.preventDefault();
+  const pin = document.getElementById("inp-pin").value.trim();
+  const alertBox = document.getElementById("login-alert");
+  const alertMsg = document.getElementById("login-alert-msg");
+  alertBox.classList.add("hidden");
+
+  if(!pin || pin.length < 5){
+    alertMsg.innerText = "PIN harus minimal 5 digit";
+    alertBox.classList.remove("hidden");
+    return;
+  }
+  try {
+    const res = await fetch(`${API_URL}?action=login&pin=${encodeURIComponent(pin)}`);
+    const data = await res.json();
+    if(data.error){
+      alertMsg.innerText = data.error;
+      alertBox.classList.remove("hidden");
+      return;
+    }
+    if(!data.ok){
+      alertMsg.innerText = "Login gagal";
+      alertBox.classList.remove("hidden");
+      return;
+    }
+    currentUser = data.guru;
+    saveSession(currentUser);
+    document.getElementById("inp-pin").value = "";
+    await loadDashboard();
+  } catch (err) {
+    alertMsg.innerText = "Gagal koneksi: " + err.message;
+    alertBox.classList.remove("hidden");
+  }
+}
+
+function logout(){
+  clearSession();
+  currentUser = null;
+  dataProgress = null;
+  adminAllData = null;
+  showView("login");
+  showToast("Berhasil logout");
+}
+
+// ==================== LOAD DASHBOARD ====================
+async function loadDashboard(){
+  const cacheKey = CACHE_KEY + "2026_" + (currentUser.isAdmin ? "all" : currentUser.pin);
+  let cached = null;
+  try {
+    const c = localStorage.getItem(cacheKey);
+    if(c){
+      const obj = JSON.parse(c);
+      if(Date.now() - obj.ts < CACHE_TTL) cached = obj.data;
+    }
+  } catch(e){}
+
+  if(cached){
+    dataProgress = cached;
+  } else {
+    try {
+      const url = currentUser.isAdmin
+        ? `${API_URL}?action=getProgressGuru&tahun=2026`
+        : `${API_URL}?action=getProgressGuru&tahun=2026&pin=${encodeURIComponent(currentUser.pin)}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if(data.error) throw new Error(data.error);
+      dataProgress = data;
+      localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data }));
+    } catch (err) {
+      showToast("Gagal load data: " + err.message);
+      return;
+    }
+  }
+
+  // Update user chip
+  document.getElementById("user-avatar").innerText = initials(currentUser.nama);
+  document.getElementById("user-name").innerText = currentUser.nama.split(",")[0];
+  document.getElementById("user-role").innerText = currentUser.isAdmin ? "Admin" : "Guru";
+
+  showView("dashboard");
+  if(currentUser.isAdmin && dataProgress.guru && Array.isArray(dataProgress.guru)){
+    renderAdmin();
+  } else {
+    renderGuru();
+  }
+}
+
+// ==================== RENDER GURU (PERSONAL) ====================
+function renderGuru(){
+  const g = dataProgress.guru;
+  if(!g){
+    document.getElementById("main-content").innerHTML = '<div style="text-align:center;padding:60px 20px;color:#8E8E99;">Data guru tidak ditemukan.</div>';
+    return;
+  }
+
+  const statusText = {
+    lulus: "Lulus",
+    cumlaude: "Cum Laude",
+    belum: "Belum Lulus",
+    tidak: "Tidak Lulus"
+  };
+  const statusIcon = {
+    lulus: "check-circle-2",
+    cumlaude: "crown",
+    belum: "alert-triangle",
+    tidak: "x-circle"
+  };
+
+  const sl = { text: statusText[g.status] || "-", icon: statusIcon[g.status] || "circle" };
+  const ringCircum = 2 * Math.PI * 72;
+  const ringOffset = ringCircum * (1 - g.skorTotal / 100);
+
+  // Tombol sertifikat
+  let certBtn;
+  if(g.lulus && g.sertifikat && g.sertifikat.link){
+    certBtn = `<a href="${escapeHtml(g.sertifikat.link)}" target="_blank" rel="noopener" class="btn-cert-main">
+      <i data-lucide="download"></i> Download Sertifikat
+    </a>`;
+  } else if(g.sertifikat && g.sertifikat.terkunci){
+    certBtn = `<button class="btn-cert-locked" disabled>
+      <i data-lucide="lock"></i> Sertifikat Terkunci
+    </button>`;
+  } else if(!g.lulus){
+    certBtn = `<button class="btn-cert-locked" disabled>
+      <i data-lucide="lock"></i> Belum Memenuhi Syarat
+    </button>`;
+  } else {
+    certBtn = `<button class="btn-cert-locked" disabled>
+      <i data-lucide="loader"></i> Sedang Diproses
+    </button>`;
+  }
+
+  // Hint di bawah tombol
+  let hintText = "";
+  if(!g.lulus && g.sertifikat && g.sertifikat.terkunci){
+    hintText = "Terus tingkatkan! Lihat 'Yang Perlu Dikejar' di bawah 👇";
+  }
+
+  // Breakdown kartu
+  const bdHtml = Object.keys(g.kriteria).map(function(k){
+    const b = g.kriteria[k];
+    const iconMap = {
+      kehadiran: "calendar-check",
+      tugas: "file-text",
+      kualitas: "star",
+      inovasi: "lightbulb",
+      feedback: "message-square",
+      keaktifan: "mic"
+    };
+    let valueText = "";
+    if(k === "kehadiran") valueText = `${b.nilai}/${b.target} sesi`;
+    else if(k === "tugas") valueText = `${b.nilai}/${b.target} tugas`;
+    else if(k === "kualitas") valueText = b.nilai > 0 ? `${b.nilai} / 4` : "-";
+    else if(k === "inovasi") valueText = `${b.nilai} karya`;
+    else if(k === "feedback") valueText = `${b.nilai} fb`;
+    else if(k === "keaktifan") valueText = `${b.nilai} aksi`;
+    
+    return `
+      <div class="bd-item">
+        <div class="bd-item-icon ${b.status}"><i data-lucide="${iconMap[k]}"></i></div>
+        <div class="bd-item-name">
+          <div class="bd-item-label">
+            <span>${escapeHtml(b.label)} ${b.wajib ? '⭐' : ''}</span>
+            <small>${valueText}</small>
+          </div>
+          <div class="bd-item-bar"><div class="bd-item-fill ${b.status}" style="width:${b.persen}%"></div></div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  // "Yang perlu dikejar"
+  const todos = [];
+  Object.keys(g.kriteria).forEach(function(k){
+    const b = g.kriteria[k];
+    if(b.status === "ok") return;
+    const iconMap = {
+      kehadiran: "calendar-check",
+      tugas: "file-text",
+      kualitas: "star",
+      inovasi: "lightbulb",
+      feedback: "message-square",
+      keaktifan: "mic"
+    };
+    let desc = "";
+    if(k === "kehadiran") desc = `Kehadiran ${b.nilai}/${b.target} sesi. Minimal ${b.target} sesi untuk lulus.`;
+    else if(k === "tugas") desc = `Tugas terkumpul ${b.nilai}/${b.target}. Minimal ${b.target} tugas untuk lulus.`;
+    else if(k === "kualitas") desc = `Rata-rata grade ${b.nilai || '-'}. Target minimal B (3.0).`;
+    else if(k === "inovasi") desc = `${b.nilai} karya. Target minimal 1 karya.`;
+    else if(k === "feedback") desc = `${b.nilai} feedback. Target minimal ${b.target}.`;
+    else if(k === "keaktifan") desc = `${b.nilai} aksi. Target minimal ${b.target} aksi.`;
+    
+    todos.push({
+      label: b.label,
+      desc: desc,
+      wajib: b.wajib,
+      status: b.status
+    });
+  });
+  todos.sort(function(a,b){ return (b.wajib?1:0) - (a.wajib?1:0); });
+
+  const todoHtml = todos.length
+    ? `<div class="panel-card">
+        <div class="panel-card-title"><i data-lucide="target"></i> Yang Perlu Dikejar</div>
+        <div class="panel-card-sub">${todos.length} item butuh tindak lanjut</div>
+        <div class="todo-list">
+          ${todos.map(t => `
+            <div class="todo-item">
+              <div class="todo-check"><i data-lucide="circle"></i></div>
+              <div class="todo-text">
+                <div class="todo-name">${escapeHtml(t.label)} ${t.wajib ? '⭐' : ''}</div>
+                <div class="todo-desc">${escapeHtml(t.desc)}</div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>`
+    : `<div class="panel-card">
+        <div class="panel-card-title"><i data-lucide="sparkles"></i> Semua Target Tercapai</div>
+        <div class="panel-card-sub">Selamat! Anda memenuhi semua kriteria. 🎉</div>
+        <div class="todo-item done">
+          <div class="todo-check"><i data-lucide="check"></i></div>
+          <div class="todo-text">
+            <div class="todo-name">Siap cetak sertifikat</div>
+            <div class="todo-desc">Klik tombol "Download Sertifikat" di atas untuk mengunduh PDF.</div>
+          </div>
+        </div>
+      </div>`;
+
+  const html = `
+    <div class="hero">
+      <div class="hero-greet">Selamat datang 👋</div>
+      <div class="hero-name">${escapeHtml(g.nama)}</div>
+      <div class="hero-meta">
+        <span><i data-lucide="building-2"></i> ${escapeHtml(g.sekolah)}</span>
+        <span><i data-lucide="briefcase"></i> ${escapeHtml(g.jabatan || '-')}</span>
+        <span><i data-lucide="hash"></i> PIN ${escapeHtml(g.pin)}</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="main-card">
+        <div class="main-card-hero ${g.status}">
+          <div class="status-badge-huge ${g.status}">
+            <i data-lucide="${sl.icon}"></i> ${sl.text}
+          </div>
+          <div class="score-ring">
+            <svg viewBox="0 0 160 160">
+              <circle class="score-ring-bg" cx="80" cy="80" r="72"></circle>
+              <circle class="score-ring-fill ring-${g.status}" cx="80" cy="80" r="72"
+                stroke-dasharray="${ringCircum}" stroke-dashoffset="${ringOffset}"></circle>
+            </svg>
+            <div class="score-center">
+              <div class="score-num">${g.skorTotal}<span class="score-suffix">%</span></div>
+              <div class="score-label">Ketercapaian</div>
+            </div>
+          </div>
+          <div class="hero-actions">${certBtn}</div>
+          ${hintText ? `<div class="hint-text">${escapeHtml(hintText)}</div>` : ''}
+        </div>
+
+        <div class="breakdown-wrap">
+          <div class="breakdown-title">Breakdown 6 Kriteria</div>
+          <div class="bd-list">${bdHtml}</div>
+        </div>
+      </div>
+
+      <div class="side-panel">
+        ${todoHtml}
+
+        <div class="panel-card">
+          <div class="panel-card-title"><i data-lucide="info"></i> Info Sesi KKG</div>
+          <div class="panel-card-sub">Ringkasan progres tahun ini</div>
+          <div class="info-list">
+            <div class="info-row"><span class="info-label">Sesi Berjalan</span><span class="info-value">${dataProgress.meta.sesiBerjalan}</span></div>
+            <div class="info-row"><span class="info-label">Target Sesi</span><span class="info-value">${dataProgress.meta.sesiTarget}</span></div>
+            <div class="info-row"><span class="info-label">Tahun</span><span class="info-value">${dataProgress.meta.tahun}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("main-content").innerHTML = html;
+  if(window.lucide) lucide.createIcons();
+}
+
+// ==================== RENDER ADMIN ====================
+function renderAdmin(){
+  const list = dataProgress.guru;
+  const lulus = list.filter(g => g.status === "lulus").length;
+  const cumlaude = list.filter(g => g.status === "cumlaude").length;
+  const belum = list.filter(g => g.status === "belum").length;
+  const tidak = list.filter(g => g.status === "tidak").length;
+  const avg = Math.round(list.reduce((a,g) => a + g.skorTotal, 0) / list.length);
+
+  const html = `
+    <div class="hero" style="background:linear-gradient(135deg,#FEF2F2 0%,#FEE2E2 50%,#FCE7F3 100%);border-color:#FCA5A5;">
+      <div class="hero-greet" style="color:#991B1B;">Dashboard Admin</div>
+      <div class="hero-name" style="color:#7F1D1D;">Progress Semua Guru</div>
+      <div class="hero-meta" style="color:#991B1B;">
+        <span><i data-lucide="users"></i> ${list.length} guru</span>
+        <span><i data-lucide="calendar-check"></i> ${dataProgress.meta.sesiBerjalan} sesi KKG berjalan</span>
+      </div>
+    </div>
+
+    <div class="admin-kpi">
+      <div class="kpi kpi-lulus"><div class="kpi-icon"><i data-lucide="check-circle-2"></i></div><div class="kpi-num">${lulus}</div><div class="kpi-label">Lulus</div></div>
+      <div class="kpi kpi-cumlaude"><div class="kpi-icon"><i data-lucide="crown"></i></div><div class="kpi-num">${cumlaude}</div><div class="kpi-label">Cum Laude</div></div>
+      <div class="kpi kpi-belum"><div class="kpi-icon"><i data-lucide="alert-triangle"></i></div><div class="kpi-num">${belum}</div><div class="kpi-label">Belum Lulus</div></div>
+      <div class="kpi kpi-tidak"><div class="kpi-icon"><i data-lucide="x-circle"></i></div><div class="kpi-num">${tidak}</div><div class="kpi-label">Tidak Lulus</div></div>
+      <div class="kpi kpi-rate"><div class="kpi-icon"><i data-lucide="bar-chart-3"></i></div><div class="kpi-num">${avg}<span style="font-size:1rem;opacity:0.6;">%</span></div><div class="kpi-label">Rata-rata</div></div>
+    </div>
+
+    <div class="admin-filter">
+      <div class="search-box"><i data-lucide="search"></i><input type="text" id="admin-search" placeholder="Cari nama guru atau PIN..." oninput="filterAdmin()"></div>
+      <select class="filter-select" id="admin-filter-status" onchange="filterAdmin()">
+        <option value="">Semua Status</option>
+        <option value="lulus">✅ Lulus</option>
+        <option value="cumlaude">🏆 Cum Laude</option>
+        <option value="belum">⚠️ Belum Lulus</option>
+        <option value="tidak">❌ Tidak Lulus</option>
+      </select>
+    </div>
+
+    <div class="admin-grid" id="admin-grid">
+      ${list.map(g => renderMiniCard(g)).join("")}
+    </div>
+  `;
+
+  document.getElementById("main-content").innerHTML = html;
+  if(window.lucide) lucide.createIcons();
+}
+
+function renderMiniCard(g){
+  const statusText = {
+    lulus: "Lulus", cumlaude: "Cum Laude",
+    belum: "Belum", tidak: "Tidak"
+  };
+  return `
+    <div class="mini-card status-${g.status}" data-nama="${escapeHtml(g.nama.toLowerCase())}" data-pin="${escapeHtml(g.pin)}" data-status="${g.status}" onclick="showDetailModal('${escapeHtml(g.pin)}')">
+      <div class="mini-head">
+        <div class="mini-avatar">${initials(g.nama)}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="mini-nama">${escapeHtml(g.nama)}</div>
+          <div class="mini-sekolah">${escapeHtml(g.sekolah)}</div>
+        </div>
+      </div>
+      <div class="mini-skor-row">
+        <span style="font-size:0.72rem;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;">Skor</span>
+        <span class="mini-skor">${g.skorTotal}%</span>
+      </div>
+      <div class="mini-progress"><div class="mini-progress-fill" style="width:${g.skorTotal}%"></div></div>
+      <div style="margin-top:10px;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-tertiary);">
+        ${statusText[g.status] || "-"} · PIN ${escapeHtml(g.pin)}
+      </div>
+    </div>
+  `;
+}
+
+function filterAdmin(){
+  const q = (document.getElementById("admin-search").value || "").toLowerCase();
+  const status = document.getElementById("admin-filter-status").value;
+  document.querySelectorAll(".mini-card").forEach(function(el){
+    const matchQ = !q || el.dataset.nama.includes(q) || el.dataset.pin.includes(q);
+    const matchS = !status || el.dataset.status === status;
+    el.style.display = (matchQ && matchS) ? "" : "none";
+  });
+}
+
+// ==================== MODAL DETAIL (ADMIN) ====================
+function showDetailModal(pin){
+  if(!adminAllData && dataProgress && Array.isArray(dataProgress.guru)){
+    adminAllData = dataProgress.guru;
+  }
+  const list = adminAllData || [];
+  let g = null;
+  list.forEach(function(x){ if(x.pin === pin) g = x; });
+  if(!g) return;
+
+  const statusText = { lulus: "Lulus", cumlaude: "Cum Laude", belum: "Belum Lulus", tidak: "Tidak Lulus" };
+  const bdRows = Object.keys(g.kriteria).map(function(k){
+    const b = g.kriteria[k];
+    let valueText = "";
+    if(k === "kehadiran") valueText = `${b.nilai}/${b.target} sesi`;
+    else if(k === "tugas") valueText = `${b.nilai}/${b.target} tugas`;
+    else if(k === "kualitas") valueText = b.nilai > 0 ? `${b.nilai} / 4` : "-";
+    else if(k === "inovasi") valueText = `${b.nilai} karya`;
+    else if(k === "feedback") valueText = `${b.nilai} fb`;
+    else if(k === "keaktifan") valueText = `${b.nilai} aksi`;
+    return `<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed #EBEBEF;font-size:0.85rem;">
+      <span style="font-weight:600;">${escapeHtml(b.label)} ${b.wajib?'⭐':''}</span>
+      <span style="font-weight:800;color:${b.status==='ok'?'#0F7A44':b.status==='warn'?'#A16207':'#991B1B'};">${valueText} · ${b.persen}%</span>
+    </div>`;
+  }).join("");
+
+  document.getElementById("modal-title").innerText = g.nama;
+  document.getElementById("modal-body").innerHTML = `
+    <div style="margin-bottom:16px;">
+      <div style="font-size:0.75rem;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px;">Sekolah</div>
+      <div style="font-weight:700;">${escapeHtml(g.sekolah)}</div>
+      <div style="font-size:0.82rem;color:var(--text-secondary);">${escapeHtml(g.jabatan || '-')} · PIN ${escapeHtml(g.pin)}</div>
+    </div>
+    <div style="padding:16px;background:#F8F9FB;border-radius:12px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-tertiary);">Skor Total</div>
+        <div style="font-family:'Plus Jakarta Sans';font-size:2rem;font-weight:800;line-height:1;">${g.skorTotal}%</div>
+      </div>
+      <div style="padding:6px 14px;border-radius:50px;font-size:0.75rem;font-weight:800;background:#F1F2F4;">${statusText[g.status] || '-'}</div>
+    </div>
+    <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-tertiary);margin-bottom:8px;">Breakdown Kriteria</div>
+    ${bdRows}
+  `;
+  document.getElementById("modal-detail").classList.add("show");
+  if(window.lucide) lucide.createIcons();
+}
+
+function closeModal(){
+  document.getElementById("modal-detail").classList.remove("show");
+}
+
+// ==================== INIT ====================
+document.addEventListener("DOMContentLoaded", async () => {
+  if(window.lucide) lucide.createIcons();
+  const session = loadSession();
+  if(session && session.pin){
+    currentUser = session;
+    await loadDashboard();
+  } else {
+    showView("login");
+  }
+});
+</script>
+</body>
+</html>
