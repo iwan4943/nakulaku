@@ -47,9 +47,160 @@ h1,h2,h3,h4{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;letter-sp
 .form-input:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(179,38,30,0.1);}
 .form-input::placeholder{letter-spacing:0.15em;color:#B8B8C0;font-size:1rem;}
 .form-hint{font-size:0.72rem;color:var(--text-tertiary);margin-top:8px;text-align:center;}
-.login-btn{width:100%;padding:14px;border-radius:12px;border:none;background:var(--primary);color:white;font-family:inherit;font-size:0.95rem;font-weight:800;cursor:pointer;transition:0.15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;letter-spacing:0.3px;}
-.login-btn:hover{background:var(--primary-dark);transform:translateY(-1px);box-shadow:0 8px 20px rgba(179,38,30,0.3);}
-.login-btn svg{width:17px;height:17px;}
+/* ==== TOMBOL MASUK — PREMIUM FEEL ==== */
+.login-btn{
+  position:relative;
+  width:100%;
+  padding:16px 24px;
+  border-radius:14px;
+  border:none;
+  background:linear-gradient(135deg, #B3261E 0%, #8B1C16 100%);
+  background-size:200% 200%;
+  background-position:0% 50%;
+  color:white;
+  font-family:'Plus Jakarta Sans',inherit;
+  font-size:0.98rem;
+  font-weight:800;
+  cursor:pointer;
+  transition:all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-top:16px;
+  letter-spacing:0.5px;
+  overflow:hidden;
+  box-shadow:0 4px 14px rgba(179,38,30,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+  isolation:isolate;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Glow ring (belakang tombol) */
+.login-btn::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:16px;
+  background:linear-gradient(135deg, #FF5A4E, #B3261E, #8B1C16, #FF5A4E);
+  background-size:400% 400%;
+  z-index:-1;
+  opacity:0;
+  transition:opacity 0.35s ease;
+  animation:gradientShift 3s ease infinite;
+}
+.login-btn:hover::before{opacity:1;}
+@keyframes gradientShift{
+  0%,100%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+}
+
+/* Shine sweep */
+.login-btn::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-100%;
+  width:100%;
+  height:100%;
+  background:linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%);
+  transition:left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events:none;
+}
+.login-btn:hover::after{left:100%;}
+
+.login-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 28px rgba(179,38,30,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+  letter-spacing:0.8px;
+}
+
+.login-btn:active{
+  transform:translateY(0) scale(0.98);
+  transition:all 0.1s;
+  box-shadow:0 2px 8px rgba(179,38,30,0.3), inset 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.login-btn:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 4px rgba(179,38,30,0.2), 0 12px 28px rgba(179,38,30,0.35);
+}
+
+.login-btn svg{
+  width:18px;
+  height:18px;
+  transition:transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.login-btn:hover svg{
+  transform:translateX(3px) rotate(-5deg);
+}
+
+/* ==== RIPPLE EFFECT ==== */
+.login-btn .ripple{
+  position:absolute;
+  border-radius:50%;
+  background:rgba(255,255,255,0.5);
+  transform:scale(0);
+  animation:rippleAnim 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events:none;
+}
+@keyframes rippleAnim{
+  to{
+    transform:scale(4);
+    opacity:0;
+  }
+}
+
+/* ==== LOADING STATE ==== */
+.login-btn.loading{
+  pointer-events:none;
+  background:linear-gradient(135deg, #6B1410 0%, #4A0E0B 100%);
+  box-shadow:0 4px 14px rgba(179,38,30,0.15);
+}
+.login-btn.loading::before{opacity:0;}
+.login-btn.loading svg{
+  animation:spinBtn 1s linear infinite;
+  transform:none !important;
+}
+@keyframes spinBtn{
+  to{transform:rotate(360deg);}
+}
+.login-btn.loading .btn-text::after{
+  content:"...";
+  animation:dots 1.4s steps(4) infinite;
+}
+@keyframes dots{
+  0%{content:"";}
+  25%{content:".";}
+  50%{content:"..";}
+  75%{content:"...";}
+}
+
+/* ==== SUCCESS STATE ==== */
+.login-btn.success{
+  background:linear-gradient(135deg, #10B981 0%, #059669 100%);
+  pointer-events:none;
+  box-shadow:0 12px 28px rgba(16,185,129,0.4);
+}
+.login-btn.success::before{opacity:0;}
+.login-btn.success svg{
+  transform:scale(1.1) !important;
+  animation:successPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes successPop{
+  0%{transform:scale(0);}
+  60%{transform:scale(1.3);}
+  100%{transform:scale(1.1);}
+}
+
+/* ==== SHAKE STATE (Error) ==== */
+.login-btn.shake{
+  animation:shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+@keyframes shake{
+  0%, 100%{transform:translateX(0);}
+  10%, 30%, 50%, 70%, 90%{transform:translateX(-6px);}
+  20%, 40%, 60%, 80%{transform:translateX(6px);}
+}
 .login-alert{margin-top:14px;padding:12px 16px;border-radius:10px;font-size:0.83rem;font-weight:600;background:var(--danger-bg);color:var(--danger-text);border:1px solid #FECACA;display:flex;align-items:center;gap:8px;}
 .login-alert svg{width:16px;height:16px;flex-shrink:0;}
 
@@ -249,9 +400,10 @@ h1,h2,h3,h4{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;letter-sp
         <i data-lucide="alert-circle"></i>
         <span id="login-alert-msg"></span>
       </div>
-      <button type="submit" class="login-btn">
-        <i data-lucide="log-in"></i> Masuk
-      </button>
+<button type="submit" class="login-btn" id="btn-login">
+  <i data-lucide="log-in" id="btn-login-icon"></i>
+  <span class="btn-text" id="btn-login-text">Masuk</span>
+</button>
     </form>
   </div>
 </div>
@@ -332,7 +484,58 @@ function saveSession(u){ localStorage.setItem("capaian_session", JSON.stringify(
 function loadSession(){ try { return JSON.parse(localStorage.getItem("capaian_session")); } catch(e){ return null; } }
 function clearSession(){ localStorage.removeItem("capaian_session"); }
 
-// ==================== LOGIN ====================
+// ==================== BUTTON HELPERS ====================
+function setBtnState(state, text, icon) {
+  const btn = document.getElementById("btn-login");
+  const txt = document.getElementById("btn-login-text");
+  const ico = document.getElementById("btn-login-icon");
+  if(!btn) return;
+
+  btn.classList.remove("loading", "success", "shake");
+
+  if(state === "loading") {
+    btn.classList.add("loading");
+    txt.innerText = "Memverifikasi";
+    ico.setAttribute("data-lucide", "loader-2");
+  } else if(state === "success") {
+    btn.classList.add("success");
+    txt.innerText = "Berhasil";
+    ico.setAttribute("data-lucide", "check");
+  } else {
+    txt.innerText = text || "Masuk";
+    ico.setAttribute("data-lucide", icon || "log-in");
+  }
+
+  if(window.lucide) lucide.createIcons();
+}
+
+function shakeBtn() {
+  const btn = document.getElementById("btn-login");
+  if(!btn) return;
+  btn.classList.add("shake");
+  setTimeout(() => btn.classList.remove("shake"), 500);
+}
+
+// ==================== RIPPLE EFFECT ====================
+function attachRipple() {
+  const btn = document.getElementById("btn-login");
+  if(!btn) return;
+  btn.addEventListener("click", function(e) {
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+    const ripple = document.createElement("span");
+    ripple.className = "ripple";
+    ripple.style.width = ripple.style.height = size + "px";
+    ripple.style.left = x + "px";
+    ripple.style.top = y + "px";
+    btn.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+  });
+}
+
+// ==================== HANDLE LOGIN (PREMIUM) ====================
 async function handleLogin(e){
   e.preventDefault();
   const pin = document.getElementById("inp-pin").value.trim();
@@ -340,31 +543,61 @@ async function handleLogin(e){
   const alertMsg = document.getElementById("login-alert-msg");
   alertBox.classList.add("hidden");
 
+  // Validasi cepat
   if(!pin || pin.length < 5){
     alertMsg.innerText = "PIN harus minimal 5 digit";
     alertBox.classList.remove("hidden");
+    shakeBtn();
     return;
   }
+
+  // Set loading state
+  setBtnState("loading");
+
+  // Delay kecil biar animasi loading kelihatan (UX feel)
+  const startTime = Date.now();
+
   try {
-    const res = await fetch(`${API_URL}?action=login&pin=${encodeURIComponent(pin)}`);
+    const res = await fetch(API_URL + "?action=login&pin=" + encodeURIComponent(pin));
     const data = await res.json();
+
+    // Minimum delay 600ms biar user bisa lihat loading-nya
+    const elapsed = Date.now() - startTime;
+    if(elapsed < 600) {
+      await new Promise(r => setTimeout(r, 600 - elapsed));
+    }
+
     if(data.error){
+      setBtnState("reset");
       alertMsg.innerText = data.error;
       alertBox.classList.remove("hidden");
+      shakeBtn();
       return;
     }
     if(!data.ok){
+      setBtnState("reset");
       alertMsg.innerText = "Login gagal";
       alertBox.classList.remove("hidden");
+      shakeBtn();
       return;
     }
+
+    // Success state
+    setBtnState("success");
     currentUser = data.guru;
     saveSession(currentUser);
+
+    // Tunggu sebentar biar user lihat centangnya
+    await new Promise(r => setTimeout(r, 700));
     document.getElementById("inp-pin").value = "";
+    setBtnState("reset");
     await loadDashboard();
+
   } catch (err) {
+    setBtnState("reset");
     alertMsg.innerText = "Gagal koneksi: " + err.message;
     alertBox.classList.remove("hidden");
+    shakeBtn();
   }
 }
 
@@ -747,6 +980,7 @@ function closeModal(){
 // ==================== INIT ====================
 document.addEventListener("DOMContentLoaded", async () => {
   if(window.lucide) lucide.createIcons();
+  attachRipple();
   const session = loadSession();
   if(session && session.pin){
     currentUser = session;
