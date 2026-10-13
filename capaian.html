@@ -440,7 +440,16 @@ function renderGuru(){
     belum: "alert-triangle",
     tidak: "x-circle"
   };
+  const iconMap = {
+    kehadiran: "calendar-check",
+    tugas: "file-text",
+    kualitas: "star",
+    inovasi: "lightbulb",
+    feedback: "message-square",
+    keaktifan: "mic"
+  };
 
+  const isKS = g.isKS === true;
   const sl = { text: statusText[g.status] || "-", icon: statusIcon[g.status] || "circle" };
   const ringCircum = 2 * Math.PI * 72;
   const ringOffset = ringCircum * (1 - g.skorTotal / 100);
@@ -448,213 +457,154 @@ function renderGuru(){
   // Tombol sertifikat
   let certBtn;
   if(g.lulus && g.sertifikat && g.sertifikat.link){
-    certBtn = `<a href="${escapeHtml(g.sertifikat.link)}" target="_blank" rel="noopener" class="btn-cert-main">
-      <i data-lucide="download"></i> Download Sertifikat
-    </a>`;
+    certBtn = '<a href="' + escapeHtml(g.sertifikat.link) + '" target="_blank" rel="noopener" class="btn-cert-main"><i data-lucide="download"></i> Download Sertifikat</a>';
   } else if(g.sertifikat && g.sertifikat.terkunci){
-    certBtn = `<button class="btn-cert-locked" disabled>
-      <i data-lucide="lock"></i> Sertifikat Terkunci
-    </button>`;
+    certBtn = '<button class="btn-cert-locked" disabled><i data-lucide="lock"></i> Sertifikat Terkunci</button>';
   } else if(!g.lulus){
-    certBtn = `<button class="btn-cert-locked" disabled>
-      <i data-lucide="lock"></i> Belum Memenuhi Syarat
-    </button>`;
+    certBtn = '<button class="btn-cert-locked" disabled><i data-lucide="lock"></i> Belum Memenuhi Syarat</button>';
   } else {
-    certBtn = `<button class="btn-cert-locked" disabled>
-      <i data-lucide="loader"></i> Sedang Diproses
-    </button>`;
+    certBtn = '<button class="btn-cert-locked" disabled><i data-lucide="loader"></i> Sedang Diproses</button>';
   }
 
-  // Hint di bawah tombol
+  // Hint
   let hintText = "";
   if(!g.lulus && g.sertifikat && g.sertifikat.terkunci){
     hintText = "Terus tingkatkan! Lihat 'Yang Perlu Dikejar' di bawah 👇";
   }
 
-  // Breakdown kartu
-  const isKS = g.isKS === true;
+  // Breakdown (2 versi: KS vs normal)
+  let bdHtml;
+  if (isKS) {
+    bdHtml = '<div class="todo-item done" style="background:#F5F3FF;border-color:#C4B5FD;">'
+      + '<div class="todo-check" style="background:#8B5CF6;border-color:#8B5CF6;"><i data-lucide="shield"></i></div>'
+      + '<div class="todo-text">'
+      + '<div class="todo-name" style="color:#4C1D95;">Kepala Sekolah</div>'
+      + '<div class="todo-desc" style="color:#5B21B6;">Sebagai Kepala Sekolah, Anda otomatis dinyatakan <b>LULUS</b> dan tidak dihitung dalam kriteria peserta KKG.</div>'
+      + '</div></div>';
+  } else {
+    bdHtml = Object.keys(g.kriteria).map(function(k){
+      const b = g.kriteria[k];
+      let valueText = "";
+      if(k === "kehadiran") valueText = b.nilai + "/" + b.target + " sesi";
+      else if(k === "tugas") valueText = b.nilai + "/" + b.target + " tugas";
+      else if(k === "kualitas") valueText = b.nilai > 0 ? b.nilai + " / 4" : "-";
+      else if(k === "inovasi") valueText = b.nilai + " karya";
+      else if(k === "feedback") valueText = b.nilai + " fb";
+      else if(k === "keaktifan") valueText = b.nilai + " aksi";
+      const star = b.wajib ? ' ⭐' : '';
+      return '<div class="bd-item">'
+        + '<div class="bd-item-icon ' + b.status + '"><i data-lucide="' + (iconMap[k] || 'circle') + '"></i></div>'
+        + '<div class="bd-item-name">'
+        + '<div class="bd-item-label"><span>' + escapeHtml(b.label) + star + '</span><small>' + valueText + '</small></div>'
+        + '<div class="bd-item-bar"><div class="bd-item-fill ' + b.status + '" style="width:' + b.persen + '%"></div></div>'
+        + '</div></div>';
+    }).join("");
+  }
 
-const bdHtml = isKS
-  ? `<div class="todo-item done" style="background:#F5F3FF;border-color:#C4B5FD;">
-      <div class="todo-check" style="background:#8B5CF6;border-color:#8B5CF6;"><i data-lucide="shield"></i></div>
-      <div class="todo-text">
-        <div class="todo-name" style="color:#4C1D95;">Kepala Sekolah</div>
-        <div class="todo-desc" style="color:#5B21B6;">Sebagai Kepala Sekolah, Anda otomatis dinyatakan <b>LULUS</b> dan tidak dihitung dalam kriteria peserta KKG.</div>
-      </div>
-    </div>`
-  : Object.keys(g.kriteria).map(function(k){
-    const b = g.kriteria[k];
-    const iconMap = {
-      kehadiran: "calendar-check",
-      tugas: "file-text",
-      kualitas: "star",
-      inovasi: "lightbulb",
-      feedback: "message-square",
-      keaktifan: "mic"
-    };
-    let valueText = "";
-    if(k === "kehadiran") valueText = `${b.nilai}/${b.target} sesi`;
-    else if(k === "tugas") valueText = `${b.nilai}/${b.target} tugas`;
-    else if(k === "kualitas") valueText = b.nilai > 0 ? `${b.nilai} / 4` : "-";
-    else if(k === "inovasi") valueText = `${b.nilai} karya`;
-    else if(k === "feedback") valueText = `${b.nilai} fb`;
-    else if(k === "keaktifan") valueText = `${b.nilai} aksi`;
-
-    return `
-      <div class="bd-item">
-        <div class="bd-item-icon ${b.status}"><i data-lucide="${iconMap[k]}"></i></div>
-        <div class="bd-item-name">
-          <div class="bd-item-label">
-            <span>${escapeHtml(b.label)} ${b.wajib ? '⭐' : ''}</span>
-            <small>${valueText}</small>
-          </div>
-          <div class="bd-item-bar"><div class="bd-item-fill ${b.status}" style="width:${b.persen}%"></div></div>
-        </div>
-      </div>
-    `;
-  }).join("");
-    const b = g.kriteria[k];
-    const iconMap = {
-      kehadiran: "calendar-check",
-      tugas: "file-text",
-      kualitas: "star",
-      inovasi: "lightbulb",
-      feedback: "message-square",
-      keaktifan: "mic"
-    };
-    let valueText = "";
-    if(k === "kehadiran") valueText = `${b.nilai}/${b.target} sesi`;
-    else if(k === "tugas") valueText = `${b.nilai}/${b.target} tugas`;
-    else if(k === "kualitas") valueText = b.nilai > 0 ? `${b.nilai} / 4` : "-";
-    else if(k === "inovasi") valueText = `${b.nilai} karya`;
-    else if(k === "feedback") valueText = `${b.nilai} fb`;
-    else if(k === "keaktifan") valueText = `${b.nilai} aksi`;
-    
-    return `
-      <div class="bd-item">
-        <div class="bd-item-icon ${b.status}"><i data-lucide="${iconMap[k]}"></i></div>
-        <div class="bd-item-name">
-          <div class="bd-item-label">
-            <span>${escapeHtml(b.label)} ${b.wajib ? '⭐' : ''}</span>
-            <small>${valueText}</small>
-          </div>
-          <div class="bd-item-bar"><div class="bd-item-fill ${b.status}" style="width:${b.persen}%"></div></div>
-        </div>
-      </div>
-    `;
-  }).join("");
-
-  // "Yang perlu dikejar"
+  // Todos (skip untuk KS)
   const todos = [];
-  Object.keys(g.kriteria).forEach(function(k){
-    const b = g.kriteria[k];
-    if(b.status === "ok") return;
-    const iconMap = {
-      kehadiran: "calendar-check",
-      tugas: "file-text",
-      kualitas: "star",
-      inovasi: "lightbulb",
-      feedback: "message-square",
-      keaktifan: "mic"
-    };
-    let desc = "";
-    if(k === "kehadiran") desc = `Kehadiran ${b.nilai}/${b.target} sesi. Minimal ${b.target} sesi untuk lulus.`;
-    else if(k === "tugas") desc = `Tugas terkumpul ${b.nilai}/${b.target}. Minimal ${b.target} tugas untuk lulus.`;
-    else if(k === "kualitas") desc = `Rata-rata grade ${b.nilai || '-'}. Target minimal B (3.0).`;
-    else if(k === "inovasi") desc = `${b.nilai} karya. Target minimal 1 karya.`;
-    else if(k === "feedback") desc = `${b.nilai} feedback. Target minimal ${b.target}.`;
-    else if(k === "keaktifan") desc = `${b.nilai} aksi. Target minimal ${b.target} aksi.`;
-    
-    todos.push({
-      label: b.label,
-      desc: desc,
-      wajib: b.wajib,
-      status: b.status
+  if (!isKS) {
+    Object.keys(g.kriteria).forEach(function(k){
+      const b = g.kriteria[k];
+      if(b.status === "ok") return;
+      let desc = "";
+      if(k === "kehadiran") desc = "Kehadiran " + b.nilai + "/" + b.target + " sesi. Minimal " + b.target + " sesi untuk lulus.";
+      else if(k === "tugas") desc = "Tugas terkumpul " + b.nilai + "/" + b.target + ". Minimal " + b.target + " tugas untuk lulus.";
+      else if(k === "kualitas") desc = "Rata-rata grade " + (b.nilai || '-') + ". Target minimal B (3.0).";
+      else if(k === "inovasi") desc = b.nilai + " karya. Target minimal 1 karya.";
+      else if(k === "feedback") desc = b.nilai + " feedback. Target minimal " + b.target + ".";
+      else if(k === "keaktifan") desc = b.nilai + " aksi. Target minimal " + b.target + " aksi.";
+      todos.push({ label: b.label, desc: desc, wajib: b.wajib, status: b.status });
     });
-  });
-  todos.sort(function(a,b){ return (b.wajib?1:0) - (a.wajib?1:0); });
+    todos.sort(function(a,b){ return (b.wajib?1:0) - (a.wajib?1:0); });
+  }
 
-  const todoHtml = todos.length
-    ? `<div class="panel-card">
-        <div class="panel-card-title"><i data-lucide="target"></i> Yang Perlu Dikejar</div>
-        <div class="panel-card-sub">${todos.length} item butuh tindak lanjut</div>
-        <div class="todo-list">
-          ${todos.map(t => `
-            <div class="todo-item">
-              <div class="todo-check"><i data-lucide="circle"></i></div>
-              <div class="todo-text">
-                <div class="todo-name">${escapeHtml(t.label)} ${t.wajib ? '⭐' : ''}</div>
-                <div class="todo-desc">${escapeHtml(t.desc)}</div>
-              </div>
-            </div>
-          `).join("")}
-        </div>
-      </div>`
-    : `<div class="panel-card">
-        <div class="panel-card-title"><i data-lucide="sparkles"></i> Semua Target Tercapai</div>
-        <div class="panel-card-sub">Selamat! Anda memenuhi semua kriteria. 🎉</div>
-        <div class="todo-item done">
-          <div class="todo-check"><i data-lucide="check"></i></div>
-          <div class="todo-text">
-            <div class="todo-name">Siap cetak sertifikat</div>
-            <div class="todo-desc">Klik tombol "Download Sertifikat" di atas untuk mengunduh PDF.</div>
-          </div>
-        </div>
-      </div>`;
+  let todoHtml;
+  if (isKS) {
+    todoHtml = '<div class="panel-card">'
+      + '<div class="panel-card-title"><i data-lucide="sparkles"></i> Status Kepala Sekolah</div>'
+      + '<div class="panel-card-sub">Pimpinan otomatis lulus</div>'
+      + '<div class="todo-item done">'
+      + '<div class="todo-check"><i data-lucide="check"></i></div>'
+      + '<div class="todo-text">'
+      + '<div class="todo-name">Siap cetak sertifikat</div>'
+      + '<div class="todo-desc">Klik tombol Download Sertifikat di atas untuk mengunduh PDF.</div>'
+      + '</div></div></div>';
+  } else if (todos.length) {
+    todoHtml = '<div class="panel-card">'
+      + '<div class="panel-card-title"><i data-lucide="target"></i> Yang Perlu Dikejar</div>'
+      + '<div class="panel-card-sub">' + todos.length + ' item butuh tindak lanjut</div>'
+      + '<div class="todo-list">'
+      + todos.map(function(t) {
+          return '<div class="todo-item">'
+            + '<div class="todo-check"><i data-lucide="circle"></i></div>'
+            + '<div class="todo-text">'
+            + '<div class="todo-name">' + escapeHtml(t.label) + (t.wajib ? ' ⭐' : '') + '</div>'
+            + '<div class="todo-desc">' + escapeHtml(t.desc) + '</div>'
+            + '</div></div>';
+        }).join("")
+      + '</div></div>';
+  } else {
+    todoHtml = '<div class="panel-card">'
+      + '<div class="panel-card-title"><i data-lucide="sparkles"></i> Semua Target Tercapai</div>'
+      + '<div class="panel-card-sub">Selamat! Anda memenuhi semua kriteria. 🎉</div>'
+      + '<div class="todo-item done">'
+      + '<div class="todo-check"><i data-lucide="check"></i></div>'
+      + '<div class="todo-text">'
+      + '<div class="todo-name">Siap cetak sertifikat</div>'
+      + '<div class="todo-desc">Klik tombol Download Sertifikat di atas untuk mengunduh PDF.</div>'
+      + '</div></div></div>';
+  }
 
-  const html = `
-    <div class="hero">
-      <div class="hero-greet">Selamat datang 👋</div>
-      <div class="hero-name">${escapeHtml(g.nama)}</div>
-<div class="hero-meta">
-  <span><i data-lucide="building-2"></i> ${escapeHtml(g.sekolah)}</span>
-  <span><i data-lucide="briefcase"></i> ${escapeHtml(g.jabatan || '-')}${g.isKS ? ' <b>(Pimpinan)</b>' : ''}</span>
-  <span><i data-lucide="hash"></i> PIN ${escapeHtml(g.pin)}</span>
-</div>
-    </div>
+  const jabatanLabel = escapeHtml(g.jabatan || '-') + (isKS ? ' (Pimpinan)' : '');
+  const bdTitle = isKS ? 'Status Kepala Sekolah' : 'Breakdown 6 Kriteria';
 
-    <div class="grid">
-      <div class="main-card">
-        <div class="main-card-hero ${g.status}">
-          <div class="status-badge-huge ${g.status}">
-            <i data-lucide="${sl.icon}"></i> ${sl.text}
-          </div>
-          <div class="score-ring">
-            <svg viewBox="0 0 160 160">
-              <circle class="score-ring-bg" cx="80" cy="80" r="72"></circle>
-              <circle class="score-ring-fill ring-${g.status}" cx="80" cy="80" r="72"
-                stroke-dasharray="${ringCircum}" stroke-dashoffset="${ringOffset}"></circle>
-            </svg>
-            <div class="score-center">
-              <div class="score-num">${g.skorTotal}<span class="score-suffix">%</span></div>
-              <div class="score-label">Ketercapaian</div>
-            </div>
-          </div>
-          <div class="hero-actions">${certBtn}</div>
-          ${hintText ? `<div class="hint-text">${escapeHtml(hintText)}</div>` : ''}
-        </div>
+  const html = '<div class="hero">'
+      + '<div class="hero-greet">Selamat datang 👋</div>'
+      + '<div class="hero-name">' + escapeHtml(g.nama) + '</div>'
+      + '<div class="hero-meta">'
+        + '<span><i data-lucide="building-2"></i> ' + escapeHtml(g.sekolah) + '</span>'
+        + '<span><i data-lucide="briefcase"></i> ' + jabatanLabel + '</span>'
+        + '<span><i data-lucide="hash"></i> PIN ' + escapeHtml(g.pin) + '</span>'
+      + '</div></div>'
 
-<div class="breakdown-wrap">
-  <div class="breakdown-title">${isKS ? 'Status Kepala Sekolah' : 'Breakdown 6 Kriteria'}</div>
-  <div class="bd-list">${bdHtml}</div>
-</div>
-      </div>
-
-      <div class="side-panel">
-        ${todoHtml}
-
-        <div class="panel-card">
-          <div class="panel-card-title"><i data-lucide="info"></i> Info Sesi KKG</div>
-          <div class="panel-card-sub">Ringkasan progres tahun ini</div>
-          <div class="info-list">
-            <div class="info-row"><span class="info-label">Sesi Berjalan</span><span class="info-value">${dataProgress.meta.sesiBerjalan}</span></div>
-            <div class="info-row"><span class="info-label">Target Sesi</span><span class="info-value">${dataProgress.meta.sesiTarget}</span></div>
-            <div class="info-row"><span class="info-label">Tahun</span><span class="info-value">${dataProgress.meta.tahun}</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
+      + '<div class="grid">'
+        + '<div class="main-card">'
+          + '<div class="main-card-hero ' + g.status + '">'
+            + '<div class="status-badge-huge ' + g.status + '">'
+              + '<i data-lucide="' + sl.icon + '"></i> ' + sl.text
+            + '</div>'
+            + '<div class="score-ring">'
+              + '<svg viewBox="0 0 160 160">'
+                + '<circle class="score-ring-bg" cx="80" cy="80" r="72"></circle>'
+                + '<circle class="score-ring-fill ring-' + g.status + '" cx="80" cy="80" r="72" stroke-dasharray="' + ringCircum + '" stroke-dashoffset="' + ringOffset + '"></circle>'
+              + '</svg>'
+              + '<div class="score-center">'
+                + '<div class="score-num">' + g.skorTotal + '<span class="score-suffix">%</span></div>'
+                + '<div class="score-label">Ketercapaian</div>'
+              + '</div>'
+            + '</div>'
+            + '<div class="hero-actions">' + certBtn + '</div>'
+            + (hintText ? '<div class="hint-text">' + escapeHtml(hintText) + '</div>' : '')
+          + '</div>'
+          + '<div class="breakdown-wrap">'
+            + '<div class="breakdown-title">' + bdTitle + '</div>'
+            + '<div class="bd-list">' + bdHtml + '</div>'
+          + '</div>'
+        + '</div>'
+        + '<div class="side-panel">'
+          + todoHtml
+          + '<div class="panel-card">'
+            + '<div class="panel-card-title"><i data-lucide="info"></i> Info Sesi KKG</div>'
+            + '<div class="panel-card-sub">Ringkasan progres tahun ini</div>'
+            + '<div class="info-list">'
+              + '<div class="info-row"><span class="info-label">Sesi Berjalan</span><span class="info-value">' + dataProgress.meta.sesiBerjalan + '</span></div>'
+              + '<div class="info-row"><span class="info-label">Target Sesi</span><span class="info-value">' + dataProgress.meta.sesiTarget + '</span></div>'
+              + '<div class="info-row"><span class="info-label">Tahun</span><span class="info-value">' + dataProgress.meta.tahun + '</span></div>'
+            + '</div>'
+          + '</div>'
+        + '</div>'
+      + '</div>';
 
   document.getElementById("main-content").innerHTML = html;
   if(window.lucide) lucide.createIcons();
