@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sertifikat Sedang Diproses — KKG Gugus Nakula</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<style>
+:root{
+  --primary:#B3261E; --primary-dark:#8B1C16; --primary-light:#FCEAE9;
+  --gold:#D4A017; --gold-dark:#B8860B; --gold-border:#F4D88A;
+  --bg:#FAFAFA; --bg-elevated:#FFFFFF;
+  --border:#EBEBEF; --border-strong:#D9D9E0;
+  --text:#121217; --text-secondary:#5A5A66; --text-tertiary:#8E8E99;
+  --shadow-xl:0 24px 60px rgba(18,18,23,0.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:linear-gradient(135deg,#FFF9E6 0%,#FFEDC2 50%,#FCEAE9 100%);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  position:relative;
+  overflow-x:hidden;
+}
+/* Ambient background orbs */
+body::before{
+  content:"";
+  position:fixed;top:-20%;left:-10%;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(212,160,23,0.2) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:"";
+  position:fixed;bottom:-20%;right:-10%;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(179,38,30,0.15) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+.card{
+  position:relative;z-index:1;
+  background:white;
+  border-radius:28px;
+  max-width:640px;
+  width:100%;
+  padding:56px 48px 48px;
+  box-shadow:var(--shadow-xl);
+  text-align:center;
+  border:1px solid var(--border);
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute;top:0;left:0;right:0;height:6px;
+  background:linear-gradient(90deg,var(--primary) 0%,var(--gold) 50%,var(--primary) 100%);
+  background-size:200% 100%;
+  animation:shine 4s linear infinite;
+}
+@keyframes shine{
+  0%{background-position:0% 0;}
+  100%{background-position:200% 0;}
+}
+
+/* Logo Brand */
+.brand-row{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  margin-bottom:32px;
+}
+.brand-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);
+  color:white;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 20px rgba(179,38,30,0.3);
+}
+.brand-icon svg{width:26px;height:26px;}
+.brand-text{text-align:left;}
+.brand-name{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:0.95rem;font-weight:800;line-height:1.2;
+  letter-spacing:-0.01em;
+}
+.brand-sub{
+  font-size:0.72rem;color:var(--text-tertiary);
+  font-weight:500;letter-spacing:0.3px;
+}
+
+/* Icon animasi */
+.icon-wrap{
+  width:120px;height:120px;margin:0 auto 28px;
+  position:relative;
+}
+.icon-pulse{
+  position:absolute;inset:0;border-radius:50%;
+  background:linear-gradient(135deg,#FFF9E6 0%,#FFEDC2 100%);
+  border:2px dashed var(--gold-border);
+  animation:pulse 2s ease-in-out infinite;
+}
+.icon-pulse.delay-1{
+  animation-delay:1s;opacity:0.5;
+}
+@keyframes pulse{
+  0%{transform:scale(1);opacity:1;}
+  100%{transform:scale(1.35);opacity:0;}
+}
+.icon-center{
+  position:absolute;inset:20px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dark) 100%);
+  color:white;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 12px 32px rgba(212,160,23,0.4);
+}
+.icon-center svg{
+  width:40px;height:40px;
+  animation:rotateSlow 4s linear infinite;
+}
+@keyframes rotateSlow{
+  to{transform:rotate(360deg);}
+}
+
+/* Text */
+h1{
+  font-family:'Playfair Display',serif;
+  font-size:2.1rem;font-weight:900;
+  color:#5A4000;
+  margin-bottom:12px;
+  letter-spacing:-0.03em;
+  line-height:1.15;
+}
+.subtitle{
+  font-size:1rem;color:var(--text-secondary);
+  margin-bottom:32px;line-height:1.6;
+}
+.subtitle strong{color:var(--primary);font-weight:700;}
+
+/* Info Box */
+.info-box{
+  background:linear-gradient(135deg,#FFFDF5 0%,#FFF9E6 100%);
+  border:1px solid var(--gold-border);
+  border-radius:18px;
+  padding:24px 26px;
+  margin-bottom:32px;
+  text-align:left;
+}
+.info-box-title{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:0.72rem;font-weight:800;
+  text-transform:uppercase;letter-spacing:1.2px;
+  color:#7A5500;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.info-box-title svg{width:14px;height:14px;}
+.info-list{
+  display:flex;flex-direction:column;gap:10px;
+}
+.info-row{
+  display:flex;align-items:flex-start;gap:12px;
+  font-size:0.85rem;line-height:1.5;
+}
+.info-row-icon{
+  width:26px;height:26px;border-radius:8px;
+  background:rgba(212,160,23,0.15);
+  color:var(--gold-dark);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;
+}
+.info-row-icon svg{width:13px;height:13px;}
+.info-row-text{flex:1;color:#5A4000;font-weight:500;}
+.info-row-text strong{font-weight:800;color:#4A3300;}
+
+/* Steps Progress */
+.steps{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;margin-bottom:32px;padding:0 20px;
+}
+.step{
+  display:flex;flex-direction:column;align-items:center;
+  flex-shrink:0;position:relative;z-index:2;
+}
+.step-circle{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:0.85rem;
+  transition:all 0.3s;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+.step.done .step-circle{
+  background:linear-gradient(135deg,#10B981 0%,#059669 100%);
+  color:white;
+  box-shadow:0 4px 12px rgba(16,185,129,0.3);
+}
+.step.active .step-circle{
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dark) 100%);
+  color:white;
+  box-shadow:0 0 0 6px rgba(212,160,23,0.2), 0 4px 12px rgba(212,160,23,0.4);
+  animation:activePulse 1.5s ease-in-out infinite;
+}
+.step.pending .step-circle{
+  background:#F1F2F4;color:#8E8E99;
+}
+@keyframes activePulse{
+  0%,100%{box-shadow:0 0 0 6px rgba(212,160,23,0.2), 0 4px 12px rgba(212,160,23,0.4);}
+  50%{box-shadow:0 0 0 12px rgba(212,160,23,0.1), 0 4px 12px rgba(212,160,23,0.4);}
+}
+.step-circle svg{width:16px;height:16px;}
+.step-label{
+  font-size:0.68rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.6px;
+  margin-top:8px;color:var(--text-tertiary);
+  text-align:center;white-space:nowrap;
+}
+.step.done .step-label,
+.step.active .step-label{color:var(--text);}
+
+.step-line{
+  height:3px;flex:1;margin:0 -2px;
+  border-radius:50px;
+  position:relative;top:-18px;
+}
+.step-line.done{background:linear-gradient(90deg,#10B981,#10B981);}
+.step-line.active{background:linear-gradient(90deg,#10B981,var(--gold));}
+.step-line.pending{background:#F1F2F4;}
+
+/* CTA Button */
+.btn-refresh{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 28px;
+  border-radius:14px;border:none;
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);
+  color:white;
+  font-family:inherit;font-size:0.92rem;font-weight:700;
+  cursor:pointer;
+  transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:0 6px 20px rgba(179,38,30,0.3);
+  letter-spacing:0.3px;
+  position:relative;overflow:hidden;
+}
+.btn-refresh:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 28px rgba(179,38,30,0.4);
+}
+.btn-refresh:active{
+  transform:translateY(0) scale(0.98);
+}
+.btn-refresh svg{
+  width:16px;height:16px;
+  transition:transform 0.4s;
+}
+.btn-refresh:hover svg{
+  transform:rotate(180deg);
+}
+
+/* Footer */
+.footer-note{
+  margin-top:32px;padding-top:24px;
+  border-top:1px dashed var(--border);
+  font-size:0.78rem;color:var(--text-tertiary);
+  line-height:1.6;
+}
+.footer-note strong{color:var(--text-secondary);font-weight:700;}
+
+/* Responsive */
+@media (max-width:560px){
+  .card{padding:40px 24px 32px;border-radius:22px;}
+  h1{font-size:1.7rem;}
+  .subtitle{font-size:0.9rem;}
+  .icon-wrap{width:100px;height:100px;margin-bottom:22px;}
+  .icon-center{inset:18px;}
+  .icon-center svg{width:32px;height:32px;}
+  .steps{padding:0;}
+  .step-circle{width:32px;height:32px;font-size:0.78rem;}
+  .step-circle svg{width:14px;height:14px;}
+  .step-label{font-size:0.6rem;letter-spacing:0.4px;}
+  .info-box{padding:18px 20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- Brand -->
+  <div class="brand-row">
+    <div class="brand-icon"><i data-lucide="graduation-cap"></i></div>
+    <div class="brand-text">
+      <div class="brand-name">KKG Gugus Nakula</div>
+      <div class="brand-sub">Kecamatan Selogiri · Kabupaten Wonogiri</div>
+    </div>
+  </div>
+
+  <!-- Animated Icon -->
+  <div class="icon-wrap">
+    <div class="icon-pulse"></div>
+    <div class="icon-pulse delay-1"></div>
+    <div class="icon-center">
+      <i data-lucide="award"></i>
+    </div>
+  </div>
+
+  <!-- Title -->
+  <h1>Sertifikat Sedang Diproses</h1>
+  <p class="subtitle">
+    Mohon ditunggu ya! Sertifikat Anda sedang dalam tahap <strong>penerbitan</strong> oleh tim admin.
+  </p>
+
+  <!-- Info Box -->
+  <div class="info-box">
+    <div class="info-box-title">
+      <i data-lucide="info"></i> Detail Proses
+    </div>
+    <div class="info-list">
+      <div class="info-row">
+        <div class="info-row-icon"><i data-lucide="user"></i></div>
+        <div class="info-row-text" id="info-nama">
+          <strong>Penerima:</strong> <span id="nama-penerima">Peserta KKG</span>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-row-icon"><i data-lucide="school"></i></div>
+        <div class="info-row-text" id="info-sekolah" style="display:none;">
+          <strong>Sekolah:</strong> <span id="sekolah-penerima"></span>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-row-icon"><i data-lucide="calendar-check"></i></div>
+        <div class="info-row-text">
+          <strong>Estimasi Selesai:</strong> Akhir Desember 2026
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-row-icon"><i data-lucide="bell"></i></div>
+        <div class="info-row-text">
+          <strong>Notifikasi:</strong> Link sertifikat akan otomatis muncul di dashboard Capaian KKG Anda
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps">
+    <div class="step done">
+      <div class="step-circle"><i data-lucide="check"></i></div>
+      <div class="step-label">Verifikasi<br>Data</div>
+    </div>
+    <div class="step-line done"></div>
+    <div class="step active">
+      <div class="step-circle"><i data-lucide="loader"></i></div>
+      <div class="step-label">Penerbitan<br>Sertifikat</div>
+    </div>
+    <div class="step-line pending"></div>
+    <div class="step pending">
+      <div class="step-circle">3</div>
+      <div class="step-label">Siap<br>Diunduh</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <button class="btn-refresh" onclick="location.reload()">
+    <i data-lucide="refresh-cw"></i>
+    Cek Status Terbaru
+  </button>
+
+  <!-- Footer -->
+  <div class="footer-note">
+    Ada pertanyaan? Hubungi <strong>Admin KKG Gugus Nakula</strong><br>
+    atau Ketua Gugus di sekolah masing-masing.
+  </div>
+
+</div>
+
+<script>
+// Parse query params untuk personalisasi
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const nama = params.get("nama");
+  const sekolah = params.get("sekolah");
+  
+  if (nama) {
+    const dec = decodeURIComponent(nama);
+    document.getElementById("nama-penerima").textContent = dec;
+  }
+  if (sekolah) {
+    const dec = decodeURIComponent(sekolah);
+    document.getElementById("sekolah-penerima").textContent = dec;
+    document.getElementById("info-sekolah").style.display = "flex";
+  }
+  
+  // Auto-refresh tiap 30 detik kalau diizinkan (opsional, off by default)
+  // setTimeout(() => location.reload(), 30000);
+})();
+
+// Render ikon
+if (window.lucide) lucide.createIcons();
+
+// Animasi ikon rotate untuk loader di step
+const loaderIcon = document.querySelector('.step.active .step-circle svg');
+if (loaderIcon) {
+  loaderIcon.style.animation = 'rotateSlow 1.5s linear infinite';
+}
+</script>
+
+</body>
+</html>
