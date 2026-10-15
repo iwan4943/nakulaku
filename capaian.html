@@ -718,7 +718,12 @@ function renderGuru(){
     bdHtml = Object.keys(g.kriteria).map(function(k){
       const b = g.kriteria[k];
       let valueText = "";
-      if(k === "kehadiran") valueText = b.nilai + "/" + b.target + " sesi";
+      if(k === "kehadiran") {
+  valueText = b.nilai + "/" + b.target + " poin";
+  if (b.hadirFisik !== undefined && b.totalSesi) {
+    valueText += " · " + b.hadirFisik + "/" + b.totalSesi + " sesi";
+  }
+}
       else if(k === "tugas") valueText = b.nilai + "/" + b.target + " tugas";
       else if(k === "kualitas") valueText = b.nilai > 0 ? b.nilai + " / 4" : "-";
       else if(k === "inovasi") valueText = b.nilai + " karya";
