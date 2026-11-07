@@ -581,10 +581,6 @@
     <button class="tab tab-champion active" data-tab="juara" onclick="showTab('juara', this)"><i data-lucide="crown"></i> 9 Juara</button>
     <button class="tab tab-umum" data-tab="juaraumum" onclick="showTab('juaraumum', this)"><i data-lucide="sparkles"></i> Juara Umum</button>
     <button class="tab" data-tab="individu" onclick="showTab('individu', this)"><i data-lucide="users-round"></i> Individu</button>
-    <button class="tab" data-tab="sekolah" onclick="showTab('sekolah', this)"><i data-lucide="building-2"></i> Sekolah</button>
-    <button class="tab" data-tab="panitia" onclick="showTab('panitia', this)"><i data-lucide="mic"></i> Panitia</button>
-    <button class="tab" data-tab="overall" onclick="showTab('overall', this)"><i data-lucide="star"></i> Overall</button>
-    <button class="tab" data-tab="fun" onclick="showTab('fun', this)"><i data-lucide="laugh"></i> Fun</button>
   </div>
 </div>
 
@@ -592,10 +588,6 @@
   <div id="panel-juara" class="tab-panel active"></div>
   <div id="panel-juaraumum" class="tab-panel"></div>
   <div id="panel-individu" class="tab-panel"></div>
-  <div id="panel-sekolah" class="tab-panel"></div>
-  <div id="panel-panitia" class="tab-panel"></div>
-  <div id="panel-overall" class="tab-panel"></div>
-  <div id="panel-fun" class="tab-panel"></div>
 </div>
 
 <div id="error-box" class="error-box hidden">
@@ -682,10 +674,6 @@ function renderAll() {
   renderJuara();
   renderJuaraUmum();
   renderIndividu();
-  renderSekolah();
-  renderPanitia();
-  renderOverall();
-  renderFun();
 
   document.getElementById("topbar").classList.remove("hidden");
   document.getElementById("meta-bar").classList.remove("hidden");
@@ -1128,92 +1116,139 @@ function drawCertificatePage(doc, n, tahun) {
 
 // ==== TAB: INDIVIDU ====
 function renderIndividu() {
-  const g = dataAwards.guru || {}, pa = dataAwards.presensiAdvanced || {}, la = dataAwards.lmsAdvanced || {}, kb = dataAwards.kombinasi || {}, bk = dataAwards.berkembang || [];
+  const g = dataAwards.guru || {};
+  const pa = dataAwards.presensiAdvanced || {};
+  const la = dataAwards.lmsAdvanced || {};
+  const kb = dataAwards.kombinasi || {};
   const html = [];
+
+  // ===== AWARD UTAMA =====
   html.push(groupLabel("Award Utama"));
-  html.push(buildSection("gem", "Guru Teladan", "Total XP tertinggi dari seluruh aktivitas LMS", buildPodium(g.teladan, x => ({ name: x.nama, sub: `${x.sekolah} • ${x.level}`, score: x.totalXP, unit: "XP" })), buildTable((g.teladan||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Level", render: x => chipLevel(x.warna, x.level, x.badge) },
-    { label: "Tugas", key: "tugas", align: "right" }, { label: "Inovasi", key: "inovasi", align: "right" },
-    { label: "Total XP", render: x => `<span class="cell-score">${x.totalXP}</span>`, align: "right" }
-  ]), g.teladan?.length || 0));
-  html.push(buildSection("palette", "Guru Kreatif", "Rata-rata nilai mutu tertinggi", buildPodium(g.kreatif, x => ({ name: x.nama, sub: `${x.sekolah} • ${x.gradeA}× A`, score: x.rataGrade, unit: "/4" })), buildTable((g.kreatif||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Grade A", key: "gradeA", align: "right" }, { label: "Grade B", key: "gradeB", align: "right" }, { label: "Grade C", key: "gradeC", align: "right" },
-    { label: "Rata-rata", render: x => `<span class="cell-score">${x.rataGrade}</span>`, align: "right" }
-  ]), g.kreatif?.length || 0));
+  html.push(buildSection("gem", "Guru Teladan",
+    "Total XP tertinggi dari seluruh aktivitas LMS",
+    buildPodium(g.teladan, x => ({ name: x.nama, sub: `${x.sekolah} • ${x.level}`, score: x.totalXP, unit: "XP" })),
+    buildTable((g.teladan||[]).slice(0,20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Level", render: x => chipLevel(x.warna, x.level, x.badge) },
+      { label: "Tugas", key: "tugas", align: "right" },
+      { label: "Inovasi", key: "inovasi", align: "right" },
+      { label: "Total XP", render: x => `<span class="cell-score">${x.totalXP}</span>`, align: "right" }
+    ]),
+    g.teladan?.length || 0
+  ));
+
+  // ===== DISIPLIN & KEHADIRAN =====
   html.push(groupLabel("Disiplin & Kehadiran"));
-  html.push(buildSection("clock", "Paling Tepat Waktu", "Frekuensi hadir tepat waktu terbanyak", buildPodium(g.tepatWaktu, x => ({ name: x.nama, sub: x.sekolah, score: x.tepat, unit: "×" })), buildTable((g.tepatWaktu||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Tepat", key: "tepat", align: "right" }, { label: "Terlambat", key: "terlambat", align: "right" }, { label: "Total Hadir", key: "totalHadir", align: "right" },
-    { label: "Persen", render: x => `<span class="cell-score">${x.persenTepat}%</span>`, align: "right" }
-  ]), g.tepatWaktu?.length || 0));
-  html.push(buildSection("calendar-check-2", "Paling Rajin", "Total kehadiran fisik terbanyak", buildPodium(g.rajin, x => ({ name: x.nama, sub: x.sekolah, score: x.totalHadir, unit: "× hadir" })), buildTable((g.rajin||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Hadir", key: "totalHadir", align: "right" }, { label: "Total Poin", key: "totalPoin", align: "right" }, { label: "Rata Poin", key: "rataPoin", align: "right" }
-  ]), g.rajin?.length || 0));
-  html.push(buildSection("sunrise", "Paling Pagi", "Rata-rata jam kedatangan paling awal", buildPodium(g.pagi, x => ({ name: x.nama, sub: x.sekolah, score: x.rataJam, unit: "WIB" })), buildTable((g.pagi||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Rata Jam", render: x => `<span class="cell-score">${x.rataJam}</span>`, align: "right" }, { label: "Kehadiran", key: "totalHadir", align: "right" }, { label: "Tepat", key: "tepat", align: "right" }
-  ]), g.pagi?.length || 0));
-  html.push(buildSection("map-pin", "Patuh Lokasi", "Persentase kehadiran dalam radius tertinggi", buildPodium(g.patuh, x => ({ name: x.nama, sub: x.sekolah, score: x.persenDalamRadius + "%", unit: "radius" })), buildTable((g.patuh||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Dalam Radius", render: x => `<span class="cell-score">${x.persenDalamRadius}%</span>`, align: "right" }, { label: "Tepat", key: "tepat", align: "right" }, { label: "Total Entri", key: "totalEntri", align: "right" }
-  ]), g.patuh?.length || 0));
+  html.push(buildSection("clock", "Paling Tepat Waktu",
+    "Frekuensi hadir tepat waktu terbanyak",
+    buildPodium(g.tepatWaktu, x => ({ name: x.nama, sub: x.sekolah, score: x.tepat, unit: "×" })),
+    buildTable((g.tepatWaktu||[]).slice(0,20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Tepat", key: "tepat", align: "right" },
+      { label: "Terlambat", key: "terlambat", align: "right" },
+      { label: "Total Hadir", key: "totalHadir", align: "right" },
+      { label: "Persen", render: x => `<span class="cell-score">${x.persenTepat}%</span>`, align: "right" }
+    ]),
+    g.tepatWaktu?.length || 0
+  ));
+  html.push(buildSection("sunrise", "Paling Pagi",
+    "Rata-rata jam kedatangan paling awal",
+    buildPodium(g.pagi, x => ({ name: x.nama, sub: x.sekolah, score: x.rataJam, unit: "WIB" })),
+    buildTable((g.pagi||[]).slice(0,20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Rata Jam", render: x => `<span class="cell-score">${x.rataJam}</span>`, align: "right" },
+      { label: "Kehadiran", key: "totalHadir", align: "right" },
+      { label: "Tepat", key: "tepat", align: "right" }
+    ]),
+    g.pagi?.length || 0
+  ));
+
+  // ===== PRESENSI ADVANCED =====
   html.push(groupLabel("Presensi Advanced"));
-  html.push(buildSection("shield-check", "Guru Zero Alpha", "100% entri bersih — tidak ada status pending", buildPodium(pa.zeroAlpha, x => ({ name: x.nama, sub: x.sekolah, score: x.totalEntri, unit: "entri" })), buildTable((pa.zeroAlpha||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Total Entri", key: "totalEntri", align: "right" }, { label: "Tepat", key: "tepat", align: "right" },
-    { label: "Status", render: () => `<span class="chip chip-green"><i data-lucide="check"></i> Bersih</span>` }
-  ]), pa.zeroAlpha?.length || 0));
-  html.push(buildSection("calendar-heart", "Guru Full Week", `Hadir di semua sesi KKG (${dataAwards.meta?.totalSesiKKG || 0} sesi Sabtu)`, buildPodium(pa.fullWeek, x => ({ name: x.nama, sub: x.sekolah, score: x.hadirSesi + "/" + x.totalSesi, unit: "sesi" })), buildTable((pa.fullWeek||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Hadir", key: "hadirSesi", align: "right" }, { label: "Total Sesi", key: "totalSesi", align: "right" }, { label: "Persen", render: x => `<span class="cell-score">${x.persen}%</span>`, align: "right" }
-  ]), pa.fullWeek?.length || 0));
-  html.push(buildSection("sun", "Guru Paling Awal Datang", "Rekor jam kedatangan paling pagi", buildPodium(pa.awalDatang, x => ({ name: x.nama, sub: x.sekolah, score: x.jamFormatted, unit: "WIB" })), buildTable((pa.awalDatang||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Jam Terpagi", render: x => `<span class="cell-score">${x.jamFormatted}</span>`, align: "right" }
-  ]), pa.awalDatang?.length || 0));
-  html.push(buildSection("file-check", "Disiplin Izin", "Rasio izin resmi tertinggi (min 3 izin)", buildPodium(pa.disiplinIzin, x => ({ name: x.nama, sub: x.sekolah, score: x.totalIzin, unit: "izin" })), buildTable((pa.disiplinIzin||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Total Izin", key: "totalIzin", align: "right" }, { label: "Rasio", render: x => `<span class="cell-score">${x.rasioIzin}%</span>`, align: "right" }, { label: "Total Entri", key: "totalEntri", align: "right" }
-  ]), pa.disiplinIzin?.length || 0));
-  html.push(buildSection("graduation-cap", "Kepala Sekolah Teladan", "KS dengan rata-rata poin presensi tertinggi", buildPodium(pa.ksTeladan, x => ({ name: x.nama, sub: x.sekolah, score: x.rataPoin, unit: "rata poin" })), buildTable((pa.ksTeladan||[]).slice(0,15), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Rata Poin", render: x => `<span class="cell-score">${x.rataPoin}</span>`, align: "right" }, { label: "Tepat", key: "tepat", align: "right" }, { label: "Total Entri", key: "totalEntri", align: "right" }
-  ]), pa.ksTeladan?.length || 0));
+  html.push(buildSection("calendar-heart", "Guru Full Week",
+    `Hadir di semua sesi KKG (${dataAwards.meta?.totalSesiKKG || 0} sesi Sabtu)`,
+    buildPodium(pa.fullWeek, x => ({ name: x.nama, sub: x.sekolah, score: x.hadirSesi + "/" + x.totalSesi, unit: "sesi" })),
+    buildTable((pa.fullWeek||[]).slice(0,20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Hadir", key: "hadirSesi", align: "right" },
+      { label: "Total Sesi", key: "totalSesi", align: "right" },
+      { label: "Persen", render: x => `<span class="cell-score">${x.persen}%</span>`, align: "right" }
+    ]),
+    pa.fullWeek?.length || 0
+  ));
+
+  // ===== KUALITAS LAPORAN LMS =====
   html.push(groupLabel("Kualitas Laporan LMS"));
-  html.push(buildSection("shield", "Guru Bebas Revisi", "Zero revisi dari minimal 3 tugas", buildPodium(la.bebasRevisi, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "tugas" })), buildTable((la.bebasRevisi||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Total", key: "total", align: "right" }, { label: "Diterima", key: "diterima", align: "right" }, { label: "Persen", render: x => `<span class="cell-score">${x.persenDiterima}%</span>`, align: "right" }
-  ]), la.bebasRevisi?.length || 0));
-  html.push(buildSection("upload-cloud", "Paling Aktif Upload", "Frekuensi upload tugas terbanyak", buildPodium(la.aktifUpload, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "upload" })), buildTable((la.aktifUpload||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Total Upload", render: x => `<span class="cell-score">${x.total}</span>`, align: "right" }, { label: "Diterima", key: "diterima", align: "right" }
-  ]), la.aktifUpload?.length || 0));
-  html.push(buildSection("file-text", "Paling Detail", "Rata-rata panjang catatan tertinggi", buildPodium(la.palingDetail, x => ({ name: x.nama, sub: x.sekolah, score: x.rataPanjang, unit: "karakter" })), buildTable((la.palingDetail||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Rata Panjang", render: x => `<span class="cell-score">${x.rataPanjang}</span>`, align: "right" }, { label: "Total Tugas", key: "total", align: "right" }
-  ]), la.palingDetail?.length || 0));
-  html.push(buildSection("lightbulb", "Paling Banyak Inovasi", "Frekuensi Karya Inovasi terbanyak", buildPodium(la.banyakInovasi, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "karya" })), buildTable((la.banyakInovasi||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Total Karya", render: x => `<span class="cell-score">${x.total}</span>`, align: "right" }, { label: "Grade A", key: "gradeA", align: "right" }
-  ]), la.banyakInovasi?.length || 0));
+  html.push(buildSection("shield", "Guru Bebas Revisi",
+    "Zero revisi dengan minimal 3 tugas diterima",
+    buildPodium(la.bebasRevisi, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "tugas" })),
+    buildTable((la.bebasRevisi||[]).slice(0,20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total", key: "total", align: "right" },
+      { label: "Diterima", key: "diterima", align: "right" },
+      { label: "Persen", render: x => `<span class="cell-score">${x.persenDiterima}%</span>`, align: "right" }
+    ]),
+    la.bebasRevisi?.length || 0
+  ));
+  html.push(buildSection("upload-cloud", "Paling Aktif Upload",
+    "Frekuensi upload tugas terbanyak",
+    buildPodium(la.aktifUpload, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "upload" })),
+    buildTable((la.aktifUpload||[]).slice(0,20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total Upload", render: x => `<span class="cell-score">${x.total}</span>`, align: "right" },
+      { label: "Diterima", key: "diterima", align: "right" }
+    ]),
+    la.aktifUpload?.length || 0
+  ));
+  html.push(buildSection("file-text", "Paling Detail",
+    "Rata-rata panjang catatan tertinggi (min 20 karakter)",
+    buildPodium(la.palingDetail, x => ({ name: x.nama, sub: x.sekolah, score: x.rataPanjang, unit: "karakter" })),
+    buildTable((la.palingDetail||[]).slice(0,20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Rata Panjang", render: x => `<span class="cell-score">${x.rataPanjang}</span>`, align: "right" },
+      { label: "Total Tugas", key: "total", align: "right" }
+    ]),
+    la.palingDetail?.length || 0
+  ));
+  html.push(buildSection("lightbulb", "Paling Banyak Inovasi",
+    "Frekuensi Karya Inovasi (Diterima)",
+    buildPodium(la.banyakInovasi, x => ({ name: x.nama, sub: x.sekolah, score: x.total, unit: "karya" })),
+    buildTable((la.banyakInovasi||[]).slice(0,20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Total Karya", render: x => `<span class="cell-score">${x.total}</span>`, align: "right" },
+      { label: "Grade A", key: "gradeA", align: "right" }
+    ]),
+    la.banyakInovasi?.length || 0
+  ));
+
+  // ===== KOMBINASI LINTAS SISTEM =====
   html.push(groupLabel("Kombinasi Lintas Sistem"));
-  html.push(buildSection("star", "Guru Multi-Talenta", "Aktif di minimal 3 kategori", buildPodium(kb.multiTalenta, x => ({ name: x.nama, sub: x.sekolah, score: x.totalKategori, unit: "kategori" })), buildTable((kb.multiTalenta||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Tepat", key: "tepat", align: "right" }, { label: "XP", key: "xp", align: "right" }, { label: "Grade A", key: "gradeA", align: "right" },
-    { label: "Kategori", render: x => `<span class="chip chip-green">${x.totalKategori}/4</span>`, align: "right" }
-  ]), kb.multiTalenta?.length || 0));
-  html.push(buildSection("zap", "Guru Serba Bisa", "Tepat ≥8× DAN XP ≥250", buildPodium(kb.serbaBisa, x => ({ name: x.nama, sub: x.sekolah, score: x.skor, unit: "skor" })), buildTable((kb.serbaBisa||[]).slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Tepat", key: "tepat", align: "right" }, { label: "XP", key: "xp", align: "right" }, { label: "Skor", render: x => `<span class="cell-score">${x.skor}</span>`, align: "right" }
-  ]), kb.serbaBisa?.length || 0));
-  html.push(buildSection("trending-up", "Guru Paling Berkembang", "Kenaikan poin terbesar semester 1 → 2", buildPodium(bk, x => ({ name: x.nama, sub: x.sekolah, score: "+" + x.delta, unit: "poin" })), buildTable(bk.slice(0,20), [
-    { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
-    { label: "Sem 1", render: x => x.rataSem1, align: "right" }, { label: "Sem 2", render: x => x.rataSem2, align: "right" }, { label: "Delta", render: x => `<span class="cell-score">+${x.delta}</span>`, align: "right" }
-  ]), bk.length || 0));
+  html.push(buildSection("star", "Guru Multi-Talenta",
+    "Aktif di minimal 3 kategori",
+    buildPodium(kb.multiTalenta, x => ({ name: x.nama, sub: x.sekolah, score: x.totalKategori, unit: "kategori" })),
+    buildTable((kb.multiTalenta||[]).slice(0,20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Tepat", key: "tepat", align: "right" },
+      { label: "XP", key: "xp", align: "right" },
+      { label: "Grade A", key: "gradeA", align: "right" },
+      { label: "Kategori", render: x => `<span class="chip chip-green">${x.totalKategori}/4</span>`, align: "right" }
+    ]),
+    kb.multiTalenta?.length || 0
+  ));
+  html.push(buildSection("zap", "Guru Serba Bisa",
+    "Tepat ≥8× DAN XP ≥250 — skor ternormalisasi",
+    buildPodium(kb.serbaBisa, x => ({ name: x.nama, sub: x.sekolah, score: x.skor, unit: "skor" })),
+    buildTable((kb.serbaBisa||[]).slice(0,20), [
+      { label: "Nama", render: x => `<div class="cell-name">${escapeHtml(x.nama)}<small>${escapeHtml(x.sekolah)}</small></div>` },
+      { label: "Tepat", key: "tepat", align: "right" },
+      { label: "XP", key: "xp", align: "right" },
+      { label: "Skor", render: x => `<span class="cell-score">${x.skor}</span>`, align: "right" }
+    ]),
+    kb.serbaBisa?.length || 0
+  ));
+
   document.getElementById("panel-individu").innerHTML = html.join("");
+  if (window.lucide) lucide.createIcons();
 }
 
 // ==== TAB: SEKOLAH ====
