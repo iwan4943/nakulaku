@@ -186,11 +186,88 @@ textarea.form-input-sm{resize:vertical;min-height:70px;font-family:inherit;}
 #toast.error{background:var(--danger);}
 #toast.success{background:var(--success);}
 
+/* ==== KPI CARDS ==== */
+.admin-kpi{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px;}
+@media (max-width:900px){.admin-kpi{grid-template-columns:repeat(2,1fr);}}
+.kpi{background:white;border:1.5px solid var(--border);border-radius:16px;padding:18px;}
+.kpi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.kpi-icon svg{width:18px;height:18px;}
+.kpi-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.9rem;font-weight:800;line-height:1;letter-spacing:-0.03em;}
+.kpi-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-tertiary);margin-top:4px;}
+.kpi-lulus .kpi-icon{background:var(--success-bg);color:var(--success-text);} .kpi-lulus .kpi-num{color:var(--success-text);}
+.kpi-cumlaude .kpi-icon{background:var(--purple-bg);color:var(--purple-text);} .kpi-cumlaude .kpi-num{color:var(--purple-text);}
+.kpi-belum .kpi-icon{background:var(--warning-bg);color:var(--warning-text);} .kpi-belum .kpi-num{color:var(--warning-text);}
+.kpi-tidak .kpi-icon{background:var(--danger-bg);color:var(--danger-text);} .kpi-tidak .kpi-num{color:var(--danger-text);}
+.kpi-rate .kpi-icon{background:#E8F0FE;color:#1A56C4;} .kpi-rate .kpi-num{color:#1A56C4;}
+
+/* ==== KPI CARDS ==== */
+.admin-kpi{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px;}
+@media (max-width:900px){.admin-kpi{grid-template-columns:repeat(2,1fr);}}
+.kpi{background:white;border:1.5px solid var(--border);border-radius:16px;padding:18px;}
+.kpi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.kpi-icon svg{width:18px;height:18px;}
+.kpi-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.9rem;font-weight:800;line-height:1;letter-spacing:-0.03em;}
+.kpi-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-tertiary);margin-top:4px;}
+.kpi-lulus .kpi-icon{background:var(--success-bg);color:var(--success-text);} .kpi-lulus .kpi-num{color:var(--success-text);}
+.kpi-cumlaude .kpi-icon{background:var(--purple-bg);color:var(--purple-text);} .kpi-cumlaude .kpi-num{color:var(--purple-text);}
+.kpi-belum .kpi-icon{background:var(--warning-bg);color:var(--warning-text);} .kpi-belum .kpi-num{color:var(--warning-text);}
+.kpi-tidak .kpi-icon{background:var(--danger-bg);color:var(--danger-text);} .kpi-tidak .kpi-num{color:var(--danger-text);}
+.kpi-rate .kpi-icon{background:#E8F0FE;color:#1A56C4;} .kpi-rate .kpi-num{color:#1A56C4;}
+
+/* ==== BYPASS ADMIN ==== */
+.bp-section-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:0.95rem;font-weight:800;margin:24px 0 14px;display:flex;align-items:center;gap:10px;color:var(--text);}
+.bp-section-title svg{width:20px;height:20px;}
+.bp-section-title .count{font-size:0.75rem;font-weight:800;background:#F1F2F4;color:var(--text-secondary);padding:3px 10px;border-radius:50px;margin-left:auto;}
+.bp-section-title.pending svg{color:var(--warning);}
+.bp-section-title.pending .count{background:#FEF3C7;color:#92400E;}
+.bp-section-title.approved svg{color:var(--success);}
+.bp-section-title.approved .count{background:#D1FAE5;color:#065F46;}
+.bp-section-title.rejected svg{color:var(--danger);}
+.bp-section-title.rejected .count{background:#FEE2E2;color:#991B1B;}
+
+.bp-card{background:white;border:1.5px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;border-left:4px solid var(--warning);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:0.2s;}
+.bp-card:hover{box-shadow:0 8px 20px rgba(0,0,0,0.08);}
+.bp-card.approved{border-left-color:var(--success);}
+.bp-card.rejected{border-left-color:var(--danger);}
+.bp-card.revoked{border-left-color:#8E8E99;opacity:0.7;}
+
+.bp-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
+.bp-name{font-weight:800;font-size:0.95rem;line-height:1.2;color:var(--text);}
+.bp-meta{font-size:0.75rem;color:var(--text-tertiary);margin-top:2px;}
+.bp-poin{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--primary);font-size:1.15rem;white-space:nowrap;text-align:right;}
+.bp-poin small{display:block;font-size:0.68rem;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;}
+
+.bp-body{display:flex;flex-direction:column;gap:6px;font-size:0.82rem;color:var(--text-secondary);margin-bottom:14px;padding:12px 14px;background:#F8F9FB;border-radius:10px;line-height:1.5;}
+.bp-body strong{color:var(--text);font-weight:700;}
+.bp-body a{color:var(--primary);text-decoration:none;font-weight:700;}
+.bp-body a:hover{text-decoration:underline;}
+.bp-body .ks-verified{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:#D1FAE5;color:#065F46;border-radius:50px;font-size:0.72rem;font-weight:800;margin-top:6px;align-self:flex-start;}
+.bp-body .ks-verified svg{width:12px;height:12px;}
+
+.bp-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.bp-btn{padding:9px 18px;border-radius:10px;border:none;font-family:inherit;font-size:0.8rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:0.15s;}
+.bp-btn svg{width:14px;height:14px;}
+.bp-btn.approve{background:var(--success);color:white;box-shadow:0 4px 12px rgba(16,185,129,0.25);}
+.bp-btn.approve:hover{background:#059669;transform:translateY(-1px);}
+.bp-btn.reject{background:var(--danger-bg);color:var(--danger-text);border:1px solid #FECACA;}
+.bp-btn.reject:hover{background:#FEE2E2;}
+.bp-btn.detail{background:#F1F2F4;color:var(--text);}
+.bp-btn.detail:hover{background:#E5E7EB;}
+.bp-btn.revoke{background:#F1F2F4;color:var(--text-secondary);}
+.bp-btn.revoke:hover{background:#E5E7EB;}
+
+.bp-override-warning{background:#FFF9E6;border:1px solid #FCD34D;border-radius:10px;padding:10px 12px;font-size:0.78rem;color:#7A5500;display:flex;gap:8px;align-items:flex-start;margin-bottom:16px;line-height:1.5;}
+.bp-override-warning svg{width:14px;height:14px;flex-shrink:0;margin-top:2px;}
+
+.bp-ks-box{padding:12px 14px;background:#EFF6FF;border:1px solid #93C5FD;border-radius:10px;margin-bottom:16px;font-size:0.82rem;line-height:1.6;color:#1E3A8A;}
+.bp-ks-box strong{color:#1E40AF;font-weight:800;}
+
 @media (max-width:640px){
   .main,.topbar-inner{padding-left:16px;padding-right:16px;}
   .hero{padding:22px 20px;}
   .hero-name{font-size:1.4rem;}
   .guru-list{grid-template-columns:1fr;}
+  .bp-card{padding:14px;}
 }
 </style>
 </head>
@@ -261,10 +338,29 @@ textarea.form-input-sm{resize:vertical;min-height:70px;font-family:inherit;}
         <i data-lucide="users"></i> Butuh Poin
         <span class="tab-badge" id="tab-badge-guru" style="display:none;">0</span>
       </button>
+      <button class="tab" data-tab="bypass" onclick="showTab('bypass', this)">
+        <i data-lucide="shield-plus"></i> Persetujuan Bypass
+        <span class="tab-badge" id="tab-badge-bypass" style="display:none;background:var(--warning);">0</span>
+      </button>
       <button class="tab" data-tab="riwayat" onclick="showTab('riwayat', this)">
         <i data-lucide="history"></i> Riwayat Poin Manual
         <span class="tab-badge" id="tab-badge-riwayat" style="display:none;background:var(--purple);">0</span>
       </button>
+    </div>
+
+    <!-- PANEL BYPASS -->
+    <div id="panel-bypass" class="panel">
+      <div class="filter-bar">
+        <div class="search-box">
+          <i data-lucide="search"></i>
+          <input type="text" id="search-bypass" placeholder="Cari nama guru / sekolah..." oninput="renderBypassAdmin()">
+        </div>
+        <select class="filter-select" id="filter-bypass-sekolah" onchange="renderBypassAdmin()">
+          <option value="">Semua Sekolah</option>
+        </select>
+        <button class="btn" onclick="loadBypassAdmin()"><i data-lucide="refresh-cw"></i> Refresh</button>
+      </div>
+      <div id="bypass-container"></div>
     </div>
 
     <!-- PANEL GURU -->
@@ -321,6 +417,24 @@ textarea.form-input-sm{resize:vertical;min-height:70px;font-family:inherit;}
   </div>
 </div>
 
+<!-- MODAL: Approve/Reject Final Bypass -->
+<div class="modal-overlay" id="modal-bypass-action" onclick="if(event.target===this)closeModal('modal-bypass-action')">
+  <div class="modal-box" style="max-width:560px;">
+    <div class="modal-head">
+      <h3 id="modal-bypass-title">Approve Final Bypass</h3>
+      <button class="modal-close" onclick="closeModal('modal-bypass-action')"><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body" id="modal-bypass-body"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-bypass-action')">Batal</button>
+      <button class="btn btn-success" id="btn-bypass-action">
+        <i data-lucide="check"></i> Approve Final
+      </button>
+    </div>
+  </div>
+</div>
+
+
 <!-- MODAL: Konfirmasi Hapus -->
 <div class="modal-overlay" id="modal-hapus" onclick="if(event.target===this)closeModal('modal-hapus')">
   <div class="modal-box" style="max-width:440px;">
@@ -356,6 +470,9 @@ let guruList = [];
 let riwayatList = [];
 let currentGuru = null;
 let currentHapus = null;
+let bypassData = null;
+let currentBypassItem = null;
+let currentBypassAction = null;
 
 // ============ UTILS ============
 function initials(n){const p=String(n||"?").trim().split(/\s+/);if(!p.length)return"?";if(p.length===1)return p[0].substring(0,2).toUpperCase();return (p[0][0]+p[p.length-1][0]).toUpperCase();}
@@ -424,7 +541,8 @@ async function loadDashboard(){
   document.getElementById("user-name").innerText = currentUser.nama;
   document.getElementById("hero-tahun").innerText = TAHUN;
   showView("dashboard");
-  await Promise.all([loadGuruList(), loadRiwayat()]);
+  await loadGuruList();
+  refreshBypassBadge();
 }
 
 // ============ LOAD DATA ============
@@ -733,8 +851,349 @@ function showTab(name, btn){
   document.getElementById("panel-"+name).classList.add("active");
   btn.classList.add("active");
   if(name === "riwayat" && !riwayatList.length) loadRiwayat();
+  if(name === "bypass") loadBypassAdmin();
   if(window.lucide)lucide.createIcons();
 }
+
+// ============ BYPASS PERSETUJUAN ============
+async function refreshBypassBadge(){
+  try {
+    const res = await fetch(API_URL + "?action=getPengajuanGugus&tahun=" + TAHUN);
+    const data = await res.json();
+    if (data.error) return;
+    const badge = document.getElementById("tab-badge-bypass");
+    if (!badge) return;
+    if (data.totalPending > 0) {
+      badge.innerText = data.totalPending;
+      badge.style.display = "";
+    } else {
+      badge.style.display = "none";
+    }
+  } catch(e){}
+}
+
+async function loadBypassAdmin(){
+  const container = document.getElementById("bypass-container");
+  if (!container) return;
+  container.innerHTML = '<div class="empty-state"><p>Memuat data persetujuan...</p></div>';
+  try {
+    const res = await fetch(API_URL + "?action=getPengajuanGugus&tahun=" + TAHUN);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    bypassData = data;
+    const badge = document.getElementById("tab-badge-bypass");
+    if (badge) {
+      if (data.totalPending > 0) { badge.innerText = data.totalPending; badge.style.display = ""; }
+      else { badge.style.display = "none"; }
+    }
+    populateBypassSekolahFilter();
+    renderBypassAdmin();
+  } catch (err){
+    container.innerHTML = '<div class="empty-state"><p style="color:#DC2626;">Gagal memuat: ' + escapeHtml(err.message) + '</p></div>';
+  }
+}
+
+function populateBypassSekolahFilter(){
+  const sel = document.getElementById("filter-bypass-sekolah");
+  if (!sel || !bypassData) return;
+  const set = {};
+  const all = [].concat(bypassData.pending||[], bypassData.approved||[], bypassData.rejected||[], bypassData.revoked||[]);
+  all.forEach(b => { if (b.sekolah) set[b.sekolah] = true; });
+  const sorted = Object.keys(set).sort();
+  sel.innerHTML = '<option value="">Semua Sekolah</option>' +
+    sorted.map(s => '<option value="' + escapeHtml(s) + '">' + escapeHtml(s) + '</option>').join("");
+}
+
+function renderBypassAdmin(){
+  if (!bypassData) return;
+  const q = (document.getElementById("search-bypass").value || "").toLowerCase();
+  const sek = document.getElementById("filter-bypass-sekolah").value;
+
+  function filterList(list){
+    return (list || []).filter(b => {
+      if (q && !b.nama.toLowerCase().includes(q) && !b.sekolah.toLowerCase().includes(q)) return false;
+      if (sek && b.sekolah !== sek) return false;
+      return true;
+    });
+  }
+
+  const pending = filterList(bypassData.pending);
+  const approved = filterList(bypassData.approved);
+  const rejected = filterList(bypassData.rejected);
+  const revoked = filterList(bypassData.revoked);
+
+  const kpi = `
+    <div class="admin-kpi" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+      <div class="kpi kpi-belum"><div class="kpi-icon"><i data-lucide="clock"></i></div><div class="kpi-num">${bypassData.totalPending||0}</div><div class="kpi-label">Menunggu</div></div>
+      <div class="kpi kpi-lulus"><div class="kpi-icon"><i data-lucide="check-circle"></i></div><div class="kpi-num">${bypassData.totalApproved||0}</div><div class="kpi-label">Approved</div></div>
+      <div class="kpi kpi-tidak"><div class="kpi-icon"><i data-lucide="x-circle"></i></div><div class="kpi-num">${bypassData.totalRejected||0}</div><div class="kpi-label">Rejected</div></div>
+      <div class="kpi kpi-rate"><div class="kpi-icon"><i data-lucide="zap"></i></div><div class="kpi-num">${bypassData.totalPoinApproved||0}</div><div class="kpi-label">Total Poin</div></div>
+    </div>
+  `;
+
+  const pendingHtml = pending.length
+    ? pending.map(b => renderBypassCard(b, "pending")).join("")
+    : '<div class="empty-state" style="padding:30px 20px;"><i data-lucide="check-circle"></i><p>Semua pengajuan sudah diproses ✅</p></div>';
+
+  const approvedHtml = approved.length
+    ? approved.slice(0, 20).map(b => renderBypassCard(b, "approved")).join("")
+    : '<div class="empty-state" style="padding:20px;"><p>Belum ada pengajuan approved.</p></div>';
+
+  const rejectedHtml = rejected.length
+    ? rejected.slice(0, 20).map(b => renderBypassCard(b, "rejected")).join("")
+    : '<div class="empty-state" style="padding:20px;"><p>Belum ada pengajuan rejected.</p></div>';
+
+  document.getElementById("bypass-container").innerHTML = kpi + `
+    <div class="bp-section-title pending">
+      <i data-lucide="clock"></i> Menunggu Approval Final
+      <span class="count">${pending.length}</span>
+    </div>
+    ${pendingHtml}
+
+    <div class="bp-section-title approved">
+      <i data-lucide="check-circle"></i> Approved
+      <span class="count">${approved.length}</span>
+    </div>
+    ${approvedHtml}
+
+    ${rejected.length || revoked.length ? `
+      <div class="bp-section-title rejected">
+        <i data-lucide="x-circle"></i> Rejected / Revoked
+        <span class="count">${rejected.length + revoked.length}</span>
+      </div>
+      ${rejectedHtml}
+      ${revoked.slice(0, 5).map(b => renderBypassCard(b, "revoked")).join("")}
+    ` : ''}
+  `;
+  if (window.lucide) lucide.createIcons();
+}
+
+function renderBypassCard(b, mode){
+  const sesiList = (b.sesiBolong || []).map(s => s.tanggalFormatted || s.tanggal).join(" · ");
+  const buktiHtml = b.buktiLink
+    ? '<div>🔗 Bukti: <a href="' + escapeHtml(b.buktiLink) + '" target="_blank" rel="noopener">Lihat</a></div>'
+    : '';
+  const ksInfo = b.ksNama
+    ? '<div class="ks-verified"><i data-lucide="check-circle"></i> Disetujui KS: ' + escapeHtml(b.ksNama) + (b.ksCatatan ? ' — "' + escapeHtml(b.ksCatatan) + '"' : '') + '</div>'
+    : '';
+
+  let actionsHtml = '';
+  if (mode === "pending") {
+    actionsHtml = '<div class="bp-actions">' +
+      '<button class="bp-btn approve" onclick="openBypassAction(\'' + escapeHtml(b.id) + '\', \'approve\')"><i data-lucide="check"></i> Approve Final</button>' +
+      '<button class="bp-btn reject" onclick="openBypassAction(\'' + escapeHtml(b.id) + '\', \'reject\')"><i data-lucide="x"></i> Tolak</button>' +
+      '</div>';
+  } else if (mode === "approved") {
+    actionsHtml = '<div class="bp-actions">' +
+      '<button class="bp-btn revoke" onclick="openBypassAction(\'' + escapeHtml(b.id) + '\', \'revoke\')"><i data-lucide="rotate-ccw"></i> Revoke</button>' +
+      '</div>';
+  }
+
+  const poinHtml = b.poinFinal && b.poinFinal !== b.poinDiajukan
+    ? '<div class="bp-poin">+' + b.poinFinal + '<small>dari ' + b.poinDiajukan + ' diajukan</small></div>'
+    : '<div class="bp-poin">+' + (b.poinFinal || b.poinDiajukan) + '<small>poin</small></div>';
+
+  return `
+    <div class="bp-card ${mode}">
+      <div class="bp-head">
+        <div>
+          <div class="bp-name">${escapeHtml(b.nama)}</div>
+          <div class="bp-meta">${escapeHtml(b.sekolah)} · ${b.jumlahSesi} sesi · ${escapeHtml(b.kategoriAlasan||'')}</div>
+        </div>
+        ${poinHtml}
+      </div>
+      <div class="bp-body">
+        <div>📅 <strong>${escapeHtml(sesiList)}</strong></div>
+        <div style="font-size:0.78rem;">${escapeHtml(b.detailAlasan || '')}</div>
+        ${buktiHtml}
+        ${ksInfo}
+        ${mode !== "pending" && b.gugusNama ? '<div style="font-size:0.72rem;color:var(--text-tertiary);">Approved Gugus: ' + escapeHtml(b.gugusNama) + (b.gugusCatatan ? ' — "' + escapeHtml(b.gugusCatatan) + '"' : '') + '</div>' : ''}
+        ${mode === "revoked" ? '<div style="font-size:0.72rem;color:#DC2626;">Revoked: ' + escapeHtml(b.revokeAlasan||'') + '</div>' : ''}
+        <div style="font-size:0.72rem;color:var(--text-tertiary);margin-top:4px;">
+          ID: ${escapeHtml(b.id)} · Diajukan: ${formatTanggal(b.tanggalSubmit || b.timestamp)}
+        </div>
+      </div>
+      ${actionsHtml}
+    </div>`;
+}
+
+function openBypassAction(id, action){
+  if (!bypassData) return;
+  const all = [].concat(bypassData.pending||[], bypassData.approved||[], bypassData.rejected||[], bypassData.revoked||[]);
+  const item = all.find(r => r.id === id);
+  if (!item) return;
+  currentBypassItem = item;
+  currentBypassAction = action;
+
+  const titleEl = document.getElementById("modal-bypass-title");
+  const bodyEl = document.getElementById("modal-bypass-body");
+  const btnEl = document.getElementById("btn-bypass-action");
+
+  if (action === "approve") {
+    titleEl.innerText = "Approve Final Bypass";
+    bodyEl.innerHTML = `
+      <div class="bp-ks-box">
+        <strong>${escapeHtml(item.nama)}</strong> — ${escapeHtml(item.sekolah)}<br>
+        Sudah disetujui KS: <strong>${escapeHtml(item.ksNama||'-')}</strong>${item.ksCatatan ? ' — "' + escapeHtml(item.ksCatatan) + '"' : ''}
+      </div>
+      <div class="form-group-sm">
+        <label class="form-label-sm">Poin Final <span class="req">*</span></label>
+        <input type="number" class="form-input-sm" id="byp-poin-final" min="1" max="${item.poinDiajukan}" value="${item.poinDiajukan}" style="font-weight:800;font-size:1.1rem;">
+        <div style="font-size:0.72rem;color:var(--text-tertiary);margin-top:4px;">
+          Poin diajukan: <strong>${item.poinDiajukan}</strong>. Anda bisa kurangi jika dirasa berlebihan (max ${item.poinDiajukan}).
+        </div>
+      </div>
+      <div class="form-group-sm">
+        <label class="form-label-sm">Catatan (opsional)</label>
+        <textarea class="form-input-sm" id="byp-catatan-final" rows="3" placeholder="Contoh: Disetujui, SK valid."></textarea>
+      </div>
+      <div class="bp-override-warning">
+        <i data-lucide="alert-triangle"></i>
+        <div>Setelah di-approve, poin <strong>langsung masuk</strong> ke kehadiran guru & tidak bisa diedit (hanya bisa revoke).</div>
+      </div>
+    `;
+    btnEl.innerHTML = '<i data-lucide="check"></i> Approve Final';
+    btnEl.style.background = "var(--success)";
+    btnEl.style.borderColor = "var(--success)";
+    btnEl.onclick = () => submitBypassAction();
+  } else if (action === "reject") {
+    titleEl.innerText = "Tolak Pengajuan Bypass";
+    bodyEl.innerHTML = `
+      <div class="bp-ks-box" style="background:#FEF2F2;border-color:#FECACA;color:#991B1B;">
+        <strong>${escapeHtml(item.nama)}</strong> — ${escapeHtml(item.sekolah)}
+      </div>
+      <div class="form-group-sm">
+        <label class="form-label-sm">Alasan Penolakan <span class="req">*</span> <span style="font-weight:500;text-transform:none;letter-spacing:0;">(min 10 karakter)</span></label>
+        <textarea class="form-input-sm" id="byp-catatan-final" rows="4" placeholder="Contoh: Bukti tidak valid, poin diajukan berlebihan, dll."></textarea>
+      </div>
+    `;
+    btnEl.innerHTML = '<i data-lucide="x"></i> Tolak Final';
+    btnEl.style.background = "var(--danger)";
+    btnEl.style.borderColor = "var(--danger)";
+    btnEl.onclick = () => submitBypassAction();
+  } else if (action === "revoke") {
+    titleEl.innerText = "Revoke Bypass";
+    bodyEl.innerHTML = `
+      <div class="bp-ks-box" style="background:#FEF2F2;border-color:#FECACA;color:#991B1B;">
+        <strong>${escapeHtml(item.nama)}</strong> — ${escapeHtml(item.sekolah)}<br>
+        Poin approved: <strong>+${item.poinFinal}</strong>
+      </div>
+      <div class="form-group-sm">
+        <label class="form-label-sm">Alasan Revoke <span class="req">*</span> <span style="font-weight:500;text-transform:none;letter-spacing:0;">(min 10 karakter)</span></label>
+        <textarea class="form-input-sm" id="byp-catatan-final" rows="4" placeholder="Contoh: Ditemukan bukti baru bahwa SK tidak valid."></textarea>
+      </div>
+      <div class="bp-override-warning">
+        <i data-lucide="alert-triangle"></i>
+        <div>Poin <strong>+${item.poinFinal}</strong> akan ditarik dari kehadiran guru. Guru bisa kehilangan kelulusan.</div>
+      </div>
+    `;
+    btnEl.innerHTML = '<i data-lucide="rotate-ccw"></i> Revoke';
+    btnEl.style.background = "var(--danger)";
+    btnEl.style.borderColor = "var(--danger)";
+    btnEl.onclick = () => submitBypassAction();
+  }
+
+  openModal("modal-bypass-action");
+}
+
+async function submitBypassAction(){
+  if (!currentBypassItem || !currentBypassAction) return;
+  const catatan = (document.getElementById("byp-catatan-final") || {}).value || "";
+  const catatanTrim = catatan.trim();
+  const btn = document.getElementById("btn-bypass-action");
+  const originalHtml = btn.innerHTML;
+
+  if (currentBypassAction === "approve") {
+    const poinFinal = Number((document.getElementById("byp-poin-final") || {}).value);
+    if (!poinFinal || poinFinal <= 0) { showToast("Poin final harus > 0"); return; }
+    if (poinFinal > currentBypassItem.poinDiajukan) {
+      showToast("Max " + currentBypassItem.poinDiajukan + " poin");
+      return;
+    }
+    btn.disabled = true;
+    btn.innerHTML = '<i data-lucide="loader-2"></i> Memproses...';
+    if (window.lucide) lucide.createIcons();
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          action: "approveGugus",
+          id: currentBypassItem.id,
+          catatan: catatanTrim,
+          poinFinal: poinFinal,
+          approver: currentUser.nama
+        })
+      });
+      const data = await res.json();
+      if (data.error) { showToast(data.error); btn.disabled=false; btn.innerHTML=originalHtml; if(window.lucide)lucide.createIcons(); return; }
+      showToast("✅ Approved! +" + poinFinal + " poin masuk");
+      closeModal("modal-bypass-action");
+      await loadBypassAdmin();
+    } catch(err){
+      showToast("Gagal: " + err.message);
+      btn.disabled=false; btn.innerHTML=originalHtml; if(window.lucide)lucide.createIcons();
+    }
+  } else if (currentBypassAction === "reject") {
+    if (catatanTrim.length < 10) { showToast("Alasan minimal 10 karakter"); return; }
+    btn.disabled = true;
+    btn.innerHTML = '<i data-lucide="loader-2"></i> Memproses...';
+    if (window.lucide) lucide.createIcons();
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          action: "rejectGugus",
+          id: currentBypassItem.id,
+          catatan: catatanTrim,
+          approver: currentUser.nama
+        })
+      });
+      const data = await res.json();
+      if (data.error) { showToast(data.error); btn.disabled=false; btn.innerHTML=originalHtml; if(window.lucide)lucide.createIcons(); return; }
+      showToast("Pengajuan ditolak");
+      closeModal("modal-bypass-action");
+      await loadBypassAdmin();
+    } catch(err){
+      showToast("Gagal: " + err.message);
+      btn.disabled=false; btn.innerHTML=originalHtml; if(window.lucide)lucide.createIcons();
+    }
+  } else if (currentBypassAction === "revoke") {
+    if (catatanTrim.length < 10) { showToast("Alasan minimal 10 karakter"); return; }
+    btn.disabled = true;
+    btn.innerHTML = '<i data-lucide="loader-2"></i> Memproses...';
+    if (window.lucide) lucide.createIcons();
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          action: "revokeBypass",
+          id: currentBypassItem.id,
+          alasan: catatanTrim,
+          admin: currentUser.nama
+        })
+      });
+      const data = await res.json();
+      if (data.error) { showToast(data.error); btn.disabled=false; btn.innerHTML=originalHtml; if(window.lucide)lucide.createIcons(); return; }
+      showToast("Bypass di-revoke");
+      closeModal("modal-bypass-action");
+      await loadBypassAdmin();
+    } catch(err){
+      showToast("Gagal: " + err.message);
+      btn.disabled=false; btn.innerHTML=originalHtml; if(window.lucide)lucide.createIcons();
+    }
+  }
+}
+
+function formatTanggal(d) {
+  try {
+    const dt = new Date(d);
+    return dt.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+  } catch(e) { return "-"; }
+}
+
 
 // ============ INIT ============
 document.addEventListener("DOMContentLoaded", async () => {
